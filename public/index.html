@@ -1,0 +1,590 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oak Dental Hospital</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeIn {
+            animation: fadeIn 1s ease-out forwards;
+        }
+        .hover-scale {
+            transition: transform 0.3s ease;
+        }
+        .hover-scale:hover {
+            transform: scale(1.05);
+        }
+        .gradient-btn {
+            background: linear-gradient(45deg, #4a90e2, #50c9c3);
+            transition: all 0.3s ease;
+        }
+        .gradient-btn:hover {
+            background: linear-gradient(45deg, #50c9c3, #4a90e2);
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        video {
+            object-fit: cover;
+            max-height: 200px;
+        }
+        img {
+            object-fit: cover;
+            max-height: 200px;
+        }
+    </style>
+</head>
+<body class="font-sans bg-gray-100 text-gray-800">
+    <!-- Header -->
+    <header class="bg-white shadow sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+                <img src="https://i.postimg.cc/yNwBc6rJ/dental.jpg" alt="Oak Dental Logo" class="h-16 w-auto">
+                <div>
+                    <h1 class="text-2xl font-bold text-blue-600">Oak Dental Hospital</h1>
+                    <p class="text-sm text-gray-600">A Multi-Speciality & Implant Center</p>
+                </div>
+            </div>
+            <nav class="hidden md:flex space-x-6">
+                <a href="#home" class="text-gray-600 hover:text-blue-600 transition">Home</a>
+                <a href="#treatments" class="text-gray-600 hover:text-blue-600 transition">Treatments</a>
+                <a href="#pregnancy" class="text-gray-600 hover:text-blue-600 transition">Dental Care During Pregnancy</a>
+                <a href="#dentist" class="text-gray-600 hover:text-blue-600 transition">Our Dentist</a>
+                <a href="#book" class="text-gray-600 hover:text-blue-600 transition">Book Appointment</a>
+                <a href="#manage" class="text-gray-600 hover:text-blue-600 transition">Manage Appointments</a>
+                <a href="#contact" class="text-gray-600 hover:text-blue-600 transition">Contact</a>
+            </nav>
+            <button id="mobile-menu-btn" class="md:hidden text-gray-600 focus:outline-none">
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/>
+                </svg>
+            </button>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-white shadow">
+            <nav class="flex flex-col space-y-4 px-4 py-6">
+                <a href="#home" class="text-gray-600 hover:text-blue-600 transition">Home</a>
+                <a href="#treatments" class="text-gray-600 hover:text-blue-600 transition">Treatments</a>
+                <a href="#pregnancy" class="text-gray-600 hover:text-blue-600 transition">Dental Care During Pregnancy</a>
+                <a href="#dentist" class="text-gray-600 hover:text-blue-600 transition">Our Dentist</a>
+                <a href="#book" class="text-gray-600 hover:text-blue-600 transition">Book Appointment</a>
+                <a href="#manage" class="text-gray-600 hover:text-blue-600 transition">Manage Appointments</a>
+                <a href="#contact" class="text-gray-600 hover:text-blue-600 transition">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="bg-gradient-to-r from-blue-500 to-teal-400 text-white py-20">
+        <div class="container mx-auto px-4 text-center animate-fadeIn">
+            <h2 class="text-4xl md:text-5xl font-bold mb-4">Healthy Smiles with Oak Dental Hospital</h2>
+            <p class="text-lg md:text-xl mb-8">Expert dental care in Hyderabad, specializing in Orthodontics, Implants, and Cosmetic Dentistry. Visit us for a brighter, healthier smile!</p>
+            <div class="flex justify-center space-x-4">
+                <a href="#book" class="gradient-btn text-white px-6 py-3 rounded-full font-semibold hover-scale">Book Appointment</a>
+                <a href="https://wa.me/+917569366767" target="_blank" class="bg-green-500 text-white px-6 py-3 rounded-full font-semibold hover-scale">Chat on WhatsApp</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Treatments Section -->
+    <section id="treatments" class="py-16">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12 animate-fadeIn">Our Treatments</h2>
+            <div id="treatments-list" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
+        </div>
+    </section>
+
+    <!-- Dental Care During Pregnancy Section -->
+    <section id="pregnancy" class="bg-gray-50 py-16">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12 animate-fadeIn">Dental Care During Pregnancy</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow animate-fadeIn">
+                    <h3 class="text-xl font-semibold mb-4">Key Tips for Expecting Mothers</h3>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li>Frequent Dental Check-Ups: Visit every 2 months to prevent infections affecting the fetus.</li>
+                        <li>Brush Twice Daily: Brush and floss before bed for oral hygiene.</li>
+                        <li>Professional Cleaning: Scaling removes calculus deposits safely.</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow animate-fadeIn">
+                    <h3 class="text-xl font-semibold mb-4">Important Notes</h3>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li>Pregnancy Gingivitis: Hormonal changes cause gum inflammation; visit us for care.</li>
+                        <li>Pregnancy Tumors: Rare, painless lesions resolve post-childbirth.</li>
+                        <li>Premature Delivery Risks: Gum issues may lead to preterm low birth weight infants.</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow animate-fadeIn">
+                    <h3 class="text-xl font-semibold mb-4">Safety Guidelines</h3>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li>Caution: Avoid drugs during pregnancy to prevent teeth discoloration.</li>
+                        <li>No Self-Medication: Hormonal changes worsen dental pain; consult a dentist.</li>
+                        <li>Safe Procedures: Treatments are safe in the 2nd trimester (4-6 months).</li>
+                    </ul>
+                </div>
+            </div>
+            <p class="text-center text-red-600 font-bold mt-8 animate-fadeIn">CAUTION! Self-Medication is DANGEROUS</p>
+        </div>
+    </section>
+
+    <!-- Our Expert Dentist Section -->
+    <section id="dentist" class="py-16">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12 animate-fadeIn">Our Expert Dentist</h2>
+            <div class="flex flex-col md:flex-row items-center bg-white p-8 rounded-lg shadow animate-fadeIn">
+                <img src="https://i.postimg.cc/wvXKNXmP/vasu-background-1.png" alt="Dr. A. Ramkoti Reddy" class="h-48 w-48 rounded-full object-cover mb-6 md:mb-0 md:mr-8">
+                <div>
+                    <h3 class="text-2xl font-semibold mb-2">Dr. A. Ramkoti Reddy</h3>
+                    <p class="text-gray-600 mb-2">Senior Dental Specialist</p>
+                    <p>20+ years of experience in Orthodontics, Implantology, and Cosmetic Dentistry.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Book Appointment Section -->
+    <section id="book" class="bg-gray-50 py-16">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12 animate-fadeIn">Book Your Appointment</h2>
+            <div class="bg-white p-8 rounded-lg shadow max-w-lg mx-auto animate-fadeIn">
+                <div id="booking-form" class="space-y-4">
+                    <input type="text" id="full-name" placeholder="Full Name" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <input type="tel" id="phone-number" placeholder="Phone Number" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <select id="treatment" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Select Treatment</option>
+                    </select>
+                    <input type="date" id="preferred-date" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <input type="time" id="preferred-time" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <button id="submit-appointment" class="gradient-btn text-white w-full py-3 rounded-lg font-semibold hover-scale">Proceed to Payment</button>
+                </div>
+                <div id="booking-success" class="hidden mt-6 text-green-600 text-center">
+                    <p>Your appointment booked successfully! Our team will meet you soon. Thank you</p>
+                    <a href="#book" id="book-another" class="text-blue-600 underline mt-2 block">Book Another Appointment</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Manage Appointments Section -->
+    <section id="manage" class="py-16">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12 animate-fadeIn">Manage Your Appointments</h2>
+            <div class="bg-white p-8 rounded-lg shadow max-w-lg mx-auto animate-fadeIn">
+                <input type="tel" id="manage-phone" placeholder="Phone Number" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4">
+                <button id="view-appointments" class="gradient-btn text-white w-full py-3 rounded-lg font-semibold hover-scale">View Appointments</button>
+                <div id="appointments-list" class="mt-6 hidden">
+                    <h3 class="text-xl font-semibold mb-4">Your Appointments</h3>
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="bg-gray-200">
+                                <th class="p-3">Treatment</th>
+                                <th class="p-3">Date</th>
+                                <th class="p-3">Time</th>
+                                <th class="p-3">Status</th>
+                                <th class="p-3">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="appointments-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="bg-gray-50 py-16">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12 animate-fadeIn">Get in Touch</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow animate-fadeIn">
+                    <h3 class="text-xl font-semibold mb-4">Address</h3>
+                    <p>2nd Floor, Vision Apartments, Rieev Gandhi Nagar, Nizampet Road, Bachupally, Hyderabad - 500090</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow animate-fadeIn">
+                    <h3 class="text-xl font-semibold mb-4">Phone</h3>
+                    <p>+91-7569 366 767 / +91-9502 030 637</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow animate-fadeIn">
+                    <h3 class="text-xl font-semibold mb-4">Email</h3>
+                    <p>info@oakdentalhospital.com</p>
+                </div>
+            </div>
+            <div class="text-center mt-8">
+                <a href="https://wa.me/+917569366767" target="_blank" class="bg-green-500 text-white px-6 py-3 rounded-full font-semibold hover-scale animate-fadeIn">Connect on WhatsApp</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">About Us</h3>
+                    <p>© 2025 Oak Dental Hospital. All Rights Reserved.</p>
+                    <p class="mt-2">Awarded Best Dental Clinic in Hyderabad (Smile Awards, 2024)</p>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">Hospital Timings</h3>
+                    <div id="timings-list">
+                        <p>Loading timings...</p>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#home" class="hover:text-blue-400 transition">Home</a></li>
+                        <li><a href="#treatments" class="hover:text-blue-400 transition">Treatments</a></li>
+                        <li><a href="#book" class="hover:text-blue-400 transition">Book Appointment</a></li>
+                        <li><a href="#manage" class="hover:text-blue-400 transition">Manage Appointments</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Cancel Appointment Modal -->
+    <div id="cancel-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white p-8 rounded-lg shadow max-w-md w-full">
+            <h2 class="text-2xl font-bold mb-4">Cancel Appointment</h2>
+            <textarea id="cancel-reason" placeholder="Reason for Cancellation" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"></textarea>
+            <div class="flex justify-end space-x-4">
+                <button id="close-cancel" class="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-400">Close</button>
+                <button id="confirm-cancel" class="gradient-btn text-white px-4 py-2 rounded-lg hover-scale">Cancel Appointment</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reschedule Appointment Modal -->
+    <div id="reschedule-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white p-8 rounded-lg shadow max-w-md w-full">
+            <h2 class="text-2xl font-bold mb-4">Reschedule Appointment</h2>
+            <input type="date" id="new-date" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4">
+            <input type="time" id="new-time" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4">
+            <textarea id="reschedule-reason" placeholder="Reason for Rescheduling" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"></textarea>
+            <div class="flex justify-end space-x-4">
+                <button id="close-reschedule" class="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-400">Close</button>
+                <button id="confirm-reschedule" class="gradient-btn text-white px-4 py-2 rounded-lg hover-scale">Reschedule</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Handle navigation to prevent full page reload for hash links
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href').substring(1);
+                document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' });
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // Fetch treatments
+        async function fetchTreatments() {
+            try {
+                const response = await fetch('/api/treatments');
+                if (!response.ok) throw new Error('Failed to fetch treatments');
+                const treatments = await response.json();
+                renderTreatments(treatments);
+            } catch (error) {
+                console.error('Error fetching treatments:', error);
+                alert('Failed to load treatments');
+            }
+        }
+
+        // Render treatments
+        function renderTreatments(treatments) {
+            const treatmentsList = document.getElementById('treatments-list');
+            const treatmentSelect = document.getElementById('treatment');
+            treatmentsList.innerHTML = '';
+            treatmentSelect.innerHTML = '<option value="">Select Treatment</option>';
+            treatments.forEach(treatment => {
+                const div = document.createElement('div');
+                div.className = 'bg-white p-6 rounded-lg shadow hover-scale animate-fadeIn';
+                div.innerHTML = `
+                    <img src="${treatment.image_url || 'https://via.placeholder.com/150'}" alt="${treatment.name}" class="w-full h-48 object-cover rounded-lg mb-4 lazyload" loading="lazy">
+                    <h3 class="text-xl font-semibold mb-2">${treatment.name}</h3>
+                    <p class="text-gray-600 mb-2">₹${treatment.price}</p>
+                    ${treatment.video_url ? `<video src="${treatment.video_url}" class="w-full rounded-lg" controls preload="metadata" loading="lazy"></video>` : ''}
+                `;
+                treatmentsList.appendChild(div);
+                const option = document.createElement('option');
+                option.value = treatment.name;
+                option.dataset.price = treatment.price;
+                option.dataset.id = treatment.id;
+                option.textContent = `${treatment.name} (₹${treatment.price})`;
+                treatmentSelect.appendChild(option);
+            });
+        }
+
+        // Fetch timings
+        async function fetchTimings() {
+            try {
+                const response = await fetch('/api/timings');
+                if (!response.ok) throw new Error('Failed to fetch timings');
+                const timings = await response.json();
+                renderTimings(timings);
+            } catch (error) {
+                console.error('Error fetching timings:', error);
+                document.getElementById('timings-list').innerHTML = '<p>Failed to load timings</p>';
+            }
+        }
+
+        // Render timings
+        function renderTimings(timings) {
+            const timingsList = document.getElementById('timings-list');
+            if (timings.length === 0) {
+                timingsList.innerHTML = '<p>No timings set</p>';
+                return;
+            }
+            timingsList.innerHTML = `
+                <table class="w-full text-left">
+                    <thead><tr class="bg-gray-200"><th class="p-3">Day</th><th class="p-3">Open</th><th class="p-3">Close</th></tr></thead>
+                    <tbody>
+                        ${timings.map(t => `<tr><td class="p-3">${t.day}</td><td class="p-3">${t.open_time}</td><td class="p-3">${t.close_time}</td></tr>`).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        // Book appointment
+        let currentAppointment = null;
+        document.getElementById('submit-appointment').addEventListener('click', async () => {
+            const name = document.getElementById('full-name').value.trim();
+            const phone = document.getElementById('phone-number').value;
+            const treatmentSelect = document.getElementById('treatment');
+            const treatment = treatmentSelect.value;
+            const price = treatmentSelect.selectedOptions[0]?.dataset.price;
+            const date = document.getElementById('preferred-date').value;
+            const time = document.getElementById('preferred-time').value;
+
+            if (!name || !phone || !treatment || !price || !date || !time) {
+                alert('All fields are required');
+                return;
+            }
+            if (!/^\d{10}$/.test(phone)) {
+                alert('Phone number must be 10 digits');
+                return;
+            }
+
+            try {
+                // Book appointment
+                const response = await fetch('/api/appointments', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        fullName: name,
+                        phone,
+                        treatment,
+                        price: parseFloat(price),
+                        date,
+                        time
+                    })
+                });
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.message);
+
+                currentAppointment = result.appointment;
+
+                // Create Razorpay order
+                const orderResponse = await fetch('/api/payments/create-order', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ amount: parseFloat(price), treatment })
+                });
+                const orderResult = await orderResponse.json();
+                if (!orderResponse.ok) throw new Error(orderResult.message);
+
+                // Open Razorpay checkout
+                const options = {
+                    key: orderResult.key,
+                    amount: parseFloat(price) * 100,
+                    currency: 'INR',
+                    order_id: orderResult.orderId,
+                    name: 'Oak Dental Hospital',
+                    description: `Payment for ${treatment}`,
+                    handler: async function (response) {
+                        try {
+                            // Verify payment
+                            const verifyResponse = await fetch('/api/payments/verify', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    orderId: response.razorpay_order_id,
+                                    paymentId: response.razorpay_payment_id,
+                                    signature: response.razorpay_signature,
+                                    appointmentId: currentAppointment.id
+                                })
+                            });
+                            const verifyResult = await verifyResponse.json();
+                            if (!verifyResponse.ok) throw new Error(verifyResult.message);
+
+                            document.getElementById('booking-form').classList.add('hidden');
+                            document.getElementById('booking-success').classList.remove('hidden');
+                            document.getElementById('full-name').value = '';
+                            document.getElementById('phone-number').value = '';
+                            document.getElementById('treatment').value = '';
+                            document.getElementById('preferred-date').value = '';
+                            document.getElementById('preferred-time').value = '';
+                            currentAppointment = null;
+                        } catch (error) {
+                            alert('Payment verification failed: ' + error.message);
+                        }
+                    },
+                    prefill: {
+                        name,
+                        contact: phone
+                    },
+                    theme: { color: '#4a90e2' }
+                };
+                const rzp = new Razorpay(options);
+                rzp.open();
+            } catch (error) {
+                console.error('Error booking appointment:', error);
+                alert('Failed to book appointment: ' + error.message);
+            }
+        });
+
+        // Book another appointment
+        document.getElementById('book-another').addEventListener('click', () => {
+            document.getElementById('booking-success').classList.add('hidden');
+            document.getElementById('booking-form').classList.remove('hidden');
+        });
+
+        // View appointments
+        document.getElementById('view-appointments').addEventListener('click', async () => {
+            const phone = document.getElementById('manage-phone').value;
+            if (!/^\d{10}$/.test(phone)) {
+                alert('Phone number must be 10 digits');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/appointments?phone=${phone}`);
+                if (!response.ok) throw new Error('Failed to fetch appointments');
+                const appointments = await response.json();
+                renderAppointments(appointments);
+            } catch (error) {
+                console.error('Error fetching appointments:', error);
+                alert('Failed to fetch appointments');
+            }
+        });
+
+        // Render appointments
+        function renderAppointments(appointments) {
+            const tableBody = document.getElementById('appointments-table-body');
+            tableBody.innerHTML = '';
+            if (appointments.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="5" class="p-3 text-center">No appointments found.</td></tr>';
+            } else {
+                appointments.forEach(appt => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td class="p-3">${appt.treatment}</td>
+                        <td class="p-3">${appt.date}</td>
+                        <td class="p-3">${appt.time}</td>
+                        <td class="p-3">${appt.status}</td>
+                        <td class="p-3">
+                            <button class="text-blue-600 hover:underline cancel-appt" data-id="${appt.id}" ${appt.status !== 'Pending' ? 'disabled' : ''}>Cancel</button>
+                            <button class="text-blue-600 hover:underline reschedule-appt" data-id="${appt.id}" ${appt.status !== 'Pending' ? 'disabled' : ''}>Reschedule</button>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            }
+            document.getElementById('appointments-list').classList.remove('hidden');
+
+            // Cancel appointment
+            document.querySelectorAll('.cancel-appt').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const id = btn.dataset.id;
+                    document.getElementById('cancel-modal').classList.remove('hidden');
+                    document.getElementById('confirm-cancel').onclick = async () => {
+                        const reason = document.getElementById('cancel-reason').value;
+                        if (!reason) {
+                            alert('Reason required');
+                            return;
+                        }
+                        try {
+                            const response = await fetch(`/api/appointments/${id}/cancel`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ reason })
+                            });
+                            if (!response.ok) throw new Error((await response.json()).message);
+                            document.getElementById('cancel-modal').classList.add('hidden');
+                            document.getElementById('cancel-reason').value = '';
+                            document.getElementById('view-appointments').click();
+                        } catch (error) {
+                            alert('Failed to cancel appointment: ' + error.message);
+                        }
+                    };
+                });
+            });
+
+            // Reschedule appointment
+            document.querySelectorAll('.reschedule-appt').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const id = btn.dataset.id;
+                    document.getElementById('reschedule-modal').classList.remove('hidden');
+                    document.getElementById('confirm-reschedule').onclick = async () => {
+                        const newDate = document.getElementById('new-date').value;
+                        const newTime = document.getElementById('new-time').value;
+                        const reason = document.getElementById('reschedule-reason').value;
+                        if (!newDate || !newTime || !reason) {
+                            alert('Date, time, and reason required');
+                            return;
+                        }
+                        try {
+                            const response = await fetch(`/api/appointments/${id}/reschedule`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ date: newDate, time: newTime, reason })
+                            });
+                            if (!response.ok) throw new Error((await response.json()).message);
+                            document.getElementById('reschedule-modal').classList.add('hidden');
+                            document.getElementById('new-date').value = '';
+                            document.getElementById('new-time').value = '';
+                            document.getElementById('reschedule-reason').value = '';
+                            document.getElementById('view-appointments').click();
+                        } catch (error) {
+                            alert('Failed to reschedule appointment: ' + error.message);
+                        }
+                    };
+                });
+            });
+        }
+
+        // Close modals
+        document.getElementById('close-cancel').addEventListener('click', () => {
+            document.getElementById('cancel-modal').classList.add('hidden');
+            document.getElementById('cancel-reason').value = '';
+        });
+        document.getElementById('close-reschedule').addEventListener('click', () => {
+            document.getElementById('reschedule-modal').classList.add('hidden');
+            document.getElementById('new-date').value = '';
+            document.getElementById('new-time').value = '';
+            document.getElementById('reschedule-reason').value = '';
+        });
+
+        // Initial fetch
+        fetchTreatments();
+        fetchTimings();
+    </script>
+</body>
+</html>
