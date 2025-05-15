@@ -2,48 +2,38 @@ const express = require('express');
 const { Pool } = require('pg');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const dotenv = require('dotenv');
 const cors = require('cors');
 const path = require('path');
-const multer = require('multer');
 const fs = require('fs');
+const multer = require('multer');
 const Razorpay = require('razorpay');
+require('dotenv').config();
 
-dotenv.config();
 const app = express();
-
-// Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
-// Log all requests for debugging
-app.use((req, res, next) => {
-  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
-  next();
+
+// Database connection
+const pool = new Pool({
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT || 5432,
 });
 
-// File Upload Setup
-const uploadDir = path.join(__dirname, 'public', 'Uploads');
-if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
+// Multer for file uploads
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, uploadDir),
-  filename: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`)
+  destination: (req, file, cb) => cb(null, 'public/Uploads'),
+  filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname)),
 });
 const upload = multer({ storage });
 
-// PostgreSQL Pool
-const pool = new Pool({
-  user: process.env.PG_USER,
-  host: process.env.PG_HOST,
-  database: process.env.PG_DATABASE,
-  password: process.env.PG_PASSWORD,
-  port: process.env.PG_PORT,
-});
-
-// Razorpay Instance
+// Razorpay instance
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
-  key_secret: process.env.RAZORPAY_KEY_SECRET
+  key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
 // Initialize Database
@@ -62,14 +52,14 @@ async function initializeDatabase() {
         full_name VARCHAR(100) NOT NULL,
         phone VARCHAR(15) NOT NULL,
         treatment VARCHAR(50) NOT NULL,
-        price DECIMAL(10,2) NOT NULL,
+        price DECIMAL(10,2) NOT NULL DEFAULT 0.00,
         date DATE NOT NULL,
         time TIME NOT NULL,
         status VARCHAR(20) NOT NULL,
+        approved BOOLEAN DEFAULT FALSE,
         cancel_reason TEXT,
         reschedule_reason TEXT,
         admin_reason TEXT,
-        approved BOOLEAN DEFAULT FALSE,
         payment_id VARCHAR(100)
       );
 
@@ -89,7 +79,8 @@ async function initializeDatabase() {
         UNIQUE(day)
       );
     `);
-    // Initialize default timings if empty
+
+    // Initialize default timings
     const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     for (const day of days) {
       const result = await pool.query('SELECT 1 FROM hospital_timings WHERE day = $1', [day]);
@@ -107,340 +98,7 @@ async function initializeDatabase() {
   }
 }
 
-// Middleware for Admin Authentication
-const auth = async (req, res, next) => {
-  const token = req.header('Authorization')?.replace('Bearer ', '');
-  if (!token) return res.status(401).json({ message: 'No token provided' });
-
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.admin = decoded;
-    next();
-  } catch (error) {
-    res.status(401).json({ message: 'Invalid token' });
-  }
-};
-
-// Payment Endpoints
-app.post('/api/payments/create-order', async (req, res) => {
-  const { amount, treatment } = req.body;
-  if (!amount || !treatment) return res.status(400).json({ message: 'Amount and treatment required' });
-
-  try {
-    const order = await razorpay.orders.create({
-      amount: amount * 100, // Convert to paise
-      currency: 'INR',
-      receipt: `receipt_${Date.now()}`,
-      notes: { treatment }
-    });
-    res.json({ orderId: order.id, key: process.env.RAZORPAY_KEY_ID });
-  } catch (error) {
-    console.error('Error creating Razorpay order:', error);
-    res.status(500).json({ message: 'Failed to create payment order' });
-  }
-});
-
-app.post('/api/payments/verify', async (req, res) => {
-  const { orderId, paymentId, signature, appointmentId } = req.body;
-  if (!orderId || !paymentId || !signature || !appointmentId) {
-    return res.status(400).json({ message: 'All payment details required' });
-  }
-
-  try {
-    const crypto = require('crypto');
-    const generatedSignature = crypto
-      .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
-      .update(`${orderId}|${paymentId}`)
-      .digest('hex');
-
-    if (generatedSignature === signature) {
-      await pool.query(
-        'UPDATE appointments SET payment_id = $1 WHERE id = $2',
-        [paymentId, appointmentId]
-      );
-      res.json({ message: 'Payment verified successfully' });
-    } else {
-      res.status(400).json({ message: 'Invalid payment signature' });
-    }
-  } catch (error) {
-    console.error('Error verifying payment:', error);
-    res.status(500).json({ message: 'Failed to verify payment' });
-  }
-});
-
-// Appointment Endpoints
-app.post('/api/appointments', async (req, res) => {
-  const { fullName, phone, treatment, price, date, time } = req.body;
-  console.log('Booking request:', req.body);
-  if (!fullName || !phone || !treatment || !price || !date || !time) {
-    return res.status(400).json({ message: 'All fields are required' });
-  }
-  if (!/^\d{10}$/.test(phone)) {
-    return res.status(400).json({ message: 'Phone number must be 10 digits' });
-  }
-  if (fullName.trim().length < 2) {
-    return res.status(400).json({ message: 'Full name must be at least 2 characters' });
-  }
-  if (isNaN(price) || price < 0) {
-    return res.status(400).json({ message: 'Price must be a valid number' });
-  }
-
-  try {
-    const result = await pool.query(
-      'INSERT INTO appointments (full_name, phone, treatment, price, date, time, status, approved) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
-      [fullName.trim(), phone, treatment, price, date, time, 'Pending', false]
-    );
-    res.status(201).json({ message: 'Appointment booked successfully', appointment: result.rows[0] });
-  } catch (error) {
-    console.error('Error booking appointment:', error);
-    res.status(500).json({ message: 'Failed to book appointment' });
-  }
-});
-
-app.get('/api/appointments', async (req, res) => {
-  const { phone } = req.query;
-  if (phone) {
-    if (!/^\d{10}$/.test(phone)) {
-      return res.status(400).json({ message: 'Phone number must be 10 digits' });
-    }
-    try {
-      const result = await pool.query('SELECT * FROM appointments WHERE phone = $1 ORDER BY date, time', [phone]);
-      res.json(result.rows);
-    } catch (error) {
-      console.error('Error fetching user appointments:', error);
-      res.status(500).json({ message: 'Failed to fetch appointments' });
-    }
-  } else {
-    try {
-      await auth(req, res, async () => {
-        const result = await pool.query('SELECT * FROM appointments ORDER BY date, time');
-        res.json(result.rows);
-      });
-    } catch (error) {
-      console.error('Error fetching all appointments:', error);
-      res.status(500).json({ message: 'Failed to fetch appointments' });
-    }
-  }
-});
-
-app.post('/api/appointments/:id/cancel', async (req, res) => {
-  const { id } = req.params;
-  const { reason } = req.body;
-  console.log('Cancel request:', { id, reason });
-  if (!reason) return res.status(400).json({ message: 'Reason required' });
-
-  try {
-    const result = await pool.query(
-      'UPDATE appointments SET status = $1, cancel_reason = $2 WHERE id = $3 RETURNING id, status',
-      ['Cancelled', reason, id]
-    );
-    if (result.rowCount === 0) return res.status(404).json({ message: 'Appointment not found' });
-    res.json({ message: 'Appointment cancelled successfully', appointment: result.rows[0] });
-  } catch (error) {
-    console.error('Error cancelling appointment:', error);
-    res.status(500).json({ message: 'Failed to cancel appointment' });
-  }
-});
-
-app.post('/api/appointments/:id/reschedule', async (req, res) => {
-  const { id } = req.params;
-  const { date, time, reason } = req.body;
-  console.log('Reschedule request:', { id, date, time, reason });
-  if (!date || !time || !reason) return res.status(400).json({ message: 'Date, time, and reason required' });
-
-  try {
-    const result = await pool.query(
-      'UPDATE appointments SET date = $1, time = $2, status = $3, reschedule_reason = $4 WHERE id = $5 RETURNING id, date, time, status',
-      [date, time, 'Pending', reason, id]
-    );
-    if (result.rowCount === 0) return res.status(404).json({ message: 'Appointment not found' });
-    res.json({ message: 'Appointment rescheduled successfully', appointment: result.rows[0] });
-  } catch (error) {
-    console.error('Error rescheduling appointment:', error);
-    res.status(500).json({ message: 'Failed to reschedule appointment' });
-  }
-});
-
-app.post('/api/appointments/:id/approve', auth, async (req, res) => {
-  const { id } = req.params;
-  console.log('Approve request:', { id });
-  try {
-    const result = await pool.query(
-      'UPDATE appointments SET status = $1, approved = $2 WHERE id = $3 RETURNING id, status, approved',
-      ['Approved', true, id]
-    );
-    if (result.rowCount === 0) return res.status(404).json({ message: 'Appointment not found' });
-    res.json({ message: 'Appointment approved successfully', appointment: result.rows[0] });
-  } catch (error) {
-    console.error('Error approving appointment:', error);
-    res.status(500).json({ message: 'Failed to approve appointment' });
-  }
-});
-
-app.post('/api/appointments/:id/admin-cancel', auth, async (req, res) => {
-  const { id } = req.params;
-  const { reason } = req.body;
-  console.log('Admin cancel request:', { id, reason });
-  if (!reason) return res.status(400).json({ message: 'Reason required' });
-
-  try {
-    const result = await pool.query(
-      'UPDATE appointments SET status = $1, admin_reason = $2 WHERE id = $3 RETURNING id, status',
-      ['Cancelled', reason, id]
-    );
-    if (result.rowCount === 0) return res.status(404).json({ message: 'Appointment not found' });
-    res.json({ message: 'Appointment cancelled by admin successfully', appointment: result.rows[0] });
-  } catch (error) {
-    console.error('Error cancelling appointment by admin:', error);
-    res.status(500).json({ message: 'Failed to cancel appointment' });
-  }
-});
-
-// Treatment Endpoints
-app.get('/api/treatments', async (req, res) => {
-  try {
-    const result = await pool.query('SELECT * FROM treatments ORDER BY name');
-    res.json(result.rows);
-  } catch (error) {
-    console.error('Error fetching treatments:', error);
-    res.status(500).json({ message: 'Failed to fetch treatments' });
-  }
-});
-
-app.post('/api/treatments', auth, upload.fields([{ name: 'image', maxCount: 1 }, { name: 'video', maxCount: 1 }]), async (req, res) => {
-  const { name, price } = req.body;
-  console.log('Add treatment request:', { name, price, files: req.files });
-  if (!name || !price) return res.status(400).json({ message: 'Name and price required' });
-  if (isNaN(price) || price < 0) return res.status(400).json({ message: 'Price must be a valid number' });
-
-  const imageUrl = req.files.image ? `/Uploads/${req.files.image[0].filename}` : null;
-  const videoUrl = req.files.video ? `/Uploads/${req.files.video[0].filename}` : null;
-
-  try {
-    const result = await pool.query(
-      'INSERT INTO treatments (name, price, image_url, video_url) VALUES ($1, $2, $3, $4) RETURNING *',
-      [name, price, imageUrl, videoUrl]
-    );
-    res.status(201).json({ message: 'Treatment added successfully', treatment: result.rows[0] });
-  } catch (error) {
-    console.error('Error adding treatment:', error);
-    res.status(500).json({ message: 'Failed to add treatment' });
-  }
-});
-
-app.put('/api/treatments/:id', auth, upload.fields([{ name: 'image', maxCount: 1 }, { name: 'video', maxCount: 1 }]), async (req, res) => {
-  const { id } = req.params;
-  const { name, price } = req.body;
-  console.log('Update treatment request:', { id, name, price, files: req.files });
-  if (!name || !price) return res.status(400).json({ message: 'Name and price required' });
-  if (isNaN(price) || price < 0) return res.status(400).json({ message: 'Price must be a valid number' });
-
-  try {
-    const existing = await pool.query('SELECT * FROM treatments WHERE id = $1', [id]);
-    if (existing.rowCount === 0) return res.status(404).json({ message: 'Treatment not found' });
-
-    const imageUrl = req.files.image ? `/Uploads/${req.files.image[0].filename}` : existing.rows[0].image_url;
-    const videoUrl = req.files.video ? `/Uploads/${req.files.video[0].filename}` : existing.rows[0].video_url;
-
-    const result = await pool.query(
-      'UPDATE treatments SET name = $1, price = $2, image_url = $3, video_url = $4 WHERE id = $5 RETURNING *',
-      [name, price, imageUrl, videoUrl, id]
-    );
-    res.json({ message: 'Treatment updated successfully', treatment: result.rows[0] });
-  } catch (error) {
-    console.error('Error updating treatment:', error);
-    res.status(500).json({ message: 'Failed to update treatment' });
-  }
-});
-
-app.delete('/api/treatments/:id', auth, async (req, res) => {
-  const { id } = req.params;
-  console.log('Delete treatment request:', { id });
-  try {
-    const result = await pool.query('DELETE FROM treatments WHERE id = $1 RETURNING *', [id]);
-    if (result.rowCount === 0) return res.status(404).json({ message: 'Treatment not found' });
-    res.json({ message: 'Treatment deleted successfully' });
-  } catch (error) {
-    console.error('Error deleting treatment:', error);
-    res.status(500).json({ message: 'Failed to delete treatment' });
-  }
-});
-
-// Hospital Timings Endpoints
-app.get('/api/timings', async (req, res) => {
-  try {
-    const result = await pool.query('SELECT * FROM hospital_timings ORDER BY id');
-    res.json(result.rows);
-  } catch (error) {
-    console.error('Error fetching timings:', error);
-    res.status(500).json({ message: 'Failed to fetch timings' });
-  }
-});
-
-app.put('/api/timings/:day', auth, async (req, res) => {
-  const { day } = req.params;
-  const { open_time, close_time } = req.body;
-  console.log('Update timing request:', { day, open_time, close_time });
-  if (!open_time || !close_time) return res.status(400).json({ message: 'Open and close times required' });
-
-  try {
-    const result = await pool.query(
-      'INSERT INTO hospital_timings (day, open_time, close_time) VALUES ($1, $2, $3) ON CONFLICT (day) DO UPDATE SET open_time = $2, close_time = $3 RETURNING *',
-      [day, open_time, close_time]
-    );
-    res.json({ message: 'Timing updated successfully', timing: result.rows[0] });
-  } catch (error) {
-    console.error('Error updating timing:', error);
-    res.status(500).json({ message: 'Failed to update timing' });
-  }
-});
-
-// Admin Endpoints
-app.post('/api/admin/register', async (req, res) => {
-  const { username, password, email } = req.body;
-  if (!username || !password || !email) return res.status(400).json({ message: 'All fields required' });
-  if (password.length < 6) return res.status(400).json({ message: 'Password must be at least 6 characters' });
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return res.status(400).json({ message: 'Invalid email format' });
-
-  try {
-    const existingAdmin = await pool.query('SELECT * FROM admins WHERE username = $1 OR email = $2', [username, email]);
-    if (existingAdmin.rowCount > 0) {
-      return res.status(400).json({ message: 'Username or email already exists' });
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-    await pool.query(
-      'INSERT INTO admins (username, password, email) VALUES ($1, $2, $3) RETURNING id, username, email',
-      [username, hashedPassword, email]
-    );
-    res.status(201).json({ message: 'Admin registered successfully' });
-  } catch (error) {
-    console.error('Error registering admin:', error);
-    res.status(500).json({ message: 'Failed to register admin' });
-  }
-});
-
-app.post('/api/admin/login', async (req, res) => {
-  const { username, password } = req.body;
-  if (!username || !password) return res.status(400).json({ message: 'Username and password required' });
-
-  try {
-    const result = await pool.query('SELECT * FROM admins WHERE username = $1', [username]);
-    const admin = result.rows[0];
-    if (!admin) return res.status(400).json({ message: 'Invalid credentials' });
-
-    const isMatch = await bcrypt.compare(password, admin.password);
-    if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
-
-    const token = jwt.sign({ id: admin.id, username: admin.username }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    res.json({ message: 'Login successful', token });
-  } catch (error) {
-    console.error('Error logging in:', error);
-    res.status(500).json({ message: 'Failed to login' });
-  }
-});
-
-// Serve Frontend Routes
+// Routes
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
@@ -450,20 +108,166 @@ app.get('/admin', (req, res) => {
   if (fs.existsSync(adminPath)) {
     res.sendFile(adminPath);
   } else {
-    res.status(404).json({ message: 'admin.html not found in public directory' });
+    res.status(404).json({ message: 'admin.html not found' });
   }
 });
 
-// Catch-all route for 404
-app.use((req, res) => {
-  res.status(404).json({ message: 'Route not found' });
+// Admin Registration
+app.post('/api/admin/register', async (req, res) => {
+  const { username, password, email } = req.body;
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    await pool.query(
+      'INSERT INTO admins (username, password, email) VALUES ($1, $2, $3)',
+      [username, hashedPassword, email]
+    );
+    res.status(201).json({ message: 'Admin registered' });
+  } catch (error) {
+    res.status(400).json({ message: 'Error registering admin', error });
+  }
 });
 
-// Start server
-const PORT = process.env.PORT || 3000;
+// Admin Login
+app.post('/api/admin/login', async (req, res) => {
+  const { username, password } = req.body;
+  try {
+    const result = await pool.query('SELECT * FROM admins WHERE username = $1', [username]);
+    const admin = result.rows[0];
+    if (admin && await bcrypt.compare(password, admin.password)) {
+      const token = jwt.sign({ id: admin.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+      res.json({ token });
+    } else {
+      res.status(401).json({ message: 'Invalid credentials' });
+    }
+  } catch (error) {
+    res.status(400).json({ message: 'Error logging in', error });
+  }
+});
+
+// Middleware to verify JWT
+const authenticate = (req, res, next) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) return res.status(401).json({ message: 'No token provided' });
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.adminId = decoded.id;
+    next();
+  } catch (error) {
+    res.status(401).json({ message: 'Invalid token' });
+  }
+};
+
+// Book Appointment
+app.post('/api/appointments', async (req, res) => {
+  const { fullName, phone, treatment, price, date, time } = req.body;
+  try {
+    const result = await pool.query(
+      'INSERT INTO appointments (full_name, phone, treatment, price, date, time, status, approved) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
+      [fullName.trim(), phone, treatment, price, date, time, 'Pending', false]
+    );
+    res.status(201).json(result.rows[0]);
+  } catch (error) {
+    res.status(400).json({ message: 'Error booking appointment', error });
+  }
+});
+
+// Approve Appointment
+app.put('/api/appointments/:id/approve', authenticate, async (req, res) => {
+  const { id } = req.params;
+  try {
+    await pool.query('UPDATE appointments SET status = $1, approved = $2 WHERE id = $3', ['Approved', true, id]);
+    res.json({ message: 'Appointment approved' });
+  } catch (error) {
+    res.status(400).json({ message: 'Error approving appointment', error });
+  }
+});
+
+// Get All Appointments
+app.get('/api/appointments', authenticate, async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM appointments ORDER BY date, time');
+    res.json(result.rows);
+  } catch (error) {
+    res.status(400).json({ message: 'Error fetching appointments', error });
+  }
+});
+
+// Add Treatment
+app.post('/api/treatments', authenticate, upload.fields([{ name: 'image' }, { name: 'video' }]), async (req, res) => {
+  const { name, price } = req.body;
+  const image = req.files.image ? `/Uploads/${req.files.image[0].filename}` : null;
+  const video = req.files.video ? `/Uploads/${req.files.video[0].filename}` : null;
+  try {
+    const result = await pool.query(
+      'INSERT INTO treatments (name, price, image_url, video_url) VALUES ($1, $2, $3, $4) RETURNING *',
+      [name, price, image, video]
+    );
+    res.status(201).json(result.rows[0]);
+  } catch (error) {
+    res.status(400).json({ message: 'Error adding treatment', error });
+  }
+});
+
+// Get All Treatments
+app.get('/api/treatments', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM treatments');
+    res.json(result.rows);
+  } catch (error) {
+    res.status(400).json({ message: 'Error fetching treatments', error });
+  }
+});
+
+// Update Hospital Timings
+app.put('/api/timings/:day', authenticate, async (req, res) => {
+  const { day } = req.params;
+  const { open_time, close_time } = req.body;
+  try {
+    await pool.query(
+      'UPDATE hospital_timings SET open_time = $1, close_time = $2 WHERE day = $3',
+      [open_time, close_time, day]
+    );
+    res.json({ message: 'Timings updated' });
+  } catch (error) {
+    res.status(400).json({ message: 'Error updating timings', error });
+  }
+});
+
+// Get Hospital Timings
+app.get('/api/timings', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM hospital_timings ORDER BY id');
+    res.json(result.rows);
+  } catch (error) {
+    res.status(400).json({ message: 'Error fetching timings', error });
+  }
+});
+
+// Razorpay Payment
+app.post('/api/payment', async (req, res) => {
+  const { amount } = req.body;
+  try {
+    const order = await razorpay.orders.create({
+      amount: amount * 100, // Convert to paise
+      currency: 'INR',
+      receipt: `receipt_${Date.now()}`,
+    });
+    res.json(order);
+  } catch (error) {
+    res.status(400).json({ message: 'Error creating payment', error });
+  }
+});
+
+// Start Server
 async function startServer() {
-  await initializeDatabase();
-  app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
+  try {
+    await initializeDatabase();
+    const port = process.env.PORT || 3000;
+    app.listen(port, () => console.log(`🚀 Server running on http://0.0.0.0:${port}`));
+  } catch (error) {
+    console.error('Error starting server:', error);
+    process.exit(1);
+  }
 }
 
 startServer();
