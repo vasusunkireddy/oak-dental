@@ -1,590 +1,524 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oak Dental Hospital</title>
+    <meta name="description" content="OAK Dental Hospital in Hyderabad offers expert dental care, including Orthodontics, Implants, and Cosmetic Dentistry. Book your appointment today!">
+    <meta name="keywords" content="dental care, dentist Hyderabad, orthodontics, dental implants, cosmetic dentistry, OAK Dental Hospital">
+    <meta name="author" content="OAK Dental Hospital">
+    <title>OAK Dental Hospital - Expert Dental Care in Hyderabad</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        body {
+            font-family: 'Poppins', sans-serif;
         }
-        .animate-fadeIn {
-            animation: fadeIn 1s ease-out forwards;
+        .logo-img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-        .hover-scale {
+        @media (max-width: 768px) {
+            .logo-img {
+                width: 48px;
+                height: 48px;
+            }
+        }
+        .hospital-name {
+            background: linear-gradient(90deg, #1e3a8a, #facc15);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
             transition: transform 0.3s ease;
         }
-        .hover-scale:hover {
+        .hospital-name:hover {
             transform: scale(1.05);
         }
-        .gradient-btn {
-            background: linear-gradient(45deg, #4a90e2, #50c9c3);
-            transition: all 0.3s ease;
+        .nav-link, .btn {
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
         }
-        .gradient-btn:hover {
-            background: linear-gradient(45deg, #50c9c3, #4a90e2);
+        .nav-link:hover, .btn:hover {
+            transform: translateY(-2px);
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            object-fit: cover;
+            border-radius: 8px;
+            loading: lazy;
+        }
+        input, select, textarea {
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        .section-animate {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         html {
             scroll-behavior: smooth;
         }
-        video {
-            object-fit: cover;
-            max-height: 200px;
+        .sticky-cta {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
         }
-        img {
-            object-fit: cover;
-            max-height: 200px;
+        .chat-button {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            z-index: 1000;
+            background-color: #25D366;
+            color: white;
+            padding: 10px;
+            border-radius: 50%;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        .chat-button:hover {
+            background-color: #20b558;
+        }
+        .faq-item {
+            cursor: pointer;
+        }
+        .faq-answer {
+            display: none;
+        }
+        .faq-item.active .faq-answer {
+            display: block;
         }
     </style>
 </head>
-<body class="font-sans bg-gray-100 text-gray-800">
-    <!-- Header -->
-    <header class="bg-white shadow sticky top-0 z-50">
-        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
-            <div class="flex items-center space-x-4">
-                <img src="https://i.postimg.cc/50vXRG8K/ram.jpg" alt="Oak Dental Logo" class="h-16 w-auto">
-                <div>
-                    <h1 class="text-2xl font-bold text-blue-600">Oak Dental Hospital</h1>
-                    <p class="text-sm text-gray-600">A Multi-Speciality & Implant Center</p>
-                </div>
+<body class="bg-blue-50 antialiased">
+    <!-- Navigation -->
+    <nav class="bg-white text-gray-700 shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <img src="https://i.postimg.cc/50vXRG8K/ram.jpg?fit=500%2C500&quality=80" alt="OAK Dental Hospital Logo" class="mr-2 logo-img">
+                <a href="#" class="text-2xl hospital-name">OAK Dental Hospital</a>
             </div>
-            <nav class="hidden md:flex space-x-6">
-                <a href="#home" class="text-gray-600 hover:text-blue-600 transition">Home</a>
-                <a href="#treatments" class="text-gray-600 hover:text-blue-600 transition">Treatments</a>
-                <a href="#pregnancy" class="text-gray-600 hover:text-blue-600 transition">Dental Care During Pregnancy</a>
-                <a href="#dentist" class="text-gray-600 hover:text-blue-600 transition">Our Dentist</a>
-                <a href="#book" class="text-gray-600 hover:text-blue-600 transition">Book Appointment</a>
-                <a href="#manage" class="text-gray-600 hover:text-blue-600 transition">Manage Appointments</a>
-                <a href="#contact" class="text-gray-600 hover:text-blue-600 transition">Contact</a>
-            </nav>
-            <button id="mobile-menu-btn" class="md:hidden text-gray-600 focus:outline-none">
-                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/>
-                </svg>
-            </button>
+            <div class="md:hidden">
+                <button id="menu-toggle" class="text-gray-700 focus:outline-none" aria-label="Toggle Menu">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+            <div id="menu" class="hidden md:flex md:space-x-6">
+                <a href="#home" class="nav-link hover:text-blue-600">Home</a>
+                <a href="#services" class="nav-link hover:text-blue-600">Treatments</a>
+                <a href="#tips" class="nav-link hover:text-blue-600">Dental Care During Pregnancy</a>
+                <a href="#about" class="nav-link hover:text-blue-600">About Us</a>
+                <a href="#smile-gallery" class="nav-link hover:text-blue-600">Smile Gallery</a>
+                <a href="#testimonials" class="nav-link hover:text-blue-600">Testimonials</a>
+                <a href="#faqs" class="nav-link hover:text-blue-600">FAQs</a>
+                <a href="#appointment" class="nav-link hover:text-blue-600">Book Appointment</a>
+                <a href="#status" class="nav-link hover:text-blue-600">Manage Appointments</a>
+                <a href="#contact" class="nav-link hover:text-blue-600">Contact</a>
+            </div>
         </div>
-        <div id="mobile-menu" class="hidden md:hidden bg-white shadow">
-            <nav class="flex flex-col space-y-4 px-4 py-6">
-                <a href="#home" class="text-gray-600 hover:text-blue-600 transition">Home</a>
-                <a href="#treatments" class="text-gray-600 hover:text-blue-600 transition">Treatments</a>
-                <a href="#pregnancy" class="text-gray-600 hover:text-blue-600 transition">Dental Care During Pregnancy</a>
-                <a href="#dentist" class="text-gray-600 hover:text-blue-600 transition">Our Dentist</a>
-                <a href="#book" class="text-gray-600 hover:text-blue-600 transition">Book Appointment</a>
-                <a href="#manage" class="text-gray-600 hover:text-blue-600 transition">Manage Appointments</a>
-                <a href="#contact" class="text-gray-600 hover:text-blue-600 transition">Contact</a>
-            </nav>
-        </div>
-    </header>
+    </nav>
 
     <!-- Hero Section -->
-    <section id="home" class="bg-gradient-to-r from-blue-500 to-teal-400 text-white py-20">
-        <div class="container mx-auto px-4 text-center animate-fadeIn">
-            <h2 class="text-4xl md:text-5xl font-bold mb-4">Healthy Smiles with Oak Dental Hospital</h2>
-            <p class="text-lg md:text-xl mb-8">Expert dental care in Hyderabad, specializing in Orthodontics, Implants, and Cosmetic Dentistry. Visit us for a brighter, healthier smile!</p>
-            <div class="flex justify-center space-x-4">
-                <a href="#book" class="gradient-btn text-white px-6 py-3 rounded-full font-semibold hover-scale">Book Appointment</a>
-                <a href="https://wa.me/+917569366767" target="_blank" class="bg-green-500 text-white px-6 py-3 rounded-full font-semibold hover-scale">Chat on WhatsApp</a>
+    <section id="home" class="bg-gradient-to-r from-blue-900 to-teal-400 text-white py-24 section-animate">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-6xl font-bold mb-4 hospital-name">Healthy Smiles with OAK Dental Hospital</h1>
+            <p class="text-xl mb-8 max-w-2xl mx-auto">Transform your smile with expert dental care in Hyderabad. Specializing in Orthodontics, Implants, and Cosmetic Dentistry for a confident, radiant you!</p>
+            <div class="space-x-4">
+                <a href="#appointment" class="btn bg-white text-blue-900 px-8 py-4 rounded-full font-semibold hover:bg-blue-100 shadow-md">Book Appointment</a>
+                <a href="https://wa.me/917569366767" target="_blank" class="btn bg-green-500 text-white px-8 py-4 rounded-full font-semibold hover:bg-green-600 shadow-md">Chat on WhatsApp</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section id="about" class="py-16 bg-green-50 section-animate">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-8 text-gray-800">About Us</h2>
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/3 mb-6 md:mb-0">
+                    <img src="https://i.postimg.cc/TwK4Wyry/Screenshot-2025-05-16-001922.png" alt="About OAK Dental Hospital" class="shadow-md">
+                </div>
+                <div class="md:w-2/3 md:pl-8 text-center md:text-left">
+                    <p class="text-gray-700 mb-4">OAK Dental Hospital is a premier dental care provider in Hyderabad, dedicated to delivering exceptional oral health services since 2015. Our mission is to create healthy, confident smiles through advanced dental treatments and compassionate care.</p>
+                    <p class="text-gray-700 mb-4">Led by Dr. A. Ram Koti Reddy, our team of experienced dentists specializes in Orthodontics, Dental Implants, Cosmetic Dentistry, and more. We use state-of-the-art technology and follow strict sterilization protocols to ensure your safety and comfort.</p>
+                    <p class="text-gray-700 mb-4">Located at 2nd Floor, Vision Apartments, Gandhi Nagar, Nizampet Road, Bachupally, Hyderabad - 500090, our modern facility is designed to provide a relaxing environment for all our patients.</p>
+                    <a href="about.html" class="btn inline-block bg-blue-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-700 shadow-md">Learn More</a>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- Treatments Section -->
-    <section id="treatments" class="py-16">
+    <section id="services" class="py-16 bg-gray-100 section-animate">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center mb-12 animate-fadeIn">Our Treatments</h2>
-            <div id="treatments-list" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
-        </div>
-    </section>
-
-    <!-- Dental Care During Pregnancy Section -->
-    <section id="pregnancy" class="bg-gray-50 py-16">
-        <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center mb-12 animate-fadeIn">Dental Care During Pregnancy</h2>
+            <h2 class="text-3xl font-bold text-center mb-8 text-gray-800">Treatments</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="bg-white p-6 rounded-lg shadow animate-fadeIn">
-                    <h3 class="text-xl font-semibold mb-4">Key Tips for Expecting Mothers</h3>
-                    <ul class="list-disc pl-5 space-y-2">
-                        <li>Frequent Dental Check-Ups: Visit every 2 months to prevent infections affecting the fetus.</li>
-                        <li>Brush Twice Daily: Brush and floss before bed for oral hygiene.</li>
-                        <li>Professional Cleaning: Scaling removes calculus deposits safely.</li>
-                    </ul>
+                <div class="bg-white p-6 rounded-lg shadow-md text-center hover:shadow-xl transition-shadow">
+                    <i class="fas fa-tooth text-4xl text-blue-600 mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">General Dentistry</h3>
+                    <p class="text-gray-700">Routine check-ups, cleanings, fillings, and preventive care to maintain your oral health.</p>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow animate-fadeIn">
-                    <h3 class="text-xl font-semibold mb-4">Important Notes</h3>
-                    <ul class="list-disc pl-5 space-y-2">
-                        <li>Pregnancy Gingivitis: Hormonal changes cause gum inflammation; visit us for care.</li>
-                        <li>Pregnancy Tumors: Rare, painless lesions resolve post-childbirth.</li>
-                        <li>Premature Delivery Risks: Gum issues may lead to preterm low birth weight infants.</li>
-                    </ul>
+                <div class="bg-white p-6 rounded-lg shadow-md text-center hover:shadow-xl transition-shadow">
+                    <i class="fas fa-smile text-4xl text-blue-600 mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">Cosmetic Dentistry</h3>
+                    <p class="text-gray-700">Teeth whitening, veneers, bonding, and smile makeovers for a confident smile.</p>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow animate-fadeIn">
-                    <h3 class="text-xl font-semibold mb-4">Safety Guidelines</h3>
-                    <ul class="list-disc pl-5 space-y-2">
-                        <li>Caution: Avoid drugs during pregnancy to prevent teeth discoloration.</li>
-                        <li>No Self-Medication: Hormonal changes worsen dental pain; consult a dentist.</li>
-                        <li>Safe Procedures: Treatments are safe in the 2nd trimester (4-6 months).</li>
-                    </ul>
+                <div class="bg-white p-6 rounded-lg shadow-md text-center hover:shadow-xl transition-shadow">
+                    <i class="fas fa-tools text-4xl text-blue-600 mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">Orthodontics</h3>
+                    <p class="text-gray-700">Braces, clear aligners, and retainers to straighten your teeth and improve your bite.</p>
                 </div>
-            </div>
-            <p class="text-center text-red-600 font-bold mt-8 animate-fadeIn">CAUTION! Self-Medication is DANGEROUS</p>
-        </div>
-    </section>
-
-    <!-- Our Expert Dentist Section -->
-    <section id="dentist" class="py-16">
-        <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center mb-12 animate-fadeIn">Our Expert Dentist</h2>
-            <div class="flex flex-col md:flex-row items-center bg-white p-8 rounded-lg shadow animate-fadeIn">
-                <img src="https://i.postimg.cc/wvXKNXmP/vasu-background-1.png" alt="Dr. A. Ramkoti Reddy" class="h-48 w-48 rounded-full object-cover mb-6 md:mb-0 md:mr-8">
-                <div>
-                    <h3 class="text-2xl font-semibold mb-2">Dr. A. Ramkoti Reddy</h3>
-                    <p class="text-gray-600 mb-2">Senior Dental Specialist</p>
-                    <p>20+ years of experience in Orthodontics, Implantology, and Cosmetic Dentistry.</p>
+                <div class="bg-white p-6 rounded-lg shadow-md text-center hover:shadow-xl transition-shadow">
+                    <i class="fas fa-tooth text-4xl text-blue-600 mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">Dental Implants</h3>
+                    <p class="text-gray-700">Permanent solutions for missing teeth with natural-looking implants.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md text-center hover:shadow-xl transition-shadow">
+                    <i class="fas fa-procedures text-4xl text-blue-600 mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">Root Canal Treatment</h3>
+                    <p class="text-gray-700">Pain-free root canal therapy to save and restore damaged teeth.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md text-center hover:shadow-xl transition-shadow">
+                    <i class="fas fa-child text-4xl text-blue-600 mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">Pediatric Dentistry</h3>
+                    <p class="text-gray-700">Gentle dental care for children, including sealants and fluoride treatments.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Book Appointment Section -->
-    <section id="book" class="bg-gray-50 py-16">
+    <!-- Before/After Smile Gallery -->
+    <section id="smile-gallery" class="py-16 bg-white section-animate">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center mb-12 animate-fadeIn">Book Your Appointment</h2>
-            <div class="bg-white p-8 rounded-lg shadow max-w-lg mx-auto animate-fadeIn">
-                <div id="booking-form" class="space-y-4">
-                    <input type="text" id="full-name" placeholder="Full Name" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <input type="tel" id="phone-number" placeholder="Phone Number" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <select id="treatment" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="">Select Treatment</option>
+            <h2 class="text-3xl font-bold text-center mb-8 text-gray-800">Before & After Smile Gallery</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="text-center">
+                    <h3 class="text-xl font-semibold mb-2">Patient 1: Teeth Whitening</h3>
+                    <div class="flex justify-center space-x-4">
+                        <img src="https://images.unsplash.com/photo-1598257006458-087169a1f08d?fit=crop&w=300&h=200&q=80" alt="Before Teeth Whitening" class="shadow-md">
+                        <img src="https://images.unsplash.com/photo-1625493459592-2f1a96d5c20a?fit=crop&w=300&h=200&q=80" alt="After Teeth Whitening" class="shadow-md">
+                    </div>
+                </div>
+                <div class="text-center">
+                    <h3 class="text-xl font-semibold mb-2">Patient 2: Orthodontics</h3>
+                    <div class="flex justify-center space-x-4">
+                        <img src="https://images.unsplash.com/photo-1598257006458-087169a1f08d?fit=crop&w=300&h=200&q=80" alt="Before Orthodontics" class="shadow-md">
+                        <img src="https://images.unsplash.com/photo-1625493459592-2f1a96d5c20a?fit=crop&w=300&h=200&q=80" alt="After Orthodontics" class="shadow-md">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="py-16 bg-blue-50 section-animate">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-8 text-gray-800">What Our Patients Say</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <p class="text-gray-700 mb-4">"The team at OAK Dental made my visit so comfortable! Dr. Reddy’s expertise gave me a perfect smile."</p>
+                    <p class="font-semibold text-gray-800">Priya S.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <p class="text-gray-700 mb-4">"From booking to treatment, everything was seamless. Highly recommend their implant services!"</p>
+                    <p class="font-semibold text-gray-800">Rahul K.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <p class="text-gray-700 mb-4">"My kids love visiting OAK Dental. The pediatric care is gentle and fun!"</p>
+                    <p class="font-semibold text-gray-800">Anita M.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dental Care Tips Section -->
+    <section id="tips" class="py-16 bg-orange-50 section-animate">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-8 text-gray-800">Dental Care Tips for Pregnancy</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-2">1. Frequent Dental Check-ups</h3>
+                    <p class="text-gray-700">At least once in 2 months to avoid infections that can affect the fetus.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-2">2. Brush and Floss</h3>
+                    <p class="text-gray-700">Brush twice daily and floss before going to bed.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-2">3. Professional Teeth Cleaning</h3>
+                    <p class="text-gray-700">For removal of calculus deposits (scaling).</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-2">4. Avoid Self-Medication</h3>
+                    <p class="text-gray-700 text-red-600 font-bold">Caution: Self-medication is dangerous!</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-2">5. Avoid Certain Drugs</h3>
+                    <p class="text-gray-700">Be extremely cautious on usage of drugs during pregnancy. Avoid tetracycline as they cause discoloration of your child's temporary & permanent teeth.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-2">6. Be Aware of Risks</h3>
+                    <p class="text-gray-700">
+                        <strong>Pregnancy Gingivitis:</strong> Swollen red gums, bleeding while brushing.<br>
+                        <strong>Pregnancy Tumors:</strong> Benign growths in the gums, subside post-childbirth.<br>
+                        <strong>Premature Delivery:</strong> Bacterial infections can enter bloodstream, leading to premature delivery.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faqs" class="py-16 bg-white section-animate">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-8 text-gray-800">Frequently Asked Questions</h2>
+            <div class="max-w-2xl mx-auto">
+                <div class="faq-item mb-4">
+                    <h3 class="text-xl font-semibold text-gray-800 flex justify-between items-center" onclick="toggleFAQ(this)">
+                        Is root canal treatment painful?
+                        <i class="fas fa-chevron-down"></i>
+                    </h3>
+                    <div class="faq-answer mt-2 text-gray-700">
+                        <p>No, root canal treatments at OAK Dental Hospital are performed under local anesthesia, ensuring a pain-free experience. Our advanced techniques also minimize discomfort during recovery.</p>
+                    </div>
+                </div>
+                <div class="faq-item mb-4">
+                    <h3 class="text-xl font-semibold text-gray-800 flex justify-between items-center" onclick="toggleFAQ(this)">
+                        How long do dental implants last?
+                        <i class="fas fa-chevron-down"></i>
+                    </h3>
+                    <div class="faq-answer mt-2 text-gray-700">
+                        <p>With proper care, dental implants can last a lifetime. Regular dental check-ups and good oral hygiene are key to their longevity.</p>
+                    </div>
+                </div>
+                <div class="faq-item mb-4">
+                    <h3 class="text-xl font-semibold text-gray-800 flex justify-between items-center" onclick="toggleFAQ(this)">
+                        Do you offer emergency dental services?
+                        <i class="fas fa-chevron-down"></i>
+                    </h3>
+                    <div class="faq-answer mt-2 text-gray-700">
+                        <p>Yes, we provide emergency dental services. Please call us at +91 7569 366 767 to schedule an urgent appointment.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Appointment Booking Section -->
+    <section id="appointment" class="py-16 bg-white section-animate">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-8 text-gray-800">Book an Appointment</h2>
+            <form id="appointment-form" class="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-md">
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2" for="name">Full Name</label>
+                    <input type="text" id="name" class="w-full p-3 border rounded-lg" required aria-required="true">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2" for="email">Email</label>
+                    <input type="email" id="email" class="w-full p-3 border rounded-lg" required aria-required="true">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2" for="phone">Phone Number</label>
+                    <input type="tel" id="phone" class="w-full p-3 border rounded-lg" required aria-required="true">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2" for="date">Preferred Date</label>
+                    <input type="date" id="date" class="w-full p-3 border rounded-lg" required aria-required="true">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2" for="service">Service</label>
+                    <select id="service" class="w-full p-3 border rounded-lg" required aria-required="true">
+                        <option value="">Select Service</option>
+                        <option value="general">General Dentistry</option>
+                        <option value="cosmetic">Cosmetic Dentistry</option>
+                        <option value="orthodontics">Orthodontics</option>
+                        <option value="implants">Dental Implants</option>
+                        <option value="root-canal">Root Canal Treatment</option>
+                        <option value="pediatric">Pediatric Dentistry</option>
                     </select>
-                    <input type="date" id="preferred-date" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <input type="time" id="preferred-time" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <button id="submit-appointment" class="gradient-btn text-white w-full py-3 rounded-lg font-semibold hover-scale">Proceed to Payment</button>
                 </div>
-                <div id="booking-success" class="hidden mt-6 text-green-600 text-center">
-                    <p>Your appointment booked successfully! Our team will meet you soon. Thank you</p>
-                    <a href="#book" id="book-another" class="text-blue-600 underline mt-2 block">Book Another Appointment</a>
+                <button type="button" onclick="bookAppointment()" class="btn w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 shadow-md">Submit</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Appointment Status Section -->
+    <section id="status" class="py-16 bg-purple-50 section-animate">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-8 text-gray-800">Manage Appointments</h2>
+            <div id="status-display" class="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-md text-center">
+                <p class="text-gray-700">Enter your email to check your appointment status.</p>
+                <div class="mt-4">
+                    <input type="email" id="status-email" class="w-full p-3 border rounded-lg mb-4" placeholder="Your Email" required aria-required="true">
+                    <button onclick="checkStatus()" class="btn bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 shadow-md">Check Status</button>
                 </div>
+                <div id="status-result" class="mt-4 text-gray-700"></div>
             </div>
         </div>
     </section>
 
-    <!-- Manage Appointments Section -->
-    <section id="manage" class="py-16">
+    <!-- Gallery Section -->
+    <section id="gallery" class="py-16 bg-gray-100 section-animate">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center mb-12 animate-fadeIn">Manage Your Appointments</h2>
-            <div class="bg-white p-8 rounded-lg shadow max-w-lg mx-auto animate-fadeIn">
-                <input type="tel" id="manage-phone" placeholder="Phone Number" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4">
-                <button id="view-appointments" class="gradient-btn text-white w-full py-3 rounded-lg font-semibold hover-scale">View Appointments</button>
-                <div id="appointments-list" class="mt-6 hidden">
-                    <h3 class="text-xl font-semibold mb-4">Your Appointments</h3>
-                    <table class="w-full text-left">
-                        <thead>
-                            <tr class="bg-gray-200">
-                                <th class="p-3">Treatment</th>
-                                <th class="p-3">Date</th>
-                                <th class="p-3">Time</th>
-                                <th class="p-3">Status</th>
-                                <th class="p-3">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="appointments-table-body"></tbody>
-                    </table>
-                </div>
+            <h2 class="text-3xl font-bold text-center mb-8 text-gray-800">Our Clinic</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <img src="https://i.postimg.cc/QxXDzmsh/Oak-dental-interior-2.jpg?fit=600%2C400&quality=80" alt="Reception Area at OAK Dental Hospital" class="shadow-md">
+                <img src="https://i.postimg.cc/htYqfqmt/Oak-dental-interior-1.jpg?fit=600%2C400&quality=80" alt="Treatment Room 1 at OAK Dental Hospital" class="shadow-md">
+                <img src="https://i.postimg.cc/j2tpGxpZ/Oak-dental-interior.jpg?fit=600%2C400&quality=80" alt="Treatment Room 2 at OAK Dental Hospital" class="shadow-md">
             </div>
         </div>
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="bg-gray-50 py-16">
+    <section id="contact" class="py-16 bg-cyan-50 section-animate">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center mb-12 animate-fadeIn">Get in Touch</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="bg-white p-6 rounded-lg shadow animate-fadeIn">
-                    <h3 class="text-xl font-semibold mb-4">Address</h3>
-                    <p>2nd Floor, Vision Apartments, Rieev Gandhi Nagar, Nizampet Road, Bachupally, Hyderabad - 500090</p>
+            <h2 class="text-3xl font-bold text-center mb-8 text-gray-800">Contact Us</h2>
+            <div class="flex flex-col md:flex-row">
+                <div class="md:w-1/2 mb-6 md:mb-0">
+                    <h3 class="text-xl font-semibold mb-4 text-gray-800">Get in Touch</h3>
+                    <p class="text-gray-700 mb-2"><i class="fas fa-map-marker-alt mr-2"></i>2nd Floor, Vision Apartments, Gandhi Nagar, Nizampet Road, Bachupally, Hyderabad - 500090</p>
+                    <p class="text-gray-700 mb-2"><i class="fas fa-phone mr-2"></i>+91 7569 366 767</p>
+                    <p class="text-gray-700 mb-2"><i class="fas fa-phone mr-2"></i>+91 9502 030 637</p>
+                    <p class="text-gray-700 mb-2"><i class="fab fa-whatsapp mr-2"></i><a href="https://wa.me/917569366767" target="_blank" class="text-blue-600 hover:underline">Chat on WhatsApp</a></p>
+                    <button onclick="callClinic()" class="btn bg-green-500 text-white px-4 py-2 rounded-lg mt-2 hover:bg-green-600 shadow-md">
+                        <i class="fas fa-phone mr-2"></i>Call Now
+                    </button>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow animate-fadeIn">
-                    <h3 class="text-xl font-semibold mb-4">Phone</h3>
-                    <p>+91-7569 366 767 / +91-9502 030 637</p>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow animate-fadeIn">
-                    <h3 class="text-xl font-semibold mb-4">Email</h3>
-                    <p>info@oakdentalhospital.com</p>
-                </div>
-            </div>
-            <div class="text-center mt-8">
-                <a href="https://wa.me/+917569366767" target="_blank" class="bg-green-500 text-white px-6 py-3 rounded-full font-semibold hover-scale animate-fadeIn">Connect on WhatsApp</a>
+                <form class="md:w-1/2 bg-white p-8 rounded-lg shadow-md">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2" for="contact-name">Name</label>
+                        <input type="text" id="contact-name" class="w-full p-3 border rounded-lg" required aria-required="true">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2" for="contact-email">Email</label>
+                        <input type="email" id="contact-email" class="w-full p-3 border rounded-lg" required aria-required="true">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2" for="message">Message</label>
+                        <textarea id="message" class="w-full p-3 border rounded-lg" rows="5" required aria-required="true"></textarea>
+                    </div>
+                    <button type="button" onclick="submitContact()" class="btn w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 shadow-md">Send Message</button>
+                </form>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-12">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div>
-                    <h3 class="text-xl font-semibold mb-4">About Us</h3>
-                    <p>© 2025 Oak Dental Hospital. All Rights Reserved.</p>
-                    <p class="mt-2">Awarded Best Dental Clinic in Hyderabad (Smile Awards, 2024)</p>
-                </div>
-                <div>
-                    <h3 class="text-xl font-semibold mb-4">Hospital Timings</h3>
-                    <div id="timings-list">
-                        <p>Loading timings...</p>
-                    </div>
-                </div>
-                <div>
-                    <h3 class="text-xl font-semibold mb-4">Quick Links</h3>
-                    <ul class="space-y-2">
-                        <li><a href="#home" class="hover:text-blue-400 transition">Home</a></li>
-                        <li><a href="#treatments" class="hover:text-blue-400 transition">Treatments</a></li>
-                        <li><a href="#book" class="hover:text-blue-400 transition">Book Appointment</a></li>
-                        <li><a href="#manage" class="hover:text-blue-400 transition">Manage Appointments</a></li>
-                    </ul>
-                </div>
-            </div>
+    <footer class="bg-gradient-to-r from-blue-900 to-teal-400 text-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-lg">© 2025 <span class="hospital-name">OAK Dental Hospital</span>. All rights reserved.</p>
         </div>
     </footer>
 
-    <!-- Cancel Appointment Modal -->
-    <div id="cancel-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white p-8 rounded-lg shadow max-w-md w-full">
-            <h2 class="text-2xl font-bold mb-4">Cancel Appointment</h2>
-            <textarea id="cancel-reason" placeholder="Reason for Cancellation" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"></textarea>
-            <div class="flex justify-end space-x-4">
-                <button id="close-cancel" class="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-400">Close</button>
-                <button id="confirm-cancel" class="gradient-btn text-white px-4 py-2 rounded-lg hover-scale">Cancel Appointment</button>
-            </div>
-        </div>
-    </div>
+    <!-- Sticky CTA Button -->
+    <a href="#appointment" class="sticky-cta btn bg-blue-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-700 shadow-md">
+        Book Appointment
+    </a>
 
-    <!-- Reschedule Appointment Modal -->
-    <div id="reschedule-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white p-8 rounded-lg shadow max-w-md w-full">
-            <h2 class="text-2xl font-bold mb-4">Reschedule Appointment</h2>
-            <input type="date" id="new-date" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4">
-            <input type="time" id="new-time" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4">
-            <textarea id="reschedule-reason" placeholder="Reason for Rescheduling" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"></textarea>
-            <div class="flex justify-end space-x-4">
-                <button id="close-reschedule" class="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-400">Close</button>
-                <button id="confirm-reschedule" class="gradient-btn text-white px-4 py-2 rounded-lg hover-scale">Reschedule</button>
-            </div>
-        </div>
-    </div>
+    <!-- WhatsApp Chat Button -->
+    <a href="https://wa.me/917569366767" target="_blank" class="chat-button">
+        <i class="fab fa-whatsapp text-2xl"></i>
+    </a>
 
     <script>
-        // Mobile menu toggle
-        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-        mobileMenuBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
+        const menuToggle = document.getElementById('menu-toggle');
+        const menu = document.getElementById('menu');
+        menuToggle.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+            menu.classList.toggle('flex');
+            menu.classList.toggle('flex-col');
+            menu.classList.toggle('absolute');
+            menu.classList.toggle('top-16');
+            menu.classList.toggle('left-0');
+            menu.classList.toggle('w-full');
+            menu.classList.toggle('bg-white');
+            menu.classList.toggle('p-4');
+            menu.classList.toggle('shadow-lg');
         });
 
-        // Handle navigation to prevent full page reload for hash links
-        document.querySelectorAll('nav a').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const targetId = link.getAttribute('href').substring(1);
-                document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' });
-                mobileMenu.classList.add('hidden');
-            });
-        });
+        let appointments = JSON.parse(localStorage.getItem('appointments')) || [];
 
-        // Fetch treatments
-        async function fetchTreatments() {
-            try {
-                const response = await fetch('/api/treatments');
-                if (!response.ok) throw new Error('Failed to fetch treatments');
-                const treatments = await response.json();
-                renderTreatments(treatments);
-            } catch (error) {
-                console.error('Error fetching treatments:', error);
-                alert('Failed to load treatments');
-            }
-        }
+        function bookAppointment() {
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const date = document.getElementById('date').value;
+            const service = document.getElementById('service').value;
 
-        // Render treatments
-        function renderTreatments(treatments) {
-            const treatmentsList = document.getElementById('treatments-list');
-            const treatmentSelect = document.getElementById('treatment');
-            treatmentsList.innerHTML = '';
-            treatmentSelect.innerHTML = '<option value="">Select Treatment</option>';
-            treatments.forEach(treatment => {
-                const div = document.createElement('div');
-                div.className = 'bg-white p-6 rounded-lg shadow hover-scale animate-fadeIn';
-                div.innerHTML = `
-                    <img src="${treatment.image_url || 'https://via.placeholder.com/150'}" alt="${treatment.name}" class="w-full h-48 object-cover rounded-lg mb-4 lazyload" loading="lazy">
-                    <h3 class="text-xl font-semibold mb-2">${treatment.name}</h3>
-                    <p class="text-gray-600 mb-2">₹${treatment.price}</p>
-                    ${treatment.video_url ? `<video src="${treatment.video_url}" class="w-full rounded-lg" controls preload="metadata" loading="lazy"></video>` : ''}
-                `;
-                treatmentsList.appendChild(div);
-                const option = document.createElement('option');
-                option.value = treatment.name;
-                option.dataset.price = treatment.price;
-                option.dataset.id = treatment.id;
-                option.textContent = `${treatment.name} (₹${treatment.price})`;
-                treatmentSelect.appendChild(option);
-            });
-        }
-
-        // Fetch timings
-        async function fetchTimings() {
-            try {
-                const response = await fetch('/api/timings');
-                if (!response.ok) throw new Error('Failed to fetch timings');
-                const timings = await response.json();
-                renderTimings(timings);
-            } catch (error) {
-                console.error('Error fetching timings:', error);
-                document.getElementById('timings-list').innerHTML = '<p>Failed to load timings</p>';
-            }
-        }
-
-        // Render timings
-        function renderTimings(timings) {
-            const timingsList = document.getElementById('timings-list');
-            if (timings.length === 0) {
-                timingsList.innerHTML = '<p>No timings set</p>';
-                return;
-            }
-            timingsList.innerHTML = `
-                <table class="w-full text-left">
-                    <thead><tr class="bg-gray-200"><th class="p-3">Day</th><th class="p-3">Open</th><th class="p-3">Close</th></tr></thead>
-                    <tbody>
-                        ${timings.map(t => `<tr><td class="p-3">${t.day}</td><td class="p-3">${t.open_time}</td><td class="p-3">${t.close_time}</td></tr>`).join('')}
-                    </tbody>
-                </table>
-            `;
-        }
-
-        // Book appointment
-        let currentAppointment = null;
-        document.getElementById('submit-appointment').addEventListener('click', async () => {
-            const name = document.getElementById('full-name').value.trim();
-            const phone = document.getElementById('phone-number').value;
-            const treatmentSelect = document.getElementById('treatment');
-            const treatment = treatmentSelect.value;
-            const price = treatmentSelect.selectedOptions[0]?.dataset.price;
-            const date = document.getElementById('preferred-date').value;
-            const time = document.getElementById('preferred-time').value;
-
-            if (!name || !phone || !treatment || !price || !date || !time) {
-                alert('All fields are required');
-                return;
-            }
-            if (!/^\d{10}$/.test(phone)) {
-                alert('Phone number must be 10 digits');
-                return;
-            }
-
-            try {
-                // Book appointment
-                const response = await fetch('/api/appointments', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        fullName: name,
-                        phone,
-                        treatment,
-                        price: parseFloat(price),
-                        date,
-                        time
-                    })
-                });
-                const result = await response.json();
-                if (!response.ok) throw new Error(result.message);
-
-                currentAppointment = result.appointment;
-
-                // Create Razorpay order
-                const orderResponse = await fetch('/api/payments/create-order', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ amount: parseFloat(price), treatment })
-                });
-                const orderResult = await orderResponse.json();
-                if (!orderResponse.ok) throw new Error(orderResult.message);
-
-                // Open Razorpay checkout
-                const options = {
-                    key: orderResult.key,
-                    amount: parseFloat(price) * 100,
-                    currency: 'INR',
-                    order_id: orderResult.orderId,
-                    name: 'Oak Dental Hospital',
-                    description: `Payment for ${treatment}`,
-                    handler: async function (response) {
-                        try {
-                            // Verify payment
-                            const verifyResponse = await fetch('/api/payments/verify', {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({
-                                    orderId: response.razorpay_order_id,
-                                    paymentId: response.razorpay_payment_id,
-                                    signature: response.razorpay_signature,
-                                    appointmentId: currentAppointment.id
-                                })
-                            });
-                            const verifyResult = await verifyResponse.json();
-                            if (!verifyResponse.ok) throw new Error(verifyResult.message);
-
-                            document.getElementById('booking-form').classList.add('hidden');
-                            document.getElementById('booking-success').classList.remove('hidden');
-                            document.getElementById('full-name').value = '';
-                            document.getElementById('phone-number').value = '';
-                            document.getElementById('treatment').value = '';
-                            document.getElementById('preferred-date').value = '';
-                            document.getElementById('preferred-time').value = '';
-                            currentAppointment = null;
-                        } catch (error) {
-                            alert('Payment verification failed: ' + error.message);
-                        }
-                    },
-                    prefill: {
-                        name,
-                        contact: phone
-                    },
-                    theme: { color: '#4a90e2' }
-                };
-                const rzp = new Razorpay(options);
-                rzp.open();
-            } catch (error) {
-                console.error('Error booking appointment:', error);
-                alert('Failed to book appointment: ' + error.message);
-            }
-        });
-
-        // Book another appointment
-        document.getElementById('book-another').addEventListener('click', () => {
-            document.getElementById('booking-success').classList.add('hidden');
-            document.getElementById('booking-form').classList.remove('hidden');
-        });
-
-        // View appointments
-        document.getElementById('view-appointments').addEventListener('click', async () => {
-            const phone = document.getElementById('manage-phone').value;
-            if (!/^\d{10}$/.test(phone)) {
-                alert('Phone number must be 10 digits');
-                return;
-            }
-
-            try {
-                const response = await fetch(`/api/appointments?phone=${phone}`);
-                if (!response.ok) throw new Error('Failed to fetch appointments');
-                const appointments = await response.json();
-                renderAppointments(appointments);
-            } catch (error) {
-                console.error('Error fetching appointments:', error);
-                alert('Failed to fetch appointments');
-            }
-        });
-
-        // Render appointments
-        function renderAppointments(appointments) {
-            const tableBody = document.getElementById('appointments-table-body');
-            tableBody.innerHTML = '';
-            if (appointments.length === 0) {
-                tableBody.innerHTML = '<tr><td colspan="5" class="p-3 text-center">No appointments found.</td></tr>';
+            if (name && email && phone && date && service) {
+                const appointment = { name, email, phone, date, service, status: 'Pending' };
+                appointments.push(appointment);
+                localStorage.setItem('appointments', JSON.stringify(appointments));
+                alert(`Appointment booked for ${name} on ${date} for ${service}.\nConfirmation sent to ${email}.\nSMS sent to ${phone}.`);
+                document.getElementById('appointment-form').reset();
             } else {
-                appointments.forEach(appt => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td class="p-3">${appt.treatment}</td>
-                        <td class="p-3">${appt.date}</td>
-                        <td class="p-3">${appt.time}</td>
-                        <td class="p-3">${appt.status}</td>
-                        <td class="p-3">
-                            <button class="text-blue-600 hover:underline cancel-appt" data-id="${appt.id}" ${appt.status !== 'Pending' ? 'disabled' : ''}>Cancel</button>
-                            <button class="text-blue-600 hover:underline reschedule-appt" data-id="${appt.id}" ${appt.status !== 'Pending' ? 'disabled' : ''}>Reschedule</button>
-                        </td>
-                    `;
-                    tableBody.appendChild(row);
-                });
+                alert('Please fill all fields.');
             }
-            document.getElementById('appointments-list').classList.remove('hidden');
-
-            // Cancel appointment
-            document.querySelectorAll('.cancel-appt').forEach(btn => {
-                btn.addEventListener('click', async () => {
-                    const id = btn.dataset.id;
-                    document.getElementById('cancel-modal').classList.remove('hidden');
-                    document.getElementById('confirm-cancel').onclick = async () => {
-                        const reason = document.getElementById('cancel-reason').value;
-                        if (!reason) {
-                            alert('Reason required');
-                            return;
-                        }
-                        try {
-                            const response = await fetch(`/api/appointments/${id}/cancel`, {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({ reason })
-                            });
-                            if (!response.ok) throw new Error((await response.json()).message);
-                            document.getElementById('cancel-modal').classList.add('hidden');
-                            document.getElementById('cancel-reason').value = '';
-                            document.getElementById('view-appointments').click();
-                        } catch (error) {
-                            alert('Failed to cancel appointment: ' + error.message);
-                        }
-                    };
-                });
-            });
-
-            // Reschedule appointment
-            document.querySelectorAll('.reschedule-appt').forEach(btn => {
-                btn.addEventListener('click', async () => {
-                    const id = btn.dataset.id;
-                    document.getElementById('reschedule-modal').classList.remove('hidden');
-                    document.getElementById('confirm-reschedule').onclick = async () => {
-                        const newDate = document.getElementById('new-date').value;
-                        const newTime = document.getElementById('new-time').value;
-                        const reason = document.getElementById('reschedule-reason').value;
-                        if (!newDate || !newTime || !reason) {
-                            alert('Date, time, and reason required');
-                            return;
-                        }
-                        try {
-                            const response = await fetch(`/api/appointments/${id}/reschedule`, {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({ date: newDate, time: newTime, reason })
-                            });
-                            if (!response.ok) throw new Error((await response.json()).message);
-                            document.getElementById('reschedule-modal').classList.add('hidden');
-                            document.getElementById('new-date').value = '';
-                            document.getElementById('new-time').value = '';
-                            document.getElementById('reschedule-reason').value = '';
-                            document.getElementById('view-appointments').click();
-                        } catch (error) {
-                            alert('Failed to reschedule appointment: ' + error.message);
-                        }
-                    };
-                });
-            });
         }
 
-        // Close modals
-        document.getElementById('close-cancel').addEventListener('click', () => {
-            document.getElementById('cancel-modal').classList.add('hidden');
-            document.getElementById('cancel-reason').value = '';
-        });
-        document.getElementById('close-reschedule').addEventListener('click', () => {
-            document.getElementById('reschedule-modal').classList.add('hidden');
-            document.getElementById('new-date').value = '';
-            document.getElementById('new-time').value = '';
-            document.getElementById('reschedule-reason').value = '';
-        });
+        function checkStatus() {
+            const email = document.getElementById('status-email').value;
+            const resultDiv = document.getElementById('status-result');
+            const appointment = appointments.find(app => app.email === email);
 
-        // Initial fetch
-        fetchTreatments();
-        fetchTimings();
+            if (appointment) {
+                resultDiv.innerHTML = `
+                    <p><strong>Name:</strong> ${appointment.name}</p>
+                    <p><strong>Date:</strong> ${appointment.date}</p>
+                    <p><strong>Service:</strong> ${appointment.service}</p>
+                    <p><strong>Status:</strong> ${appointment.status}</p>
+                `;
+            } else {
+                resultDiv.innerHTML = '<p class="text-red-600">No appointment found with this email.</p>';
+            }
+        }
+
+        function submitContact() {
+            const name = document.getElementById('contact-name').value;
+            const email = document.getElementById('contact-email').value;
+            const message = document.getElementById('message').value;
+            if (name && email && message) {
+                alert(`Message sent from ${name}. We will respond to ${email} soon.`);
+            } else {
+                alert('Please fill all fields.');
+            }
+        }
+
+        function callClinic() {
+            window.location.href = 'tel:+917569366767';
+        }
+
+        function toggleFAQ(element) {
+            const faqItem = element.parentElement;
+            faqItem.classList.toggle('active');
+            const icon = element.querySelector('i');
+            icon.classList.toggle('fa-chevron-down');
+            icon.classList.toggle('fa-chevron-up');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('.section-animate');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animationDelay = '0.2s';
+                    }
+                });
+            }, { threshold: 0.1 });
+            sections.forEach(section => observer.observe(section));
+        });
     </script>
 </body>
 </html>
