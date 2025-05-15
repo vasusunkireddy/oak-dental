@@ -6,17 +6,19 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "express": "^4.18.2",
-    "pg": "^8.11.3",
+    "@paypal/checkout-server-sdk": "^1.0.3",
+    "axios": "^1.9.0",
     "bcryptjs": "^2.4.3",
-    "jsonwebtoken": "^9.0.2",
-    "dotenv": "^16.3.1",
     "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "firebase-admin": "^13.4.0",
+    "jsonwebtoken": "^9.0.2",
     "multer": "^1.4.5-lts.1",
+    "pg": "^8.11.3",
     "razorpay": "^2.9.2"
   },
   "description": "Oak Dental Hospital is a web application for managing dental appointments, treatments, and hospital timings. It provides a user-facing interface for booking appointments and an admin panel for managing operations. Built with Node.js, Express, PostgreSQL, and Razorpay for payments, the app uses Tailwind CSS for styling and is inspired by Manya Dental's design.",
-  "devDependencies": {},
   "keywords": [],
   "author": "",
   "license": "ISC"

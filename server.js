@@ -7,7 +7,7 @@ const cors = require('cors');
 const path = require('path');
 const multer = require('multer');
 const fs = require('fs');
-const Razorpay = require('razorpay');
+const paypal = require('@paypal/checkout-server-sdk');
 
 dotenv.config();
 const app = express();
@@ -37,11 +37,12 @@ const pool = new Pool({
   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
 });
 
-// Razorpay Instance
-const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID,
-  key_secret: process.env.RAZORPAY_KEY_SECRET
-});
+// PayPal Setup (Sandbox environment for testing)
+const environment = new paypal.core.SandboxEnvironment(
+  process.env.PAYPAL_CLIENT_ID,
+  process.env.PAYPAL_CLIENT_SECRET
+);
+const paypalClient = new paypal.core.PayPalHttpClient(environment);
 
 // Initialize Database
 async function initializeDatabase() {
@@ -118,53 +119,6 @@ const auth = async (req, res, next) => {
   }
 };
 
-// Payment Endpoints
-app.post('/api/payments/create-order', async (req, res) => {
-  const { amount, treatment } = req.body;
-  if (!amount || !treatment) return res.status(400).json({ message: 'Amount and treatment required' });
-
-  try {
-    const order = await razorpay.orders.create({
-      amount: amount * 100, // Convert to paise
-      currency: 'INR',
-      receipt: `receipt_${Date.now()}`,
-      notes: { treatment }
-    });
-    res.json({ orderId: order.id, key: process.env.RAZORPAY_KEY_ID });
-  } catch (error) {
-    console.error('Error creating Razorpay order:', error);
-    res.status(500).json({ message: 'Failed to create payment order' });
-  }
-});
-
-app.post('/api/payments/verify', async (req, res) => {
-  const { orderId, paymentId, signature, appointmentId } = req.body;
-  if (!orderId || !paymentId || !signature || !appointmentId) {
-    return res.status(400).json({ message: 'All payment details required' });
-  }
-
-  try {
-    const crypto = require('crypto');
-    const generatedSignature = crypto
-      .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
-      .update(`${orderId}|${paymentId}`)
-      .digest('hex');
-
-    if (generatedSignature === signature) {
-      await pool.query(
-        'UPDATE appointments SET payment_id = $1 WHERE id = $2',
-        [paymentId, appointmentId]
-      );
-      res.json({ message: 'Payment verified successfully' });
-    } else {
-      res.status(400).json({ message: 'Invalid payment signature' });
-    }
-  } catch (error) {
-    console.error('Error verifying payment:', error);
-    res.status(500).json({ message: 'Failed to verify payment' });
-  }
-});
-
 // Appointment Endpoints
 app.post('/api/appointments', async (req, res) => {
   const { fullName, phone, treatment, price, date, time } = req.body;
@@ -191,6 +145,24 @@ app.post('/api/appointments', async (req, res) => {
   } catch (error) {
     console.error('Error booking appointment:', error);
     res.status(500).json({ message: 'Failed to book appointment' });
+  }
+});
+
+app.put('/api/appointments/:id/payment', async (req, res) => {
+  const { id } = req.params;
+  const { payment_id } = req.body;
+  try {
+    const result = await pool.query(
+      'UPDATE appointments SET payment_id = $1 WHERE id = $2 RETURNING *',
+      [payment_id, id]
+    );
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'Appointment not found' });
+    }
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error('Error updating payment:', error);
+    res.status(500).json({ message: 'Failed to update payment', error: error.message });
   }
 });
 

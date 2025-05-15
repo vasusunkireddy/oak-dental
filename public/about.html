@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Learn more about OAK Dental Hospital in Hyderabad, our mission, team, facilities, and why patients choose us for their dental care needs.">
+    <meta name="keywords" content="OAK Dental Hospital, about us, dental care Hyderabad, dental team, facilities">
+    <meta name="author" content="OAK Dental Hospital">
+    <title>About OAK Dental Hospital</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        .logo-img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        @media (max-width: 768px) {
+            .logo-img {
+                width: 48px;
+                height: 48px;
+            }
+        }
+        .hospital-name {
+            background: linear-gradient(90deg, #1e3a8a, #facc15);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+            transition: transform 0.3s ease;
+        }
+        .hospital-name:hover {
+            transform: scale(1.05);
+        }
+        .nav-link, .btn {
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+        }
+        .nav-link:hover, .btn:hover {
+            transform: translateY(-2px);
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            object-fit: cover;
+            border-radius: 8px;
+            loading: lazy;
+        }
+        .section-animate {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body class="bg-blue-50 antialiased">
+    <!-- Navigation -->
+    <nav class="bg-white text-gray-700 shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <img src="https://i.postimg.cc/50vXRG8K/ram.jpg?fit=500%2C500&quality=80" alt="OAK Dental Hospital Logo" class="mr-2 logo-img">
+                <a href="index.html" class="text-2xl hospital-name">OAK Dental Hospital</a>
+            </div>
+            <div class="md:hidden">
+                <button id="menu-toggle" class="text-gray-700 focus:outline-none" aria-label="Toggle Menu">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+            <div id="menu" class="hidden md:flex md:space-x-6">
+                <a href="index.html" class="nav-link hover:text-blue-600">Home</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- About Us Detailed Section -->
+    <section class="py-16 bg-green-50 section-animate">
+        <div class="container mx-auto px-4">
+            <h1 class="text-4xl font-bold text-center mb-12 text-gray-800">About OAK Dental Hospital</h1>
+            
+            <!-- Introduction -->
+            <div class="mb-12">
+                <h2 class="text-2xl font-semibold mb-4 text-gray-800">Our Story</h2>
+                <p class="text-gray-700 mb-4">Founded in 2015, OAK Dental Hospital has grown to become one of Hyderabad’s most trusted dental care providers. Our journey began with a vision to make high-quality dental care accessible to everyone, combining advanced technology with a patient-first approach.</p>
+                <p class="text-gray-700 mb-4">Over the years, we’ve helped thousands of patients achieve healthier, more confident smiles through our comprehensive range of services, from routine check-ups to complex dental implants.</p>
+            </div>
+
+            <!-- Mission and Values -->
+            <div class="mb-12">
+                <h2 class="text-2xl font-semibold mb-4 text-gray-800">Our Mission & Values</h2>
+                <p class="text-gray-700 mb-4">At OAK Dental Hospital, our mission is to deliver exceptional dental care that enhances the overall well-being of our patients. We are guided by the following values:</p>
+                <ul class="list-disc list-inside text-gray-700 mb-4">
+                    <li><strong>Excellence:</strong> We strive for the highest standards in dental care.</li>
+                    <li><strong>Compassion:</strong> We treat every patient with empathy and respect.</li>
+                    <li><strong>Innovation:</strong> We embrace the latest dental technologies and techniques.</li>
+                    <li><strong>Integrity:</strong> We maintain transparency and trust in all our interactions.</li>
+                </ul>
+            </div>
+
+            <!-- Our Team -->
+            <div class="mb-12">
+                <h2 class="text-2xl font-semibold mb-4 text-gray-800">Meet Our Team</h2>
+                <div class="flex flex-col md:flex-row items-center mb-6">
+                    <img src="https://i.postimg.cc/ydX5XqD9/rahulkl-74ih0-1.jpg?fit=400%2C400&quality=80" alt="Dr. A. Ram Koti Reddy" class="w-48 h-48 object-cover shadow-md mb-4 md:mb-0 md:mr-6">
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-800">Dr. A. Ram Koti Reddy, BDS, MDS</h3>
+                        <p class="text-gray-700">Prosthodontist & Implantologist, Reg. No: A19677</p>
+                        <p class="text-gray-700 mt-2">With over 15 years of experience, Dr. Reddy leads our team with expertise in prosthodontics and dental implants, ensuring every patient receives personalized, top-quality care.</p>
+                    </div>
+                </div>
+                <p class="text-gray-700">Our team also includes skilled orthodontists, pediatric dentists, and support staff who work together to provide a seamless and comfortable experience for every patient.</p>
+            </div>
+
+            <!-- Facilities -->
+            <div class="mb-12">
+                <h2 class="text-2xl font-semibold mb-4 text-gray-800">Our Facilities</h2>
+                <p class="text-gray-700 mb-4">Our state-of-the-art facility in Hyderabad is equipped with the latest dental technology to ensure precise diagnoses and effective treatments. Some highlights include:</p>
+                <ul class="list-disc list-inside text-gray-700 mb-4">
+                    <li>Advanced digital X-ray and imaging systems.</li>
+                    <li>Sterile treatment rooms with strict hygiene protocols.</li>
+                    <li>Comfortable waiting areas with Wi-Fi and refreshments.</li>
+                    <li>Specialized pediatric dentistry rooms for children.</li>
+                </ul>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <img src="https://i.postimg.cc/QxXDzmsh/Oak-dental-interior-2.jpg?fit=600%2C400&quality=80" alt="Reception Area at OAK Dental Hospital" class="shadow-md">
+                    <img src="https://i.postimg.cc/htYqfqmt/Oak-dental-interior-1.jpg?fit=600%2C400&quality=80" alt="Treatment Room at OAK Dental Hospital" class="shadow-md">
+                </div>
+            </div>
+
+            <!-- Certifications and Awards -->
+            <div class="mb-12">
+                <h2 class="text-2xl font-semibold mb-4 text-gray-800">Certifications & Awards</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                    <div>
+                        <i class="fas fa-certificate text-4xl text-blue-600 mb-2"></i>
+                        <p class="text-gray-700">ISO 9001:2015 Certified for Quality Management</p>
+                    </div>
+                    <div>
+                        <i class="fas fa-award text-4xl text-blue-600 mb-2"></i>
+                        <p class="text-gray-700">Best Dental Clinic in Hyderabad 2024</p>
+                    </div>
+                    <div>
+                        <i class="fas fa-shield-alt text-4xl text-blue-600 mb-2"></i>
+                        <p class="text-gray-700">Member of Indian Dental Association</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Why Choose Us -->
+            <div class="mb-12">
+                <h2 class="text-2xl font-semibold mb-4 text-gray-800">Why Choose Us?</h2>
+                <p class="text-gray-700 mb-4">At OAK Dental Hospital, we go beyond treating teeth—we care for people. Here’s why patients choose us:</p>
+                <ul class="list-disc list-inside text-gray-700 mb-4">
+                    <li>Experienced and compassionate dental professionals.</li>
+                    <li>Comprehensive range of dental services under one roof.</li>
+                    <li>Patient-centric approach with tailored treatment plans.</li>
+                    <li>Commitment to safety, comfort, and satisfaction.</li>
+                </ul>
+            </div>
+
+            <!-- Back to Home -->
+            <div class="text-center">
+                <a href="index.html" class="btn inline-block bg-blue-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-700 shadow-md">Back to Home</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gradient-to-r from-blue-900 to-teal-400 text-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-lg mb-4">© 2025 <span class="hospital-name">OAK Dental Hospital</span>. All rights reserved.</p>
+            <div class="mb-4">
+                <h3 class="text-lg font-semibold mb-2">Stay Updated</h3>
+                <form id="newsletter-form" class="flex justify-center">
+                    <input type="email" id="newsletter-email" class="p-2 rounded-l-lg border-0 focus:outline-none" placeholder="Enter your email" required aria-required="true">
+                    <button type="button" onclick="subscribeNewsletter()" class="btn bg-blue-600 text-white p-2 rounded-r-lg hover:bg-blue-700">Subscribe</button>
+                </form>
+            </div>
+            <div class="flex justify-center space-x-4">
+                <a href="https://facebook.com" target="_blank" class="text-white hover:text-blue-300"><i class="fab fa-facebook-f text-2xl"></i></a>
+                <a href="https://instagram.com" target="_blank" class="text-white hover:text-blue-300"><i class="fab fa-instagram text-2xl"></i></a>
+                <a href="https://twitter.com" target="_blank" class="text-white hover:text-blue-300"><i class="fab fa-twitter text-2xl"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const menuToggle = document.getElementById('menu-toggle');
+        const menu = document.getElementById('menu');
+        menuToggle.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+            menu.classList.toggle('flex');
+            menu.classList.toggle('flex-col');
+            menu.classList.toggle('absolute');
+            menu.classList.toggle('top-16');
+            menu.classList.toggle('left-0');
+            menu.classList.toggle('w-full');
+            menu.classList.toggle('bg-white');
+            menu.classList.toggle('p-4');
+            menu.classList.toggle('shadow-lg');
+        });
+
+        function subscribeNewsletter() {
+            const email = document.getElementById('newsletter-email').value;
+            if (email) {
+                alert(`Thank you for subscribing with ${email}!`);
+                document.getElementById('newsletter-form').reset();
+            } else {
+                alert('Please enter your email.');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('.section-animate');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animationDelay = '0.2s';
+                    }
+                });
+            }, { threshold: 0.1 });
+            sections.forEach(section => observer.observe(section));
+        });
+    </script>
+</body>
+</html>
