@@ -76,6 +76,13 @@
         .btn-primary:hover {
             background-color: #3b82f6;
         }
+        .btn-success {
+            background-color: #22c55e;
+            color: white;
+        }
+        .btn-success:hover {
+            background-color: #16a34a;
+        }
         .btn-danger {
             background-color: #dc2626;
             color: white;
@@ -199,12 +206,14 @@
                         <tr>
                             <th>Name</th>
                             <th>Phone</th>
+                            <th>Email</th>
                             <th>Treatment</th>
                             <th>Fee</th>
                             <th>Date</th>
                             <th>Time</th>
                             <th>Status</th>
                             <th>Payment</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody id="appointments-table"></tbody>
@@ -397,9 +406,8 @@
                 registerLinks.forEach(link => link.classList.remove('hidden'));
             }
 
-            // Ensure mobile nav visibility
             const mobileNav = document.querySelector('.mobile-nav');
-            mobileNav.classList.add('hidden'); // Hide mobile nav by default, toggle with menu button
+            mobileNav.classList.add('hidden');
         }
 
         // Handle login
@@ -470,11 +478,11 @@
                 updateNavVisibility();
                 showSection('login');
                 alert('Logged out successfully.');
-                window.location.href = '/admin.html'; // Redirect to admin.html
+                window.location.href = '/admin.html';
             });
         });
 
-        // Load appointments
+        // Load appointments (only show if payment is done)
         async function loadAppointments() {
             const token = localStorage.getItem('token');
             if (!token) {
@@ -492,27 +500,120 @@
                 const appointments = await response.json();
                 const tableBody = document.getElementById('appointments-table');
                 tableBody.innerHTML = '';
-                if (appointments.length === 0) {
-                    tableBody.innerHTML = '<tr><td colspan="8" class="text-center">No appointments found.</td></tr>';
+                const paidAppointments = appointments.filter(apt => apt.payment_id && apt.payment_id !== 'Pending');
+                if (paidAppointments.length === 0) {
+                    tableBody.innerHTML = '<tr><td colspan="10" class="text-center">No paid appointments found.</td></tr>';
                     return;
                 }
-                appointments.forEach(apt => {
+                paidAppointments.forEach(apt => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
                         <td>${apt.full_name || 'N/A'}</td>
                         <td>${apt.phone || 'N/A'}</td>
+                        <td>${apt.email || 'N/A'}</td>
                         <td>${apt.treatment || 'N/A'}</td>
                         <td>${apt.price || 'N/A'}</td>
                         <td>${apt.date || 'N/A'}</td>
                         <td>${apt.time || 'N/A'}</td>
-                        <td>${apt.status || 'N/A'}</td>
-                        <td>${apt.payment_id || 'Pending'}</td>
+                        <td>${apt.status || 'Pending'}</td>
+                        <td>${apt.payment_id}</td>
+                        <td>
+                            <button class="approve-btn btn-success mr-2" data-id="${apt.id}" ${apt.status === 'Approved' || apt.status === 'Rejected' ? 'disabled' : ''}>Approve</button>
+                            <button class="reject-btn btn-danger" data-id="${apt.id}" ${apt.status === 'Approved' || apt.status === 'Rejected' ? 'disabled' : ''}>Reject</button>
+                        </td>
                     `;
                     tableBody.appendChild(row);
+                });
+
+                // Add event listeners for approve/reject buttons
+                document.querySelectorAll('.approve-btn').forEach(btn => {
+                    btn.addEventListener('click', () => handleAppointmentAction(btn.dataset.id, 'Approved'));
+                });
+                document.querySelectorAll('.reject-btn').forEach(btn => {
+                    btn.addEventListener('click', () => handleAppointmentAction(btn.dataset.id, 'Rejected'));
                 });
             } catch (error) {
                 console.error('Error loading appointments:', error);
                 alert('Failed to load appointments: ' + error.message);
+            }
+        }
+
+        // Handle appointment approval/rejection
+        async function handleAppointmentAction(id, action) {
+            let reason = '';
+            if (action === 'Rejected') {
+                reason = prompt('Please provide a reason for rejecting this appointment:');
+                if (!reason) {
+                    alert('A reason is required to reject the appointment.');
+                    return;
+                }
+            }
+            try {
+                const response = await fetch(`https://oak-dental.onrender.com/api/appointments/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify({ status: action, rejection_reason: reason })
+                });
+                const result = await response.json();
+                if (response.ok) {
+                    alert(`Appointment ${action.toLowerCase()} successfully.`);
+                    const appointment = await fetchAppointmentDetails(id);
+                    await sendNotification(appointment, action, reason);
+                    loadAppointments();
+                } else {
+                    alert(result.message || `Failed to ${action.toLowerCase()} appointment.`);
+                }
+            } catch (error) {
+                console.error(`Error ${action.toLowerCase()}ing appointment:`, error);
+                alert(`An error occurred while ${action.toLowerCase()}ing the appointment: ` + error.message);
+            }
+        }
+
+        // Fetch appointment details for notification
+        async function fetchAppointmentDetails(id) {
+            try {
+                const response = await fetch(`https://oak-dental.onrender.com/api/appointments/${id}`, {
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                });
+                if (!response.ok) {
+                    throw new Error('Failed to fetch appointment details.');
+                }
+                return await response.json();
+            } catch (error) {
+                console.error('Error fetching appointment details:', error);
+                throw error;
+            }
+        }
+
+        // Send email and SMS notification
+        async function sendNotification(appointment, action, reason) {
+            const emailBody = {
+                email: appointment.email,
+                subject: `Appointment ${action} - Oak Dental Hospital`,
+                message: `Dear ${appointment.full_name},\n\nYour appointment for ${appointment.treatment} on ${appointment.date} at ${appointment.time} has been ${action.toLowerCase()}.\n${action === 'Rejected' ? `Reason: ${reason}\n` : ''}Thank you for choosing Oak Dental Hospital.\n\nBest regards,\nOak Dental Team`
+            };
+            const smsBody = {
+                phone: appointment.phone,
+                message: `Your appointment for ${appointment.treatment} on ${appointment.date} at ${appointment.time} has been ${action.toLowerCase()}.${action === 'Rejected' ? ` Reason: ${reason}` : ''} - Oak Dental Hospital`
+            };
+
+            try {
+                await fetch('https://oak-dental.onrender.com/api/send-email', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(emailBody)
+                });
+                await fetch('https://oak-dental.onrender.com/api/send-sms', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(smsBody)
+                });
+            } catch (error) {
+                console.error('Error sending notification:', error);
+                alert('Appointment updated, but failed to send notification: ' + error.message);
             }
         }
 
@@ -631,7 +732,7 @@
             try {
                 const response = await fetch(`https://oak-dental.onrender.com/api/treatments/${id}`, {
                     method: 'DELETE',
-                    headers: { 'Authorization': ` entrances ${localStorage.getItem('token')}` }
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
                 });
                 const result = await response.json();
                 if (response.ok) {
