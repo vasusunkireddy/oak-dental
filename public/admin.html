@@ -517,9 +517,14 @@
         axios.interceptors.response.use(
             response => response,
             error => {
-                const message = error.response?.data?.message || 'An error occurred. Please try again.';
+                const message = error.response?.data?.message || 'An unexpected error occurred. Please try again.';
+                console.error('API Error:', {
+                    message,
+                    status: error.response?.status,
+                    data: error.response?.data,
+                    url: error.config?.url
+                });
                 showAlert(message, 'error');
-                console.error('API Error:', error.response || error.message);
                 return Promise.reject(error);
             }
         );
@@ -684,19 +689,27 @@
                         Authorization: `Bearer ${token}`,
                         'Content-Type': 'multipart/form-data'
                     },
-                    timeout: 30000
+                    timeout: 60000 // Increased timeout for uploads
                 });
                 return {
                     image: response.data.imageUrl ? response.data.imageUrl : null,
                     video: response.data.videoUrl ? response.data.videoUrl : null
                 };
             } catch (error) {
-                console.error('File upload error:', error.response?.data || error.message);
+                console.error('Upload attempt failed:', {
+                    attempt: 3 - retries,
+                    message: error.response?.data?.message || error.message,
+                    status: error.response?.status,
+                    url: error.config?.url
+                });
                 if (retries > 0) {
                     console.log(`Retrying upload (${retries} attempts left)...`);
                     return uploadFiles(imageFile, videoFile, retries - 1);
                 }
-                showAlert('Failed to upload files. Saving without media.', 'error');
+                const errorMessage = error.response?.status === 404
+                    ? 'Upload endpoint not found. Please check server configuration.'
+                    : error.response?.data?.message || 'Failed to upload files. Saving without media.';
+                showAlert(errorMessage, 'error');
                 return { image: null, video: null };
             }
         }
@@ -739,8 +752,8 @@
                         ${treatment.image ? `<img src="${treatment.image}" alt="${treatment.name} image" class="mb-2 rounded-lg" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><p class="text-red-600 text-sm hidden">Image not available</p>` : ''}
                         ${treatment.video ? `<video controls class="mb-2 rounded-lg"><source src="${treatment.video}" type="video/mp4" onerror="this.parentElement.style.display='none';this.parentElement.nextElementSibling.style.display='block'"></video><p class="text-red-600 text-sm hidden">Video not available</p>` : ''}
                         <div class="flex space-x-2 mt-4">
-                            <button onclick="editTreatment('${treatment._id}', '${treatment.name.replace(/'/g, "\\'")}', '${treatment.description.replace(/'/g, "\\'")}', ${treatment.cost}, '${treatment.offer ? treatment.offer.replace(/'/g, "\\'") : ''}')" class="btn bg-blue-600 text-white rounded-lg hover:bg-blue-700" aria-label="Edit Treatment"><i class="fas fa-edit mr-1"></i> Edit</button>
-                            <button onclick="deleteTreatment('${treatment._id}')" class="btn bg-red-600 text-white rounded-lg hover:bg-red-700" aria-label="Delete Treatment"><i class="fas fa-trash-alt mr-1"></i> Delete</button>
+                            <button onclick="editTreatment('${treatment.id}', '${treatment.name.replace(/'/g, "\\'")}', '${treatment.description.replace(/'/g, "\\'")}', ${treatment.cost}, '${treatment.offer ? treatment.offer.replace(/'/g, "\\'") : ''}')" class="btn bg-blue-600 text-white rounded-lg hover:bg-blue-700" aria-label="Edit Treatment"><i class="fas fa-edit mr-1"></i> Edit</button>
+                            <button onclick="deleteTreatment('${treatment.id}')" class="btn bg-red-600 text-white rounded-lg hover:bg-red-700" aria-label="Delete Treatment"><i class="fas fa-trash-alt mr-1"></i> Delete</button>
                         </div>
                     `;
                     treatmentsList.appendChild(div);
@@ -758,7 +771,7 @@
                         <p class="text-gray-700"><strong>Time:</strong> ${appointment.time}</p>
                         <p class="text-gray-700"><strong>Service:</strong> ${appointment.Treatment ? appointment.Treatment.name : 'Not specified'}</p>
                         <p class="text-gray-700"><strong>Status:</strong> ${appointment.status}</p>
-                        <select onchange="updateAppointmentStatus('${appointment._id}', this.value)" class="mt-2 p-2 border rounded-lg w-full" aria-label="Update Appointment Status">
+                        <select onchange="updateAppointmentStatus('${appointment.id}', this.value)" class="mt-2 p-2 border rounded-lg w-full" aria-label="Update Appointment Status">
                             <option value="Pending" ${appointment.status === 'Pending' ? 'selected' : ''}>Pending</option>
                             <option value="Confirmed" ${appointment.status === 'Confirmed' ? 'selected' : ''}>Confirmed</option>
                             <option value="Cancelled" ${appointment.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
@@ -792,7 +805,7 @@
                         <p class="text-gray-700 mb-2"><strong>Email:</strong> ${contact.email}</p>
                         <p class="text-gray-700 mb-2"><strong>Message:</strong> ${contact.message}</p>
                         <p class="text-gray-700 mb-2"><strong>Received:</strong> ${new Date(contact.createdAt).toLocaleString()}</p>
-                        <button onclick="openReplyModal('${contact._id}', '${contact.email}')" class="btn bg-green-600 text-white px-4 py-2 rounded-lg mt-2 hover:bg-green-700" aria-label="Reply to ${contact.name}"><i class="fas fa-reply mr-1"></i> Reply</button>
+                        <button onclick="openReplyModal('${contact.id}', '${contact.email}')" class="btn bg-green-600 text-white px-4 py-2 rounded-lg mt-2 hover:bg-green-700" aria-label="Reply to ${contact.name}"><i class="fas fa-reply mr-1"></i> Reply</button>
                     `;
                     contactsList.appendChild(div);
                 });
@@ -849,89 +862,6 @@
             }
         }
 
-        function editTreatment(id, name, description, cost, offer) {
-            document.getElementById('edit-treatment-id').value = id;
-            document.getElementById('edit-treatment-name').value = name;
-            document.getElementById('edit-treatment-description').value = description;
-            document.getElementById('edit-treatment-cost').value = cost;
-            document.getElementById('edit-treatment-offer').value = offer;
-            document.getElementById('edit-treatment-modal').style.display = 'flex';
-        }
-
-        async function updateTreatment() {
-            const id = document.getElementById('edit-treatment-id').value;
-            const name = document.getElementById('edit-treatment-name').value;
-            const description = document.getElementById('edit-treatment-description').value;
-            const cost = document.getElementById('edit-treatment-cost').value;
-            const offer = document.getElementById('edit-treatment-offer').value;
-            const imageFile = document.getElementById('edit-treatment-image').files[0];
-            const videoFile = document.getElementById('edit-treatment-video').files[0];
-
-            if (!name || !description || !cost) {
-                showAlert('Please fill all required fields.', 'error');
-                return;
-            }
-
-            showSpinner('edit-treatment-spinner');
-            try {
-                const { image, video } = await uploadFiles(imageFile, videoFile);
-                await axios.put(`${API_URL}/admin/treatments/${id}`, { name, description, cost: parseFloat(cost), offer, image, video }, {
-                    headers: { Authorization: `Bearer ${token}` },
-                    timeout: 10000
-                });
-                showAlert('Treatment updated. Changes will reflect on the user page.');
-                closeModal();
-                await loadDashboard();
-            } catch (error) {
-                // Error handled by Axios interceptor
-            } finally {
-                hideSpinner('edit-treatment-spinner');
-            }
-        }
-
-        function closeModal() {
-            document.getElementById('edit-treatment-modal').style.display = 'none';
-            document.getElementById('edit-treatment-form').reset();
-        }
-
-        function openReplyModal(id, email) {
-            document.getElementById('reply-contact-id').value = id;
-            document.getElementById('reply-contact-email').value = email;
-            document.getElementById('reply-contact-message').value = '';
-            document.getElementById('reply-contact-modal').style.display = 'flex';
-        }
-
-        function closeReplyModal() {
-            document.getElementById('reply-contact-modal').style.display = 'none';
-            document.getElementById('reply-contact-form').reset();
-        }
-
-        async function sendReply() {
-            const id = document.getElementById('reply-contact-id').value;
-            const email = document.getElementById('reply-contact-email').value;
-            const message = document.getElementById('reply-contact-message').value;
-
-            if (!message) {
-                showAlert('Please enter a reply message.', 'error');
-                return;
-            }
-
-            showSpinner('reply-contact-spinner');
-            try {
-                await axios.post(`${API_URL}/admin/contact/reply`, { contactId: id, email, message }, {
-                    headers: { Authorization: `Bearer ${token}` },
-                    timeout: 10000
-                });
-                showAlert('Reply sent successfully to ' + email);
-                closeReplyModal();
-                await loadDashboard();
-            } catch (error) {
-                // Error handled by Axios interceptor
-            } finally {
-                hideSpinner('reply-contact-spinner');
-            }
-        }
-
         async function addTreatment() {
             const id = document.getElementById('treatment-id').value;
             const name = document.getElementById('treatment-name').value;
@@ -949,14 +879,39 @@
             showSpinner('treatment-spinner');
             try {
                 const { image, video } = await uploadFiles(imageFile, videoFile);
+                const treatmentData = {
+                    name,
+                    description,
+                    cost: parseFloat(cost),
+                    offer: offer || null,
+                    image: image || null,
+                    video: video || null
+                };
                 const config = { headers: { Authorization: `Bearer ${token}` }, timeout: 10000 };
-                if (id) {
-                    await axios.put(`${API_URL}/admin/treatments/${id}`, { name, description, cost: parseFloat(cost), offer, image, video }, config);
-                    showAlert('Treatment updated. Changes will reflect on the user page.');
-                } else {
-                    await axios.post(`${API_URL}/admin/treatments`, { name, description, cost: parseFloat(cost), offer, image, video }, config);
-                    showAlert('Treatment added successfully. Changes will reflect on the user page.');
+
+                let retries = 2;
+                while (retries > 0) {
+                    try {
+                        if (id) {
+                            await axios.put(`${API_URL}/admin/treatments/${id}`, treatmentData, config);
+                            showAlert('Treatment updated. Changes will reflect on the user page.');
+                        } else {
+                            await axios.post(`${API_URL}/admin/treatments`, treatmentData, config);
+                            showAlert('Treatment added successfully. Changes will reflect on the user page.');
+                        }
+                        break;
+                    } catch (error) {
+                        console.error('Treatment save attempt failed:', {
+                            attempt: 3 - retries,
+                            message: error.response?.data?.message || error.message,
+                            status: error.response?.status
+                        });
+                        if (retries === 1) throw error; // Last attempt, let interceptor handle
+                        retries--;
+                        await new Promise(resolve => setTimeout(resolve, 1000)); // Wait before retry
+                    }
                 }
+
                 clearTreatmentForm();
                 await loadDashboard();
             } catch (error) {
@@ -998,6 +953,97 @@
             } finally {
                 hideSpinner('appointment-spinner');
             }
+        }
+
+        function editTreatment(id, name, description, cost, offer) {
+            document.getElementById('edit-treatment-id').value = id;
+            document.getElementById('edit-treatment-name').value = name;
+            document.getElementById('edit-treatment-description').value = description;
+            document.getElementById('edit-treatment-cost').value = cost;
+            document.getElementById('edit-treatment-offer').value = offer;
+            document.getElementById('edit-treatment-modal').style.display = 'flex';
+        }
+
+        async function updateTreatment() {
+            const id = document.getElementById('edit-treatment-id').value;
+            const name = document.getElementById('edit-treatment-name').value;
+            const description = document.getElementById('edit-treatment-description').value;
+            const cost = document.getElementById('edit-treatment-cost').value;
+            const offer = document.getElementById('edit-treatment-offer').value;
+            const imageFile = document.getElementById('edit-treatment-image').files[0];
+            const videoFile = document.getElementById('edit-treatment-video').files[0];
+
+            if (!name || !description || !cost) {
+                showAlert('Please fill all required fields.', 'error');
+                return;
+            }
+
+            showSpinner('edit-treatment-spinner');
+            try {
+                const { image, video } = await uploadFiles(imageFile, videoFile);
+                const treatmentData = {
+                    name,
+                    description,
+                    cost: parseFloat(cost),
+                    offer: offer || null,
+                    image: image || null,
+                    video: video || null
+                };
+                await axios.put(`${API_URL}/admin/treatments/${id}`, treatmentData, {
+                    headers: { Authorization: `Bearer ${token}` },
+                    timeout: 10000
+                });
+                showAlert('Treatment updated. Changes will reflect on the user page.');
+                closeModal();
+                await loadDashboard();
+            } catch (error) {
+                // Error handled by Axios interceptor
+            } finally {
+                hideSpinner('edit-treatment-spinner');
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('edit-treatment-modal').style.display = 'none';
+            document.getElementById('edit-treatment-form').reset();
+        }
+
+        function openReplyModal(id, email) {
+            document.getElementById('reply-contact-id').value = id;
+            document.getElementById('reply-contact-email').value = email;
+            document.getElementById('reply-contact-message').value = '';
+            document.getElementById('reply-contact-modal').style.display = 'flex';
+        }
+
+        async function sendReply() {
+            const id = document.getElementById('reply-contact-id').value;
+            const email = document.getElementById('reply-contact-email').value;
+            const message = document.getElementById('reply-contact-message').value;
+
+            if (!message) {
+                showAlert('Please enter a reply message.', 'error');
+                return;
+            }
+
+            showSpinner('reply-contact-spinner');
+            try {
+                await axios.post(`${API_URL}/admin/contact/reply`, { contactId: id, email, message }, {
+                    headers: { Authorization: `Bearer ${token}` },
+                    timeout: 10000
+                });
+                showAlert('Reply sent successfully to ' + email);
+                closeReplyModal();
+                await loadDashboard();
+            } catch (error) {
+                // Error handled by Axios interceptor
+            } finally {
+                hideSpinner('reply-contact-spinner');
+            }
+        }
+
+        function closeReplyModal() {
+            document.getElementById('reply-contact-modal').style.display = 'none';
+            document.getElementById('reply-contact-form').reset();
         }
 
         document.addEventListener('DOMContentLoaded', () => {
