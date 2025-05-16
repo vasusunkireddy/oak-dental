@@ -23,7 +23,9 @@ const requiredEnvVars = [
     'PAYPAL_CLIENT_ID',
     'PAYPAL_CLIENT_SECRET',
     'EMAIL_USER',
-    'EMAIL_PASS'
+    'EMAIL_PASS',
+    'SMS_API_KEY', // Added for SMS service
+    'SMS_API_URL'  // Added for SMS service
 ];
 for (const envVar of requiredEnvVars) {
     if (!process.env[envVar]) {
@@ -52,7 +54,7 @@ const logger = winston.createLogger({
 const allowedOrigins = [
     'https://oak-dental.onrender.com',
     'http://localhost:3000',
-    'http://localhost:5000' // For local testing
+    'http://localhost:5000'
 ];
 app.use(cors({
     origin: (origin, callback) => {
@@ -189,6 +191,17 @@ const transporter = nodemailer.createTransport({
     }
 });
 
+// Business Information
+const businessInfo = {
+    name: "OAK Dental Hospital",
+    address: "123 Dental Avenue, Smile City, SC 12345",
+    contactEmail: process.env.EMAIL_USER,
+    contactPhone: "+91 7569 366 767",
+    website: "https://oak-dental.onrender.com",
+    adminName: "Dr. John Smith",
+    adminTitle: "Chief Dentist"
+};
+
 // Middleware to verify JWT
 const authenticateAdmin = async (req, res, next) => {
     const token = req.headers.authorization?.split('Bearer ')[1];
@@ -219,6 +232,181 @@ const sanitizeInput = (data) => {
         return sanitized;
     }
     return data;
+};
+
+// Function to send SMS (using a hypothetical SMS API)
+const sendSMS = async (to, message) => {
+    try {
+        await axios.post(process.env.SMS_API_URL, {
+            to,
+            message,
+            apiKey: process.env.SMS_API_KEY
+        }, {
+            timeout: 10000
+        });
+        logger.info('SMS sent successfully', { to });
+    } catch (error) {
+        logger.error('Failed to send SMS:', { message: error.message, stack: error.stack, to });
+        throw new Error('Failed to send SMS');
+    }
+};
+
+// Function to send Appointment Confirmation Email and SMS
+const sendAppointmentConfirmation = async (appointment, serviceName, transactionId) => {
+    const emailContent = `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9;">
+            <h2 style="color: #0f2a44;">Appointment Confirmation - ${serviceName}</h2>
+            <p style="color: #1e293b;">Dear ${appointment.name},</p>
+            <p style="color: #1e293b;">Thank you for booking an appointment with us. We are delighted to confirm the details of your appointment as follows:</p>
+            
+            <h3 style="color: #0f2a44;">Appointment Details</h3>
+            <p style="color: #1e293b;"><strong>Service Type:</strong> ${serviceName}</p>
+            <p style="color: #1e293b;"><strong>Date:</strong> ${appointment.date}</p>
+            <p style="color: #1e293b;"><strong>Time:</strong> ${appointment.time}</p>
+            <p style="color: #1e293b;"><strong>Payment ID:</strong> ${transactionId}</p>
+            
+            <h3 style="color: #0f2a44;">Location</h3>
+            <p style="color: #1e293b;">${businessInfo.address}</p>
+            
+            <h3 style="color: #0f2a44;">Additional Information</h3>
+            <p style="color: #1e293b;">Please ensure that you arrive 10 minutes before your scheduled time. If you have any questions or need to reschedule, feel free to contact us at ${businessInfo.contactEmail} or ${businessInfo.contactPhone}.</p>
+            
+            <p style="color: #1e293b;">Thank you for choosing ${businessInfo.name}. We look forward to serving you!</p>
+            
+            <p style="color: #1e293b;">Warm regards,<br>
+            ${businessInfo.adminName}<br>
+            ${businessInfo.adminTitle}<br>
+            ${businessInfo.name}<br>
+            ${businessInfo.contactEmail}<br>
+            ${businessInfo.contactPhone}<br>
+            <a href="${businessInfo.website}" style="color: #2563eb;">${businessInfo.website}</a></p>
+            
+            <hr style="border-top: 1px solid #e5e7eb; margin: 20px 0;">
+            <p style="color: #6b7280; font-size: 12px;">This is an automated email, please do not reply directly.</p>
+        </div>
+    `;
+
+    const smsMessage = `Dear ${appointment.name}, your appointment for ${serviceName} on ${appointment.date} at ${appointment.time} is confirmed. Payment ID: ${transactionId}. Location: ${businessInfo.address}. Arrive 10 mins early. Contact: ${businessInfo.contactPhone}`;
+
+    try {
+        // Send Email
+        await transporter.sendMail({
+            from: `"${businessInfo.name}" <${process.env.EMAIL_USER}>`,
+            to: appointment.email,
+            subject: `Appointment Confirmation - ${serviceName}`,
+            html: emailContent
+        });
+        logger.info('Appointment confirmation email sent', { email: appointment.email });
+
+        // Send SMS
+        await sendSMS(appointment.phone, smsMessage);
+    } catch (error) {
+        logger.error('Failed to send appointment confirmation:', { message: error.message, stack: error.stack, email: appointment.email });
+    }
+};
+
+// Function to send Appointment Approval Email and SMS
+const sendAppointmentApproval = async (appointment, serviceName) => {
+    const emailContent = `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9;">
+            <h2 style="color: #0f2a44;">Your Appointment has been Approved</h2>
+            <p style="color: #1e293b;">Dear ${appointment.name},</p>
+            <p style="color: #1e293b;">We are pleased to inform you that your appointment has been approved by ${businessInfo.adminName}. Below are the details of your confirmed appointment:</p>
+            
+            <h3 style="color: #0f2a44;">Appointment Details</h3>
+            <p style="color: #1e293b;"><strong>Service Type:</strong> ${serviceName}</p>
+            <p style="color: #1e293b;"><strong>Doctor:</strong> ${businessInfo.adminName}</p>
+            <p style="color: #1e293b;"><strong>Date:</strong> ${appointment.date}</p>
+            <p style="color: #1e293b;"><strong>Time:</strong> ${appointment.time}</p>
+            <p style="color: #1e293b;"><strong>Payment ID:</strong> ${appointment.transactionId}</p>
+            
+            <h3 style="color: #0f2a44;">Location</h3>
+            <p style="color: #1e293b;">${businessInfo.address}</p>
+            
+            <h3 style="color: #0f2a44;">Additional Information</h3>
+            <p style="color: #1e293b;">Please arrive at least 10 minutes before your scheduled appointment time. If you have any questions, feel free to contact us at ${businessInfo.contactEmail} or ${businessInfo.contactPhone}.</p>
+            
+            <p style="color: #1e293b;">Thank you for trusting ${businessInfo.name}. We look forward to seeing you soon!</p>
+            
+            <p style="color: #1e293b;">Warm regards,<br>
+            ${businessInfo.name} Team<br>
+            ${businessInfo.contactEmail}<br>
+            ${businessInfo.contactPhone}<br>
+            <a href="${businessInfo.website}" style="color: #2563eb;">${businessInfo.website}</a></p>
+            
+            <hr style="border-top: 1px solid #e5e7eb; margin: 20px 0;">
+            <p style="color: #6b7280; font-size: 12px;">This is an automated email, please do not reply directly.</p>
+        </div>
+    `;
+
+    const smsMessage = `Dear ${appointment.name}, your appointment for ${serviceName} with ${businessInfo.adminName} on ${appointment.date} at ${appointment.time} has been approved. Payment ID: ${appointment.transactionId}. Location: ${businessInfo.address}. Contact: ${businessInfo.contactPhone}`;
+
+    try {
+        // Send Email
+        await transporter.sendMail({
+            from: `"${businessInfo.name}" <${process.env.EMAIL_USER}>`,
+            to: appointment.email,
+            subject: 'Your Appointment has been Approved',
+            html: emailContent
+        });
+        logger.info('Appointment approval email sent', { email: appointment.email });
+
+        // Send SMS
+        await sendSMS(appointment.phone, smsMessage);
+    } catch (error) {
+        logger.error('Failed to send appointment approval:', { message: error.message, stack: error.stack, email: appointment.email });
+    }
+};
+
+// Function to send Appointment Cancellation Email and SMS
+const sendAppointmentCancellation = async (appointment, serviceName, reason = 'unforeseen circumstances') => {
+    const emailContent = `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9;">
+            <h2 style="color: #0f2a44;">Appointment Cancellation Notice</h2>
+            <p style="color: #1e293b;">Dear ${appointment.name},</p>
+            <p style="color: #1e293b;">We regret to inform you that your appointment scheduled with ${businessInfo.adminName} has been canceled due to ${reason}.</p>
+            
+            <h3 style="color: #0f2a44;">Appointment Details</h3>
+            <p style="color: #1e293b;"><strong>Service Type:</strong> ${serviceName}</p>
+            <p style="color: #1e293b;"><strong>Doctor:</strong> ${businessInfo.adminName}</p>
+            <p style="color: #1e293b;"><strong>Date:</strong> ${appointment.date}</p>
+            <p style="color: #1e293b;"><strong>Time:</strong> ${appointment.time}</p>
+            <p style="color: #1e293b;"><strong>Payment ID:</strong> ${appointment.transactionId}</p>
+            
+            <h3 style="color: #0f2a44;">Next Steps</h3>
+            <p style="color: #1e293b;">We sincerely apologize for any inconvenience this may cause. You may reschedule your appointment through our website or contact us directly for assistance.</p>
+            <p style="color: #1e293b;">Feel free to reach us at ${businessInfo.contactEmail} or ${businessInfo.contactPhone} if you have any questions or need further support.</p>
+            
+            <p style="color: #1e293b;">Thank you for your understanding. We hope to assist you soon.</p>
+            
+            <p style="color: #1e293b;">Best regards,<br>
+            ${businessInfo.name} Team<br>
+            ${businessInfo.contactEmail}<br>
+            ${businessInfo.contactPhone}<br>
+            <a href="${businessInfo.website}" style="color: #2563eb;">${businessInfo.website}</a></p>
+            
+            <hr style="border-top: 1px solid #e5e7eb; margin: 20px 0;">
+            <p style="color: #6b7280; font-size: 12px;">This is an automated email, please do not reply directly.</p>
+        </div>
+    `;
+
+    const smsMessage = `Dear ${appointment.name}, your appointment for ${serviceName} with ${businessInfo.adminName} on ${appointment.date} at ${appointment.time} has been cancelled due to ${reason}. Payment ID: ${appointment.transactionId}. Contact: ${businessInfo.contactPhone}`;
+
+    try {
+        // Send Email
+        await transporter.sendMail({
+            from: `"${businessInfo.name}" <${process.env.EMAIL_USER}>`,
+            to: appointment.email,
+            subject: 'Appointment Cancellation Notice',
+            html: emailContent
+        });
+        logger.info('Appointment cancellation email sent', { email: appointment.email });
+
+        // Send SMS
+        await sendSMS(appointment.phone, smsMessage);
+    } catch (error) {
+        logger.error('Failed to send appointment cancellation:', { message: error.message, stack: error.stack, email: appointment.email });
+    }
 };
 
 // Health Check Endpoint
@@ -316,18 +504,18 @@ app.post('/api/admin/contact/reply', authenticateAdmin, async (req, res) => {
             return res.status(404).json({ message: 'Contact message not found' });
         }
         await transporter.sendMail({
-            from: `"OAK Dental Hospital" <${process.env.EMAIL_USER}>`,
+            from: `"${businessInfo.name}" <${process.env.EMAIL_USER}>`,
             to: email,
             subject: 'Response to Your Inquiry',
             text: message,
             html: `
                 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9;">
-                    <h2 style="color: #0f2a44;">OAK Dental Hospital</h2>
+                    <h2 style="color: #0f2a44;">${businessInfo.name}</h2>
                     <p style="color: #1e293b;">Dear ${contact.name},</p>
                     <p style="color: #1e293b;">Thank you for reaching out to us. Below is our response to your inquiry:</p>
                     <p style="color: #1e293b; background-color: #ffffff; padding: 15px; border-radius: 8px;">${message}</p>
                     <p style="color: #1e293b;">If you have further questions, feel free to contact us.</p>
-                    <p style="color: #1e293b;">Best regards,<br>OAK Dental Hospital Team</p>
+                    <p style="color: #1e293b;">Best regards,<br>${businessInfo.name} Team</p>
                     <hr style="border-top: 1px solid #e5e7eb; margin: 20px 0;">
                     <p style="color: #6b7280; font-size: 12px;">This is an automated email, please do not reply directly.</p>
                 </div>
@@ -510,6 +698,14 @@ app.post('/api/paypal/capture-order', async (req, res) => {
             status: 'Confirmed'
         };
         const createdAppointment = await Appointment.create(appointmentData);
+
+        // Fetch the service name for the email
+        const treatment = await Treatment.findByPk(appointment.serviceId);
+        const serviceName = treatment ? treatment.name : 'Dental Service';
+
+        // Send appointment confirmation email and SMS
+        await sendAppointmentConfirmation(createdAppointment, serviceName, transaction.id);
+
         logger.info('PayPal order captured and appointment created', { orderId, appointmentId: createdAppointment.id });
         res.json({
             transactionId: transaction.id,
@@ -625,8 +821,8 @@ app.put('/api/admin/treatments/:id', authenticateAdmin, async (req, res) => {
             description,
             cost: parseFloat(cost),
             offer: offer || null,
-            image: image || treatment.image,
-            video: video || treatment.video
+            image: image || treatment.image, // Preserve existing image if not updated
+            video: video || treatment.video  // Preserve existing video if not updated
         };
         await Treatment.update(updateData, { where: { id: req.params.id } });
         logger.info('Treatment updated', { id: req.params.id, name });
@@ -691,13 +887,29 @@ app.put('/api/admin/appointments/:id', authenticateAdmin, async (req, res) => {
         if (!status || !['Pending', 'Confirmed', 'Cancelled'].includes(status)) {
             return res.status(400).json({ message: 'Valid status is required (Pending, Confirmed, Cancelled)' });
         }
-        const appointment = await Appointment.findByPk(req.params.id);
+        const appointment = await Appointment.findByPk(req.params.id, {
+            include: [{ model: Treatment, as: 'Treatment', attributes: ['name'] }]
+        });
         if (!appointment) {
             return res.status(404).json({ message: 'Appointment not found' });
         }
+        const previousStatus = appointment.status;
         await Appointment.update({ status }, { where: { id: req.params.id } });
+
+        const updatedAppointment = await Appointment.findByPk(req.params.id, {
+            include: [{ model: Treatment, as: 'Treatment', attributes: ['name'] }]
+        });
+        const serviceName = updatedAppointment.Treatment ? updatedAppointment.Treatment.name : 'Dental Service';
+
+        // Send notifications based on status change
+        if (status === 'Confirmed' && previousStatus !== 'Confirmed') {
+            await sendAppointmentApproval(updatedAppointment, serviceName);
+        } else if (status === 'Cancelled' && previousStatus !== 'Cancelled') {
+            await sendAppointmentCancellation(updatedAppointment, serviceName, 'scheduling conflicts');
+        }
+
         logger.info('Appointment status updated', { id: req.params.id, status });
-        res.json({ message: 'Appointment updated' });
+        res.json(updatedAppointment);
     } catch (error) {
         logger.error('Error updating appointment:', { message: error.message, stack: error.stack });
         res.status(500).json({ message: 'Server error' });
