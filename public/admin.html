@@ -3,46 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Admin Dashboard for OAK Dental Hospital to manage treatments, appointments, payments, and contact messages.">
+    <meta name="keywords" content="admin, OAK Dental Hospital, dental treatments, appointments, payments, contact">
+    <meta name="author" content="OAK Dental Hospital">
     <title>OAK Dental Hospital - Admin Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Open+Sans:wght@300;400;500&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
         body {
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Open Sans', sans-serif;
+            background: linear-gradient(145deg, #e6f0fa 0%, #f9fbfd 100%);
+            min-height: 100vh;
+            color: #1e293b;
         }
-        h1, h2, h3 {
-            font-family: 'Poppins', sans-serif;
+        h1, h2, h3, h4 {
+            font-family: 'Montserrat', sans-serif;
+            color: #0f2a44;
         }
         .btn {
-            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
         }
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            background: linear-gradient(145deg, #2563eb, #1e40af);
+        }
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.3);
+            transition: all 0.4s ease;
+        }
+        .btn:hover::after {
+            left: 100%;
         }
         .card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background: white;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            border: 1px solid #e5e7eb;
+            overflow: hidden;
         }
         .card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
         }
         input, select, textarea {
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            transition: all 0.3s ease;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            padding: 0.75rem;
+            background: #f9fafb;
+            font-size: 1rem;
         }
         input:focus, select:focus, textarea:focus {
             outline: none;
             border-color: #2563eb;
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-            ring: 2px solid #2563eb;
+            background: white;
         }
         .toggle-link {
             cursor: pointer;
             color: #2563eb;
+            transition: color 0.3s ease;
         }
         .toggle-link:hover {
+            color: #1e40af;
             text-decoration: underline;
         }
         .form-container {
@@ -60,13 +97,19 @@
         }
         .alert {
             transition: opacity 0.3s ease;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
         .section-panel {
-            transition: max-height 0.3s ease;
+            transition: max-height 0.5s ease;
             overflow: hidden;
+            background: #ffffff;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
         }
         .section-panel.collapsed {
-            max-height: 3rem;
+            max-height: 3.5rem;
         }
         .modal {
             display: none;
@@ -79,14 +122,16 @@
             z-index: 1000;
             justify-content: center;
             align-items: center;
+            animation: fadeInBackdrop 0.3s ease;
         }
         .modal-content {
             background: white;
-            padding: 24px;
+            padding: 2rem;
             border-radius: 12px;
-            max-width: 500px;
+            max-width: 600px;
             width: 90%;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            animation: slideInModal 0.4s ease;
         }
         .spinner {
             border: 4px solid rgba(0, 0, 0, 0.1);
@@ -104,10 +149,84 @@
             animation: fadeIn 0.5s ease-in;
         }
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        @keyframes fadeInBackdrop {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideInModal {
+            from { transform: translateY(-40px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        /* Treatments Section */
+        .treatment-form {
+            background: linear-gradient(135deg, #f9fafb, #e6e6fa);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+        }
+        .treatment-form label {
+            font-weight: 500;
+            color: #0f2a44;
+            font-size: 0.95rem;
+        }
+        .treatment-form input, .treatment-form textarea {
+            border: 1px solid #d1d5db;
+            transition: all 0.3s ease;
+        }
+        .treatment-form input:focus, .treatment-form textarea:focus {
+            border-color: #2563eb;
+            background: white;
+        }
+        .treatment-card {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, #ffffff, #f0f7ff);
+        }
+        .treatment-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+        }
+        .treatment-card img, .treatment-card video {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+        }
+        .treatment-card:hover img, .treatment-card:hover video {
+            transform: scale(1.02);
+        }
+        .treatment-card .btn {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            min-width: 80px;
+        }
+        /* Contact Messages Section */
+        .contact-card {
+            background: linear-gradient(135deg, #ffffff, #e6e6fa);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+        .contact-card textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        .reply-form {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e5e7eb;
+        }
+        /* Responsive Design */
         @media (max-width: 768px) {
+            .btn {
+                padding: 0.75rem 1.25rem;
+                font-size: 0.95rem;
+            }
             .form-container {
                 position: static;
             }
@@ -117,20 +236,30 @@
             .form-visible {
                 display: block;
             }
+            .treatment-card img, .treatment-card video {
+                max-height: 160px;
+            }
+            .section-panel {
+                padding: 1rem;
+            }
+            .modal-content {
+                padding: 1.5rem;
+                max-width: 95%;
+            }
         }
     </style>
 </head>
-<body class="bg-gray-50">
+<body>
     <!-- Navigation -->
     <nav class="bg-white shadow-lg sticky top-0 z-50">
-        <div class="container mx-auto px-4 py-3 flex justify-between items-center flex-wrap">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center flex-wrap">
             <div class="flex items-center">
-                <img src="https://i.postimg.cc/50vXRG8K/ram.jpg" alt="OAK Dental Hospital Logo" class="mr-3 w-12 h-12 bg-white rounded-full shadow-sm">
-                <h1 class="text-3xl font-extrabold text-gray-800 leading-7">OAK Dental Hospital - Admin</h1>
+                <img src="https://i.postimg.cc/50vXRG8K/ram.jpg?fit=500%2C500&quality=80" alt="OAK Dental Hospital Logo" class="mr-3 w-12 h-12 bg-white rounded-full shadow-sm">
+                <h1 class="text-3xl font-bold text-gray-800">OAK Dental Hospital - Admin</h1>
             </div>
             <div class="flex mt-2 sm:mt-0">
-                <a href="/index.html" class="btn bg-blue-700 text-white px-4 py-2 rounded-lg mr-2 hover:bg-blue-800" aria-label="Go to User Page">User Page</a>
-                <button onclick="logout()" class="btn bg-red-700 text-white px-4 py-2 rounded-lg hidden" id="logout-btn" aria-label="Logout">Logout</button>
+                <a href="/index.html" class="btn bg-blue-600 text-white px-4 py-2 rounded-lg mr-2 hover:bg-blue-700" aria-label="Go to User Page">User Page</a>
+                <button onclick="logout()" class="btn bg-red-600 text-white px-4 py-2 rounded-lg hidden" id="logout-btn" aria-label="Logout">Logout</button>
             </div>
         </div>
     </nav>
@@ -145,51 +274,51 @@
                 </div>
                 <!-- Login Form -->
                 <div id="login-form-container" class="form-container form-visible">
-                    <h2 class="text-2xl font-extrabold mb-6 text-center text-gray-800 leading-7">Admin Login</h2>
+                    <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Admin Login</h2>
                     <form id="login-form" onsubmit="event.preventDefault(); login();">
                         <div class="mb-4">
-                            <label class="block text-gray-700 mb-2 text-base" for="login-username">Username</label>
-                            <input type="text" id="login-username" class="w-full p-4 border rounded-lg shadow-sm text-base" placeholder="Enter username" required aria-required="true" pattern="[A-Za-z0-9]{3,}" title="Username must be at least 3 characters, letters and numbers only">
+                            <label class="block text-gray-700 mb-2 font-medium" for="login-username">Username</label>
+                            <input type="text" id="login-username" class="w-full p-4 border rounded-lg shadow-sm" placeholder="Enter username" required aria-required="true" pattern="[A-Za-z0-9]{3,}" title="Username must be at least 3 characters, letters and numbers only">
                         </div>
                         <div class="mb-4 relative">
-                            <label class="block text-gray-700 mb-2 text-base" for="login-password">Password</label>
-                            <input type="password" id="login-password" class="w-full p-4 border rounded-lg shadow-sm text-base" placeholder="Enter password" required aria-required="true" minlength="6">
+                            <label class="block text-gray-700 mb-2 font-medium" for="login-password">Password</label>
+                            <input type="password" id="login-password" class="w-full p-4 border rounded-lg shadow-sm" placeholder="Enter password" required aria-required="true" minlength="6">
                             <button type="button" onclick="togglePassword('login-password')" class="absolute right-4 top-12 text-gray-500" aria-label="Toggle password visibility">
                                 <i class="fas fa-eye"></i>
                             </button>
                         </div>
-                        <button type="submit" class="btn w-full bg-blue-700 text-white p-4 rounded-lg hover:bg-blue-800 flex items-center justify-center" aria-label="Login">
+                        <button type="submit" class="btn w-full bg-blue-600 text-white p-4 rounded-lg hover:bg-blue-700 flex items-center justify-center" aria-label="Login">
                             <span>Login</span>
                             <div class="spinner ml-2" id="login-spinner"></div>
                         </button>
                     </form>
-                    <p class="text-center mt-4 text-gray-700 text-base">Don't have an account? <span class="toggle-link" onclick="showRegister()">Register</span></p>
+                    <p class="text-center mt-4 text-gray-700">Don't have an account? <span class="toggle-link" onclick="showRegister()">Register</span></p>
                 </div>
                 <!-- Register Form -->
                 <div id="register-form-container" class="form-container form-hidden">
-                    <h2 class="text-2xl font-extrabold mb-6 text-center text-gray-800 leading-7">Admin Registration</h2>
+                    <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Admin Registration</h2>
                     <form id="register-form" onsubmit="event.preventDefault(); register();">
                         <div class="mb-4">
-                            <label class="block text-gray-700 mb-2 text-base" for="register-username">Username</label>
-                            <input type="text" id="register-username" class="w-full p-4 border rounded-lg shadow-sm text-base" placeholder="Enter username" required aria-required="true" pattern="[A-Za-z0-9]{3,}" title="Username must be at least 3 characters, letters and numbers only">
+                            <label class="block text-gray-700 mb-2 font-medium" for="register-username">Username</label>
+                            <input type="text" id="register-username" class="w-full p-4 border rounded-lg shadow-sm" placeholder="Enter username" required aria-required="true" pattern="[A-Za-z0-9]{3,}" title="Username must be at least 3 characters, letters and numbers only">
                         </div>
                         <div class="mb-4">
-                            <label class="block text-gray-700 mb-2 text-base" for="register-email">Email</label>
-                            <input type="email" id="register-email" class="w-full p-4 border rounded-lg shadow-sm text-base" placeholder="Enter email" required aria-required="true">
+                            <label class="block text-gray-700 mb-2 font-medium" for="register-email">Email</label>
+                            <input type="email" id="register-email" class="w-full p-4 border rounded-lg shadow-sm" placeholder="Enter email" required aria-required="true">
                         </div>
                         <div class="mb-4 relative">
-                            <label class="block text-gray-700 mb-2 text-base" for="register-password">Password</label>
-                            <input type="password" id="register-password" class="w-full p-4 border rounded-lg shadow-sm text-base" placeholder="Enter password" required aria-required="true" minlength="6">
+                            <label class="block text-gray-700 mb-2 font-medium" for="register-password">Password</label>
+                            <input type="password" id="register-password" class="w-full p-4 border rounded-lg shadow-sm" placeholder="Enter password" required aria-required="true" minlength="6">
                             <button type="button" onclick="togglePassword('register-password')" class="absolute right-4 top-12 text-gray-500" aria-label="Toggle password visibility">
                                 <i class="fas fa-eye"></i>
                             </button>
                         </div>
-                        <button type="submit" class="btn w-full bg-blue-700 text-white p-4 rounded-lg hover:bg-blue-800 flex items-center justify-center" aria-label="Register">
+                        <button type="submit" class="btn w-full bg-blue-600 text-white p-4 rounded-lg hover:bg-blue-700 flex items-center justify-center" aria-label="Register">
                             <span>Register</span>
                             <div class="spinner ml-2" id="register-spinner"></div>
                         </button>
                     </form>
-                    <p class="text-center mt-4 text-gray-700 text-base">Already have an account? <span class="toggle-link" onclick="showLogin()">Login</span></p>
+                    <p class="text-center mt-4 text-gray-700">Already have an account? <span class="toggle-link" onclick="showLogin()">Login</span></p>
                 </div>
             </div>
         </div>
@@ -198,21 +327,21 @@
     <!-- Dashboard Section -->
     <section id="dashboard" class="py-16 hidden">
         <div class="container mx-auto px-4">
-            <h2 class="text-4xl font-extrabold text-center mb-4 text-gray-800 leading-7 fade-in" id="welcome-message">Welcome!</h2>
-            <h3 class="text-3xl font-extrabold text-center mb-8 text-gray-800 leading-7 fade-in">Admin Dashboard</h3>
+            <h2 class="text-4xl font-bold text-center mb-4 text-gray-800 fade-in" id="welcome-message">Welcome!</h2>
+            <h3 class="text-3xl font-semibold text-center mb-12 text-gray-800 fade-in">Admin Dashboard</h3>
 
             <!-- Manage Appointment Times -->
             <div class="mb-12 section-panel fade-in" id="times-panel">
                 <h4 class="text-2xl font-semibold mb-4 text-gray-800 flex justify-between items-center cursor-pointer" onclick="toggleSection('times-panel')">
                     Manage Appointment Times
-                    <i class="fas fa-chevron-down"></i>
+                    <i class="fas fa-chevron-down transition-transform duration-300"></i>
                 </h4>
                 <form id="time-form" class="max-w-md mb-6 bg-white p-6 rounded-xl shadow-md card border border-gray-200">
                     <div class="mb-4">
-                        <label class="block text-gray-700 mb-2 text-base" for="new-time">Add Time Slot</label>
-                        <input type="time" id="new-time" class="w-full p-4 border rounded-lg shadow-sm text-base" placeholder="Select time" required aria-required="true">
+                        <label class="block text-gray-700 mb-2 font-medium" for="new-time">Add Time Slot</label>
+                        <input type="time" id="new-time" class="w-full p-4 border rounded-lg shadow-sm" placeholder="Select time" required aria-required="true">
                     </div>
-                    <button type="button" onclick="addTime()" class="btn w-full bg-blue-700 text-white p-4 rounded-lg hover:bg-blue-800 flex items-center justify-center" aria-label="Add Time Slot">
+                    <button type="button" onclick="addTime()" class="btn w-full bg-blue-600 text-white p-4 rounded-lg hover:bg-blue-700 flex items-center justify-center" aria-label="Add Time Slot">
                         <span>Add Time</span>
                         <div class="spinner ml-2" id="time-spinner"></div>
                     </button>
@@ -222,49 +351,70 @@
 
             <!-- Manage Treatments -->
             <div class="mb-12 section-panel fade-in" id="treatments-panel">
-                <h4 class="text-2xl font-semibold mb-4 text-gray-800 flex justify-between items-center cursor-pointer" onclick="toggleSection('treatments-panel')">
+                <h4 class="text-2xl font-semibold mb-6 text-gray-800 flex justify-between items-center cursor-pointer" onclick="toggleSection('treatments-panel')">
                     Manage Treatments
-                    <i class="fas fa-chevron-down"></i>
+                    <i class="fas fa-chevron-down transition-transform duration-300"></i>
                 </h4>
-                <form id="treatment-form" class="max-w-md mb-6 bg-white p-6 rounded-xl shadow-md card border border-gray-200">
+                <form id="treatment-form" class="max-w-lg mb-8 treatment-form">
                     <input type="hidden" id="treatment-id">
-                    <div class="mb-4">
-                        <label class="block text-gray-700 mb-2 text-base" for="treatment-name">Treatment Name</label>
-                        <input type="text" id="treatment-name" class="w-full p-4 border rounded-lg shadow-sm text-base" placeholder="Enter treatment name" required aria-required="true">
+                    <div class="mb-5">
+                        <label class="block text-gray-700 mb-2 font-medium" for="treatment-name">Treatment Name</label>
+                        <input type="text" id="treatment-name" class="w-full p-4 rounded-lg shadow-sm" placeholder="Enter treatment name" required aria-required="true">
                     </div>
-                    <div class="mb-4">
-                        <label class="block text-gray-700 mb-2 text-base" for="treatment-description">Description</label>
-                        <textarea id="treatment-description" class="w-full p-4 border rounded-lg shadow-sm text-base" rows="4" placeholder="Enter description" required aria-required="true"></textarea>
+                    <div class="mb-5">
+                        <label class="block text-gray-700 mb-2 font-medium" for="treatment-description">Description</label>
+                        <textarea id="treatment-description" class="w-full p-4 rounded-lg shadow-sm" rows="4" placeholder="Enter description" required aria-required="true"></textarea>
                     </div>
-                    <div class="mb-4">
-                        <label class="block text-gray-700 mb-2 text-base" for="treatment-cost">Cost (₹)</label>
-                        <input type="number" id="treatment-cost" class="w-full p-4 border rounded-lg shadow-sm text-base" placeholder="Enter cost" required aria-required="true" min="0">
+                    <div class="mb-5">
+                        <label class="block text-gray-700 mb-2 font-medium" for="treatment-cost">Cost ($)</label>
+                        <input type="number" id="treatment-cost" class="w-full p-4 rounded-lg shadow-sm" placeholder="Enter cost" required aria-required="true" min="0" step="0.01">
+                    </div>
+                    <div class="mb-5">
+                        <label class="block text-gray-700 mb-2 font-medium" for="treatment-offer">Offer (Optional)</label>
+                        <input type="text" id="treatment-offer" class="w-full p-4 rounded-lg shadow-sm" placeholder="e.g., 20% off">
+                    </div>
+                    <div class="mb-5">
+                        <label class="block text-gray-700 mb-2 font-medium" for="treatment-image">Image (Optional, max 5MB)</label>
+                        <input type="file" id="treatment-image" accept="image/*" class="w-full p-4 rounded-lg shadow-sm" onchange="validateFile(this, 5)">
+                    </div>
+                    <div class="mb-5">
+                        <label class="block text-gray-700 mb-2 font-medium" for="treatment-video">Video (Optional, max 10MB)</label>
+                        <input type="file" id="treatment-video" accept="video/*" class="w-full p-4 rounded-lg shadow-sm" onchange="validateFile(this, 10)">
                     </div>
                     <div class="flex space-x-4">
-                        <button type="button" onclick="addTreatment()" class="btn flex-1 bg-blue-700 text-white p-4 rounded-lg hover:bg-blue-800 flex items-center justify-center" id="treatment-submit" aria-label="Add Treatment">
+                        <button type="button" onclick="addTreatment()" class="btn flex-1 bg-blue-600 text-white p-4 rounded-lg hover:bg-blue-700 flex items-center justify-center" id="treatment-submit" aria-label="Add Treatment">
                             <span>Add Treatment</span>
                             <div class="spinner ml-2" id="treatment-spinner"></div>
                         </button>
-                        <button type="button" onclick="clearTreatmentForm()" class="btn flex-1 bg-gray-600 text-white p-4 rounded-lg hover:bg-gray-700" aria-label="Clear Form">Clear</button>
+                        <button type="button" onclick="clearTreatmentForm()" class="btn flex-1 bg-gray-500 text-white p-4 rounded-lg hover:bg-gray-600" aria-label="Clear Form">Clear</button>
                     </div>
                 </form>
-                <div id="treatments-list" class="grid grid-cols-1 sm:grid-cols-3 gap-4"></div>
+                <div id="treatments-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
             </div>
 
             <!-- Manage Appointments -->
             <div class="mb-12 section-panel fade-in" id="appointments-panel">
                 <h4 class="text-2xl font-semibold mb-4 text-gray-800 flex justify-between items-center cursor-pointer" onclick="toggleSection('appointments-panel')">
                     Manage Appointments
-                    <i class="fas fa-chevron-down"></i>
+                    <i class="fas fa-chevron-down transition-transform duration-300"></i>
                 </h4>
                 <div id="appointments-list" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+            </div>
+
+            <!-- Manage Payments -->
+            <div class="mb-12 section-panel fade-in" id="payments-panel">
+                <h4 class="text-2xl font-semibold mb-4 text-gray-800 flex justify-between items-center cursor-pointer" onclick="toggleSection('payments-panel')">
+                    Manage Payments
+                    <i class="fas fa-chevron-down transition-transform duration-300"></i>
+                </h4>
+                <div id="payments-list" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
             </div>
 
             <!-- Contact Messages -->
             <div class="mb-12 section-panel fade-in" id="contacts-panel">
                 <h4 class="text-2xl font-semibold mb-4 text-gray-800 flex justify-between items-center cursor-pointer" onclick="toggleSection('contacts-panel')">
                     Contact Messages
-                    <i class="fas fa-chevron-down"></i>
+                    <i class="fas fa-chevron-down transition-transform duration-300"></i>
                 </h4>
                 <div id="contacts-list" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
             </div>
@@ -273,7 +423,7 @@
             <div class="section-panel fade-in" id="newsletter-panel">
                 <h4 class="text-2xl font-semibold mb-4 text-gray-800 flex justify-between items-center cursor-pointer" onclick="toggleSection('newsletter-panel')">
                     Newsletter Subscribers
-                    <i class="fas fa-chevron-down"></i>
+                    <i class="fas fa-chevron-down transition-transform duration-300"></i>
                 </h4>
                 <div id="newsletter-list" class="grid grid-cols-1 sm:grid-cols-3 gap-4"></div>
             </div>
@@ -283,37 +433,73 @@
     <!-- Edit Treatment Modal -->
     <div id="edit-treatment-modal" class="modal">
         <div class="modal-content">
-            <h3 class="text-2xl font-extrabold mb-4 text-gray-800 leading-7">Edit Treatment</h3>
+            <h3 class="text-2xl font-bold mb-6 text-gray-800">Edit Treatment</h3>
             <form id="edit-treatment-form">
                 <input type="hidden" id="edit-treatment-id">
-                <div class="mb-4">
-                    <label class="block text-gray-700 mb-2 text-base" for="edit-treatment-name">Treatment Name</label>
-                    <input type="text" id="edit-treatment-name" class="w-full p-4 border rounded-lg shadow-sm text-base" placeholder="Enter treatment name" required aria-required="true">
+                <div class="mb-5">
+                    <label class="block text-gray-700 mb-2 font-medium" for="edit-treatment-name">Treatment Name</label>
+                    <input type="text" id="edit-treatment-name" class="w-full p-4 rounded-lg shadow-sm" placeholder="Enter treatment name" required aria-required="true">
                 </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700 mb-2 text-base" for="edit-treatment-description">Description</label>
-                    <textarea id="edit-treatment-description" class="w-full p-4 border rounded-lg shadow-sm text-base" rows="4" placeholder="Enter description" required aria-required="true"></textarea>
+                <div class="mb-5">
+                    <label class="block text-gray-700 mb-2 font-medium" for="edit-treatment-description">Description</label>
+                    <textarea id="edit-treatment-description" class="w-full p-4 rounded-lg shadow-sm" rows="4" placeholder="Enter description" required aria-required="true"></textarea>
                 </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700 mb-2 text-base" for="edit-treatment-cost">Cost (₹)</label>
-                    <input type="number" id="edit-treatment-cost" class="w-full p-4 border rounded-lg shadow-sm text-base" placeholder="Enter cost" required aria-required="true" min="0">
+                <div class="mb-5">
+                    <label class="block text-gray-700 mb-2 font-medium" for="edit-treatment-cost">Cost ($)</label>
+                    <input type="number" id="edit-treatment-cost" class="w-full p-4 rounded-lg shadow-sm" placeholder="Enter cost" required aria-required="true" min="0" step="0.01">
+                </div>
+                <div class="mb-5">
+                    <label class="block text-gray-700 mb-2 font-medium" for="edit-treatment-offer">Offer (Optional)</label>
+                    <input type="text" id="edit-treatment-offer" class="w-full p-4 rounded-lg shadow-sm" placeholder="e.g., 20% off">
+                </div>
+                <div class="mb-5">
+                    <label class="block text-gray-700 mb-2 font-medium" for="edit-treatment-image">Image (Optional, max 5MB)</label>
+                    <input type="file" id="edit-treatment-image" accept="image/*" class="w-full p-4 rounded-lg shadow-sm" onchange="validateFile(this, 5)">
+                </div>
+                <div class="mb-5">
+                    <label class="block text-gray-700 mb-2 font-medium" for="edit-treatment-video">Video (Optional, max 10MB)</label>
+                    <input type="file" id="edit-treatment-video" accept="video/*" class="w-full p-4 rounded-lg shadow-sm" onchange="validateFile(this, 10)">
                 </div>
                 <div class="flex space-x-4">
-                    <button type="button" onclick="updateTreatment()" class="btn flex-1 bg-blue-700 text-white p-4 rounded-lg hover:bg-blue-800 flex items-center justify-center" aria-label="Update Treatment">
+                    <button type="button" onclick="updateTreatment()" class="btn flex-1 bg-blue-600 text-white p-4 rounded-lg hover:bg-blue-700 flex items-center justify-center" aria-label="Update Treatment">
                         <span>Update</span>
                         <div class="spinner ml-2" id="edit-treatment-spinner"></div>
                     </button>
-                    <button type="button" onclick="closeModal()" class="btn flex-1 bg-gray-600 text-white p-4 rounded-lg hover:bg-gray-700" aria-label="Cancel">Cancel</button>
+                    <button type="button" onclick="closeModal()" class="btn flex-1 bg-gray-500 text-white p-4 rounded-lg hover:bg-gray-600" aria-label="Cancel">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Reply Contact Modal -->
+    <div id="reply-contact-modal" class="modal">
+        <div class="modal-content">
+            <h3 class="text-2xl font-bold mb-6 text-gray-800">Reply to Contact Message</h3>
+            <form id="reply-contact-form">
+                <input type="hidden" id="reply-contact-id">
+                <div class="mb-5">
+                    <label class="block text-gray-700 mb-2 font-medium" for="reply-contact-email">Recipient Email</label>
+                    <input type="email" id="reply-contact-email" class="w-full p-4 rounded-lg shadow-sm" readonly>
+                </div>
+                <div class="mb-5">
+                    <label class="block text-gray-700 mb-2 font-medium" for="reply-contact-message">Reply Message</label>
+                    <textarea id="reply-contact-message" class="w-full p-4 rounded-lg shadow-sm" rows="5" placeholder="Enter your reply" required aria-required="true"></textarea>
+                </div>
+                <div class="flex space-x-4">
+                    <button type="button" onclick="sendReply()" class="btn flex-1 bg-blue-600 text-white p-4 rounded-lg hover:bg-blue-700 flex items-center justify-center" aria-label="Send Reply">
+                        <span>Send Reply</span>
+                        <div class="spinner ml-2" id="reply-contact-spinner"></div>
+                    </button>
+                    <button type="button" onclick="closeReplyModal()" class="btn flex-1 bg-gray-500 text-white p-4 rounded-lg hover:bg-gray-600" aria-label="Cancel">Cancel</button>
                 </div>
             </form>
         </div>
     </div>
 
     <script>
-        const API_URL = 'http://localhost:3000/api';
+        const API_URL = 'https://oak-dental.onrender.com/api';
         let token = localStorage.getItem('adminToken');
 
-        // Decode JWT to get username
         function decodeJWT(token) {
             try {
                 const base64Url = token.split('.')[1];
@@ -328,16 +514,16 @@
             }
         }
 
-        // Initialize Axios with global error handling
         axios.interceptors.response.use(
             response => response,
             error => {
-                showAlert(error.response?.data?.message || 'An error occurred. Please try again.', 'error');
+                const message = error.response?.data?.message || 'An error occurred. Please try again.';
+                showAlert(message, 'error');
+                console.error('API Error:', error.response || error.message);
                 return Promise.reject(error);
             }
         );
 
-        // Check if already logged in
         if (token) {
             document.getElementById('auth-section').classList.add('hidden');
             document.getElementById('dashboard').classList.remove('hidden');
@@ -405,6 +591,14 @@
             document.getElementById(id).style.display = 'none';
         }
 
+        function validateFile(input, maxSizeMB) {
+            const file = input.files[0];
+            if (file && file.size > maxSizeMB * 1024 * 1024) {
+                showAlert(`File size exceeds ${maxSizeMB}MB limit.`, 'error');
+                input.value = '';
+            }
+        }
+
         async function register() {
             const username = document.getElementById('register-username').value;
             const email = document.getElementById('register-email').value;
@@ -417,7 +611,7 @@
 
             showSpinner('register-spinner');
             try {
-                await axios.post(`${API_URL}/admin/register`, { username, email, password });
+                await axios.post(`${API_URL}/admin/register`, { username, email, password }, { timeout: 10000 });
                 showAlert('Registration successful! Please log in.');
                 document.getElementById('register-form').reset();
                 showLogin();
@@ -439,7 +633,7 @@
 
             showSpinner('login-spinner');
             try {
-                const response = await axios.post(`${API_URL}/admin/login`, { username, password });
+                const response = await axios.post(`${API_URL}/admin/login`, { username, password }, { timeout: 10000 });
                 token = response.data.token;
                 localStorage.setItem('adminToken', token);
                 document.getElementById('auth-section').classList.add('hidden');
@@ -449,7 +643,7 @@
                 if (decoded && decoded.username) {
                     document.getElementById('welcome-message').textContent = `Welcome, ${decoded.username}!`;
                 }
-                loadDashboard();
+                await loadDashboard();
             } catch (error) {
                 // Error handled by Axios interceptor
             } finally {
@@ -477,61 +671,94 @@
             icon.classList.toggle('fa-chevron-up');
         }
 
+        async function uploadFiles(imageFile, videoFile, retries = 2) {
+            if (!imageFile && !videoFile) return { image: null, video: null };
+
+            try {
+                const formData = new FormData();
+                if (imageFile) formData.append('image', imageFile);
+                if (videoFile) formData.append('video', videoFile);
+
+                const response = await axios.post(`${API_URL}/admin/upload`, formData, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'multipart/form-data'
+                    },
+                    timeout: 30000
+                });
+                return {
+                    image: response.data.imageUrl ? response.data.imageUrl : null,
+                    video: response.data.videoUrl ? response.data.videoUrl : null
+                };
+            } catch (error) {
+                console.error('File upload error:', error.response?.data || error.message);
+                if (retries > 0) {
+                    console.log(`Retrying upload (${retries} attempts left)...`);
+                    return uploadFiles(imageFile, videoFile, retries - 1);
+                }
+                showAlert('Failed to upload files. Saving without media.', 'error');
+                return { image: null, video: null };
+            }
+        }
+
         async function loadDashboard() {
             showSpinner('dashboard-spinner');
             try {
-                const config = { headers: { Authorization: `Bearer ${token}` } };
-                const [times, treatments, appointments, contacts, newsletter] = await Promise.all([
-                    axios.get(`${API_URL}/admin/times`, config),
-                    axios.get(`${API_URL}/admin/treatments`, config),
-                    axios.get(`${API_URL}/admin/appointments`, config),
-                    axios.get(`${API_URL}/admin/contacts`, config),
-                    axios.get(`${API_URL}/admin/newsletter`, config)
+                const config = { headers: { Authorization: `Bearer ${token}` }, timeout: 10000 };
+                const [times, treatments, appointments, payments, contacts, newsletter] = await Promise.all([
+                    axios.get(`${API_URL}/admin/times`, config).catch(err => ({ data: [] })),
+                    axios.get(`${API_URL}/admin/treatments`, config).catch(err => ({ data: [] })),
+                    axios.get(`${API_URL}/admin/appointments`, config).catch(err => ({ data: [] })),
+                    axios.get(`${API_URL}/admin/payments`, config).catch(err => ({ data: [] })),
+                    axios.get(`${API_URL}/admin/contacts`, config).catch(err => ({ data: [] })),
+                    axios.get(`${API_URL}/admin/newsletter`, config).catch(err => ({ data: [] }))
                 ]);
 
-                // Render Times
                 const timesList = document.getElementById('times-list');
-                timesList.innerHTML = '';
+                timesList.innerHTML = times.data.length ? '' : '<p class="text-gray-700 text-center col-span-full">No time slots available.</p>';
                 times.data.forEach(time => {
                     const div = document.createElement('div');
                     div.className = 'bg-white p-6 rounded-xl shadow-md card border border-gray-200 flex justify-between items-center';
                     div.innerHTML = `
-                        <p class="text-gray-700 text-base">${time.time}</p>
-                        <button onclick="deleteTime('${time._id}')" class="btn bg-red-700 text-white px-3 py-2 rounded-lg hover:bg-red-800" aria-label="Delete Time Slot">Delete</button>
+                        <p class="text-gray-700">${time.time}</p>
+                        <button onclick="deleteTime(${time.id})" class="btn bg-red-600 text-white px-3 py-2 rounded-lg hover:bg-red-700" aria-label="Delete Time Slot"><i class="fas fa-trash-alt"></i> Delete</button>
                     `;
                     timesList.appendChild(div);
                 });
 
-                // Render Treatments
                 const treatmentsList = document.getElementById('treatments-list');
-                treatmentsList.innerHTML = '';
+                treatmentsList.innerHTML = treatments.data.length ? '' : '<p class="text-gray-700 text-center col-span-full">No treatments available.</p>';
                 treatments.data.forEach(treatment => {
                     const div = document.createElement('div');
-                    div.className = 'bg-white p-6 rounded-xl shadow-md card border border-gray-200';
+                    div.className = 'treatment-card bg-white p-6 rounded-xl shadow-md card border border-gray-200';
                     div.innerHTML = `
                         <h3 class="text-lg font-semibold mb-2 text-gray-800">${treatment.name}</h3>
-                        <p class="text-gray-700 mb-2 text-base">${treatment.description}</p>
-                        <p class="text-gray-700 font-semibold mb-2 text-base">₹${treatment.cost}</p>
-                        <button onclick="editTreatment('${treatment._id}', '${treatment.name}', '${treatment.description}', ${treatment.cost})" class="btn bg-blue-700 text-white px-3 py-2 rounded-lg mr-2 hover:bg-blue-800" aria-label="Edit Treatment">Edit</button>
-                        <button onclick="deleteTreatment('${treatment._id}')" class="btn bg-red-700 text-white px-3 py-2 rounded-lg hover:bg-red-800" aria-label="Delete Treatment">Delete</button>
+                        <p class="text-gray-600 mb-2">${treatment.description}</p>
+                        <p class="text-gray-700 font-semibold mb-2">$${parseFloat(treatment.cost).toFixed(2)}</p>
+                        ${treatment.offer ? `<p class="text-green-600 font-semibold mb-2">Offer: ${treatment.offer}</p>` : ''}
+                        ${treatment.image ? `<img src="${treatment.image}" alt="${treatment.name} image" class="mb-2 rounded-lg" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><p class="text-red-600 text-sm hidden">Image not available</p>` : ''}
+                        ${treatment.video ? `<video controls class="mb-2 rounded-lg"><source src="${treatment.video}" type="video/mp4" onerror="this.parentElement.style.display='none';this.parentElement.nextElementSibling.style.display='block'"></video><p class="text-red-600 text-sm hidden">Video not available</p>` : ''}
+                        <div class="flex space-x-2 mt-4">
+                            <button onclick="editTreatment('${treatment._id}', '${treatment.name.replace(/'/g, "\\'")}', '${treatment.description.replace(/'/g, "\\'")}', ${treatment.cost}, '${treatment.offer ? treatment.offer.replace(/'/g, "\\'") : ''}')" class="btn bg-blue-600 text-white rounded-lg hover:bg-blue-700" aria-label="Edit Treatment"><i class="fas fa-edit mr-1"></i> Edit</button>
+                            <button onclick="deleteTreatment('${treatment._id}')" class="btn bg-red-600 text-white rounded-lg hover:bg-red-700" aria-label="Delete Treatment"><i class="fas fa-trash-alt mr-1"></i> Delete</button>
+                        </div>
                     `;
                     treatmentsList.appendChild(div);
                 });
 
-                // Render Appointments
                 const appointmentsList = document.getElementById('appointments-list');
-                appointmentsList.innerHTML = '';
+                appointmentsList.innerHTML = appointments.data.length ? '' : '<p class="text-gray-700 text-center col-span-full">No appointments available.</p>';
                 appointments.data.forEach(appointment => {
                     const div = document.createElement('div');
                     div.className = 'bg-white p-6 rounded-xl shadow-md card border border-gray-200';
                     div.innerHTML = `
-                        <p class="text-gray-700 text-base"><strong>Name:</strong> ${appointment.name}</p>
-                        <p class="text-gray-700 text-base"><strong>Email:</strong> ${appointment.email}</p>
-                        <p class="text-gray-700 text-base"><strong>Date:</strong> ${appointment.date}</p>
-                        <p class="text-gray-700 text-base"><strong>Time:</strong> ${appointment.time}</p>
-                        <p class="text-gray-700 text-base"><strong>Service:</strong> ${appointment.service.name}</p>
-                        <p class="text-gray-700 text-base"><strong>Status:</strong> ${appointment.status}</p>
-                        <select onchange="updateAppointmentStatus('${appointment._id}', this.value)" class="mt-2 p-2 border rounded-lg text-base" aria-label="Update Appointment Status">
+                        <p class="text-gray-700"><strong>Name:</strong> ${appointment.name}</p>
+                        <p class="text-gray-700"><strong>Email:</strong> ${appointment.email}</p>
+                        <p class="text-gray-700"><strong>Date:</strong> ${appointment.date}</p>
+                        <p class="text-gray-700"><strong>Time:</strong> ${appointment.time}</p>
+                        <p class="text-gray-700"><strong>Service:</strong> ${appointment.Treatment ? appointment.Treatment.name : 'Not specified'}</p>
+                        <p class="text-gray-700"><strong>Status:</strong> ${appointment.status}</p>
+                        <select onchange="updateAppointmentStatus('${appointment._id}', this.value)" class="mt-2 p-2 border rounded-lg w-full" aria-label="Update Appointment Status">
                             <option value="Pending" ${appointment.status === 'Pending' ? 'selected' : ''}>Pending</option>
                             <option value="Confirmed" ${appointment.status === 'Confirmed' ? 'selected' : ''}>Confirmed</option>
                             <option value="Cancelled" ${appointment.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
@@ -540,34 +767,50 @@
                     appointmentsList.appendChild(div);
                 });
 
-                // Render Contacts
-                const contactsList = document.getElementById('contacts-list');
-                contactsList.innerHTML = '';
-                contacts.data.forEach(contact => {
+                const paymentsList = document.getElementById('payments-list');
+                paymentsList.innerHTML = payments.data.length ? '' : '<p class="text-gray-700 text-center col-span-full">No payments available.</p>';
+                payments.data.forEach(payment => {
                     const div = document.createElement('div');
                     div.className = 'bg-white p-6 rounded-xl shadow-md card border border-gray-200';
                     div.innerHTML = `
-                        <p class="text-gray-700 text-base"><strong>Name:</strong> ${contact.name}</p>
-                        <p class="text-gray-700 text-base"><strong>Email:</strong> ${contact.email}</p>
-                        <p class="text-gray-700 text-base"><strong>Message:</strong> ${contact.message}</p>
+                        <p class="text-gray-700"><strong>Transaction ID:</strong> ${payment.transactionId}</p>
+                        <p class="text-gray-700"><strong>Amount:</strong> $${payment.amount.toFixed(2)}</p>
+                        <p class="text-gray-700"><strong>Payer:</strong> ${payment.payer.name} (${payment.payer.email})</p>
+                        <p class="text-gray-700"><strong>Appointment ID:</strong> ${payment.appointmentId}</p>
+                        <p class="text-gray-700"><strong>Date:</strong> ${new Date(payment.date).toLocaleString()}</p>
+                    `;
+                    paymentsList.appendChild(div);
+                });
+
+                const contactsList = document.getElementById('contacts-list');
+                contactsList.innerHTML = contacts.data.length ? '' : '<p class="text-gray-700 text-center col-span-full">No contact messages available.</p>';
+                contacts.data.forEach(contact => {
+                    const div = document.createElement('div');
+                    div.className = 'contact-card';
+                    div.innerHTML = `
+                        <p class="text-gray-700 mb-2"><strong>Name:</strong> ${contact.name}</p>
+                        <p class="text-gray-700 mb-2"><strong>Email:</strong> ${contact.email}</p>
+                        <p class="text-gray-700 mb-2"><strong>Message:</strong> ${contact.message}</p>
+                        <p class="text-gray-700 mb-2"><strong>Received:</strong> ${new Date(contact.createdAt).toLocaleString()}</p>
+                        <button onclick="openReplyModal('${contact._id}', '${contact.email}')" class="btn bg-green-600 text-white px-4 py-2 rounded-lg mt-2 hover:bg-green-700" aria-label="Reply to ${contact.name}"><i class="fas fa-reply mr-1"></i> Reply</button>
                     `;
                     contactsList.appendChild(div);
                 });
 
-                // Render Newsletter Subscribers
                 const newsletterList = document.getElementById('newsletter-list');
-                newsletterList.innerHTML = '';
+                newsletterList.innerHTML = newsletter.data.length ? '' : '<p class="text-gray-700 text-center col-span-full">No subscribers available.</p>';
                 newsletter.data.forEach(subscriber => {
                     const div = document.createElement('div');
                     div.className = 'bg-white p-6 rounded-xl shadow-md card border border-gray-200';
                     div.innerHTML = `
-                        <p class="text-gray-700 text-base"><strong>Email:</strong> ${subscriber.email}</p>
+                        <p class="text-gray-700"><strong>Email:</strong> ${subscriber.email}</p>
                     `;
                     newsletterList.appendChild(div);
                 });
             } catch (error) {
-                showAlert('Failed to load dashboard. Please log in again.', 'error');
-                logout();
+                console.error('Failed to load dashboard:', error);
+                showAlert('Failed to load dashboard data. Retrying...', 'error');
+                setTimeout(loadDashboard, 3000);
             } finally {
                 hideSpinner('dashboard-spinner');
             }
@@ -581,10 +824,10 @@
             }
             showSpinner('time-spinner');
             try {
-                await axios.post(`${API_URL}/admin/times`, { time }, { headers: { Authorization: `Bearer ${token}` } });
+                await axios.post(`${API_URL}/admin/times`, { time }, { headers: { Authorization: `Bearer ${token}` }, timeout: 10000 });
                 showAlert('Time slot added.');
                 document.getElementById('time-form').reset();
-                loadDashboard();
+                await loadDashboard();
             } catch (error) {
                 // Error handled by Axios interceptor
             } finally {
@@ -596,9 +839,9 @@
             if (!confirm('Are you sure you want to delete this time slot?')) return;
             showSpinner('time-spinner');
             try {
-                await axios.delete(`${API_URL}/admin/times/${id}`, { headers: { Authorization: `Bearer ${token}` } });
+                await axios.delete(`${API_URL}/admin/times/${id}`, { headers: { Authorization: `Bearer ${token}` }, timeout: 10000 });
                 showAlert('Time slot deleted.');
-                loadDashboard();
+                await loadDashboard();
             } catch (error) {
                 // Error handled by Axios interceptor
             } finally {
@@ -606,11 +849,12 @@
             }
         }
 
-        function editTreatment(id, name, description, cost) {
+        function editTreatment(id, name, description, cost, offer) {
             document.getElementById('edit-treatment-id').value = id;
             document.getElementById('edit-treatment-name').value = name;
             document.getElementById('edit-treatment-description').value = description;
             document.getElementById('edit-treatment-cost').value = cost;
+            document.getElementById('edit-treatment-offer').value = offer;
             document.getElementById('edit-treatment-modal').style.display = 'flex';
         }
 
@@ -619,18 +863,25 @@
             const name = document.getElementById('edit-treatment-name').value;
             const description = document.getElementById('edit-treatment-description').value;
             const cost = document.getElementById('edit-treatment-cost').value;
+            const offer = document.getElementById('edit-treatment-offer').value;
+            const imageFile = document.getElementById('edit-treatment-image').files[0];
+            const videoFile = document.getElementById('edit-treatment-video').files[0];
 
             if (!name || !description || !cost) {
-                showAlert('Please fill all fields.', 'error');
+                showAlert('Please fill all required fields.', 'error');
                 return;
             }
 
             showSpinner('edit-treatment-spinner');
             try {
-                await axios.put(`${API_URL}/admin/treatments/${id}`, { name, description, cost }, { headers: { Authorization: `Bearer ${token}` } });
-                showAlert('Treatment updated.');
+                const { image, video } = await uploadFiles(imageFile, videoFile);
+                await axios.put(`${API_URL}/admin/treatments/${id}`, { name, description, cost: parseFloat(cost), offer, image, video }, {
+                    headers: { Authorization: `Bearer ${token}` },
+                    timeout: 10000
+                });
+                showAlert('Treatment updated. Changes will reflect on the user page.');
                 closeModal();
-                loadDashboard();
+                await loadDashboard();
             } catch (error) {
                 // Error handled by Axios interceptor
             } finally {
@@ -643,29 +894,71 @@
             document.getElementById('edit-treatment-form').reset();
         }
 
+        function openReplyModal(id, email) {
+            document.getElementById('reply-contact-id').value = id;
+            document.getElementById('reply-contact-email').value = email;
+            document.getElementById('reply-contact-message').value = '';
+            document.getElementById('reply-contact-modal').style.display = 'flex';
+        }
+
+        function closeReplyModal() {
+            document.getElementById('reply-contact-modal').style.display = 'none';
+            document.getElementById('reply-contact-form').reset();
+        }
+
+        async function sendReply() {
+            const id = document.getElementById('reply-contact-id').value;
+            const email = document.getElementById('reply-contact-email').value;
+            const message = document.getElementById('reply-contact-message').value;
+
+            if (!message) {
+                showAlert('Please enter a reply message.', 'error');
+                return;
+            }
+
+            showSpinner('reply-contact-spinner');
+            try {
+                await axios.post(`${API_URL}/admin/contact/reply`, { contactId: id, email, message }, {
+                    headers: { Authorization: `Bearer ${token}` },
+                    timeout: 10000
+                });
+                showAlert('Reply sent successfully to ' + email);
+                closeReplyModal();
+                await loadDashboard();
+            } catch (error) {
+                // Error handled by Axios interceptor
+            } finally {
+                hideSpinner('reply-contact-spinner');
+            }
+        }
+
         async function addTreatment() {
             const id = document.getElementById('treatment-id').value;
             const name = document.getElementById('treatment-name').value;
             const description = document.getElementById('treatment-description').value;
             const cost = document.getElementById('treatment-cost').value;
+            const offer = document.getElementById('treatment-offer').value;
+            const imageFile = document.getElementById('treatment-image').files[0];
+            const videoFile = document.getElementById('treatment-video').files[0];
 
             if (!name || !description || !cost) {
-                showAlert('Please fill all fields.', 'error');
+                showAlert('Please fill all required fields.', 'error');
                 return;
             }
 
             showSpinner('treatment-spinner');
             try {
-                const config = { headers: { Authorization: `Bearer ${token}` } };
+                const { image, video } = await uploadFiles(imageFile, videoFile);
+                const config = { headers: { Authorization: `Bearer ${token}` }, timeout: 10000 };
                 if (id) {
-                    await axios.put(`${API_URL}/admin/treatments/${id}`, { name, description, cost }, config);
-                    showAlert('Treatment updated.');
+                    await axios.put(`${API_URL}/admin/treatments/${id}`, { name, description, cost: parseFloat(cost), offer, image, video }, config);
+                    showAlert('Treatment updated. Changes will reflect on the user page.');
                 } else {
-                    await axios.post(`${API_URL}/admin/treatments`, { name, description, cost }, config);
-                    showAlert('Treatment added.');
+                    await axios.post(`${API_URL}/admin/treatments`, { name, description, cost: parseFloat(cost), offer, image, video }, config);
+                    showAlert('Treatment added successfully. Changes will reflect on the user page.');
                 }
                 clearTreatmentForm();
-                loadDashboard();
+                await loadDashboard();
             } catch (error) {
                 // Error handled by Axios interceptor
             } finally {
@@ -681,12 +974,12 @@
         }
 
         async function deleteTreatment(id) {
-            if (!confirm('Are you sure you want to delete this treatment?')) return;
+            if (!confirm('Are you sure you want to delete this treatment? This will reflect on the user page.')) return;
             showSpinner('treatment-spinner');
             try {
-                await axios.delete(`${API_URL}/admin/treatments/${id}`, { headers: { Authorization: `Bearer ${token}` } });
-                showAlert('Treatment deleted.');
-                loadDashboard();
+                await axios.delete(`${API_URL}/admin/treatments/${id}`, { headers: { Authorization: `Bearer ${token}` }, timeout: 10000 });
+                showAlert('Treatment deleted. Changes will reflect on the user page.');
+                await loadDashboard();
             } catch (error) {
                 // Error handled by Axios interceptor
             } finally {
@@ -697,9 +990,9 @@
         async function updateAppointmentStatus(id, status) {
             showSpinner('appointment-spinner');
             try {
-                await axios.put(`${API_URL}/admin/appointments/${id}`, { status }, { headers: { Authorization: `Bearer ${token}` } });
+                await axios.put(`${API_URL}/admin/appointments/${id}`, { status }, { headers: { Authorization: `Bearer ${token}` }, timeout: 10000 });
                 showAlert('Appointment status updated.');
-                loadDashboard();
+                await loadDashboard();
             } catch (error) {
                 // Error handled by Axios interceptor
             } finally {
@@ -707,11 +1000,14 @@
             }
         }
 
-        // Initialize dashboard spinner (not rendered in DOM)
         document.addEventListener('DOMContentLoaded', () => {
             const spinner = document.createElement('div');
             spinner.id = 'dashboard-spinner';
             spinner.className = 'spinner';
+            spinner.style.position = 'fixed';
+            spinner.style.top = '50%';
+            spinner.style.left = '50%';
+            spinner.style.transform = 'translate(-50%, -50%)';
             document.body.appendChild(spinner);
         });
     </script>
