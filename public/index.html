@@ -39,6 +39,10 @@
             height: 60px;
             object-fit: contain;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .logo-img:hover {
+            transform: scale(1.1);
         }
         @media (max-width: 768px) {
             .logo-img {
@@ -461,7 +465,7 @@
         }
         .virtual-tour-container {
             position: relative;
-            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            padding-bottom: 56.25%;
             height: 0;
             overflow: hidden;
             border-radius: 12px;
@@ -600,25 +604,6 @@
             0% { transform: translate(-50%, -50%) rotate(0deg); }
             100% { transform: translate(-50%, -50%) rotate(360deg); }
         }
-        .smile-gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1rem;
-        }
-        .smile-gallery-grid img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-        }
-        @media (max-width: 768px) {
-            .smile-gallery-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 0.5rem;
-            }
-            .smile-gallery-grid img {
-                height: 120px;
-            }
-        }
         #appointment-form {
             background: linear-gradient(135deg, #ffffff, #e6e6fa);
             border-radius: 12px;
@@ -642,6 +627,21 @@
             }
             #appointment-form label {
                 font-size: 0.9rem;
+            }
+        }
+        .alert-message {
+            text-align: center;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 0 auto;
+            max-width: 90%;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+        @media (max-width: 768px) {
+            .alert-message {
+                font-size: 0.9rem;
+                padding: 0.75rem;
             }
         }
     </style>
@@ -688,7 +688,6 @@
                 <div class="dropdown">
                     <a href="#" class="nav-link hover:text-blue-600" aria-label="Resources menu">Resources</a>
                     <div class="dropdown-menu">
-                        <a href="#smile-gallery" class="hover:text-blue-600" aria-label="Go to Smile Gallery section">Smile Gallery</a>
                         <a href="#testimonials" class="hover:text-blue-600" aria-label="Go to Testimonials section">Testimonials</a>
                         <a href="#virtual-tour" class="hover:text-blue-600" aria-label="Go to Virtual Tour section">Virtual Tour</a>
                         <a href="#blog" class="hover:text-blue-600" aria-label="Go to Blog section">Blog</a>
@@ -800,33 +799,6 @@
         </div>
     </section>
 
-    <!-- Before/After Smile Gallery -->
-    <section id="smile-gallery" class="py-16 bg-yellow-50 section-animate">
-        <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-extrabold text-center mb-8 text-gray-800">Before & After Smile Gallery</h2>
-            <div class="smile-gallery-grid max-w-4xl mx-auto">
-                <div class="text-center">
-                    <p class="text-gray-700 mb-2 font-semibold">Before</p>
-                    <img src="https://i.postimg.cc/3R4YvL2Z/before-smile-1.jpg" alt="Before smile transformation 1">
-                    <p class="text-gray-700 mt-2 font-semibold">After</p>
-                    <img src="https://i.postimg.cc/7YkP5q4J/after-smile-1.jpg" alt="After smile transformation 1">
-                </div>
-                <div class="text-center">
-                    <p class="text-gray-700 mb-2 font-semibold">Before</p>
-                    <img src="https://i.postimg.cc/NGGqL9s8/before-smile-2.jpg" alt="Before smile transformation 2">
-                    <p class="text-gray-700 mt-2 font-semibold">After</p>
-                    <img src="https://i.postimg.cc/7ZxWjR7Y/after-smile-2.jpg" alt="After smile transformation 2">
-                </div>
-                <div class="text-center">
-                    <p class="text-gray-700 mb-2 font-semibold">Before</p>
-                    <img src="https://i.postimg.cc/5yW2YkQB/before-smile-3.jpg" alt="Before smile transformation 3">
-                    <p class="text-gray-700 mt-2 font-semibold">After</p>
-                    <img src="https://i.postimg.cc/KzqP3mL8/after-smile-3.jpg" alt="After smile transformation 3">
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- Testimonials Section with Feedback -->
     <section id="testimonials" class="py-16 bg-blue-50 section-animate">
         <div class="container mx-auto px-4">
@@ -920,32 +892,32 @@
             <h2 class="text-3xl font-extrabold text-center mb-8 text-gray-800">Dental Health Blog</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div class="blog-card bg-white rounded-lg shadow-md card">
-                    <img src="https://i.postimg.cc/3JqM4N5V/Blog-1.jpg" alt="Maintaining Oral Hygiene with Braces" class="w-full">
+                    <img src="https://i.postimg.cc/vTjKPVVn/BRACE.jpg" alt="Maintaining Oral Hygiene with Braces" class="w-full">
                     <div class="p-6">
                         <h3 class="text-xl font-semibold mb-2 text-gray-800">Maintaining Oral Hygiene with Braces</h3>
                         <p class="text-gray-700 mb-4">Learn essential tips to keep your teeth clean while wearing braces, including brushing techniques and dietary advice.</p>
-                        <a href="blogs.html#oral-hygiene-braces" class="btn inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" aria-label="Read more about maintaining oral hygiene with braces">Read More</a>
+                        <a href="blog.html#oral-hygiene-braces" class="btn inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" aria-label="Read more about maintaining oral hygiene with braces">Read More</a>
                     </div>
                 </div>
                 <div class="blog-card bg-white rounded-lg shadow-md card">
-                    <img src="https://i.postimg.cc/zXwYvNqW/Blog-2.jpg" alt="Benefits of Dental Implants" class="w-full">
+                    <img src="https://i.postimg.cc/T3fzBRDK/BLOG1.jpg" alt="Benefits of Dental Implants" class="w-full">
                     <div class="p-6">
                         <h3 class="text-xl font-semibold mb-2 text-gray-800">Benefits of Dental Implants</h3>
                         <p class="text-gray-700 mb-4">Discover why dental implants are a long-lasting solution for missing teeth and how they can improve your quality of life.</p>
-                        <a href="blogs.html#dental-implants-benefits" class="btn inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" aria-label="Read more about the benefits of dental implants">Read More</a>
+                        <a href="blog.html#dental-implants-benefits" class="btn inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" aria-label="Read more about the benefits of dental implants">Read More</a>
                     </div>
                 </div>
                 <div class="blog-card bg-white rounded-lg shadow-md card">
-                    <img src="https://i.postimg.cc/8C7YqWqH/Blog-3.jpg" alt="Cosmetic Dentistry Trends" class="w-full">
+                    <img src="https://i.postimg.cc/vTjKPVVn/BRACE.jpg" alt="Cosmetic Dentistry Trends" class="w-full">
                     <div class="p-6">
                         <h3 class="text-xl font-semibold mb-2 text-gray-800">Cosmetic Dentistry Trends in 2025</h3>
                         <p class="text-gray-700 mb-4">Explore the latest trends in cosmetic dentistry, from teeth whitening to veneers, and how they can enhance your smile.</p>
-                        <a href="blogs.html#cosmetic-dentistry-trends" class="btn inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" aria-label="Read more about cosmetic dentistry trends in 2025">Read More</a>
+                        <a href="blog.html#cosmetic-dentistry-trends" class="btn inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" aria-label="Read more about cosmetic dentistry trends in 2025">Read More</a>
                     </div>
                 </div>
             </div>
             <div class="text-center mt-8">
-                <a href="blogs.html" class="btn inline-block bg-green-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-green-700 shadow-md" aria-label="Explore more dental health blogs">Know More</a>
+                <a href="blog.html" class="btn inline-block bg-green-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-green-700 shadow-md" aria-label="Explore more dental health blogs">Know More</a>
             </div>
         </div>
     </section>
@@ -1062,7 +1034,7 @@
     <div id="appointment-modal">
         <div class="modal-content">
             <h3 class="text-2xl font-extrabold mb-4 text-gray-800">Appointment Confirmed!</h3>
-            <p class="text-gray-700 mb-4">Thank you for booking with OAK Dental Hospital. You will receive a confirmation email and SMS shortly.</p>
+            <p class="text-gray-700 mb-4 alert-message">Thank you for booking with OAK Dental Hospital. You will receive a confirmation email and SMS shortly.</p>
             <button onclick="closeModal()" class="btn bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700" aria-label="Close confirmation modal">Close</button>
         </div>
     </div>
@@ -1072,7 +1044,7 @@
         <div class="container mx-auto px-4">
             <h2 class="text-3xl font-extrabold text-center mb-8 text-gray-800">Manage Appointments</h2>
             <div id="status-display" class="max-w-lg mx-auto status-card">
-                <p class="text-gray-700 mb-4">Enter your email to check or cancel your appointment status.</p>
+                <p class="text-gray-700 mb-4 alert-message">Enter your email to check or cancel your appointment status.</p>
                 <div class="mt-4">
                     <input type="email" id="status-email" class="w-full p-3 border rounded-lg shadow-sm mb-4" placeholder="Your Email" required aria-required="true">
                     <div class="flex space-x-4">
@@ -1243,7 +1215,7 @@
                 const container = document.getElementById('carousel-container');
                 container.innerHTML = '';
                 if (filteredTreatments.length === 0) {
-                    container.innerHTML = '<p class="text-gray-700 text-center">No treatments available at the moment.</p>';
+                    container.innerHTML = '<p class="text-gray-700 text-center alert-message">No treatments available at the moment.</p>';
                     return;
                 }
                 filteredTreatments.forEach((treatment, index) => {
@@ -1277,7 +1249,7 @@
             } catch (error) {
                 console.error('Error loading treatments:', error);
                 const container = document.getElementById('carousel-container');
-                container.innerHTML = '<p class="text-red-600 text-center">Failed to load treatments. Please try again later.</p>';
+                container.innerHTML = '<p class="text-red-600 text-center alert-message">Failed to load treatments. Please try again later.</p>';
             } finally {
                 hideSpinner();
             }
@@ -1335,7 +1307,7 @@
             const container = document.getElementById('carousel-container');
             container.innerHTML = '';
             if (filteredTreatments.length === 0) {
-                container.innerHTML = '<p class="text-gray-700 text-center">No treatments match your criteria.</p>';
+                container.innerHTML = '<p class="text-gray-700 text-center alert-message">No treatments match your criteria.</p>';
                 return;
             }
             filteredTreatments.forEach((treatment, index) => {
@@ -1449,7 +1421,7 @@
             const serviceId = document.getElementById('service').value;
 
             if (!name || !email || !phone || !date || !time || !serviceId) {
-                alert('Please fill all fields to book an appointment.');
+                alert('Please fill all fields to book an appointment.', { class: 'alert-message bg-red-100 text-red-600' });
                 return;
             }
 
@@ -1495,7 +1467,7 @@
                 await handlePostPayment(transactionResponse, appointmentData);
             } catch (error) {
                 console.error('Payment initiation error:', error);
-                alert('Payment failed. Please try again or contact support.');
+                alert('Payment failed. Please try again or contact support.', { class: 'alert-message bg-red-100 text-red-600' });
             } finally {
                 hideSpinner();
             }
@@ -1507,521 +1479,525 @@
                 await sendNotifications(appointmentData, transactionResponse);
 
                 if (Notification.permission === 'granted') {
-                    new Notification('Appointment Confirmed', {
-                        body: `Thank you, ${appointmentData.name}! Your appointment is confirmed for ${appointmentData.date} at ${appointmentData.time}.`,
-                        icon: 'https://i.postimg.cc/50vXRG8K/ram.jpg'
+                        new Notification('Appointment Confirmed', {
+                            body: `Thank you, ${appointmentData.name}! Your appointment is confirmed for ${appointmentData.date} at ${appointmentData.time}.`,
+                            icon: 'https://i.postimg.cc/50vXRG8K/ram.jpg'
+                        });
+                    } else if (Notification.permission !== 'denied') {
+                        Notification.requestPermission().then(permission => {
+                            if (permission === 'granted') {
+                                new Notification('Appointment Confirmed', {
+                                    body: `Thank you, ${appointmentData.name}! Your appointment is confirmed for ${appointmentData.date} at ${appointmentData.time}.`,
+                                    icon: 'https://i.postimg.cc/50vXRG8K/ram.jpg'
+                                });
+                            }
+                        });
+                    }
+
+                    alert(`Payment successful! Transaction ID: ${transactionResponse.transactionId}`, { class: 'alert-message bg-green-100 text-green-600' });
+                    document.getElementById('appointment-modal').style.display = 'flex';
+                    document.getElementById('appointment-form').reset();
+
+                    gtag('event', 'purchase', {
+                        'event_category': 'Payment',
+                        'event_label': 'Appointment Deposit',
+                        'value': 10
                     });
-                } else if (Notification.permission !== 'denied') {
-                    Notification.requestPermission().then(permission => {
-                        if (permission === 'granted') {
-                            new Notification('Appointment Confirmed', {
-                                body: `Thank you, ${appointmentData.name}! Your appointment is confirmed for ${appointmentData.date} at ${appointmentData.time}.`,
-                                icon: 'https://i.postimg.cc/50vXRG8K/ram.jpg'
-                            });
+                } catch (error) {
+                    console.error('Error handling post-payment:', error);
+                    alert('Payment processed, but there was an issue with notifications. Please contact support.', { class: 'alert-message bg-red-100 text-red-600' });
+                } finally {
+                    hideSpinner();
+                }
+            }
+
+            async function sendNotifications(appointmentData, transactionResponse) {
+                try {
+                    const emailResponse = await axios.post(`${API_URL}/send-email`, {
+                        to: appointmentData.email,
+                        subject: 'Appointment Confirmation - OAK Dental Hospital',
+                        body: `Dear ${appointmentData.name},\n\nYour appointment is confirmed for ${appointmentData.date} at ${appointmentData.time}.\nTransaction ID: ${transactionResponse.transactionId}\n\nThank you for choosing OAK Dental Hospital!\n\nBest regards,\nOAK Dental Team`
+                    });
+
+                    const smsResponse = await axios.post(`${API_URL}/send-sms`, {
+                        to: appointmentData.phone,
+                        message: `Dear ${appointmentData.name}, your appointment at OAK Dental Hospital is confirmed for ${appointmentData.date} at ${appointmentData.time}. Transaction ID: ${transactionResponse.transactionId}.`
+                    });
+
+                    if (emailResponse.status !== 200 || smsResponse.status !== 200) {
+                        throw new Error('Failed to send notifications');
+                    }
+                } catch (error) {
+                    console.error('Error sending notifications:', error);
+                    throw error;
+                }
+            }
+
+            function closeModal() {
+                document.getElementById('appointment-modal').style.display = 'none';
+            }
+
+            async function checkStatus() {
+                const email = document.getElementById('status-email').value;
+                if (!email) {
+                    alert('Please enter your email to check appointment status.', { class: 'alert-message bg-red-100 text-red-600' });
+                    return;
+                }
+
+                try {
+                    showSpinner();
+                    const response = await axios.get(`${API_URL}/appointments?email=${email}`, { timeout: 10000 });
+                    const statusResult = document.getElementById('status-result');
+
+                    if (response.data.length === 0) {
+                        statusResult.innerHTML = '<p class="text-red-600 alert-message">No appointments found for this email.</p>';
+                        return;
+                    }
+
+                    statusResult.innerHTML = '';
+                    response.data.forEach(appointment => {
+                        const appointmentCard = document.createElement('div');
+                        appointmentCard.className = 'status-card mt-4';
+                        appointmentCard.innerHTML = `
+                            <p class="text-gray-700"><strong>Name:</strong> ${appointment.name}</p>
+                            <p class="text-gray-700"><strong>Date:</strong> ${appointment.date}</p>
+                            <p class="text-gray-700"><strong>Time:</strong> ${appointment.time}</p>
+                            <p class="text-gray-700"><strong>Service:</strong> ${appointment.service}</p>
+                            <p class="text-gray-700"><strong>Status:</strong> ${appointment.status || 'Confirmed'}</p>
+                        `;
+                        statusResult.appendChild(appointmentCard);
+                    });
+                } catch (error) {
+                    console.error('Error checking appointment status:', error);
+                    document.getElementById('status-result').innerHTML = '<p class="text-red-600 alert-message">Failed to check appointment status. Please try again later.</p>';
+                } finally {
+                    hideSpinner();
+                }
+            }
+
+            async function cancelAppointment() {
+                const email = document.getElementById('status-email').value;
+                if (!email) {
+                    alert('Please enter your email to cancel an appointment.', { class: 'alert-message bg-red-100 text-red-600' });
+                    return;
+                }
+
+                try {
+                    showSpinner();
+                    const response = await axios.delete(`${API_URL}/appointments?email=${email}`, { timeout: 10000 });
+                    const statusResult = document.getElementById('status-result');
+
+                    if (response.status === 200) {
+                        statusResult.innerHTML = '<p class="text-green-600 alert-message">Appointment cancelled successfully.</p>';
+                    } else {
+                        statusResult.innerHTML = '<p class="text-red-600 alert-message">No appointments found to cancel.</p>';
+                    }
+                } catch (error) {
+                    console.error('Error cancelling appointment:', error);
+                    document.getElementById('status-result').innerHTML = '<p class="text-red-600 alert-message">Failed to cancel appointment. Please try again later.</p>';
+                } finally {
+                    hideSpinner();
+                }
+            }
+
+            async function submitContact() {
+                const name = document.getElementById('contact-name').value;
+                const email = document.getElementById('contact-email').value;
+                const message = document.getElementById('message').value;
+
+                if (!name || !email || !message) {
+                    alert('Please fill all fields in the contact form.', { class: 'alert-message bg-red-100 text-red-600' });
+                    return;
+                }
+
+                try {
+                    showSpinner();
+                    const response = await axios.post(`${API_URL}/contact`, { name, email, message }, { timeout: 10000 });
+
+                    if (response.status === 200) {
+                        alert('Message sent successfully! We will get back to you soon.', { class: 'alert-message bg-green-100 text-green-600' });
+                        document.getElementById('contact-form').reset();
+                    }
+                } catch (error) {
+                    console.error('Error submitting contact form:', error);
+                    alert('Failed to send message. Please try again later.', { class: 'alert-message bg-red-100 text-red-600' });
+                } finally {
+                    hideSpinner();
+                }
+            }
+
+            async function subscribeNewsletter() {
+                const email = document.getElementById('newsletter-email').value;
+
+                if (!email) {
+                    alert('Please enter your email to subscribe.', { class: 'alert-message bg-red-100 text-red-600' });
+                    return;
+                }
+
+                try {
+                    showSpinner();
+                    const response = await axios.post(`${API_URL}/newsletter`, { email }, { timeout: 10000 });
+
+                    if (response.status === 200) {
+                        alert('Subscribed successfully! Stay tuned for updates.', { class: 'alert-message bg-green-100 text-green-600' });
+                        document.getElementById('newsletter-email').value = '';
+                    }
+                } catch (error) {
+                    console.error('Error subscribing to newsletter:', error);
+                    alert('Failed to subscribe. Please try again later.', { class: 'alert-message bg-red-100 text-red-600' });
+                } finally {
+                    hideSpinner();
+                }
+            }
+
+            function callClinic() {
+                window.location.href = 'tel:+917569366767';
+            }
+
+            function toggleFAQ(element) {
+                const faqItem = element.parentElement;
+                const isActive = faqItem.classList.contains('active');
+                document.querySelectorAll('.faq-item').forEach(item => {
+                    item.classList.remove('active');
+                    item.querySelector('h3').setAttribute('aria-expanded', 'false');
+                    item.querySelector('.faq-answer').style.display = 'none';
+                    item.querySelector('.fas').classList.remove('fa-chevron-up');
+                    item.querySelector('.fas').classList.add('fa-chevron-down');
+                });
+
+                if (!isActive) {
+                    faqItem.classList.add('active');
+                    element.setAttribute('aria-expanded', 'true');
+                    faqItem.querySelector('.faq-answer').style.display = 'block';
+                    element.querySelector('.fas').classList.remove('fa-chevron-down');
+                    element.querySelector('.fas').classList.add('fa-chevron-up');
+                }
+            }
+
+            async function submitFeedback() {
+                const name = document.getElementById('feedback-name').value;
+                const rating = document.querySelector('input[name="rating"]:checked')?.value;
+                const description = document.getElementById('feedback-description').value;
+                const date = new Date().toISOString();
+
+                if (!name || !rating || !description) {
+                    alert('Please fill all fields to submit feedback.', { class: 'alert-message bg-red-100 text-red-600' });
+                    return;
+                }
+
+                try {
+                    showSpinner();
+                    const response = await axios.post(`${API_URL}/feedback`, { name, rating, description, date }, { timeout: 10000 });
+
+                    if (response.status === 200 || response.status === 201) {
+                        alert('Thank you for your valuable feedback!', { class: 'alert-message bg-green-100 text-green-600' });
+                        document.getElementById('feedback-name').value = '';
+                        document.getElementById('feedback-description').value = '';
+                        document.querySelector('input[name="rating"]:checked').checked = false;
+                        loadFeedback();
+                    }
+                } catch (error) {
+                    console.error('Error submitting feedback:', error);
+                    alert('Failed to submit feedback. Please try again later.', { class: 'alert-message bg-red-100 text-red-600' });
+                } finally {
+                    hideSpinner();
+                }
+            }
+
+            async function loadFeedback() {
+                try {
+                    showSpinner();
+                    const response = await axios.get(`${API_URL}/feedback`, { timeout: 10000 });
+                    const feedbackList = document.getElementById('feedback-list');
+                    feedbackList.innerHTML = '';
+
+                    if (response.data.length === 0) {
+                        feedbackList.innerHTML = '<p class="text-gray-700 text-center alert-message">No feedback available yet.</p>';
+                        return;
+                    }
+
+                    response.data.forEach(feedback => {
+                        const stars = '★'.repeat(feedback.rating) + '☆'.repeat(5 - feedback.rating);
+                        const feedbackCard = document.createElement('div');
+                        feedbackCard.className = 'feedback-card';
+                        feedbackCard.innerHTML = `
+                            <div class="feedback-stars">${stars}</div>
+                            <p class="text-gray-700 mb-2">"${feedback.description}"</p>
+                            <p class="text-gray-600 font-semibold">— ${feedback.name}</p>
+                            <p class="text-gray-500 text-sm">${new Date(feedback.date).toLocaleDateString()}</p>
+                        `;
+                        feedbackList.appendChild(feedbackCard);
+                    });
+                } catch (error) {
+                    console.error('Error loading feedback:', error);
+                    const feedbackList = document.getElementById('feedback-list');
+                    feedbackList.innerHTML = '<p class="text-red-600 text-center alert-message">Failed to load feedback. Please try again later.</p>';
+                } finally {
+                    hideSpinner();
+                }
+            }
+
+            async function downloadPDF(type) {
+                try {
+                    showSpinner();
+                    let content;
+                    if (type === 'braces-guide') {
+                        content = `
+                            \\documentclass{article}
+                            \\usepackage[utf8]{inputenc}
+                            \\usepackage{geometry}
+                            \\geometry{a4paper, margin=1in}
+                            \\title{Guide to Braces}
+                            \\author{OAK Dental Hospital}
+                            \\date{May 2025}
+
+                            \\begin{document}
+
+                            \\begin{center}
+                            \\textbf{\\Large OAK Dental Hospital}\\\\
+                            \\vspace{0.2cm}
+                            2nd Floor, Vision Apartments, Gandhi Nagar, Nizampet Road, Bachupally, Hyderabad - 500090\\\\
+                            Phone: +91 7569 366 767
+                            \\end{center}
+
+                            \\maketitle
+
+                            \\section*{Introduction}
+                            At OAK Dental Hospital, we understand that getting braces is a significant step towards a healthier, more confident smile. This guide provides essential tips to help you care for your braces and maintain excellent oral hygiene during your treatment.
+
+                            \\section*{Daily Care Tips}
+                            \\begin{itemize}
+                                \\item \\textbf{Brushing:} Brush your teeth at least twice a day using a soft-bristled toothbrush. Pay extra attention to the areas around brackets and wires.
+                                \\item \\textbf{Flossing:} Floss daily to remove food particles and plaque from between teeth and under the gumline. Use floss threaders or interdental brushes for easier access.
+                                \\item \\textbf{Mouthwash:} Rinse with an antimicrobial mouthwash to reduce bacteria and keep your mouth fresh.
+                            \\end{itemize}
+
+                            \\section*{Foods to Avoid}
+                            \\begin{itemize}
+                                \\item \\textbf{Sticky Foods:} Avoid chewing gum, caramel, and toffee, as they can get stuck in your braces and cause damage.
+                                \\item \\textbf{Hard Foods:} Nuts, hard candies, and popcorn can break brackets or wires. Opt for softer alternatives.
+                                \\item \\textbf{Sugary Foods:} Limit sugary snacks and drinks to prevent cavities, as braces can trap food particles.
+                            \\end{itemize}
+
+                            \\section*{Handling Discomfort}
+                            \\begin{itemize}
+                                \\item \\textbf{Wax:} Use orthodontic wax to cover any brackets or wires that irritate your cheeks or gums.
+                                \\item \\textbf{Pain Relief:} Over-the-counter pain relievers like ibuprofen can help with initial soreness. Consult your dentist if discomfort persists.
+                                \\item \\textbf{Emergencies:} If a bracket breaks or a wire pokes out, contact OAK Dental Hospital immediately at +91 7569 366 767.
+                            \\end{itemize}
+
+                            \\section*{Regular Check-ups}
+                            Schedule regular appointments with your orthodontist at OAK Dental Hospital to monitor your progress and make necessary adjustments. Typically, you’ll need to visit every 4-6 weeks.
+
+                            \\section*{Conclusion}
+                            Caring for your braces requires diligence, but the result—a beautiful, straight smile—is worth it! For any questions or concerns, feel free to reach out to us at OAK Dental Hospital. We’re here to support you every step of the way.
+
+                            \\end{document}
+                        `;
+                    } else if (type === 'implant-aftercare') {
+                        content = `
+                            \\documentclass{article}
+                            \\usepackage[utf8]{inputenc}
+                            \\usepackage{geometry}
+                            \\geometry{a4paper, margin=1in}
+                            \\title{Implant Aftercare}
+                            \\author{OAK Dental Hospital}
+                            \\date{May 2025}
+
+                            \\begin{document}
+
+                            \\begin{center}
+                            \\textbf{\\Large OAK Dental Hospital}\\\\
+                            \\vspace{0.2cm}
+                            2nd Floor, Vision Apartments, Gandhi Nagar, Nizampet Road, Bachupally, Hyderabad - 500090\\\\
+                            Phone: +91 7569 366 767
+                            \\end{center}
+
+                            \\maketitle
+
+                            \\section*{Introduction}
+                            Congratulations on your new dental implant from OAK Dental Hospital! Proper aftercare is crucial to ensure the longevity and success of your implant. This guide provides tips to help you recover and maintain your implant effectively.
+
+                            \\section*{Immediate Post-Surgery Care}
+                            \\begin{itemize}
+                                \\item \\textbf{Rest:} Avoid strenuous activities for at least 48 hours after surgery to promote healing.
+                                \\item \\textbf{Ice Packs:} Apply ice packs to the outside of your cheek for 15-minute intervals to reduce swelling.
+                                \\item \\textbf{Medication:} Take prescribed antibiotics and pain relievers as directed by your dentist to prevent infection and manage discomfort.
+                            \\end{itemize}
+
+                            \\section*{Oral Hygiene}
+                            \\begin{itemize}
+                                \\item \\textbf{Gentle Cleaning:} Brush gently around the implant site with a soft-bristled toothbrush. Avoid the surgical area for the first few days.
+                                \\item \\textbf{Rinsing:} Rinse your mouth with a saltwater solution (1 tsp salt in a glass of warm water) 2-3 times a day to keep the area clean.
+                                \\item \\textbf{Avoid Irritation:} Do not touch the implant site with your fingers or tongue to prevent infection.
+                            \\end{itemize}
+
+                            \\section*{Dietary Guidelines}
+                            \\begin{itemize}
+                                \\item \\textbf{Soft Foods:} Stick to soft foods like yogurt, mashed potatoes, and smoothies for the first week.
+                                \\item \\textbf{Avoid Hot Foods:} Avoid hot foods and drinks for the first 48 hours to prevent irritation.
+                                \\item \\textbf{Stay Hydrated:} Drink plenty of water, but avoid using a straw, as the suction can dislodge the blood clot.
+                            \\end{itemize}
+
+                            \\section*{Long-Term Maintenance}
+                            \\begin{itemize}
+                                \\item \\textbf{Regular Brushing:} Brush twice daily and floss around the implant to prevent plaque buildup.
+                                \\item \\textbf{Dental Visits:} Schedule regular check-ups with OAK Dental Hospital to monitor the health of your implant.
+                                \\item \\textbf{Avoid Hard Chewing:} Avoid chewing on hard objects like ice or pens, which can damage the implant.
+                            \\end{itemize}
+
+                            \\section*{When to Contact Us}
+                            If you experience severe pain, excessive bleeding, or signs of infection (redness, swelling, or pus), contact OAK Dental Hospital immediately at +91 7569 366 767.
+
+                            \\section*{Conclusion}
+                            With proper care, your dental implant can last a lifetime. The team at OAK Dental Hospital is here to support you throughout your recovery and beyond. Feel free to reach out with any questions!
+
+                            \\end{document}
+                        `;
+                    } else if (type === 'kids-dental-care') {
+                        content = `
+                            \\documentclass{article}
+                            \\usepackage[utf8]{inputenc}
+                            \\usepackage{geometry}
+                            \\geometry{a4paper, margin=1in}
+                            \\title{Kids' Dental Care}
+                            \\author{OAK Dental Hospital}
+                            \\date{May 2025}
+
+                            \\begin{document}
+
+                            \\begin{center}
+                            \\textbf{\\Large OAK Dental Hospital}\\\\
+                            \\vspace{0.2cm}
+                            2nd Floor, Vision Apartments, Gandhi Nagar, Nizampet Road, Bachupally, Hyderabad - 500090\\\\
+                            Phone: +91 7569 366 767
+                            \\end{center}
+
+                            \\maketitle
+
+                            \\section*{Introduction}
+                            At OAK Dental Hospital, we believe that establishing good dental habits early sets the foundation for a lifetime of healthy smiles. This guide offers tips to help parents ensure their children’s teeth remain strong and healthy from infancy to adolescence.
+
+                            \\section*{Infant Dental Care}
+                            \\begin{itemize}
+                                \\item \\textbf{Clean Gums:} Even before teeth emerge, clean your baby’s gums with a soft, damp cloth after feedings.
+                                \\item \\textbf{First Tooth:} Once the first tooth appears (usually between 6-12 months), start brushing with a small, soft-bristled toothbrush and a rice-grain-sized amount of fluoride toothpaste.
+                                \\item \\textbf{Avoid Bottle Decay:} Don’t let your baby sleep with a bottle of milk or juice, as it can lead to tooth decay.
+                            \\end{itemize}
+
+                            \\section*{Toddler and Preschooler Care}
+                            \\begin{itemize}
+                                \\item \\textbf{Brushing Routine:} Brush your child’s teeth twice daily with a pea-sized amount of fluoride toothpaste. Supervise until they can brush effectively on their own (around age 6).
+                                \\item \\textbf{Flossing:} Start flossing once your child’s teeth touch each other to remove food particles and plaque.
+                                \\item \\textbf{Dental Visits:} Schedule your child’s first dental visit by their first birthday or within 6 months of their first tooth erupting. Regular check-ups at OAK Dental Hospital help catch issues early.
+                            \\end{itemize}
+
+                            \\section*{School-Age Children}
+                            \\begin{itemize}
+                                \\item \\textbf{Healthy Snacks:} Encourage healthy snacks like fruits and vegetables instead of sugary treats to reduce the risk of cavities.
+                                \\item \\textbf{Mouthguards:} If your child plays sports, ensure they wear a mouthguard to protect their teeth from injury.
+                                \\item \\textbf{Sealants:} Ask your dentist at OAK Dental Hospital about dental sealants, which can protect molars from cavities.
+                            \\end{itemize}
+
+                            \\section*{Encouraging Good Habits}
+                            \\begin{itemize}
+                                \\item \\textbf{Make It Fun:} Use flavored toothpaste or a toothbrush with their favorite character to make brushing enjoyable.
+                                \\item \\textbf{Lead by Example:} Brush and floss alongside your child to model good habits.
+                                \\item \\textbf{Reward System:} Create a reward chart for consistent brushing and flossing to motivate your child.
+                            \\end{itemize}
+
+                            \\section*{When to Contact Us}
+                            If your child experiences tooth pain, sensitivity, or has a dental injury, contact OAK Dental Hospital at +91 7569 366 767 for prompt care.
+
+                            \\section*{Conclusion}
+                            Healthy dental habits start early, and OAK Dental Hospital is here to support your child’s oral health journey. Schedule a visit today to ensure your child’s smile stays bright and healthy!
+
+                            \\end{document}
+                        `;
+                    }
+
+                    const response = await axios.post(`${API_URL}/generate-pdf`, { content }, { responseType: 'blob', timeout: 15000 });
+                    const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', `${type}.pdf`);
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                } catch (error) {
+                    console.error('Error generating PDF:', error);
+                    alert('Failed to generate PDF. Please try again later.', { class: 'alert-message bg-red-100 text-red-600' });
+                } finally {
+                    hideSpinner();
+                }
+            }
+
+            // Admin Link Visibility (Assuming admin is logged in based on a token or session)
+            function checkAdminStatus() {
+                const adminToken = localStorage.getItem('adminToken'); // Replace with actual auth mechanism
+                const adminLink = document.getElementById('admin-link');
+                if (adminToken) {
+                    adminLink.classList.remove('hidden');
+                }
+            }
+
+            // Custom Alert Function for Consistent Styling
+            function alert(message, options = {}) {
+                const defaultClass = 'alert-message bg-blue-100 text-blue-600';
+                const alertClass = options.class || defaultClass;
+                const tempDiv = document.createElement('div');
+                tempDiv.className = alertClass;
+                tempDiv.textContent = message;
+                document.body.appendChild(tempDiv);
+                setTimeout(() => {
+                    tempDiv.remove();
+                }, 3000);
+            }
+
+            // Initialize on Page Load
+            window.onload = () => {
+                loadTreatments();
+                loadAppointmentOptions();
+                loadFeedback();
+                checkAdminStatus();
+
+                // Google Pay Button Setup
+                const gpayButton = document.getElementById('gpay-button-container');
+                gpayButton.addEventListener('click', () => initiatePayment('gpay'));
+
+                // PayPal Button Setup
+                document.getElementById('paypal-button-container').addEventListener('click', () => initiatePayment('paypal'));
+
+                // Set minimum date for appointment to today
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('date').setAttribute('min', today);
+
+                // Keyboard Accessibility for FAQs
+                document.querySelectorAll('.faq-item h3').forEach(faq => {
+                    faq.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            toggleFAQ(faq);
                         }
                     });
-                }
-
-                alert(`Payment successful! Transaction ID: ${transactionResponse.transactionId}`);
-                document.getElementById('appointment-modal').style.display = 'flex';
-                document.getElementById('appointment-form').reset();
-
-                gtag('event', 'purchase', {
-                    'event_category': 'Payment',
-                    'event_label': 'Appointment Deposit',
-                    'value': 10
-                });
-            } catch (error) {
-                console.error('Error handling post-payment:', error);
-                alert('Payment processed, but there was an issue with notifications. Please contact support.');
-            } finally {
-                hideSpinner();
-            }
-        }
-
-        async function sendNotifications(appointmentData, transactionResponse) {
-            try {
-                const emailResponse = await axios.post(`${API_URL}/send-email`, {
-                    to: appointmentData.email,
-                    subject: 'Appointment Confirmation - OAK Dental Hospital',
-                    body: `Dear ${appointmentData.name},\n\nYour appointment is confirmed for ${appointmentData.date} at ${appointmentData.time}.\nTransaction ID: ${transactionResponse.transactionId}\n\nThank you for choosing OAK Dental Hospital!\n\nBest regards,\nOAK Dental Team`
                 });
 
-                const smsResponse = await axios.post(`${API_URL}/send-sms`, {
-                    to: appointmentData.phone,
-                    message: `Dear ${appointmentData.name}, your appointment at OAK Dental Hospital is confirmed for ${appointmentData.date} at ${appointmentData.time}. Transaction ID: ${transactionResponse.transactionId}.`
+                // Lazy Loading for Images
+                document.querySelectorAll('img[loading="lazy"]').forEach(img => {
+                    img.onerror = () => {
+                        img.src = 'https://via.placeholder.com/300x200?text=Image+Not+Found';
+                    };
                 });
+            };
 
-                if (emailResponse.status !== 200 || smsResponse.status !== 200) {
-                    throw new Error('Failed to send notifications');
-                }
-            } catch (error) {
-                console.error('Error sending notifications:', error);
-                throw error;
-            }
-        }
-
-        function closeModal() {
-            document.getElementById('appointment-modal').style.display = 'none';
-        }
-
-        async function checkStatus() {
-            const email = document.getElementById('status-email').value;
-            if (!email) {
-                alert('Please enter your email to check appointment status.');
-                return;
-            }
-
-            try {
-                showSpinner();
-                const response = await axios.get(`${API_URL}/appointments?email=${email}`, { timeout: 10000 });
-                const statusResult = document.getElementById('status-result');
-
-                if (response.data.length === 0) {
-                    statusResult.innerHTML = '<p class="text-red-600">No appointments found for this email.</p>';
-                    return;
-                }
-
-                statusResult.innerHTML = '';
-                response.data.forEach(appointment => {
-                    const appointmentCard = document.createElement('div');
-                    appointmentCard.className = 'status-card mt-4';
-                    appointmentCard.innerHTML = `
-                        <p class="text-gray-700"><strong>Name:</strong> ${appointment.name}</p>
-                        <p class="text-gray-700"><strong>Date:</strong> ${appointment.date}</p>
-                        <p class="text-gray-700"><strong>Time:</strong> ${appointment.time}</p>
-                        <p class="text-gray-700"><strong>Service:</strong> ${appointment.service}</p>
-                        <p class="text-gray-700"><strong>Status:</strong> ${appointment.status || 'Confirmed'}</p>
-                    `;
-                    statusResult.appendChild(appointmentCard);
+            // Service Worker Registration
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/sw.js').then(reg => {
+                    console.log('Service Worker registered:', reg);
+                }).catch(err => {
+                    console.error('Service Worker registration failed:', err);
                 });
-            } catch (error) {
-                console.error('Error checking appointment status:', error);
-                document.getElementById('status-result').innerHTML = '<p class="text-red-600">Failed to check appointment status. Please try again later.</p>';
-            } finally {
-                hideSpinner();
             }
-        }
-
-        async function cancelAppointment() {
-            const email = document.getElementById('status-email').value;
-            if (!email) {
-                alert('Please enter your email to cancel an appointment.');
-                return;
-            }
-
-            try {
-                showSpinner();
-                const response = await axios.delete(`${API_URL}/appointments?email=${email}`, { timeout: 10000 });
-                const statusResult = document.getElementById('status-result');
-
-                if (response.status === 200) {
-                    statusResult.innerHTML = '<p class="text-green-600">Appointment cancelled successfully.</p>';
-                } else {
-                    statusResult.innerHTML = '<p class="text-red-600">No appointments found to cancel.</p>';
-                }
-            } catch (error) {
-                console.error('Error cancelling appointment:', error);
-                document.getElementById('status-result').innerHTML = '<p class="text-red-600">Failed to cancel appointment. Please try again later.</p>';
-            } finally {
-                hideSpinner();
-            }
-        }
-
-        async function submitContact() {
-            const name = document.getElementById('contact-name').value;
-            const email = document.getElementById('contact-email').value;
-            const message = document.getElementById('message').value;
-
-            if (!name || !email || !message) {
-                alert('Please fill all fields in the contact form.');
-                return;
-            }
-
-            try {
-                showSpinner();
-                const response = await axios.post(`${API_URL}/contact`, { name, email, message }, { timeout: 10000 });
-
-                if (response.status === 200) {
-                    alert('Message sent successfully! We will get back to you soon.');
-                    document.getElementById('contact-form').reset();
-                }
-            } catch (error) {
-                console.error('Error submitting contact form:', error);
-                alert('Failed to send message. Please try again later.');
-            } finally {
-                hideSpinner();
-            }
-        }
-
-        async function subscribeNewsletter() {
-            const email = document.getElementById('newsletter-email').value;
-
-            if (!email) {
-                alert('Please enter your email to subscribe.');
-                return;
-            }
-
-            try {
-                showSpinner();
-                const response = await axios.post(`${API_URL}/newsletter`, { email }, { timeout: 10000 });
-
-                if (response.status === 200) {
-                    alert('Subscribed successfully! Stay tuned for updates.');
-                    document.getElementById('newsletter-email').value = '';
-                }
-            } catch (error) {
-                console.error('Error subscribing to newsletter:', error);
-                alert('Failed to subscribe. Please try again later.');
-            } finally {
-                hideSpinner();
-            }
-        }
-
-        function callClinic() {
-            window.location.href = 'tel:+917569366767';
-        }
-
-        function toggleFAQ(element) {
-            const faqItem = element.parentElement;
-            const isActive = faqItem.classList.contains('active');
-            document.querySelectorAll('.faq-item').forEach(item => {
-                item.classList.remove('active');
-                item.querySelector('h3').setAttribute('aria-expanded', 'false');
-                item.querySelector('.faq-answer').style.display = 'none';
-                item.querySelector('.fas').classList.remove('fa-chevron-up');
-                item.querySelector('.fas').classList.add('fa-chevron-down');
-            });
-
-            if (!isActive) {
-                faqItem.classList.add('active');
-                element.setAttribute('aria-expanded', 'true');
-                faqItem.querySelector('.faq-answer').style.display = 'block';
-                element.querySelector('.fas').classList.remove('fa-chevron-down');
-                element.querySelector('.fas').classList.add('fa-chevron-up');
-            }
-        }
-
-        async function submitFeedback() {
-            const name = document.getElementById('feedback-name').value;
-            const rating = document.querySelector('input[name="rating"]:checked')?.value;
-            const description = document.getElementById('feedback-description').value;
-            const date = new Date().toISOString();
-
-            if (!name || !rating || !description) {
-                alert('Please fill all fields to submit feedback.');
-                return;
-            }
-
-            try {
-                showSpinner();
-                const response = await axios.post(`${API_URL}/feedback`, { name, rating, description, date }, { timeout: 10000 });
-
-                if (response.status === 200 || response.status === 201) {
-                    alert('Thank you for your valuable feedback!');
-                    document.getElementById('feedback-name').value = '';
-                    document.getElementById('feedback-description').value = '';
-                    document.querySelector('input[name="rating"]:checked').checked = false;
-                    loadFeedback();
-                }
-            } catch (error) {
-                console.error('Error submitting feedback:', error);
-                alert('Failed to submit feedback. Please try again later.');
-            } finally {
-                hideSpinner();
-            }
-        }
-
-        async function loadFeedback() {
-            try {
-                showSpinner();
-                const response = await axios.get(`${API_URL}/feedback`, { timeout: 10000 });
-                const feedbackList = document.getElementById('feedback-list');
-                feedbackList.innerHTML = '';
-
-                if (response.data.length === 0) {
-                    feedbackList.innerHTML = '<p class="text-gray-700 text-center">No feedback available yet.</p>';
-                    return;
-                }
-
-                response.data.forEach(feedback => {
-                    const stars = '★'.repeat(feedback.rating) + '☆'.repeat(5 - feedback.rating);
-                    const feedbackCard = document.createElement('div');
-                    feedbackCard.className = 'feedback-card';
-                    feedbackCard.innerHTML = `
-                        <div class="feedback-stars">${stars}</div>
-                        <p class="text-gray-700 mb-2">"${feedback.description}"</p>
-                        <p class="text-gray-600 font-semibold">— ${feedback.name}</p>
-                        <p class="text-gray-500 text-sm">${new Date(feedback.date).toLocaleDateString()}</p>
-                    `;
-                    feedbackList.appendChild(feedbackCard);
-                });
-            } catch (error) {
-                console.error('Error loading feedback:', error);
-                const feedbackList = document.getElementById('feedback-list');
-                feedbackList.innerHTML = '<p class="text-red-600 text-center">Failed to load feedback. Please try again later.</p>';
-            } finally {
-                hideSpinner();
-            }
-        }
-
-        async function downloadPDF(type) {
-            try {
-                showSpinner();
-                let content;
-                if (type === 'braces-guide') {
-                    content = `
-                        \\documentclass{article}
-                        \\usepackage[utf8]{inputenc}
-                        \\usepackage{graphicx}
-                        \\usepackage{geometry}
-                        \\geometry{a4paper, margin=1in}
-                        \\title{Guide to Braces}
-                        \\author{OAK Dental Hospital}
-                        \\date{May 2025}
-
-                        \\begin{document}
-
-                        \\begin{center}
-                        \\includegraphics[width=0.2\\textwidth]{https://i.postimg.cc/50vXRG8K/ram.jpg}\\\\
-                        \\vspace{0.5cm}
-                        \\textbf{\\Large OAK Dental Hospital}\\\\
-                        \\vspace{0.2cm}
-                        2nd Floor, Vision Apartments, Gandhi Nagar, Nizampet Road, Bachupally, Hyderabad - 500090\\\\
-                        Phone: +91 7569 366 767
-                        \\end{center}
-
-                        \\maketitle
-
-                        \\section*{Introduction}
-                        At OAK Dental Hospital, we understand that getting braces is a significant step towards a healthier, more confident smile. This guide provides essential tips to help you care for your braces and maintain excellent oral hygiene during your treatment.
-
-                        \\section*{Daily Care Tips}
-                        \\begin{itemize}
-                            \\item \\textbf{Brushing:} Brush your teeth at least twice a day using a soft-bristled toothbrush. Pay extra attention to the areas around brackets and wires.
-                            \\item \\textbf{Flossing:} Floss daily to remove food particles and plaque from between teeth and under the gumline. Use floss threaders or interdental brushes for easier access.
-                            \\item \\textbf{Mouthwash:} Rinse with an antimicrobial mouthwash to reduce bacteria and keep your mouth fresh.
-                        \\end{itemize}
-
-                        \\section*{Foods to Avoid}
-                        \\begin{itemize}
-                            \\item \\textbf{Sticky Foods:} Avoid chewing gum, caramel, and toffee, as they can get stuck in your braces and cause damage.
-                            \\item \\textbf{Hard Foods:} Nuts, hard candies, and popcorn can break brackets or wires. Opt for softer alternatives.
-                            \\item \\textbf{Sugary Foods:} Limit sugary snacks and drinks to prevent cavities, as braces can trap food particles.
-                        \\end{itemize}
-
-                        \\section*{Handling Discomfort}
-                        \\begin{itemize}
-                            \\item \\textbf{Wax:} Use orthodontic wax to cover any brackets or wires that irritate your cheeks or gums.
-                            \\item \\textbf{Pain Relief:} Over-the-counter pain relievers like ibuprofen can help with initial soreness. Consult your dentist if discomfort persists.
-                            \\item \\textbf{Emergencies:} If a bracket breaks or a wire pokes out, contact OAK Dental Hospital immediately at +91 7569 366 767.
-                        \\end{itemize}
-
-                        \\section*{Regular Check-ups}
-                        Schedule regular appointments with your orthodontist at OAK Dental Hospital to monitor your progress and make necessary adjustments. Typically, you’ll need to visit every 4-6 weeks.
-
-                        \\section*{Conclusion}
-                        Caring for your braces requires diligence, but the result—a beautiful, straight smile—is worth it! For any questions or concerns, feel free to reach out to us at OAK Dental Hospital. We’re here to support you every step of the way.
-
-                        \\end{document}
-                    `;
-                } else if (type === 'implant-aftercare') {
-                    content = `
-                        \\documentclass{article}
-                        \\usepackage[utf8]{inputenc}
-                        \\usepackage{graphicx}
-                        \\usepackage{geometry}
-                        \\geometry{a4paper, margin=1in}
-                        \\title{Implant Aftercare}
-                        \\author{OAK Dental Hospital}
-                        \\date{May 2025}
-
-                        \\begin{document}
-
-                        \\begin{center}
-                        \\includegraphics[width=0.2\\textwidth]{https://i.postimg.cc/50vXRG8K/ram.jpg}\\\\
-                        \\vspace{0.5cm}
-                        \\textbf{\\Large OAK Dental Hospital}\\\\
-                        \\vspace{0.2cm}
-                        2nd Floor, Vision Apartments, Gandhi Nagar, Nizampet Road, Bachupally, Hyderabad - 500090\\\\
-                        Phone: +91 7569 366 767
-                        \\end{center}
-
-                        \\maketitle
-
-                        \\section*{Introduction}
-                        Congratulations on your new dental implant from OAK Dental Hospital! Proper aftercare is crucial to ensure the longevity and success of your implant. This guide provides tips to help you recover and maintain your implant effectively.
-
-                        \\section*{Immediate Post-Surgery Care}
-                        \\begin{itemize}
-                            \\item \\textbf{Rest:} Avoid strenuous activities for at least 48 hours after surgery to promote healing.
-                            \\item \\textbf{Ice Packs:} Apply ice packs to the outside of your cheek for 15-minute intervals to reduce swelling.
-                            \\item \\textbf{Medication:} Take prescribed antibiotics and pain relievers as directed by your dentist to prevent infection and manage discomfort.
-                        \\end{itemize}
-
-                        \\section*{Oral Hygiene}
-                        \\begin{itemize}
-                            \\item \\textbf{Gentle Cleaning:} Brush gently around the implant site with a soft-bristled toothbrush. Avoid the surgical area for the first few days.
-                            \\item \\textbf{Rinsing:} Rinse your mouth with a saltwater solution (1 tsp salt in a glass of warm water) 2-3 times a day to keep the area clean.
-                            \\item \\textbf{Avoid Irritation:} Do not touch the implant site with your fingers or tongue to prevent infection.
-                        \\end{itemize}
-
-                        \\section*{Dietary Guidelines}
-                        \\begin{itemize}
-                            \\item \\textbf{Soft Foods:} Stick to soft foods like yogurt, mashed potatoes, and smoothies for the first week.
-                            \\item \\textbf{Avoid Hot Foods:} Avoid hot foods and drinks for the first 48 hours to prevent irritation.
-                            \\item \\textbf{Stay Hydrated:} Drink plenty of water, but avoid using a straw, as the suction can dislodge the blood clot.
-                        \\end{itemize}
-
-                        \\section*{Long-Term Maintenance}
-                        \\begin{itemize}
-                            \\item \\textbf{Regular Brushing:} Brush twice daily and floss around the implant to prevent plaque buildup.
-                            \\item \\textbf{Dental Visits:} Schedule regular check-ups with OAK Dental Hospital to monitor the health of your implant.
-                            \\item \\textbf{Avoid Hard Chewing:} Avoid chewing on hard objects like ice or pens, which can damage the implant.
-                        \\end{itemize}
-
-                        \\section*{When to Contact Us}
-                        If you experience severe pain, excessive bleeding, or signs of infection (redness, swelling, or pus), contact OAK Dental Hospital immediately at +91 7569 366 767.
-
-                        \\section*{Conclusion}
-                        With proper care, your dental implant can last a lifetime. The team at OAK Dental Hospital is here to support you throughout your recovery and beyond. Feel free to reach out with any questions!
-
-                        \\end{document}
-                    `;
-                } else if (type === 'kids-dental-care') {
-                    content = `
-                        \\documentclass{article}
-                        \\usepackage[utf8]{inputenc}
-                        \\usepackage{graphicx}
-                        \\usepackage{geometry}
-                        \\geometry{a4paper, margin=1in}
-                        \\title{Kids' Dental Care}
-                        \\author{OAK Dental Hospital}
-                        \\date{May 2025}
-
-                        \\begin{document}
-
-                        \\begin{center}
-                        \\includegraphics[width=0.2\\textwidth]{https://i.postimg.cc/50vXRG8K/ram.jpg}\\\\
-                        \\vspace{0.5cm}
-                        \\textbf{\\Large OAK Dental Hospital}\\\\
-                        \\vspace{0.2cm}
-                        2nd Floor, Vision Apartments, Gandhi Nagar, Nizampet Road, Bachupally, Hyderabad - 500090\\\\
-                        Phone: +91 7569 366 767
-                        \\end{center}
-
-                        \\maketitle
-
-                        \\section*{Introduction}
-                        At OAK Dental Hospital, we believe that establishing good dental habits early sets the foundation for a lifetime of healthy smiles. This guide offers tips to help parents ensure their children’s teeth remain strong and healthy from infancy to adolescence.
-
-                        \\section*{Infant Dental Care}
-                        \\begin{itemize}
-                            \\item \\textbf{Clean Gums:} Even before teeth emerge, clean your baby’s gums with a soft, damp cloth after feedings.
-                            \\item \\textbf{First Tooth:} Once the first tooth appears (usually between 6-12 months), start brushing with a small, soft-bristled toothbrush and a rice-grain-sized amount of fluoride toothpaste.
-                            \\item \\textbf{Avoid Bottle Decay:} Don’t let your baby sleep with a bottle of milk or juice, as it can lead to tooth decay.
-                        \\end{itemize}
-
-                        \\section*{Toddler and Preschooler Care}
-                        \\begin{itemize}
-                            \\item \\textbf{Brushing Routine:} Brush your child’s teeth twice daily with a pea-sized amount of fluoride toothpaste. Supervise until they can brush effectively on their own (around age 6).
-                            \\item \\textbf{Flossing:} Start flossing once your child’s teeth touch each other to remove food particles and plaque.
-                            \\item \\textbf{Dental Visits:} Schedule your child’s first dental visit by their first birthday or within 6 months of their first tooth erupting. Regular check-ups at OAK Dental Hospital help catch issues early.
-                        \\end{itemize}
-
-                        \\section*{School-Age Children}
-                        \\begin{itemize}
-                            \\item \\textbf{Healthy Snacks:} Encourage healthy snacks like fruits and vegetables instead of sugary treats to reduce the risk of cavities.
-                            \\item \\textbf{Mouthguards:} If your child plays sports, ensure they wear a mouthguard to protect their teeth from injury.
-                            \\item \\textbf{Sealants:} Ask your dentist at OAK Dental Hospital about dental sealants, which can protect molars from cavities.
-                        \\end{itemize}
-
-                        \\section*{Encouraging Good Habits}
-                        \\begin{itemize}
-                            \\item \\textbf{Make It Fun:} Use flavored toothpaste or a toothbrush with their favorite character to make brushing enjoyable.
-                            \\item \\textbf{Lead by Example:} Brush and floss alongside your child to model good habits.
-                            \\item \\textbf{Reward System:} Create a reward chart for consistent brushing and flossing to motivate your child.
-                        \\end{itemize}
-
-                        \\section*{When to Contact Us}
-                        If your child experiences tooth pain, sensitivity, or has a dental injury, contact OAK Dental Hospital at +91 7569 366 767 for prompt care.
-
-                        \\section*{Conclusion}
-                        Healthy dental habits start early, and OAK Dental Hospital is here to support your child’s oral health journey. Schedule a visit today to ensure your child’s smile stays bright and healthy!
-
-                        \\end{document}
-                    `;
-                }
-
-                const response = await axios.post(`${API_URL}/generate-pdf`, { content }, { responseType: 'blob' });
-                const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
-                const link = document.createElement('a');
-                link.href = url;
-                link.setAttribute('download', `${type}.pdf`);
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            } catch (error) {
-                console.error('Error generating PDF:', error);
-                alert('Failed to generate PDF. Please try again later.');
-            } finally {
-                hideSpinner();
-            }
-        }
-
-        // Admin Link Visibility (Assuming admin is logged in based on a token or session)
-        function checkAdminStatus() {
-            const adminToken = localStorage.getItem('adminToken'); // Replace with actual auth mechanism
-            const adminLink = document.getElementById('admin-link');
-            if (adminToken) {
-                adminLink.classList.remove('hidden');
-            }
-        }
-
-        // Initialize on Page Load
-        window.onload = () => {
-            loadTreatments();
-            loadAppointmentOptions();
-            loadFeedback();
-            checkAdminStatus();
-
-            // Google Pay Button Setup
-            const gpayButton = document.getElementById('gpay-button-container');
-            gpayButton.addEventListener('click', () => initiatePayment('gpay'));
-
-            // PayPal Button Setup
-            document.getElementById('paypal-button-container').addEventListener('click', () => initiatePayment('paypal'));
-
-            // Set minimum date for appointment to today
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('date').setAttribute('min', today);
-
-            // Keyboard Accessibility for FAQs
-            document.querySelectorAll('.faq-item h3').forEach(faq => {
-                faq.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        toggleFAQ(faq);
-                    }
-                });
-            });
-
-            // Lazy Loading for Images
-            document.querySelectorAll('img[loading="lazy"]').forEach(img => {
-                img.onerror = () => {
-                    img.src = 'https://via.placeholder.com/300x200?text=Image+Not+Found';
-                };
-            });
-        };
-
-        // Service Worker Registration
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js').then(reg => {
-                console.log('Service Worker registered:', reg);
-            }).catch(err => {
-                console.error('Service Worker registration failed:', err);
-            });
-        }
-    </script>
-</body>
+        </script>
+    </body>
 </html>
