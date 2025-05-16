@@ -82,7 +82,7 @@
                 object-fit: cover;
             }
         }
-        video {
+        video, iframe {
             max-width: 100%;
             height: auto;
             border-radius: 8px;
@@ -272,7 +272,7 @@
                 position: fixed;
                 top: 0;
                 right: 0;
-                width: 80%;
+                width: 85%;
                 height: 100%;
                 z-index: 1000;
                 box-shadow: -4px 0 12px rgba(0, 0, 0, 0.2);
@@ -290,7 +290,7 @@
                 left: 0;
                 width: 100%;
                 height: 100%;
-                background: rgba(0, 0, 0, 0.6);
+                background: rgba(0, 0, 0, 0.7);
                 z-index: 999;
             }
             #menu-overlay.active {
@@ -360,6 +360,9 @@
         #treatments-carousel {
             position: relative;
             overflow: hidden;
+            background: linear-gradient(135deg, #f0f7ff, #e6e6fa);
+            border-radius: 12px;
+            padding: 1rem;
         }
         .carousel-container {
             display: flex;
@@ -370,7 +373,10 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1rem;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
         .carousel-item-content {
             flex: 1;
@@ -384,36 +390,66 @@
         }
         .carousel-item img, .carousel-item video {
             width: 100%;
-            max-height: 200px;
+            max-height: 250px;
             object-fit: cover;
-            border-radius: 8px;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
         }
         .carousel-button {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(37, 99, 235, 0.8);
             color: white;
-            padding: 0.5rem;
+            padding: 0.75rem;
             cursor: pointer;
             z-index: 10;
+            border-radius: 50%;
         }
         .carousel-button.left {
-            left: 0;
+            left: 10px;
         }
         .carousel-button.right {
-            right: 0;
+            right: 10px;
         }
         @media (max-width: 768px) {
             .carousel-item {
                 flex-direction: column;
+                gap: 1rem;
             }
             .carousel-item-media {
                 width: 100%;
             }
             .carousel-item img, .carousel-item video {
-                max-height: 150px;
+                max-height: 180px;
             }
+        }
+        .status-card {
+            background: linear-gradient(135deg, #ffffff, #f0f7ff);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .contact-form {
+            background: linear-gradient(135deg, #ffffff, #e6e6fa);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .virtual-tour-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .virtual-tour-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
         }
     </style>
     <script type="application/ld+json">
@@ -480,7 +516,7 @@
             <p class="text-xl mb-8 max-w-2xl mx-auto">Transform your smile with expert dental care in Hyderabad. Specializing in Orthodontics, Implants, and Cosmetic Dentistry for a confident, radiant you!</p>
             <div class="flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-4 justify-center">
                 <a href="#appointment" class="btn bg-white text-blue-900 px-8 py-4 rounded-full font-semibold hover:bg-blue-100 shadow-md" aria-label="Book an appointment with OAK Dental Hospital">Book Appointment</a>
-                <a href="https://wa.me/917569366767" target="_blank" class="btn bg-green-500 text-white px-8 py-4 rounded-full font-semibold hover:bg-green-600 shadow Javascript:void(0)md" aria-label="Chat with OAK Dental Hospital on WhatsApp">Chat on WhatsApp</a>
+                <a href="https://wa.me/917569366767" target="_blank" class="btn bg-green-500 text-white px-8 py-4 rounded-full font-semibold hover:bg-green-600 shadow-md" aria-label="Chat with OAK Dental Hospital on WhatsApp">Chat on WhatsApp</a>
             </div>
         </div>
     </section>
@@ -497,7 +533,7 @@
                     <p class="text-gray-700 mb-4">OAK Dental Hospital is a premier dental care provider in Hyderabad, dedicated to delivering exceptional oral health services since 2015. Our mission is to create healthy, confident smiles through advanced dental treatments and compassionate care.</p>
                     <p class="text-gray-700 mb-4">Led by Dr. A. Ram Koti Reddy, our team of experienced dentists specializes in Orthodontics, Dental Implants, Cosmetic Dentistry, and more. We use state-of-the-art technology and follow strict sterilization protocols to ensure your safety and comfort.</p>
                     <p class="text-gray-700 mb-4">Located at 2nd Floor, Vision Apartments, Gandhi Nagar, Nizampet Road, Bachupally, Hyderabad - 500090, our modern facility is designed to provide a relaxing environment for all our patients.</p>
-                    <a href="about.html" class="btn inline-block bg-blue-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-700 shadow-md" aria-label="Learn pi more about OAK Dental Hospital">Learn More</a>
+                    <a href="about.html" class="btn inline-block bg-blue-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-700 shadow-md" aria-label="Learn more about OAK Dental Hospital">Learn More</a>
                 </div>
             </div>
         </div>
@@ -590,11 +626,10 @@
         <div class="container mx-auto px-4">
             <h2 class="text-3xl font-extrabold text-center mb-8 text-gray-800">Virtual Tour of Our Clinic</h2>
             <div class="max-w-4xl mx-auto">
-                <video controls class="w-full rounded-lg shadow-md" loading="lazy">
-                    <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-                <p class="text-center text-gray-700 mt-4">Take a virtual tour of OAK Dental Hospital and explore our modern facilities designed for your comfort and care.</p>
+                <div class="virtual-tour-container">
+                    <iframe src="https://www.instagram.com/reel/CknEfc8qdYa/embed" frameborder="0" allowtransparency="true" allowfullscreen></iframe>
+                </div>
+                <p class="text-center text-gray-700 mt-4">Explore our state-of-the-art facilities at OAK Dental Hospital through this immersive virtual tour.</p>
             </div>
         </div>
     </section>
@@ -719,8 +754,8 @@
     <section id="status" class="py-16 bg-indigo-50 section-animate">
         <div class="container mx-auto px-4">
             <h2 class="text-3xl font-extrabold text-center mb-8 text-gray-800">Manage Appointments</h2>
-            <div id="status-display" class="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-md text-center card">
-                <p class="text-gray-700">Enter your email to check your appointment status.</p>
+            <div id="status-display" class="max-w-lg mx-auto status-card">
+                <p class="text-gray-700 mb-4">Enter your email to check your appointment status.</p>
                 <div class="mt-4">
                     <input type="email" id="status-email" class="w-full p-3 border rounded-lg shadow-sm mb-4" placeholder="Your Email" required aria-required="true">
                     <button onclick="checkStatus()" class="btn bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 shadow-md" aria-label="Check appointment status">Check Status</button>
@@ -757,7 +792,7 @@
                         <i class="fas fa-phone mr-2"></i>Call Now
                     </button>
                 </div>
-                <form id="contact-form" class="md:w-1/2 bg-white p-8 rounded-lg shadow-md card">
+                <form id="contact-form" class="md:w-1/2 contact-form">
                     <div class="mb-4">
                         <label class="block text-gray-700 mb-2" for="contact-name">Name</label>
                         <input type="text" id="contact-name" class="w-full p-3 border rounded-lg shadow-sm" required aria-required="true">
@@ -768,7 +803,7 @@
                     </div>
                     <div class="mb-4">
                         <label class="block text-gray-700 mb-2" for="message">Message</label>
-                        <textarea id="message" class="w-full p-3 border rounded-lg shadow-sm" rows Tai="5" required aria-required="true"></textarea>
+                        <textarea id="message" class="w-full p-3 border rounded-lg shadow-sm" rows="5" required aria-required="true"></textarea>
                     </div>
                     <button type="button" onclick="submitContact()" class="btn w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 shadow-md" aria-label="Send message to OAK Dental Hospital">Send Message</button>
                 </form>
@@ -1028,18 +1063,18 @@
                 if (appointment && Object.keys(appointment).length > 0) {
                     const serviceName = treatments.find(t => t._id === appointment.service)?.name || 'Unknown Service';
                     resultDiv.innerHTML = `
-                        <p><strong>Name:</strong> ${appointment.name || 'N/A'}</p>
-                        <p><strong>Date:</strong> ${appointment.date || 'N/A'}</p>
-                        <p><strong>Time:</strong> ${appointment.time || 'N/A'}</p>
-                        <p><strong>Service:</strong> ${serviceName}</p>
-                        <p><strong>Status:</strong> ${appointment.status || 'Pending'}</p>
+                        <p class="font-semibold"><strong>Name:</strong> ${appointment.name || 'N/A'}</p>
+                        <p class="font-semibold"><strong>Date:</strong> ${appointment.date || 'N/A'}</p>
+                        <p class="font-semibold"><strong>Time:</strong> ${appointment.time || 'N/A'}</p>
+                        <p class="font-semibold"><strong>Service:</strong> ${serviceName}</p>
+                        <p class="font-semibold"><strong>Status:</strong> ${appointment.status || 'Pending'}</p>
                     `;
                 } else {
-                    resultDiv.innerHTML = '<p class="text-red-600">No appointment found with this email.</p>';
+                    resultDiv.innerHTML = '<p class="text-red-600 font-semibold">No appointment found with this email.</p>';
                 }
             } catch (error) {
                 console.error('Error checking status:', error);
-                resultDiv.innerHTML = '<p class="text-red-600">Failed to check status. Please try again later.</p>';
+                resultDiv.innerHTML = '<p class="text-red-600 font-semibold">Failed to check status. Please try again later.</p>';
             }
         }
 
@@ -1158,3 +1193,4 @@
     </script>
 </body>
 </html>
+
