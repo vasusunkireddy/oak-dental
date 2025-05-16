@@ -1,443 +1,486 @@
 const express = require('express');
-const { Pool } = require('pg');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const dotenv = require('dotenv');
-const cors = require('cors');
-const path = require('path');
-const multer = require('multer');
 const fs = require('fs');
-const paypal = require('@paypal/checkout-server-sdk');
+const path = require('path');
+const Sequelize = require('sequelize');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const cors = require('cors');
+const dotenv = require('dotenv');
+const axios = require('axios');
+const sanitizeHtml = require('sanitize-html');
+const multer = require('multer');
 
 dotenv.config();
-const app = express();
 
-// Middleware
+const app = express();
 app.use(cors());
 app.use(express.json());
+
+// Serve static files from public folder (includes index.html, admin.html, and uploads)
 app.use(express.static(path.join(__dirname, 'public')));
-// Log all requests for debugging
-app.use((req, res, next) => {
-  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
-  next();
-});
 
-// File Upload Setup
-const uploadDir = path.join(__dirname, 'public', 'Uploads');
-if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
+// Multer setup for image uploads
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, uploadDir),
-  filename: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`)
-});
-const upload = multer({ storage });
-
-// PostgreSQL Pool (Updated to use DATABASE_URL)
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
-});
-
-// PayPal Setup (Sandbox environment for testing)
-const environment = new paypal.core.SandboxEnvironment(
-  process.env.PAYPAL_CLIENT_ID,
-  process.env.PAYPAL_CLIENT_SECRET
-);
-const paypalClient = new paypal.core.PayPalHttpClient(environment);
-
-// Initialize Database
-async function initializeDatabase() {
-  try {
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS admins (
-        id SERIAL PRIMARY KEY,
-        username VARCHAR(50) UNIQUE NOT NULL,
-        password TEXT NOT NULL,
-        email VARCHAR(100) UNIQUE NOT NULL
-      );
-
-      CREATE TABLE IF NOT EXISTS appointments (
-        id SERIAL PRIMARY KEY,
-        full_name VARCHAR(100) NOT NULL,
-        phone VARCHAR(15) NOT NULL,
-        treatment VARCHAR(50) NOT NULL,
-        price DECIMAL(10,2) NOT NULL,
-        date DATE NOT NULL,
-        time TIME NOT NULL,
-        status VARCHAR(20) NOT NULL,
-        cancel_reason TEXT,
-        reschedule_reason TEXT,
-        admin_reason TEXT,
-        approved BOOLEAN DEFAULT FALSE,
-        payment_id VARCHAR(100)
-      );
-
-      CREATE TABLE IF NOT EXISTS treatments (
-        id SERIAL PRIMARY KEY,
-        name VARCHAR(50) NOT NULL,
-        price DECIMAL(10,2) NOT NULL,
-        image_url TEXT,
-        video_url TEXT
-      );
-
-      CREATE TABLE IF NOT EXISTS hospital_timings (
-        id SERIAL PRIMARY KEY,
-        day VARCHAR(10) NOT NULL,
-        open_time TIME NOT NULL,
-        close_time TIME NOT NULL,
-        UNIQUE(day)
-      );
-    `);
-    // Initialize default timings if empty
-    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    for (const day of days) {
-      const result = await pool.query('SELECT 1 FROM hospital_timings WHERE day = $1', [day]);
-      if (result.rowCount === 0) {
-        await pool.query(
-          'INSERT INTO hospital_timings (day, open_time, close_time) VALUES ($1, $2, $3)',
-          [day, '09:00', '18:00']
-        );
-      }
+    destination: (req, file, cb) => {
+        const uploadPath = path.join(__dirname, 'public/uploads');
+        if (!fs.existsSync(uploadPath)) {
+            fs.mkdirSync(uploadPath, { recursive: true });
+        }
+        cb(null, uploadPath);
+    },
+    filename: (req, file, cb) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const sanitizedName = file.originalname.replace(/[^a-zA-Z0-9.]/g, '_').toLowerCase();
+        cb(null, `${uniqueSuffix}-${sanitizedName}`);
     }
-    console.log('Database initialized successfully');
-  } catch (error) {
-    console.error('Error initializing database:', error);
-    throw error;
-  }
-}
+});
+const upload = multer({
+    storage,
+    fileFilter: (req, file, cb) => {
+        const filetypes = /jpeg|jpg|png/;
+        const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+        const mimetype = filetypes.test(file.mimetype);
+        if (extname && mimetype) {
+            return cb(null, true);
+        }
+        cb(new Error('Only PNG and JPEG images are allowed'));
+    },
+    limits: { fileSize: 5 * 1024 * 1024 } // 5MB limit
+});
 
-// Middleware for Admin Authentication
-const auth = async (req, res, next) => {
-  const token = req.header('Authorization')?.replace('Bearer ', '');
-  if (!token) return res.status(401).json({ message: 'No token provided' });
+// Database Connection
+const sequelize = new Sequelize(process.env.DATABASE_URL, {
+    dialect: 'postgres',
+    dialectOptions: {
+        ssl: {
+            require: true,
+            rejectUnauthorized: false
+        }
+    }
+});
 
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.admin = decoded;
-    next();
-  } catch (error) {
-    res.status(401).json({ message: 'Invalid token' });
-  }
+// Models
+const Admin = sequelize.define('Admin', {
+    username: { type: Sequelize.STRING, allowNull: false, unique: true },
+    email: { type: Sequelize.STRING, allowNull: false, unique: true },
+    password: { type: Sequelize.STRING, allowNull: false }
+});
+
+const Time = sequelize.define('Time', {
+    time: { type: Sequelize.STRING, allowNull: false }
+});
+
+const Treatment = sequelize.define('Treatment', {
+    name: { type: Sequelize.STRING, allowNull: false },
+    description: { type: Sequelize.TEXT, allowNull: false },
+    cost: { type: Sequelize.FLOAT, allowNull: false },
+    imageUrl: { type: Sequelize.STRING }
+});
+
+const Appointment = sequelize.define('Appointment', {
+    name: { type: Sequelize.STRING, allowNull: false },
+    email: { type: Sequelize.STRING, allowNull: false },
+    phone: { type: Sequelize.STRING, allowNull: false },
+    date: { type: Sequelize.STRING, allowNull: false },
+    time: { type: Sequelize.STRING, allowNull: false },
+    status: { type: Sequelize.STRING, defaultValue: 'Pending' },
+    transactionId: { type: Sequelize.STRING }
+});
+
+const Contact = sequelize.define('Contact', {
+    name: { type: Sequelize.STRING, allowNull: false },
+    email: { type: Sequelize.STRING, allowNull: false },
+    message: { type: Sequelize.TEXT, allowNull: false },
+    createdAt: { type: Sequelize.DATE, defaultValue: Sequelize.NOW }
+});
+
+const Newsletter = sequelize.define('Newsletter', {
+    email: { type: Sequelize.STRING, allowNull: false, unique: true },
+    createdAt: { type: Sequelize.DATE, defaultValue: Sequelize.NOW }
+});
+
+Appointment.belongsTo(Treatment, { foreignKey: 'serviceId' });
+
+// Sync Database
+sequelize.sync({ alter: true })
+    .then(() => console.log('Database synced'))
+    .catch(err => console.error('Database sync error:', err));
+
+// Middleware to verify JWT
+const authenticateAdmin = async (req, res, next) => {
+    const token = req.headers.authorization?.split('Bearer ')[1];
+    if (!token) return res.status(401).json({ message: 'Unauthorized' });
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.admin = decoded;
+        next();
+    } catch (error) {
+        res.status(401).json({ message: 'Invalid token' });
+    }
 };
 
-// Appointment Endpoints
-app.post('/api/appointments', async (req, res) => {
-  const { fullName, phone, treatment, price, date, time } = req.body;
-  console.log('Booking request:', req.body);
-  if (!fullName || !phone || !treatment || !price || !date || !time) {
-    return res.status(400).json({ message: 'All fields are required' });
-  }
-  if (!/^\d{10}$/.test(phone)) {
-    return res.status(400).json({ message: 'Phone number must be 10 digits' });
-  }
-  if (fullName.trim().length < 2) {
-    return res.status(400).json({ message: 'Full name must be at least 2 characters' });
-  }
-  if (isNaN(price) || price < 0) {
-    return res.status(400).json({ message: 'Price must be a valid number' });
-  }
-
-  try {
-    const result = await pool.query(
-      'INSERT INTO appointments (full_name, phone, treatment, price, date, time, status, approved) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
-      [fullName.trim(), phone, treatment, price, date, time, 'Pending', false]
-    );
-    res.status(201).json({ message: 'Appointment booked successfully', appointment: result.rows[0] });
-  } catch (error) {
-    console.error('Error booking appointment:', error);
-    res.status(500).json({ message: 'Failed to book appointment' });
-  }
-});
-
-app.put('/api/appointments/:id/payment', async (req, res) => {
-  const { id } = req.params;
-  const { payment_id } = req.body;
-  try {
-    const result = await pool.query(
-      'UPDATE appointments SET payment_id = $1 WHERE id = $2 RETURNING *',
-      [payment_id, id]
-    );
-    if (result.rows.length === 0) {
-      return res.status(404).json({ message: 'Appointment not found' });
+// Sanitize input
+const sanitizeInput = (data) => {
+    if (typeof data === 'string') {
+        return sanitizeHtml(data, { allowedTags: [], allowedAttributes: {} });
     }
-    res.json(result.rows[0]);
-  } catch (error) {
-    console.error('Error updating payment:', error);
-    res.status(500).json({ message: 'Failed to update payment', error: error.message });
-  }
-});
-
-app.get('/api/appointments', async (req, res) => {
-  const { phone } = req.query;
-  if (phone) {
-    if (!/^\d{10}$/.test(phone)) {
-      return res.status(400).json({ message: 'Phone number must be 10 digits' });
+    if (typeof data === 'object' && data !== null) {
+        const sanitized = {};
+        for (const key in data) {
+            sanitized[key] = sanitizeInput(data[key]);
+        }
+        return sanitized;
     }
-    try {
-      const result = await pool.query('SELECT * FROM appointments WHERE phone = $1 ORDER BY date, time', [phone]);
-      res.json(result.rows);
-    } catch (error) {
-      console.error('Error fetching user appointments:', error);
-      res.status(500).json({ message: 'Failed to fetch appointments' });
-    }
-  } else {
-    try {
-      await auth(req, res, async () => {
-        const result = await pool.query('SELECT * FROM appointments ORDER BY date, time');
-        res.json(result.rows);
-      });
-    } catch (error) {
-      console.error('Error fetching all appointments:', error);
-      res.status(500).json({ message: 'Failed to fetch appointments' });
-    }
-  }
-});
+    return data;
+};
 
-app.post('/api/appointments/:id/cancel', async (req, res) => {
-  const { id } = req.params;
-  const { reason } = req.body;
-  console.log('Cancel request:', { id, reason });
-  if (!reason) return res.status(400).json({ message: 'Reason required' });
-
-  try {
-    const result = await pool.query(
-      'UPDATE appointments SET status = $1, cancel_reason = $2 WHERE id = $3 RETURNING id, status',
-      ['Cancelled', reason, id]
-    );
-    if (result.rowCount === 0) return res.status(404).json({ message: 'Appointment not found' });
-    res.json({ message: 'Appointment cancelled successfully', appointment: result.rows[0] });
-  } catch (error) {
-    console.error('Error cancelling appointment:', error);
-    res.status(500).json({ message: 'Failed to cancel appointment' });
-  }
-});
-
-app.post('/api/appointments/:id/reschedule', async (req, res) => {
-  const { id } = req.params;
-  const { date, time, reason } = req.body;
-  console.log('Reschedule request:', { id, date, time, reason });
-  if (!date || !time || !reason) return res.status(400).json({ message: 'Date, time, and reason required' });
-
-  try {
-    const result = await pool.query(
-      'UPDATE appointments SET date = $1, time = $2, status = $3, reschedule_reason = $4 WHERE id = $5 RETURNING id, date, time, status',
-      [date, time, 'Pending', reason, id]
-    );
-    if (result.rowCount === 0) return res.status(404).json({ message: 'Appointment not found' });
-    res.json({ message: 'Appointment rescheduled successfully', appointment: result.rows[0] });
-  } catch (error) {
-    console.error('Error rescheduling appointment:', error);
-    res.status(500).json({ message: 'Failed to reschedule appointment' });
-  }
-});
-
-app.post('/api/appointments/:id/approve', auth, async (req, res) => {
-  const { id } = req.params;
-  console.log('Approve request:', { id });
-  try {
-    const result = await pool.query(
-      'UPDATE appointments SET status = $1, approved = $2 WHERE id = $3 RETURNING id, status, approved',
-      ['Approved', true, id]
-    );
-    if (result.rowCount === 0) return res.status(404).json({ message: 'Appointment not found' });
-    res.json({ message: 'Appointment approved successfully', appointment: result.rows[0] });
-  } catch (error) {
-    console.error('Error approving appointment:', error);
-    res.status(500).json({ message: 'Failed to approve appointment' });
-  }
-});
-
-app.post('/api/appointments/:id/admin-cancel', auth, async (req, res) => {
-  const { id } = req.params;
-  const { reason } = req.body;
-  console.log('Admin cancel request:', { id, reason });
-  if (!reason) return res.status(400).json({ message: 'Reason required' });
-
-  try {
-    const result = await pool.query(
-      'UPDATE appointments SET status = $1, admin_reason = $2 WHERE id = $3 RETURNING id, status',
-      ['Cancelled', reason, id]
-    );
-    if (result.rowCount === 0) return res.status(404).json({ message: 'Appointment not found' });
-    res.json({ message: 'Appointment cancelled by admin successfully', appointment: result.rows[0] });
-  } catch (error) {
-    console.error('Error cancelling appointment by admin:', error);
-    res.status(500).json({ message: 'Failed to cancel appointment' });
-  }
-});
-
-// Treatment Endpoints
-app.get('/api/treatments', async (req, res) => {
-  try {
-    const result = await pool.query('SELECT * FROM treatments ORDER BY name');
-    res.json(result.rows);
-  } catch (error) {
-    console.error('Error fetching treatments:', error);
-    res.status(500).json({ message: 'Failed to fetch treatments' });
-  }
-});
-
-app.post('/api/treatments', auth, upload.fields([{ name: 'image', maxCount: 1 }, { name: 'video', maxCount: 1 }]), async (req, res) => {
-  const { name, price } = req.body;
-  console.log('Add treatment request:', { name, price, files: req.files });
-  if (!name || !price) return res.status(400).json({ message: 'Name and price required' });
-  if (isNaN(price) || price < 0) return res.status(400).json({ message: 'Price must be a valid number' });
-
-  const imageUrl = req.files.image ? `/Uploads/${req.files.image[0].filename}` : null;
-  const videoUrl = req.files.video ? `/Uploads/${req.files.video[0].filename}` : null;
-
-  try {
-    const result = await pool.query(
-      'INSERT INTO treatments (name, price, image_url, video_url) VALUES ($1, $2, $3, $4) RETURNING *',
-      [name, price, imageUrl, videoUrl]
-    );
-    res.status(201).json({ message: 'Treatment added successfully', treatment: result.rows[0] });
-  } catch (error) {
-    console.error('Error adding treatment:', error);
-    res.status(500).json({ message: 'Failed to add treatment' });
-  }
-});
-
-app.put('/api/treatments/:id', auth, upload.fields([{ name: 'image', maxCount: 1 }, { name: 'video', maxCount: 1 }]), async (req, res) => {
-  const { id } = req.params;
-  const { name, price } = req.body;
-  console.log('Update treatment request:', { id, name, price, files: req.files });
-  if (!name || !price) return res.status(400).json({ message: 'Name and price required' });
-  if (isNaN(price) || price < 0) return res.status(400).json({ message: 'Price must be a valid number' });
-
-  try {
-    const existing = await pool.query('SELECT * FROM treatments WHERE id = $1', [id]);
-    if (existing.rowCount === 0) return res.status(404).json({ message: 'Treatment not found' });
-
-    const imageUrl = req.files.image ? `/Uploads/${req.files.image[0].filename}` : existing.rows[0].image_url;
-    const videoUrl = req.files.video ? `/Uploads/${req.files.video[0].filename}` : existing.rows[0].video_url;
-
-    const result = await pool.query(
-      'UPDATE treatments SET name = $1, price = $2, image_url = $3, video_url = $4 WHERE id = $5 RETURNING *',
-      [name, price, imageUrl, videoUrl, id]
-    );
-    res.json({ message: 'Treatment updated successfully', treatment: result.rows[0] });
-  } catch (error) {
-    console.error('Error updating treatment:', error);
-    res.status(500).json({ message: 'Failed to update treatment' });
-  }
-});
-
-app.delete('/api/treatments/:id', auth, async (req, res) => {
-  const { id } = req.params;
-  console.log('Delete treatment request:', { id });
-  try {
-    const result = await pool.query('DELETE FROM treatments WHERE id = $1 RETURNING *', [id]);
-    if (result.rowCount === 0) return res.status(404).json({ message: 'Treatment not found' });
-    res.json({ message: 'Treatment deleted successfully' });
-  } catch (error) {
-    console.error('Error deleting treatment:', error);
-    res.status(500).json({ message: 'Failed to delete treatment' });
-  }
-});
-
-// Hospital Timings Endpoints
-app.get('/api/timings', async (req, res) => {
-  try {
-    const result = await pool.query('SELECT * FROM hospital_timings ORDER BY id');
-    res.json(result.rows);
-  } catch (error) {
-    console.error('Error fetching timings:', error);
-    res.status(500).json({ message: 'Failed to fetch timings' });
-  }
-});
-
-app.put('/api/timings/:day', auth, async (req, res) => {
-  const { day } = req.params;
-  const { open_time, close_time } = req.body;
-  console.log('Update timing request:', { day, open_time, close_time });
-  if (!open_time || !close_time) return res.status(400).json({ message: 'Open and close times required' });
-
-  try {
-    const result = await pool.query(
-      'INSERT INTO hospital_timings (day, open_time, close_time) VALUES ($1, $2, $3) ON CONFLICT (day) DO UPDATE SET open_time = $2, close_time = $3 RETURNING *',
-      [day, open_time, close_time]
-    );
-    res.json({ message: 'Timing updated successfully', timing: result.rows[0] });
-  } catch (error) {
-    console.error('Error updating timing:', error);
-    res.status(500).json({ message: 'Failed to update timing' });
-  }
-});
-
-// Admin Endpoints
+// Admin Registration
 app.post('/api/admin/register', async (req, res) => {
-  const { username, password, email } = req.body;
-  if (!username || !password || !email) return res.status(400).json({ message: 'All fields required' });
-  if (password.length < 6) return res.status(400).json({ message: 'Password must be at least 6 characters' });
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return res.status(400).json({ message: 'Invalid email format' });
-
-  try {
-    const existingAdmin = await pool.query('SELECT * FROM admins WHERE username = $1 OR email = $2', [username, email]);
-    if (existingAdmin.rowCount > 0) {
-      return res.status(400).json({ message: 'Username or email already exists' });
+    try {
+        const { username, email, password } = sanitizeInput(req.body);
+        if (!username || !email || !password) {
+            return res.status(400).json({ message: 'All fields are required' });
+        }
+        if (password.length < 6) {
+            return res.status(400).json({ message: 'Password must be at least 6 characters' });
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            return res.status(400).json({ message: 'Invalid email format' });
+        }
+        const existingAdmin = await Admin.findOne({ where: { [Sequelize.Op.or]: [{ username }, { email }] } });
+        if (existingAdmin) {
+            return res.status(400).json({ message: 'Username or email already exists' });
+        }
+        const hashedPassword = await bcrypt.hash(password, 12);
+        await Admin.create({ username, email, password: hashedPassword });
+        res.status(201).json({ message: 'Admin registered successfully' });
+    } catch (error) {
+        console.error('Registration error:', error);
+        res.status(500).json({ message: 'Server error' });
     }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-    await pool.query(
-      'INSERT INTO admins (username, password, email) VALUES ($1, $2, $3) RETURNING id, username, email',
-      [username, hashedPassword, email]
-    );
-    res.status(201).json({ message: 'Admin registered successfully' });
-  } catch (error) {
-    console.error('Error registering admin:', error);
-    res.status(500).json({ message: 'Failed to register admin' });
-  }
 });
 
+// Admin Login
 app.post('/api/admin/login', async (req, res) => {
-  const { username, password } = req.body;
-  if (!username || !password) return res.status(400).json({ message: 'Username and password required' });
-
-  try {
-    const result = await pool.query('SELECT * FROM admins WHERE username = $1', [username]);
-    const admin = result.rows[0];
-    if (!admin) return res.status(400).json({ message: 'Invalid credentials' });
-
-    const isMatch = await bcrypt.compare(password, admin.password);
-    if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
-
-    const token = jwt.sign({ id: admin.id, username: admin.username }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    res.json({ message: 'Login successful', token });
-  } catch (error) {
-    console.error('Error logging in:', error);
-    res.status(500).json({ message: 'Failed to login' });
-  }
+    try {
+        const { username, password } = sanitizeInput(req.body);
+        const admin = await Admin.findOne({ where: { username } });
+        if (!admin) {
+            return res.status(401).json({ message: 'Invalid credentials' });
+        }
+        const isMatch = await bcrypt.compare(password, admin.password);
+        if (!isMatch) {
+            return res.status(401).json({ message: 'Invalid credentials' });
+        }
+        const token = jwt.sign({ id: admin.id, username: admin.username }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        res.json({ token });
+    } catch (error) {
+        console.error('Login error:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
 });
 
-// Serve Frontend Routes
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+// Public Routes
+app.get('/api/treatments', async (req, res) => {
+    try {
+        const treatments = await Treatment.findAll();
+        res.json(treatments);
+    } catch (error) {
+        console.error('Error fetching treatments:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
 });
 
+app.get('/api/times', async (req, res) => {
+    try {
+        const times = await Time.findAll();
+        res.json(times);
+    } catch (error) {
+        console.error('Error fetching times:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+app.post('/api/contact', async (req, res) => {
+    try {
+        const { name, email, message } = sanitizeInput(req.body);
+        await Contact.create({ name, email, message });
+        res.status(201).json({ message: 'Message sent' });
+    } catch (error) {
+        console.error('Error saving contact:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+app.post('/api/newsletter', async (req, res) => {
+    try {
+        const { email } = sanitizeInput(req.body);
+        const existingSubscriber = await Newsletter.findOne({ where: { email } });
+        if (existingSubscriber) {
+            return res.status(400).json({ message: 'Email already subscribed' });
+        }
+        await Newsletter.create({ email });
+        res.status(201).json({ message: 'Subscribed successfully' });
+    } catch (error) {
+        console.error('Error subscribing:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+app.get('/api/appointments/status', async (req, res) => {
+    try {
+        const { email } = sanitizeInput(req.query);
+        const appointment = await Appointment.findOne({ where: { email }, include: [Treatment] });
+        if (!appointment) {
+            return res.status(404).json({ message: 'Appointment not found' });
+        }
+        res.json(appointment);
+    } catch (error) {
+        console.error('Error checking status:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// PayPal Routes
+app.post('/api/paypal/create-order', async (req, res) => {
+    try {
+        const { amount, description } = sanitizeInput(req.body);
+        if (!amount || !description) {
+            return res.status(400).json({ message: 'Amount and description are required' });
+        }
+        const currencyCode = process.env.PAYPAL_CURRENCY || 'USD';
+        const returnUrl = process.env.PAYPAL_RETURN_URL || 'http://localhost:3000/success';
+        const cancelUrl = process.env.PAYPAL_CANCEL_URL || 'http://localhost:3000/cancel';
+
+        const response = await axios.post('https://api-m.sandbox.paypal.com/v2/checkout/orders', {
+            intent: 'CAPTURE',
+            purchase_units: [{
+                amount: {
+                    currency_code: currencyCode,
+                    value: parseFloat(amount).toFixed(2)
+                },
+                description
+            }],
+            application_context: {
+                return_url: returnUrl,
+                cancel_url: cancelUrl
+            }
+        }, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Basic ${Buffer.from(`${process.env.PAYPAL_CLIENT_ID}:${process.env.PAYPAL_CLIENT_SECRET}`).toString('base64')}`
+            }
+        });
+        res.json({ id: response.data.id });
+    } catch (error) {
+        console.error('Error creating PayPal order:', {
+            message: error.message,
+            response: error.response ? {
+                status: error.response.status,
+                statusText: error.response.statusText,
+                data: error.response.data
+            } : 'No response data'
+        });
+        if (error.response && error.response.status === 422) {
+            const details = error.response.data.details || [];
+            return res.status(422).json({
+                message: 'PayPal order creation failed due to validation errors',
+                details: details.map(detail => detail.description || detail.issue).join('; ')
+            });
+        }
+        res.status(500).json({ message: 'Failed to create PayPal order' });
+    }
+});
+
+app.post('/api/paypal/capture-order', async (req, res) => {
+    try {
+        const { orderId, appointment } = sanitizeInput(req.body);
+        if (!orderId || !appointment) {
+            return res.status(400).json({ message: 'Order ID and appointment data are required' });
+        }
+        const response = await axios.post(`https://api-m.sandbox.paypal.com/v2/checkout/orders/${orderId}/capture`, {}, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Basic ${Buffer.from(`${process.env.PAYPAL_CLIENT_ID}:${process.env.PAYPAL_CLIENT_SECRET}`).toString('base64')}`
+            }
+        });
+        const appointmentData = {
+            ...appointment,
+            transactionId: response.data.purchase_units[0].payments.captures[0].id
+        };
+        await Appointment.create(appointmentData);
+        res.json({ transactionId: response.data.purchase_units[0].payments.captures[0].id });
+    } catch (error) {
+        console.error('Error capturing PayPal order:', error);
+        res.status(500).json({ message: 'Failed to capture order' });
+    }
+});
+
+// Admin Routes
+app.get('/api/admin/times', authenticateAdmin, async (req, res) => {
+    try {
+        const times = await Time.findAll();
+        res.json(times);
+    } catch (error) {
+        console.error('Error fetching times:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+app.post('/api/admin/times', authenticateAdmin, async (req, res) => {
+    try {
+        const { time } = sanitizeInput(req.body);
+        await Time.create({ time });
+        res.status(201).json({ message: 'Time slot added' });
+    } catch (error) {
+        console.error('Error adding time:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+app.delete('/api/admin/times/:id', authenticateAdmin, async (req, res) => {
+    try {
+        await Time.destroy({ where: { id: req.params.id } });
+        res.json({ message: 'Time slot deleted' });
+    } catch (error) {
+        console.error('Error deleting time:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+app.get('/api/admin/treatments', authenticateAdmin, async (req, res) => {
+    try {
+        const treatments = await Treatment.findAll();
+        res.json(treatments);
+    } catch (error) {
+        console.error('Error fetching treatments:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+app.post('/api/admin/treatments', authenticateAdmin, upload.single('image'), async (req, res) => {
+    try {
+        const { name, description, cost } = sanitizeInput(req.body);
+        if (!name || !description || !cost) {
+            return res.status(400).json({ message: 'All fields are required' });
+        }
+        const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
+        await Treatment.create({ name, description, cost: parseFloat(cost), imageUrl });
+        res.status(201).json({ message: 'Treatment added' });
+    } catch (error) {
+        console.error('Error adding treatment:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+app.put('/api/admin/treatments/:id', authenticateAdmin, upload.single('image'), async (req, res) => {
+    try {
+        const { name, description, cost } = sanitizeInput(req.body);
+        if (!name || !description || !cost) {
+            return res.status(400).json({ message: 'All fields are required' });
+        }
+        const updateData = { name, description, cost: parseFloat(cost) };
+        if (req.file) {
+            updateData.imageUrl = `/uploads/${req.file.filename}`;
+        }
+        await Treatment.update(updateData, { where: { id: req.params.id } });
+        res.json({ message: 'Treatment updated' });
+    } catch (error) {
+        console.error('Error updating treatment:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+app.delete('/api/admin/treatments/:id', authenticateAdmin, async (req, res) => {
+    try {
+        const treatment = await Treatment.findByPk(req.params.id);
+        if (treatment && treatment.imageUrl) {
+            const imagePath = path.join(__dirname, 'public', treatment.imageUrl);
+            if (fs.existsSync(imagePath)) {
+                fs.unlinkSync(imagePath);
+            }
+        }
+        await Treatment.destroy({ where: { id: req.params.id } });
+        res.json({ message: 'Treatment deleted' });
+    } catch (error) {
+        console.error('Error deleting treatment:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+app.get('/api/admin/appointments', authenticateAdmin, async (req, res) => {
+    try {
+        const appointments = await Appointment.findAll({ include: [Treatment] });
+        res.json(appointments);
+    } catch (error) {
+        console.error('Error fetching appointments:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+app.put('/api/admin/appointments/:id', authenticateAdmin, async (req, res) => {
+    try {
+        const { status } = sanitizeInput(req.body);
+        await Appointment.update({ status }, { where: { id: req.params.id } });
+        res.json({ message: 'Appointment updated' });
+    } catch (error) {
+        console.error('Error updating appointment:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+app.get('/api/admin/contacts', authenticateAdmin, async (req, res) => {
+    try {
+        const contacts = await Contact.findAll();
+        res.json(contacts);
+    } catch (error) {
+        console.error('Error fetching contacts:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+app.get('/api/admin/newsletter', authenticateAdmin, async (req, res) => {
+    try {
+        const subscribers = await Newsletter.findAll();
+        res.json(subscribers);
+    } catch (error) {
+        console.error('Error fetching subscribers:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// Serve admin page at /admin
 app.get('/admin', (req, res) => {
-  const adminPath = path.join(__dirname, 'public', 'admin.html');
-  if (fs.existsSync(adminPath)) {
-    res.sendFile(adminPath);
-  } else {
-    res.status(404).json({ message: 'admin.html not found in public directory' });
-  }
+    res.sendFile(path.join(__dirname, 'public', 'admin.html'));
 });
 
-// Catch-all route for 404
-app.use((req, res) => {
-  res.status(404).json({ message: 'Route not found' });
+// Error Handling for Multer
+app.use((err, req, res, next) => {
+    if (err instanceof multer.MulterError) {
+        return res.status(400).json({ message: 'File upload error: ' + err.message });
+    } else if (err) {
+        return res.status(400).json({ message: err.message });
+    }
+    next();
 });
 
-// Start server
+// Global Error Handling
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({ message: 'Something went wrong!' });
+});
+
+// SPA fallback for user frontend (excluding /admin and /api)
+app.get('*', (req, res) => {
+    if (!req.path.startsWith('/api') && req.path !== '/admin') {
+        res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    } else {
+        res.status(404).json({ message: 'Resource not found' });
+    }
+});
+
+// Start Server
 const PORT = process.env.PORT || 3000;
-async function startServer() {
-  try {
-    await initializeDatabase();
-    app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
-  } catch (error) {
-    console.error('Failed to start server:', error);
-    process.exit(1);
-  }
-}
-
-startServer();
+app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+});
