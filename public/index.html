@@ -56,9 +56,13 @@
         }
         @media (max-width: 768px) {
             .hospital-name {
-                color: #1e3a8a;
+                font-size: 1.5rem;
                 background: none;
                 -webkit-text-fill-color: #1e3a8a;
+                color: #1e3a8a;
+                text-align: center;
+                display: block;
+                margin: 0 auto;
             }
         }
         .hospital-name:hover {
@@ -86,7 +90,7 @@
         }
         @media (max-width: 768px) {
             img {
-                height: 200px;
+                height: 150px;
                 object-fit: cover;
             }
         }
@@ -179,15 +183,15 @@
                 font-size: 16px;
             }
             #home {
-                padding-top: 10rem;
-                padding-bottom: 10rem;
-                min-height: 80vh;
+                padding-top: 8rem;
+                padding-bottom: 8rem;
+                min-height: 70vh;
             }
             #home h1 {
-                font-size: 2.25rem;
+                font-size: 2rem;
             }
             #home p {
-                font-size: 1rem;
+                font-size: 0.9rem;
             }
         }
         #home {
@@ -285,20 +289,22 @@
         @media (max-width: 768px) {
             #menu {
                 background-color: #ffffff;
-                padding: 1.5rem;
+                padding: 1rem;
                 position: fixed;
                 top: 0;
                 right: 0;
-                width: 85%;
+                width: 75%;
                 height: 100%;
                 z-index: 1000;
                 box-shadow: -4px 0 12px rgba(0, 0, 0, 0.2);
                 transform: translateX(100%);
                 transition: transform 0.3s ease-in-out;
                 overflow-y: auto;
+                display: block;
             }
             #menu.active {
                 transform: translateX(0);
+                display: block;
             }
             #menu-overlay {
                 display: none;
@@ -314,8 +320,8 @@
                 display: block;
             }
             .nav-link, .dropdown > a {
-                padding: 1rem;
-                font-size: 1.2rem;
+                padding: 0.8rem;
+                font-size: 1rem;
                 display: block;
                 color: #374151;
                 border-bottom: 1px solid #e5e7eb;
@@ -325,15 +331,15 @@
                 position: static;
                 box-shadow: none;
                 background: #f9fafb;
-                padding-left: 1.5rem;
+                padding-left: 1rem;
             }
             .dropdown-menu.block {
                 display: block;
             }
             .dropdown-menu a {
-                padding: 0.75rem 1rem;
+                padding: 0.5rem 1rem;
                 color: #374151;
-                font-size: 1rem;
+                font-size: 0.9rem;
             }
         }
         @media (min-width: 769px) {
@@ -512,7 +518,7 @@
         .gpay-button:hover {
             background-color: #3267D6;
         }
-        .gpay-button img {
+        .gpay-button img, .paypal-button img {
             width: 24px;
             height: 24px;
             margin-right: 8px;
@@ -594,6 +600,50 @@
             0% { transform: translate(-50%, -50%) rotate(0deg); }
             100% { transform: translate(-50%, -50%) rotate(360deg); }
         }
+        .smile-gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+        .smile-gallery-grid img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        @media (max-width: 768px) {
+            .smile-gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.5rem;
+            }
+            .smile-gallery-grid img {
+                height: 120px;
+            }
+        }
+        #appointment-form {
+            background: linear-gradient(135deg, #ffffff, #e6e6fa);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        @media (max-width: 768px) {
+            #appointment-form {
+                padding: 1.5rem;
+                max-width: 100%;
+            }
+            #appointment-form .mb-4 {
+                margin-bottom: 1rem;
+            }
+            #appointment-form input,
+            #appointment-form select {
+                padding: 0.75rem;
+                font-size: 0.9rem;
+            }
+            #appointment-form label {
+                font-size: 0.9rem;
+            }
+        }
     </style>
     <script type="application/ld+json">
     {
@@ -674,11 +724,11 @@
             <div class="stats-section">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div class="stats-card text-center">
-                        <h3 class="text-4xl font-bold text-blue-600">1000+</h3>
+                        <h3 class="text-4xl font-bold text-blue-600">10,000+</h3>
                         <p class="text-gray-700">Happy Patients Served</p>
                     </div>
                     <div class="stats-card text-center">
-                        <h3 class="text-4xl font-bold text-blue-600">3+</h3>
+                        <h3 class="text-4xl font-bold text-blue-600">15+</h3>
                         <p class="text-gray-700">Years of Excellence</p>
                     </div>
                     <div class="stats-card text-center">
@@ -754,7 +804,26 @@
     <section id="smile-gallery" class="py-16 bg-yellow-50 section-animate">
         <div class="container mx-auto px-4">
             <h2 class="text-3xl font-extrabold text-center mb-8 text-gray-800">Before & After Smile Gallery</h2>
-            <p class="text-center text-gray-700">Coming soon! Check back for our patient smile transformations.</p>
+            <div class="smile-gallery-grid max-w-4xl mx-auto">
+                <div class="text-center">
+                    <p class="text-gray-700 mb-2 font-semibold">Before</p>
+                    <img src="https://i.postimg.cc/3R4YvL2Z/before-smile-1.jpg" alt="Before smile transformation 1">
+                    <p class="text-gray-700 mt-2 font-semibold">After</p>
+                    <img src="https://i.postimg.cc/7YkP5q4J/after-smile-1.jpg" alt="After smile transformation 1">
+                </div>
+                <div class="text-center">
+                    <p class="text-gray-700 mb-2 font-semibold">Before</p>
+                    <img src="https://i.postimg.cc/NGGqL9s8/before-smile-2.jpg" alt="Before smile transformation 2">
+                    <p class="text-gray-700 mt-2 font-semibold">After</p>
+                    <img src="https://i.postimg.cc/7ZxWjR7Y/after-smile-2.jpg" alt="After smile transformation 2">
+                </div>
+                <div class="text-center">
+                    <p class="text-gray-700 mb-2 font-semibold">Before</p>
+                    <img src="https://i.postimg.cc/5yW2YkQB/before-smile-3.jpg" alt="Before smile transformation 3">
+                    <p class="text-gray-700 mt-2 font-semibold">After</p>
+                    <img src="https://i.postimg.cc/KzqP3mL8/after-smile-3.jpg" alt="After smile transformation 3">
+                </div>
+            </div>
         </div>
     </section>
 
@@ -855,7 +924,7 @@
                     <div class="p-6">
                         <h3 class="text-xl font-semibold mb-2 text-gray-800">Maintaining Oral Hygiene with Braces</h3>
                         <p class="text-gray-700 mb-4">Learn essential tips to keep your teeth clean while wearing braces, including brushing techniques and dietary advice.</p>
-                        <a href="blog.html#oral-hygiene-braces" class="btn inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" aria-label="Read more about maintaining oral hygiene with braces">Read More</a>
+                        <a href="blogs.html#oral-hygiene-braces" class="btn inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" aria-label="Read more about maintaining oral hygiene with braces">Read More</a>
                     </div>
                 </div>
                 <div class="blog-card bg-white rounded-lg shadow-md card">
@@ -863,7 +932,7 @@
                     <div class="p-6">
                         <h3 class="text-xl font-semibold mb-2 text-gray-800">Benefits of Dental Implants</h3>
                         <p class="text-gray-700 mb-4">Discover why dental implants are a long-lasting solution for missing teeth and how they can improve your quality of life.</p>
-                        <a href="blog.html#dental-implants-benefits" class="btn inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" aria-label="Read more about the benefits of dental implants">Read More</a>
+                        <a href="blogs.html#dental-implants-benefits" class="btn inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" aria-label="Read more about the benefits of dental implants">Read More</a>
                     </div>
                 </div>
                 <div class="blog-card bg-white rounded-lg shadow-md card">
@@ -871,12 +940,12 @@
                     <div class="p-6">
                         <h3 class="text-xl font-semibold mb-2 text-gray-800">Cosmetic Dentistry Trends in 2025</h3>
                         <p class="text-gray-700 mb-4">Explore the latest trends in cosmetic dentistry, from teeth whitening to veneers, and how they can enhance your smile.</p>
-                        <a href="blog.html#cosmetic-dentistry-trends" class="btn inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" aria-label="Read more about cosmetic dentistry trends in 2025">Read More</a>
+                        <a href="blogs.html#cosmetic-dentistry-trends" class="btn inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" aria-label="Read more about cosmetic dentistry trends in 2025">Read More</a>
                     </div>
                 </div>
             </div>
             <div class="text-center mt-8">
-                <a href="blog.html" class="btn inline-block bg-green-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-green-700 shadow-md" aria-label="Explore more dental health blogs">Know More</a>
+                <a href="blogs.html" class="btn inline-block bg-green-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-green-700 shadow-md" aria-label="Explore more dental health blogs">Know More</a>
             </div>
         </div>
     </section>
@@ -888,18 +957,18 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div class="bg-white p-6 rounded-lg shadow-md text-center card">
                     <h3 class="text-xl font-semibold mb-2">Guide to Braces</h3>
-                    <p class="text-gray-700 mb-4">Learn how to care for your braces and maintain oral hygiene.</p>
-                    <a href="/pdfs/braces-guide.pdf" class="btn bg-blue-600 text-white px-4 py-2 rounded-lg" download aria-label="Download Guide to Braces PDF">Download PDF</a>
+                    <p class="text-gray-700 mb-4">Learn how to care for your braces and maintain oral hygiene with this comprehensive guide.</p>
+                    <a href="#" onclick="downloadPDF('braces-guide')" class="btn bg-blue-600 text-white px-4 py-2 rounded-lg" aria-label="Download Guide to Braces PDF">Download PDF</a>
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-md text-center card">
                     <h3 class="text-xl font-semibold mb-2">Implant Aftercare</h3>
-                    <p class="text-gray-700 mb-4">Tips for recovering and maintaining dental implants.</p>
-                    <a href="/pdfs/implant-aftercare.pdf" class="btn bg-blue-600 text-white px-4 py-2 rounded-lg" download aria-label="Download Implant Aftercare PDF">Download PDF</a>
+                    <p class="text-gray-700 mb-4">Essential tips for recovering and maintaining your dental implants for long-term success.</p>
+                    <a href="#" onclick="downloadPDF('implant-aftercare')" class="btn bg-blue-600 text-white px-4 py-2 rounded-lg" aria-label="Download Implant Aftercare PDF">Download PDF</a>
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-md text-center card">
                     <h3 class="text-xl font-semibold mb-2">Kids’ Dental Care</h3>
-                    <p class="text-gray-700 mb-4">How to ensure healthy teeth for your children.</p>
-                    <a href="/pdfs/kids-dental-care.pdf" class="btn bg-blue-600 text-white px-4 py-2 rounded-lg" download aria-label="Download Kids’ Dental Care PDF">Download PDF</a>
+                    <p class="text-gray-700 mb-4">A guide to ensure healthy teeth for your children, from infancy to adolescence.</p>
+                    <a href="#" onclick="downloadPDF('kids-dental-care')" class="btn bg-blue-600 text-white px-4 py-2 rounded-lg" aria-label="Download Kids’ Dental Care PDF">Download PDF</a>
                 </div>
             </div>
         </div>
@@ -945,7 +1014,8 @@
     <section id="appointment" class="py-16 bg-purple-50 section-animate">
         <div class="container mx-auto px-4">
             <h2 class="text-3xl font-extrabold text-center mb-8 text-gray-800">Book an Appointment</h2>
-            <form id="appointment-form" class="max-w-lg mx-auto bg                <div class="mb-4">
+            <form id="appointment-form">
+                <div class="mb-4">
                     <label class="block text-gray-700 mb-2" for="name">Full Name</label>
                     <input type="text" id="name" class="w-full p-3 border rounded-lg shadow-sm" required aria-required="true">
                 </div>
@@ -976,10 +1046,11 @@
                 </div>
                 <div class="payment-buttons">
                     <div id="paypal-button-container" class="payment-button paypal-button">
+                        <img src="https://i.postimg.cc/Vsngbp7g/paypal1.jpg" alt="PayPal Logo">
                         Pay with PayPal
                     </div>
                     <div id="gpay-button-container" class="payment-button gpay-button">
-                        <img src="https://www.gstatic.com/instantbuy/svg/dark_gpay.svg" alt="Google Pay Logo">
+                        <img src="https://i.postimg.cc/tgKdsgyk/gpay.webp" alt="Google Pay Logo">
                         Pay with Google Pay
                     </div>
                 </div>
@@ -1375,96 +1446,56 @@
             const phone = document.getElementById('phone').value;
             const date = document.getElementById('date').value;
             const time = document.getElementById('time').value;
-            const service = document.getElementById('service').value;
-            const today = new Date().toISOString().split('T')[0];
+            const serviceId = document.getElementById('service').value;
 
-            if (!name || !email || !phone || !date || !time || !service || date < today) {
-                alert('Please fill all fields and select a future date.');
+            if (!name || !email || !phone || !date || !time || !serviceId) {
+                alert('Please fill all fields to book an appointment.');
                 return;
             }
 
-            const appointmentData = { name, email, phone, date, time, serviceId: service };
+            const appointmentData = { name, email, phone, date, time, serviceId };
 
             try {
                 showSpinner();
                 let transactionResponse;
 
                 if (method === 'paypal') {
-                    const orderResponse = await axios.post(`${API_URL}/paypal/create-order`, {
-                        amount: '10.00',
-                        description: 'Appointment Deposit - OAK Dental Hospital',
-                        payer: { name, email, phone }
-                    });
-                    const orderId = orderResponse.data.id;
-
-                    paypal.Buttons({
-                        createOrder: () => orderId,
-                        onApprove: async (data) => {
-                            try {
-                                const captureResponse = await axios.post(`${API_URL}/paypal/capture-order`, {
-                                    orderId: data.orderID,
-                                    appointment: appointmentData
+                    const paypalResponse = await new Promise((resolve, reject) => {
+                        paypal.Buttons({
+                            createOrder: (data, actions) => {
+                                return actions.order.create({
+                                    purchase_units: [{
+                                        amount: {
+                                            value: '10.00',
+                                            currency_code: 'USD'
+                                        }
+                                    }]
                                 });
-                                transactionResponse = captureResponse.data;
-                                await handlePostPayment(transactionResponse, appointmentData);
-                            } catch (error) {
-                                console.error('Error capturing PayPal payment:', error);
-                                alert('Payment capture failed. Please try again.');
-                            }
-                        },
-                        onError: (err) => {
-                            console.error('PayPal error:', err);
-                            alert('Payment failed. Please check your connection and try again.');
-                        }
-                    }).render('#paypal-button-container').catch(err => {
-                        console.error('PayPal button rendering failed:', err);
-                        alert('Failed to load PayPal payment system. Please try again later.');
+                            },
+                            onApprove: async (data, actions) => {
+                                const order = await actions.order.capture();
+                                resolve({
+                                    transactionId: order.id,
+                                    status: order.status,
+                                    payer: order.payer
+                                });
+                            },
+                            onError: (err) => reject(err)
+                        }).render('#paypal-button-container');
                     });
+                    transactionResponse = await axios.post(`${API_URL}/paypal/capture-payment`, {
+                        orderId: paypalResponse.transactionId,
+                        appointment: appointmentData
+                    });
+                    transactionResponse = transactionResponse.data;
                 } else if (method === 'gpay') {
                     transactionResponse = await initiateGPayPayment(appointmentData);
-                    await handlePostPayment(transactionResponse, appointmentData);
-                }
-            } catch (error) {
-                console.error('Error initiating payment:', error);
-                alert('Failed to initiate payment. Please try again.');
-            } finally {
-                hideSpinner();
-            }
-        }
-
-        async function handlePostPayment(transactionResponse, appointmentData) {
-            try {
-                showSpinner();
-                await sendNotifications(appointmentData, transactionResponse);
-
-                if (Notification.permission === 'granted') {
-                    new Notification('Appointment Confirmed', {
-                        body: `Thank you, ${appointmentData.name}! Your appointment is confirmed for ${appointmentData.date} at ${appointmentData.time}.`,
-                        icon: 'https://i.postimg.cc/50vXRG8K/ram.jpg'
-                    });
-                } else if (Notification.permission !== 'denied') {
-                    Notification.requestPermission().then(permission => {
-                        if (permission === 'granted') {
-                            new Notification('Appointment Confirmed', {
-                                body: `Thank you, ${appointmentData.name}! Your appointment is confirmed for ${appointmentData.date} at ${appointmentData.time}.`,
-                                icon: 'https://i.postimg.cc/50vXRG8K/ram.jpg'
-                            });
-                        }
-                    });
                 }
 
-                alert(`Payment successful! Transaction ID: ${transactionResponse.transactionId}`);
-                document.getElementById('appointment-modal').style.display = 'flex';
-                document.getElementById('appointment-form').reset();
-
-                gtag('event', 'purchase', {
-                    'event_category': 'Payment',
-                    'event_label': 'Appointment Deposit',
-                    'value': 10
-                });
+                await handlePostPayment(transactionResponse, appointmentData);
             } catch (error) {
-                console.error('Error handling post-payment:', error);
-                alert('Payment processed, but there was an issue with notifications. Please contact support.');
+                console.error('Payment initiation error:', error);
+                alert('Payment failed. Please try again or contact support.');
             } finally {
                 hideSpinner();
             }
@@ -1687,7 +1718,7 @@
                 const response = await axios.post(`${API_URL}/feedback`, { name, rating, description, date }, { timeout: 10000 });
 
                 if (response.status === 200 || response.status === 201) {
-                    alert('Thank you for your feedback!');
+                    alert('Thank you for your valuable feedback!');
                     document.getElementById('feedback-name').value = '';
                     document.getElementById('feedback-description').value = '';
                     document.querySelector('input[name="rating"]:checked').checked = false;
@@ -1729,6 +1760,210 @@
                 console.error('Error loading feedback:', error);
                 const feedbackList = document.getElementById('feedback-list');
                 feedbackList.innerHTML = '<p class="text-red-600 text-center">Failed to load feedback. Please try again later.</p>';
+            } finally {
+                hideSpinner();
+            }
+        }
+
+        async function downloadPDF(type) {
+            try {
+                showSpinner();
+                let content;
+                if (type === 'braces-guide') {
+                    content = `
+                        \\documentclass{article}
+                        \\usepackage[utf8]{inputenc}
+                        \\usepackage{graphicx}
+                        \\usepackage{geometry}
+                        \\geometry{a4paper, margin=1in}
+                        \\title{Guide to Braces}
+                        \\author{OAK Dental Hospital}
+                        \\date{May 2025}
+
+                        \\begin{document}
+
+                        \\begin{center}
+                        \\includegraphics[width=0.2\\textwidth]{https://i.postimg.cc/50vXRG8K/ram.jpg}\\\\
+                        \\vspace{0.5cm}
+                        \\textbf{\\Large OAK Dental Hospital}\\\\
+                        \\vspace{0.2cm}
+                        2nd Floor, Vision Apartments, Gandhi Nagar, Nizampet Road, Bachupally, Hyderabad - 500090\\\\
+                        Phone: +91 7569 366 767
+                        \\end{center}
+
+                        \\maketitle
+
+                        \\section*{Introduction}
+                        At OAK Dental Hospital, we understand that getting braces is a significant step towards a healthier, more confident smile. This guide provides essential tips to help you care for your braces and maintain excellent oral hygiene during your treatment.
+
+                        \\section*{Daily Care Tips}
+                        \\begin{itemize}
+                            \\item \\textbf{Brushing:} Brush your teeth at least twice a day using a soft-bristled toothbrush. Pay extra attention to the areas around brackets and wires.
+                            \\item \\textbf{Flossing:} Floss daily to remove food particles and plaque from between teeth and under the gumline. Use floss threaders or interdental brushes for easier access.
+                            \\item \\textbf{Mouthwash:} Rinse with an antimicrobial mouthwash to reduce bacteria and keep your mouth fresh.
+                        \\end{itemize}
+
+                        \\section*{Foods to Avoid}
+                        \\begin{itemize}
+                            \\item \\textbf{Sticky Foods:} Avoid chewing gum, caramel, and toffee, as they can get stuck in your braces and cause damage.
+                            \\item \\textbf{Hard Foods:} Nuts, hard candies, and popcorn can break brackets or wires. Opt for softer alternatives.
+                            \\item \\textbf{Sugary Foods:} Limit sugary snacks and drinks to prevent cavities, as braces can trap food particles.
+                        \\end{itemize}
+
+                        \\section*{Handling Discomfort}
+                        \\begin{itemize}
+                            \\item \\textbf{Wax:} Use orthodontic wax to cover any brackets or wires that irritate your cheeks or gums.
+                            \\item \\textbf{Pain Relief:} Over-the-counter pain relievers like ibuprofen can help with initial soreness. Consult your dentist if discomfort persists.
+                            \\item \\textbf{Emergencies:} If a bracket breaks or a wire pokes out, contact OAK Dental Hospital immediately at +91 7569 366 767.
+                        \\end{itemize}
+
+                        \\section*{Regular Check-ups}
+                        Schedule regular appointments with your orthodontist at OAK Dental Hospital to monitor your progress and make necessary adjustments. Typically, you’ll need to visit every 4-6 weeks.
+
+                        \\section*{Conclusion}
+                        Caring for your braces requires diligence, but the result—a beautiful, straight smile—is worth it! For any questions or concerns, feel free to reach out to us at OAK Dental Hospital. We’re here to support you every step of the way.
+
+                        \\end{document}
+                    `;
+                } else if (type === 'implant-aftercare') {
+                    content = `
+                        \\documentclass{article}
+                        \\usepackage[utf8]{inputenc}
+                        \\usepackage{graphicx}
+                        \\usepackage{geometry}
+                        \\geometry{a4paper, margin=1in}
+                        \\title{Implant Aftercare}
+                        \\author{OAK Dental Hospital}
+                        \\date{May 2025}
+
+                        \\begin{document}
+
+                        \\begin{center}
+                        \\includegraphics[width=0.2\\textwidth]{https://i.postimg.cc/50vXRG8K/ram.jpg}\\\\
+                        \\vspace{0.5cm}
+                        \\textbf{\\Large OAK Dental Hospital}\\\\
+                        \\vspace{0.2cm}
+                        2nd Floor, Vision Apartments, Gandhi Nagar, Nizampet Road, Bachupally, Hyderabad - 500090\\\\
+                        Phone: +91 7569 366 767
+                        \\end{center}
+
+                        \\maketitle
+
+                        \\section*{Introduction}
+                        Congratulations on your new dental implant from OAK Dental Hospital! Proper aftercare is crucial to ensure the longevity and success of your implant. This guide provides tips to help you recover and maintain your implant effectively.
+
+                        \\section*{Immediate Post-Surgery Care}
+                        \\begin{itemize}
+                            \\item \\textbf{Rest:} Avoid strenuous activities for at least 48 hours after surgery to promote healing.
+                            \\item \\textbf{Ice Packs:} Apply ice packs to the outside of your cheek for 15-minute intervals to reduce swelling.
+                            \\item \\textbf{Medication:} Take prescribed antibiotics and pain relievers as directed by your dentist to prevent infection and manage discomfort.
+                        \\end{itemize}
+
+                        \\section*{Oral Hygiene}
+                        \\begin{itemize}
+                            \\item \\textbf{Gentle Cleaning:} Brush gently around the implant site with a soft-bristled toothbrush. Avoid the surgical area for the first few days.
+                            \\item \\textbf{Rinsing:} Rinse your mouth with a saltwater solution (1 tsp salt in a glass of warm water) 2-3 times a day to keep the area clean.
+                            \\item \\textbf{Avoid Irritation:} Do not touch the implant site with your fingers or tongue to prevent infection.
+                        \\end{itemize}
+
+                        \\section*{Dietary Guidelines}
+                        \\begin{itemize}
+                            \\item \\textbf{Soft Foods:} Stick to soft foods like yogurt, mashed potatoes, and smoothies for the first week.
+                            \\item \\textbf{Avoid Hot Foods:} Avoid hot foods and drinks for the first 48 hours to prevent irritation.
+                            \\item \\textbf{Stay Hydrated:} Drink plenty of water, but avoid using a straw, as the suction can dislodge the blood clot.
+                        \\end{itemize}
+
+                        \\section*{Long-Term Maintenance}
+                        \\begin{itemize}
+                            \\item \\textbf{Regular Brushing:} Brush twice daily and floss around the implant to prevent plaque buildup.
+                            \\item \\textbf{Dental Visits:} Schedule regular check-ups with OAK Dental Hospital to monitor the health of your implant.
+                            \\item \\textbf{Avoid Hard Chewing:} Avoid chewing on hard objects like ice or pens, which can damage the implant.
+                        \\end{itemize}
+
+                        \\section*{When to Contact Us}
+                        If you experience severe pain, excessive bleeding, or signs of infection (redness, swelling, or pus), contact OAK Dental Hospital immediately at +91 7569 366 767.
+
+                        \\section*{Conclusion}
+                        With proper care, your dental implant can last a lifetime. The team at OAK Dental Hospital is here to support you throughout your recovery and beyond. Feel free to reach out with any questions!
+
+                        \\end{document}
+                    `;
+                } else if (type === 'kids-dental-care') {
+                    content = `
+                        \\documentclass{article}
+                        \\usepackage[utf8]{inputenc}
+                        \\usepackage{graphicx}
+                        \\usepackage{geometry}
+                        \\geometry{a4paper, margin=1in}
+                        \\title{Kids' Dental Care}
+                        \\author{OAK Dental Hospital}
+                        \\date{May 2025}
+
+                        \\begin{document}
+
+                        \\begin{center}
+                        \\includegraphics[width=0.2\\textwidth]{https://i.postimg.cc/50vXRG8K/ram.jpg}\\\\
+                        \\vspace{0.5cm}
+                        \\textbf{\\Large OAK Dental Hospital}\\\\
+                        \\vspace{0.2cm}
+                        2nd Floor, Vision Apartments, Gandhi Nagar, Nizampet Road, Bachupally, Hyderabad - 500090\\\\
+                        Phone: +91 7569 366 767
+                        \\end{center}
+
+                        \\maketitle
+
+                        \\section*{Introduction}
+                        At OAK Dental Hospital, we believe that establishing good dental habits early sets the foundation for a lifetime of healthy smiles. This guide offers tips to help parents ensure their children’s teeth remain strong and healthy from infancy to adolescence.
+
+                        \\section*{Infant Dental Care}
+                        \\begin{itemize}
+                            \\item \\textbf{Clean Gums:} Even before teeth emerge, clean your baby’s gums with a soft, damp cloth after feedings.
+                            \\item \\textbf{First Tooth:} Once the first tooth appears (usually between 6-12 months), start brushing with a small, soft-bristled toothbrush and a rice-grain-sized amount of fluoride toothpaste.
+                            \\item \\textbf{Avoid Bottle Decay:} Don’t let your baby sleep with a bottle of milk or juice, as it can lead to tooth decay.
+                        \\end{itemize}
+
+                        \\section*{Toddler and Preschooler Care}
+                        \\begin{itemize}
+                            \\item \\textbf{Brushing Routine:} Brush your child’s teeth twice daily with a pea-sized amount of fluoride toothpaste. Supervise until they can brush effectively on their own (around age 6).
+                            \\item \\textbf{Flossing:} Start flossing once your child’s teeth touch each other to remove food particles and plaque.
+                            \\item \\textbf{Dental Visits:} Schedule your child’s first dental visit by their first birthday or within 6 months of their first tooth erupting. Regular check-ups at OAK Dental Hospital help catch issues early.
+                        \\end{itemize}
+
+                        \\section*{School-Age Children}
+                        \\begin{itemize}
+                            \\item \\textbf{Healthy Snacks:} Encourage healthy snacks like fruits and vegetables instead of sugary treats to reduce the risk of cavities.
+                            \\item \\textbf{Mouthguards:} If your child plays sports, ensure they wear a mouthguard to protect their teeth from injury.
+                            \\item \\textbf{Sealants:} Ask your dentist at OAK Dental Hospital about dental sealants, which can protect molars from cavities.
+                        \\end{itemize}
+
+                        \\section*{Encouraging Good Habits}
+                        \\begin{itemize}
+                            \\item \\textbf{Make It Fun:} Use flavored toothpaste or a toothbrush with their favorite character to make brushing enjoyable.
+                            \\item \\textbf{Lead by Example:} Brush and floss alongside your child to model good habits.
+                            \\item \\textbf{Reward System:} Create a reward chart for consistent brushing and flossing to motivate your child.
+                        \\end{itemize}
+
+                        \\section*{When to Contact Us}
+                        If your child experiences tooth pain, sensitivity, or has a dental injury, contact OAK Dental Hospital at +91 7569 366 767 for prompt care.
+
+                        \\section*{Conclusion}
+                        Healthy dental habits start early, and OAK Dental Hospital is here to support your child’s oral health journey. Schedule a visit today to ensure your child’s smile stays bright and healthy!
+
+                        \\end{document}
+                    `;
+                }
+
+                const response = await axios.post(`${API_URL}/generate-pdf`, { content }, { responseType: 'blob' });
+                const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', `${type}.pdf`);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } catch (error) {
+                console.error('Error generating PDF:', error);
+                alert('Failed to generate PDF. Please try again later.');
             } finally {
                 hideSpinner();
             }
