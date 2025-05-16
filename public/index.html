@@ -6,6 +6,12 @@
     <meta name="description" content="OAK Dental Hospital in Hyderabad offers expert dental care, including Orthodontics, Implants, and Cosmetic Dentistry. Book your appointment today!">
     <meta name="keywords" content="dental care, dentist Hyderabad, orthodontics, dental implants, cosmetic dentistry, OAK Dental Hospital">
     <meta name="author" content="OAK Dental Hospital">
+    <!-- Open Graph Tags for Social Media Sharing -->
+    <meta property="og:title" content="OAK Dental Hospital - Expert Dental Care in Hyderabad">
+    <meta property="og:description" content="Transform your smile with expert dental care in Hyderabad. Specializing in Orthodontics, Implants, and Cosmetic Dentistry for a confident, radiant you!">
+    <meta property="og:image" content="https://i.postimg.cc/50vXRG8K/ram.jpg">
+    <meta property="og:url" content="https://oak-dental.onrender.com">
+    <meta property="og:type" content="website">
     <title>OAK Dental Hospital - Expert Dental Care in Hyderabad</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -23,6 +29,7 @@
     <style>
         body {
             font-family: 'Roboto', sans-serif;
+            background-color: #f8fafc;
         }
         h1, h2, h3, .hospital-name {
             font-family: 'Poppins', sans-serif;
@@ -465,7 +472,7 @@
             width: 100%;
             height: 200px;
             object-fit: cover;
-            border-radius: 8px;
+            border-radius: 8px 8px 0 0;
         }
         @media (max-width: 768px) {
             .blog-card img {
@@ -510,6 +517,83 @@
             height: 24px;
             margin-right: 8px;
         }
+        .feedback-form {
+            background: linear-gradient(135deg, #ffffff, #e6e6fa);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .star-rating {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-bottom: 1rem;
+        }
+        .star-rating input {
+            display: none;
+        }
+        .star-rating label {
+            font-size: 1.5rem;
+            color: #d1d5db;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+        .star-rating input:checked ~ label,
+        .star-rating label:hover,
+        .star-rating label:hover ~ label {
+            color: #facc15;
+        }
+        .feedback-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .feedback-stars {
+            color: #facc15;
+            margin-bottom: 0.5rem;
+        }
+        .stats-section {
+            background: linear-gradient(135deg, #e6e6fa, #f0f7ff);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .stats-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        .filter-container {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+        .filter-container select {
+            padding: 0.5rem;
+            border-radius: 8px;
+            border: 1px solid #d1d5db;
+        }
+        .loading-spinner {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f4f6;
+            border-top: 5px solid #2563eb;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            z-index: 2000;
+        }
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
     </style>
     <script type="application/ld+json">
     {
@@ -531,6 +615,9 @@
     </script>
 </head>
 <body class="bg-blue-50 antialiased">
+    <!-- Loading Spinner -->
+    <div id="loading-spinner" class="loading-spinner"></div>
+
     <!-- Navigation -->
     <nav class="bg-white text-gray-700 shadow-lg sticky top-0 z-50">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
@@ -580,6 +667,29 @@
         </div>
     </section>
 
+    <!-- Stats Section -->
+    <section id="stats-section" class="py-16 bg-white section-animate">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-extrabold text-center mb-8 text-gray-800">Our Achievements</h2>
+            <div class="stats-section">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="stats-card text-center">
+                        <h3 class="text-4xl font-bold text-blue-600">1000+</h3>
+                        <p class="text-gray-700">Happy Patients Served</p>
+                    </div>
+                    <div class="stats-card text-center">
+                        <h3 class="text-4xl font-bold text-blue-600">3+</h3>
+                        <p class="text-gray-700">Years of Excellence</p>
+                    </div>
+                    <div class="stats-card text-center">
+                        <h3 class="text-4xl font-bold text-blue-600">50+</h3>
+                        <p class="text-gray-700">Specialized Treatments</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- About Us Section -->
     <section id="about" class="py-16 bg-green-50 section-animate">
         <div class="container mx-auto px-4">
@@ -615,10 +725,23 @@
         </div>
     </section>
 
-    <!-- Treatments Section with Carousel -->
+    <!-- Treatments Section with Carousel and Filters -->
     <section id="services" class="py-16 bg-gray-100 section-animate">
         <div class="container mx-auto px-4">
             <h2 class="text-3xl font-extrabold text-center mb-8 text-gray-800">Treatments</h2>
+            <div class="filter-container max-w-2xl mx-auto">
+                <select id="category-filter" onchange="filterTreatments()">
+                    <option value="">All Categories</option>
+                    <option value="Orthodontics">Orthodontics</option>
+                    <option value="Implants">Implants</option>
+                    <option value="Cosmetic">Cosmetic Dentistry</option>
+                </select>
+                <select id="price-filter" onchange="filterTreatments()">
+                    <option value="">Sort by Price</option>
+                    <option value="low-to-high">Low to High</option>
+                    <option value="high-to-low">High to Low</option>
+                </select>
+            </div>
             <div id="treatments-carousel" class="relative">
                 <div id="carousel-container" class="carousel-container"></div>
                 <button class="carousel-button left" onclick="prevSlide()">❮</button>
@@ -635,11 +758,40 @@
         </div>
     </section>
 
-    <!-- Testimonials Section -->
+    <!-- Testimonials Section with Feedback -->
     <section id="testimonials" class="py-16 bg-blue-50 section-animate">
         <div class="container mx-auto px-4">
             <h2 class="text-3xl font-extrabold text-center mb-8 text-gray-800">What Our Patients Say</h2>
-            <p class="text-center text-gray-700">Coming soon! Patient testimonials will be added by our admin team.</p>
+            <div class="max-w-lg mx-auto mb-12 feedback-form">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4 text-center">Share Your Feedback</h3>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2" for="feedback-name">Your Name</label>
+                    <input type="text" id="feedback-name" class="w-full p-3 border rounded-lg shadow-sm" required aria-required="true">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Rating</label>
+                    <div class="star-rating">
+                        <input type="radio" id="star5" name="rating" value="5" required aria-required="true">
+                        <label for="star5" class="fas fa-star"></label>
+                        <input type="radio" id="star4" name="rating" value="4">
+                        <label for="star4" class="fas fa-star"></label>
+                        <input type="radio" id="star3" name="rating" value="3">
+                        <label for="star3" class="fas fa-star"></label>
+                        <input type="radio" id="star2" name="rating" value="2">
+                        <label for="star2" class="fas fa-star"></label>
+                        <input type="radio" id="star1" name="rating" value="1">
+                        <label for="star1" class="fas fa-star"></label>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2" for="feedback-description">Your Feedback</label>
+                    <textarea id="feedback-description" class="w-full p-3 border rounded-lg shadow-sm" rows="4" required aria-required="true"></textarea>
+                </div>
+                <button onclick="submitFeedback()" class="btn w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 shadow-md" aria-label="Submit your feedback">Submit Feedback</button>
+            </div>
+            <div id="feedback-list" class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                <!-- Feedback will be dynamically loaded here -->
+            </div>
         </div>
     </section>
 
@@ -703,7 +855,7 @@
                     <div class="p-6">
                         <h3 class="text-xl font-semibold mb-2 text-gray-800">Maintaining Oral Hygiene with Braces</h3>
                         <p class="text-gray-700 mb-4">Learn essential tips to keep your teeth clean while wearing braces, including brushing techniques and dietary advice.</p>
-                        <a href="blogs.html#oral-hygiene-braces" class="btn inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" aria-label="Read more about maintaining oral hygiene with braces">Read More</a>
+                        <a href="blog.html#oral-hygiene-braces" class="btn inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" aria-label="Read more about maintaining oral hygiene with braces">Read More</a>
                     </div>
                 </div>
                 <div class="blog-card bg-white rounded-lg shadow-md card">
@@ -711,7 +863,7 @@
                     <div class="p-6">
                         <h3 class="text-xl font-semibold mb-2 text-gray-800">Benefits of Dental Implants</h3>
                         <p class="text-gray-700 mb-4">Discover why dental implants are a long-lasting solution for missing teeth and how they can improve your quality of life.</p>
-                        <a href="blogs.html#dental-implants-benefits" class="btn inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" aria-label="Read more about the benefits of dental implants">Read More</a>
+                        <a href="blog.html#dental-implants-benefits" class="btn inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" aria-label="Read more about the benefits of dental implants">Read More</a>
                     </div>
                 </div>
                 <div class="blog-card bg-white rounded-lg shadow-md card">
@@ -719,12 +871,12 @@
                     <div class="p-6">
                         <h3 class="text-xl font-semibold mb-2 text-gray-800">Cosmetic Dentistry Trends in 2025</h3>
                         <p class="text-gray-700 mb-4">Explore the latest trends in cosmetic dentistry, from teeth whitening to veneers, and how they can enhance your smile.</p>
-                        <a href="blogs.html#cosmetic-dentistry-trends" class="btn inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" aria-label="Read more about cosmetic dentistry trends in 2025">Read More</a>
+                        <a href="blog.html#cosmetic-dentistry-trends" class="btn inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" aria-label="Read more about cosmetic dentistry trends in 2025">Read More</a>
                     </div>
                 </div>
             </div>
             <div class="text-center mt-8">
-                <a href="blogs.html" class="btn inline-block bg-green-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-green-700 shadow-md" aria-label="Explore more dental health blogs">Know More</a>
+                <a href="blog.html" class="btn inline-block bg-green-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-green-700 shadow-md" aria-label="Explore more dental health blogs">Know More</a>
             </div>
         </div>
     </section>
@@ -793,8 +945,7 @@
     <section id="appointment" class="py-16 bg-purple-50 section-animate">
         <div class="container mx-auto px-4">
             <h2 class="text-3xl font-extrabold text-center mb-8 text-gray-800">Book an Appointment</h2>
-            <form id="appointment-form" class="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-md card">
-                <div class="mb-4">
+            <form id="appointment-form" class="max-w-lg mx-auto bg                <div class="mb-4">
                     <label class="block text-gray-700 mb-2" for="name">Full Name</label>
                     <input type="text" id="name" class="w-full p-3 border rounded-lg shadow-sm" required aria-required="true">
                 </div>
@@ -845,15 +996,18 @@
         </div>
     </div>
 
-    <!-- Appointment Status Section -->
+    <!-- Appointment Status Section with Cancellation -->
     <section id="status" class="py-16 bg-indigo-50 section-animate">
         <div class="container mx-auto px-4">
             <h2 class="text-3xl font-extrabold text-center mb-8 text-gray-800">Manage Appointments</h2>
             <div id="status-display" class="max-w-lg mx-auto status-card">
-                <p class="text-gray-700 mb-4">Enter your email to check your appointment status.</p>
+                <p class="text-gray-700 mb-4">Enter your email to check or cancel your appointment status.</p>
                 <div class="mt-4">
                     <input type="email" id="status-email" class="w-full p-3 border rounded-lg shadow-sm mb-4" placeholder="Your Email" required aria-required="true">
-                    <button onclick="checkStatus()" class="btn bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 shadow-md" aria-label="Check appointment status">Check Status</button>
+                    <div class="flex space-x-4">
+                        <button onclick="checkStatus()" class="btn flex-1 bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 shadow-md" aria-label="Check appointment status">Check Status</button>
+                        <button onclick="cancelAppointment()" class="btn flex-1 bg-red-600 text-white p-3 rounded-lg hover:bg-red-700 shadow-md" aria-label="Cancel appointment">Cancel Appointment</button>
+                    </div>
                 </div>
                 <div id="status-result" class="mt-4 text-gray-700"></div>
             </div>
@@ -933,9 +1087,18 @@
         </a>
     </div>
 
-    <!-- Tawk.to Live Chat -->
+    <!-- Tawk.to Live Chat with Pre-Chat Form -->
     <script>
         var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+        Tawk_API.onLoad = function(){
+            Tawk_API.setAttributes({
+                'name' : 'Visitor',
+                'email' : 'visitor@oakdental.com'
+            }, function(error){});
+        };
+        Tawk_API.onPrechatSubmit = function(data){
+            console.log('Prechat form submitted:', data);
+        };
         (function(){
             var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
             s1.async=true;
@@ -985,22 +1148,34 @@
             });
         });
 
+        // Loading Spinner Control
+        function showSpinner() {
+            document.getElementById('loading-spinner').style.display = 'block';
+        }
+
+        function hideSpinner() {
+            document.getElementById('loading-spinner').style.display = 'none';
+        }
+
         // Carousel for Treatments
         let currentSlide = 0;
         let treatments = [];
+        let filteredTreatments = [];
         let slideInterval;
 
         async function loadTreatments() {
             try {
+                showSpinner();
                 const response = await axios.get(`${API_URL}/treatments`, { timeout: 10000 });
                 treatments = response.data.slice(0, 6).filter(treatment => treatment.name && (treatment.image || treatment.video));
+                filteredTreatments = [...treatments];
                 const container = document.getElementById('carousel-container');
                 container.innerHTML = '';
-                if (treatments.length === 0) {
+                if (filteredTreatments.length === 0) {
                     container.innerHTML = '<p class="text-gray-700 text-center">No treatments available at the moment.</p>';
                     return;
                 }
-                treatments.forEach((treatment, index) => {
+                filteredTreatments.forEach((treatment, index) => {
                     const div = document.createElement('div');
                     div.className = 'carousel-item card bg-white p-4 rounded-lg shadow-md';
                     div.innerHTML = `
@@ -1022,7 +1197,7 @@
                 serviceSelect.innerHTML = '<option value="">Select Service</option>';
                 treatments.forEach(treatment => {
                     const option = document.createElement('option');
-                    option.value = treatment.id; // Use 'id' as per Sequelize model
+                    option.value = treatment.id;
                     option.textContent = `${treatment.name} ($${treatment.cost || 'Contact for pricing'})`;
                     serviceSelect.appendChild(option);
                 });
@@ -1032,6 +1207,8 @@
                 console.error('Error loading treatments:', error);
                 const container = document.getElementById('carousel-container');
                 container.innerHTML = '<p class="text-red-600 text-center">Failed to load treatments. Please try again later.</p>';
+            } finally {
+                hideSpinner();
             }
         }
 
@@ -1047,14 +1224,14 @@
 
         function prevSlide() {
             stopAutoSlide();
-            currentSlide = (currentSlide - 1 + treatments.length) % treatments.length;
+            currentSlide = (currentSlide - 1 + filteredTreatments.length) % filteredTreatments.length;
             updateCarousel();
             startAutoSlide();
         }
 
         function nextSlide() {
             stopAutoSlide();
-            currentSlide = (currentSlide + 1) % treatments.length;
+            currentSlide = (currentSlide + 1) % filteredTreatments.length;
             updateCarousel();
             startAutoSlide();
         }
@@ -1064,8 +1241,56 @@
             container.style.transform = `translateX(-${currentSlide * 100}%)`;
         }
 
+        function filterTreatments() {
+            const category = document.getElementById('category-filter').value;
+            const priceSort = document.getElementById('price-filter').value;
+
+            filteredTreatments = [...treatments];
+
+            if (category) {
+                filteredTreatments = filteredTreatments.filter(treatment => treatment.category === category);
+            }
+
+            if (priceSort) {
+                filteredTreatments.sort((a, b) => {
+                    const costA = parseFloat(a.cost) || 0;
+                    const costB = parseFloat(b.cost) || 0;
+                    return priceSort === 'low-to-high' ? costA - costB : costB - costA;
+                });
+            }
+
+            currentSlide = 0;
+            stopAutoSlide();
+            const container = document.getElementById('carousel-container');
+            container.innerHTML = '';
+            if (filteredTreatments.length === 0) {
+                container.innerHTML = '<p class="text-gray-700 text-center">No treatments match your criteria.</p>';
+                return;
+            }
+            filteredTreatments.forEach((treatment, index) => {
+                const div = document.createElement('div');
+                div.className = 'carousel-item card bg-white p-4 rounded-lg shadow-md';
+                div.innerHTML = `
+                    <div class="carousel-item-content">
+                        <h3 class="text-lg font-semibold mb-2">${treatment.name}</h3>
+                        <p class="text-gray-700 text-sm mb-2">${treatment.description || 'No description available.'}</p>
+                        <p class="text-gray-700 font-semibold mb-2">$${treatment.cost || 'Contact for pricing'}</p>
+                        ${treatment.offer ? `<p class="text-green-600 font-semibold">Offer: ${treatment.offer}</p>` : ''}
+                    </div>
+                    <div class="carousel-item-media">
+                        ${treatment.image ? `<img src="${API_URL}${treatment.image}" alt="${treatment.name} image" loading="lazy" onerror="this.src='https://via.placeholder.com/300x200?text=Image+Not+Found';">` : ''}
+                        ${treatment.video ? `<video controls><source src="${API_URL}${treatment.video}" type="video/mp4" onerror="this.parentElement.style.display='none';">Your browser does not support the video tag.</video>` : ''}
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+            updateCarousel();
+            startAutoSlide();
+        }
+
         async function loadAppointmentOptions() {
             try {
+                showSpinner();
                 const timesResponse = await axios.get(`${API_URL}/times`, { timeout: 10000 });
                 const times = timesResponse.data;
                 const timeSelect = document.getElementById('time');
@@ -1080,6 +1305,8 @@
                 console.error('Error loading appointment times:', error);
                 const timeSelect = document.getElementById('time');
                 timeSelect.innerHTML = '<option value="">Failed to load times</option>';
+            } finally {
+                hideSpinner();
             }
         }
 
@@ -1100,13 +1327,13 @@
                 tokenizationSpecification: {
                     type: 'PAYMENT_GATEWAY',
                     parameters: {
-                        gateway: 'example', // Replace with your gateway
-                        gatewayMerchantId: 'exampleMerchantId' // Replace with your gateway merchant ID
+                        gateway: 'example',
+                        gatewayMerchantId: 'exampleMerchantId'
                     }
                 }
             }],
             merchantInfo: {
-                merchantId: 'YOUR_MERCHANT_ID', // Replace with your Google Pay Merchant ID
+                merchantId: 'YOUR_MERCHANT_ID',
                 merchantName: 'OAK Dental Hospital'
             },
             transactionInfo: {
@@ -1119,6 +1346,7 @@
 
         async function initiateGPayPayment(appointmentData) {
             try {
+                showSpinner();
                 const paymentDataRequest = { ...gpayButtonConfig };
                 paymentDataRequest.transactionInfo = {
                     totalPriceStatus: 'FINAL',
@@ -1136,6 +1364,8 @@
             } catch (error) {
                 console.error('Google Pay payment error:', error);
                 throw error;
+            } finally {
+                hideSpinner();
             }
         }
 
@@ -1156,6 +1386,7 @@
             const appointmentData = { name, email, phone, date, time, serviceId: service };
 
             try {
+                showSpinner();
                 let transactionResponse;
 
                 if (method === 'paypal') {
@@ -1196,15 +1427,16 @@
             } catch (error) {
                 console.error('Error initiating payment:', error);
                 alert('Failed to initiate payment. Please try again.');
+            } finally {
+                hideSpinner();
             }
         }
 
         async function handlePostPayment(transactionResponse, appointmentData) {
             try {
-                // Send Email and SMS Notifications
+                showSpinner();
                 await sendNotifications(appointmentData, transactionResponse);
 
-                // Show Browser Notification
                 if (Notification.permission === 'granted') {
                     new Notification('Appointment Confirmed', {
                         body: `Thank you, ${appointmentData.name}! Your appointment is confirmed for ${appointmentData.date} at ${appointmentData.time}.`,
@@ -1233,47 +1465,69 @@
             } catch (error) {
                 console.error('Error handling post-payment:', error);
                 alert('Payment processed, but there was an issue with notifications. Please contact support.');
+            } finally {
+                hideSpinner();
+            }
+        }
+
+        async function handlePostPayment(transactionResponse, appointmentData) {
+            try {
+                showSpinner();
+                await sendNotifications(appointmentData, transactionResponse);
+
+                if (Notification.permission === 'granted') {
+                    new Notification('Appointment Confirmed', {
+                        body: `Thank you, ${appointmentData.name}! Your appointment is confirmed for ${appointmentData.date} at ${appointmentData.time}.`,
+                        icon: 'https://i.postimg.cc/50vXRG8K/ram.jpg'
+                    });
+                } else if (Notification.permission !== 'denied') {
+                    Notification.requestPermission().then(permission => {
+                        if (permission === 'granted') {
+                            new Notification('Appointment Confirmed', {
+                                body: `Thank you, ${appointmentData.name}! Your appointment is confirmed for ${appointmentData.date} at ${appointmentData.time}.`,
+                                icon: 'https://i.postimg.cc/50vXRG8K/ram.jpg'
+                            });
+                        }
+                    });
+                }
+
+                alert(`Payment successful! Transaction ID: ${transactionResponse.transactionId}`);
+                document.getElementById('appointment-modal').style.display = 'flex';
+                document.getElementById('appointment-form').reset();
+
+                gtag('event', 'purchase', {
+                    'event_category': 'Payment',
+                    'event_label': 'Appointment Deposit',
+                    'value': 10
+                });
+            } catch (error) {
+                console.error('Error handling post-payment:', error);
+                alert('Payment processed, but there was an issue with notifications. Please contact support.');
+            } finally {
+                hideSpinner();
             }
         }
 
         async function sendNotifications(appointmentData, transactionResponse) {
-            const serviceName = treatments.find(t => t.id === parseInt(appointmentData.serviceId))?.name || 'Unknown Service';
-            const emailBody = `
-                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9;">
-                    <h2 style="color: #0f2a44;">Welcome to OAK Dental Hospital!</h2>
-                    <p style="color: #1e293b;">Dear ${appointmentData.name},</p>
-                    <p style="color: #1e293b;">Thank you for booking an appointment with us. Below are your appointment details:</p>
-                    <div style="background-color: #ffffff; padding: 15px; border-radius: 8px;">
-                        <p><strong>Name:</strong> ${appointmentData.name}</p>
-                        <p><strong>Email:</strong> ${appointmentData.email}</p>
-                        <p><strong>Phone:</strong> ${appointmentData.phone}</p>
-                        <p><strong>Date:</strong> ${appointmentData.date}</p>
-                        <p><strong>Time:</strong> ${appointmentData.time}</p>
-                        <p><strong>Service:</strong> ${serviceName}</p>
-                        <p><strong>Status:</strong> Confirmed</p>
-                        <p><strong>Transaction ID:</strong> ${transactionResponse.transactionId}</p>
-                        <p><strong>Appointment ID:</strong> ${transactionResponse.appointmentId}</p>
-                    </div>
-                    <p style="color: #1e293b;">We look forward to seeing you at OAK Dental Hospital. If you have any questions, feel free to contact us at +91 7569 366 767.</p>
-                    <p style="color: #1e293b;">Best regards,<br>OAK Dental Hospital Team</p>
-                    <hr style="border-top: 1px solid #e5e7eb; margin: 20px 0;">
-                    <p style="color: #6b7280; font-size: 12px;">This is an automated email, please do not reply directly.</p>
-                </div>
-            `;
-            const smsBody = `Dear ${appointmentData.name}, your appointment at OAK Dental Hospital is confirmed for ${appointmentData.date} at ${appointmentData.time}. Service: ${serviceName}. Transaction ID: ${transactionResponse.transactionId}. Contact us at +91 7569 366 767 if needed.`;
+            try {
+                const emailResponse = await axios.post(`${API_URL}/send-email`, {
+                    to: appointmentData.email,
+                    subject: 'Appointment Confirmation - OAK Dental Hospital',
+                    body: `Dear ${appointmentData.name},\n\nYour appointment is confirmed for ${appointmentData.date} at ${appointmentData.time}.\nTransaction ID: ${transactionResponse.transactionId}\n\nThank you for choosing OAK Dental Hospital!\n\nBest regards,\nOAK Dental Team`
+                });
 
-            // Send Email
-            await axios.post(`${API_URL}/notifications/send-email`, {
-                to: appointmentData.email,
-                subject: 'Appointment Confirmation - OAK Dental Hospital',
-                html: emailBody
-            }, { timeout: 10000 });
+                const smsResponse = await axios.post(`${API_URL}/send-sms`, {
+                    to: appointmentData.phone,
+                    message: `Dear ${appointmentData.name}, your appointment at OAK Dental Hospital is confirmed for ${appointmentData.date} at ${appointmentData.time}. Transaction ID: ${transactionResponse.transactionId}.`
+                });
 
-            // Send SMS
-            await axios.post(`${API_URL}/notifications/send-sms`, {
-                to: appointmentData.phone,
-                message: smsBody
-            }, { timeout: 10000 });
+                if (emailResponse.status !== 200 || smsResponse.status !== 200) {
+                    throw new Error('Failed to send notifications');
+                }
+            } catch (error) {
+                console.error('Error sending notifications:', error);
+                throw error;
+            }
         }
 
         function closeModal() {
@@ -1282,29 +1536,64 @@
 
         async function checkStatus() {
             const email = document.getElementById('status-email').value;
-            const resultDiv = document.getElementById('status-result');
             if (!email) {
-                alert('Please enter an email.');
+                alert('Please enter your email to check appointment status.');
                 return;
             }
+
             try {
-                const response = await axios.get(`${API_URL}/appointments/status?email=${encodeURIComponent(email)}`, { timeout: 10000 });
-                const appointment = response.data;
-                if (appointment && Object.keys(appointment).length > 0) {
-                    const serviceName = treatments.find(t => t.id === appointment.serviceId)?.name || 'Unknown Service';
-                    resultDiv.innerHTML = `
-                        <p class="font-semibold"><strong>Name:</strong> ${appointment.name || 'N/A'}</p>
-                        <p class="font-semibold"><strong>Date:</strong> ${appointment.date || 'N/A'}</p>
-                        <p class="font-semibold"><strong>Time:</strong> ${appointment.time || 'N/A'}</p>
-                        <p class="font-semibold"><strong>Service:</strong> ${serviceName}</p>
-                        <p class="font-semibold"><strong>Status:</strong> ${appointment.status || 'Pending'}</p>
+                showSpinner();
+                const response = await axios.get(`${API_URL}/appointments?email=${email}`, { timeout: 10000 });
+                const statusResult = document.getElementById('status-result');
+
+                if (response.data.length === 0) {
+                    statusResult.innerHTML = '<p class="text-red-600">No appointments found for this email.</p>';
+                    return;
+                }
+
+                statusResult.innerHTML = '';
+                response.data.forEach(appointment => {
+                    const appointmentCard = document.createElement('div');
+                    appointmentCard.className = 'status-card mt-4';
+                    appointmentCard.innerHTML = `
+                        <p class="text-gray-700"><strong>Name:</strong> ${appointment.name}</p>
+                        <p class="text-gray-700"><strong>Date:</strong> ${appointment.date}</p>
+                        <p class="text-gray-700"><strong>Time:</strong> ${appointment.time}</p>
+                        <p class="text-gray-700"><strong>Service:</strong> ${appointment.service}</p>
+                        <p class="text-gray-700"><strong>Status:</strong> ${appointment.status || 'Confirmed'}</p>
                     `;
+                    statusResult.appendChild(appointmentCard);
+                });
+            } catch (error) {
+                console.error('Error checking appointment status:', error);
+                document.getElementById('status-result').innerHTML = '<p class="text-red-600">Failed to check appointment status. Please try again later.</p>';
+            } finally {
+                hideSpinner();
+            }
+        }
+
+        async function cancelAppointment() {
+            const email = document.getElementById('status-email').value;
+            if (!email) {
+                alert('Please enter your email to cancel an appointment.');
+                return;
+            }
+
+            try {
+                showSpinner();
+                const response = await axios.delete(`${API_URL}/appointments?email=${email}`, { timeout: 10000 });
+                const statusResult = document.getElementById('status-result');
+
+                if (response.status === 200) {
+                    statusResult.innerHTML = '<p class="text-green-600">Appointment cancelled successfully.</p>';
                 } else {
-                    resultDiv.innerHTML = '<p class="text-red-600 font-semibold">No appointment found with this email.</p>';
+                    statusResult.innerHTML = '<p class="text-red-600">No appointments found to cancel.</p>';
                 }
             } catch (error) {
-                console.error('Error checking status:', error);
-                resultDiv.innerHTML = '<p class="text-red-600 font-semibold">Failed to check status. Please try again later.</p>';
+                console.error('Error cancelling appointment:', error);
+                document.getElementById('status-result').innerHTML = '<p class="text-red-600">Failed to cancel appointment. Please try again later.</p>';
+            } finally {
+                hideSpinner();
             }
         }
 
@@ -1312,117 +1601,192 @@
             const name = document.getElementById('contact-name').value;
             const email = document.getElementById('contact-email').value;
             const message = document.getElementById('message').value;
+
             if (!name || !email || !message) {
-                alert('Please fill all fields.');
+                alert('Please fill all fields in the contact form.');
                 return;
             }
+
             try {
+                showSpinner();
                 const response = await axios.post(`${API_URL}/contact`, { name, email, message }, { timeout: 10000 });
-                if (response.status === 200 || response.status === 201) {
-                    alert(`Message sent from ${name}. We will respond to ${email} soon.`);
+
+                if (response.status === 200) {
+                    alert('Message sent successfully! We will get back to you soon.');
                     document.getElementById('contact-form').reset();
-                    gtag('event', 'submit', {
-                        'event_category': 'Form',
-                        'event_label': 'Contact Form'
-                    });
-                } else {
-                    throw new Error('Unexpected response status');
                 }
             } catch (error) {
-                console.error('Error submitting contact:', error);
+                console.error('Error submitting contact form:', error);
                 alert('Failed to send message. Please try again later.');
+            } finally {
+                hideSpinner();
             }
         }
 
         async function subscribeNewsletter() {
             const email = document.getElementById('newsletter-email').value;
+
             if (!email) {
-                alert('Please enter your email.');
+                alert('Please enter your email to subscribe.');
                 return;
             }
+
             try {
-                await axios.post(`${API_URL}/newsletter`, { email }, { timeout: 10000 });
-                alert(`Thank you for subscribing with ${email}!`);
-                document.getElementById('newsletter-form').reset();
-                gtag('event', 'subscribe', {
-                    'event_category': 'Form',
-                    'event_label': 'Newsletter'
-                });
+                showSpinner();
+                const response = await axios.post(`${API_URL}/newsletter`, { email }, { timeout: 10000 });
+
+                if (response.status === 200) {
+                    alert('Subscribed successfully! Stay tuned for updates.');
+                    document.getElementById('newsletter-email').value = '';
+                }
             } catch (error) {
-                console.error('Error subscribing:', error);
-                alert('Failed to subscribe. Please try again.');
+                console.error('Error subscribing to newsletter:', error);
+                alert('Failed to subscribe. Please try again later.');
+            } finally {
+                hideSpinner();
             }
         }
 
         function callClinic() {
             window.location.href = 'tel:+917569366767';
-            gtag('event', 'click', {
-                'event_category': 'Button',
-                'event_label': 'Call Clinic'
-            });
         }
 
         function toggleFAQ(element) {
             const faqItem = element.parentElement;
-            const isActive = faqItem.classList.toggle('active');
-            const icon = element.querySelector('i');
-            icon.classList.toggle('fa-chevron-down');
-            icon.classList.toggle('fa-chevron-up');
-            element.setAttribute('aria-expanded', isActive);
+            const isActive = faqItem.classList.contains('active');
+            document.querySelectorAll('.faq-item').forEach(item => {
+                item.classList.remove('active');
+                item.querySelector('h3').setAttribute('aria-expanded', 'false');
+                item.querySelector('.faq-answer').style.display = 'none';
+                item.querySelector('.fas').classList.remove('fa-chevron-up');
+                item.querySelector('.fas').classList.add('fa-chevron-down');
+            });
+
+            if (!isActive) {
+                faqItem.classList.add('active');
+                element.setAttribute('aria-expanded', 'true');
+                faqItem.querySelector('.faq-answer').style.display = 'block';
+                element.querySelector('.fas').classList.remove('fa-chevron-down');
+                element.querySelector('.fas').classList.add('fa-chevron-up');
+            }
         }
 
-        document.addEventListener('scroll', () => {
-            const sections = document.querySelectorAll('section[id]');
-            const navLinks = document.querySelectorAll('.nav-link, .dropdown-menu a');
-            let current = '';
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                if (window.scrollY >= sectionTop - 60) {
-                    current = section.getAttribute('id');
+        async function submitFeedback() {
+            const name = document.getElementById('feedback-name').value;
+            const rating = document.querySelector('input[name="rating"]:checked')?.value;
+            const description = document.getElementById('feedback-description').value;
+            const date = new Date().toISOString();
+
+            if (!name || !rating || !description) {
+                alert('Please fill all fields to submit feedback.');
+                return;
+            }
+
+            try {
+                showSpinner();
+                const response = await axios.post(`${API_URL}/feedback`, { name, rating, description, date }, { timeout: 10000 });
+
+                if (response.status === 200 || response.status === 201) {
+                    alert('Thank you for your feedback!');
+                    document.getElementById('feedback-name').value = '';
+                    document.getElementById('feedback-description').value = '';
+                    document.querySelector('input[name="rating"]:checked').checked = false;
+                    loadFeedback();
                 }
-            });
-            navLinks.forEach(link => {
-                link.classList.remove('text-blue-600', 'font-bold');
-                if (link.getAttribute('href').includes(current)) {
-                    link.classList.add('text-blue-600', 'font-bold');
-                    const parentDropdown = link.closest('.dropdown');
-                    if (parentDropdown) {
-                        parentDropdown.querySelector('.nav-link').classList.add('text-blue-600', 'font-bold');
-                    }
+            } catch (error) {
+                console.error('Error submitting feedback:', error);
+                alert('Failed to submit feedback. Please try again later.');
+            } finally {
+                hideSpinner();
+            }
+        }
+
+        async function loadFeedback() {
+            try {
+                showSpinner();
+                const response = await axios.get(`${API_URL}/feedback`, { timeout: 10000 });
+                const feedbackList = document.getElementById('feedback-list');
+                feedbackList.innerHTML = '';
+
+                if (response.data.length === 0) {
+                    feedbackList.innerHTML = '<p class="text-gray-700 text-center">No feedback available yet.</p>';
+                    return;
                 }
-            });
-        });
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const sections = document.querySelectorAll('.section-animate');
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.animationDelay = '0.2s';
-                    }
+                response.data.forEach(feedback => {
+                    const stars = '★'.repeat(feedback.rating) + '☆'.repeat(5 - feedback.rating);
+                    const feedbackCard = document.createElement('div');
+                    feedbackCard.className = 'feedback-card';
+                    feedbackCard.innerHTML = `
+                        <div class="feedback-stars">${stars}</div>
+                        <p class="text-gray-700 mb-2">"${feedback.description}"</p>
+                        <p class="text-gray-600 font-semibold">— ${feedback.name}</p>
+                        <p class="text-gray-500 text-sm">${new Date(feedback.date).toLocaleDateString()}</p>
+                    `;
+                    feedbackList.appendChild(feedbackCard);
                 });
-            }, { threshold: 0.1 });
-            sections.forEach(section => observer.observe(section));
+            } catch (error) {
+                console.error('Error loading feedback:', error);
+                const feedbackList = document.getElementById('feedback-list');
+                feedbackList.innerHTML = '<p class="text-red-600 text-center">Failed to load feedback. Please try again later.</p>';
+            } finally {
+                hideSpinner();
+            }
+        }
 
-            document.querySelector('.sticky-cta').addEventListener('click', () => {
-                gtag('event', 'click', {
-                    'event_category': 'Button',
-                    'event_label': 'Book Appointment'
-                });
-            });
-            document.querySelector('.chat-button').addEventListener('click', () => {
-                gtag('event', 'click', {
-                    'event_category': 'Button',
-                    'event_label': 'WhatsApp Chat'
-                });
-            });
+        // Admin Link Visibility (Assuming admin is logged in based on a token or session)
+        function checkAdminStatus() {
+            const adminToken = localStorage.getItem('adminToken'); // Replace with actual auth mechanism
+            const adminLink = document.getElementById('admin-link');
+            if (adminToken) {
+                adminLink.classList.remove('hidden');
+            }
+        }
 
-            document.getElementById('paypal-button-container').addEventListener('click', () => initiatePayment('paypal'));
-            document.getElementById('gpay-button-container').addEventListener('click', () => initiatePayment('gpay'));
-
+        // Initialize on Page Load
+        window.onload = () => {
             loadTreatments();
             loadAppointmentOptions();
-        });
+            loadFeedback();
+            checkAdminStatus();
+
+            // Google Pay Button Setup
+            const gpayButton = document.getElementById('gpay-button-container');
+            gpayButton.addEventListener('click', () => initiatePayment('gpay'));
+
+            // PayPal Button Setup
+            document.getElementById('paypal-button-container').addEventListener('click', () => initiatePayment('paypal'));
+
+            // Set minimum date for appointment to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('date').setAttribute('min', today);
+
+            // Keyboard Accessibility for FAQs
+            document.querySelectorAll('.faq-item h3').forEach(faq => {
+                faq.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        toggleFAQ(faq);
+                    }
+                });
+            });
+
+            // Lazy Loading for Images
+            document.querySelectorAll('img[loading="lazy"]').forEach(img => {
+                img.onerror = () => {
+                    img.src = 'https://via.placeholder.com/300x200?text=Image+Not+Found';
+                };
+            });
+        };
+
+        // Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js').then(reg => {
+                console.log('Service Worker registered:', reg);
+            }).catch(err => {
+                console.error('Service Worker registration failed:', err);
+            });
+        }
     </script>
 </body>
 </html>
