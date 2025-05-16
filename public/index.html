@@ -19,6 +19,7 @@
     </script>
     <script defer src="https://www.paypal.com/sdk/js?client-id=AYarbhTihMwB0cn5LEA1FJyOnOfA7aok3BXfTT7rWdbIr2jHnzBSyt0Q3iDWi8mBVLQ1T94GT2dUVajJ&currency=USD"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://pay.google.com/gp/p/js/pay.js"></script>
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -122,7 +123,9 @@
             gap: 10px;
         }
         .sticky-cta, .chat-button {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             border-radius: 50px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
             transition: background-color 0.3s ease, transform 0.2s ease;
@@ -137,7 +140,11 @@
         .chat-button {
             background-color: #25D366;
             color: white;
-            padding: 10px;
+            padding: 12px;
+            font-size: 18px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
         }
         .sticky-cta:hover {
             background-color: #1e40af;
@@ -154,12 +161,15 @@
                 right: 10px;
                 gap: 8px;
             }
-            .sticky-cta, .chat-button {
+            .sticky-cta {
                 padding: 8px 16px;
                 font-size: 12px;
             }
             .chat-button {
-                padding: 8px;
+                padding: 10px;
+                width: 45px;
+                height: 45px;
+                font-size: 16px;
             }
             #home {
                 padding-top: 10rem;
@@ -174,7 +184,7 @@
             }
         }
         #home {
-            background-image: url('https://via.placeholder.com/1920x1080?text=High+Quality+Dentist+Image');
+            background-image: url('https://i.postimg.cc/Fz5kq5dH/Premium-Photo-Dentist-examines-the-patients-teeth-at-the-dentist-1.jpg?fit=1920%2C1080&quality=90');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -190,7 +200,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.4);
             z-index: 1;
         }
         #home > * {
@@ -451,6 +461,55 @@
             width: 100%;
             height: 100%;
         }
+        .blog-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        @media (max-width: 768px) {
+            .blog-card img {
+                height: 150px;
+            }
+        }
+        .payment-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        .payment-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .payment-button:hover {
+            transform: translateY(-2px);
+        }
+        .paypal-button {
+            background-color: #0070BA;
+        }
+        .paypal-button:hover {
+            background-color: #005EA6;
+        }
+        .gpay-button {
+            background-color: #4285F4;
+        }
+        .gpay-button:hover {
+            background-color: #3267D6;
+        }
+        .gpay-button img {
+            width: 24px;
+            height: 24px;
+            margin-right: 8px;
+        }
     </style>
     <script type="application/ld+json">
     {
@@ -638,7 +697,35 @@
     <section id="blog" class="py-16 bg-white section-animate">
         <div class="container mx-auto px-4">
             <h2 class="text-3xl font-extrabold text-center mb-8 text-gray-800">Dental Health Blog</h2>
-            <p class="text-center text-gray-700">Coming soon! Check back for dental health tips and updates.</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="blog-card bg-white rounded-lg shadow-md card">
+                    <img src="https://i.postimg.cc/3JqM4N5V/Blog-1.jpg" alt="Maintaining Oral Hygiene with Braces" class="w-full">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2 text-gray-800">Maintaining Oral Hygiene with Braces</h3>
+                        <p class="text-gray-700 mb-4">Learn essential tips to keep your teeth clean while wearing braces, including brushing techniques and dietary advice.</p>
+                        <a href="blogs.html#oral-hygiene-braces" class="btn inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" aria-label="Read more about maintaining oral hygiene with braces">Read More</a>
+                    </div>
+                </div>
+                <div class="blog-card bg-white rounded-lg shadow-md card">
+                    <img src="https://i.postimg.cc/zXwYvNqW/Blog-2.jpg" alt="Benefits of Dental Implants" class="w-full">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2 text-gray-800">Benefits of Dental Implants</h3>
+                        <p class="text-gray-700 mb-4">Discover why dental implants are a long-lasting solution for missing teeth and how they can improve your quality of life.</p>
+                        <a href="blogs.html#dental-implants-benefits" class="btn inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" aria-label="Read more about the benefits of dental implants">Read More</a>
+                    </div>
+                </div>
+                <div class="blog-card bg-white rounded-lg shadow-md card">
+                    <img src="https://i.postimg.cc/8C7YqWqH/Blog-3.jpg" alt="Cosmetic Dentistry Trends" class="w-full">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2 text-gray-800">Cosmetic Dentistry Trends in 2025</h3>
+                        <p class="text-gray-700 mb-4">Explore the latest trends in cosmetic dentistry, from teeth whitening to veneers, and how they can enhance your smile.</p>
+                        <a href="blogs.html#cosmetic-dentistry-trends" class="btn inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" aria-label="Read more about cosmetic dentistry trends in 2025">Read More</a>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-8">
+                <a href="blogs.html" class="btn inline-block bg-green-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-green-700 shadow-md" aria-label="Explore more dental health blogs">Know More</a>
+            </div>
         </div>
     </section>
 
@@ -736,7 +823,15 @@
                         <option value="">Select Service</option>
                     </select>
                 </div>
-                <button type="button" onclick="initiatePayment()" class="btn w-full bg-green-600 text-white p-3 rounded-lg hover:bg-green-700 shadow-md" aria-label="Pay appointment deposit and submit">Pay Deposit & Submit</button>
+                <div class="payment-buttons">
+                    <div id="paypal-button-container" class="payment-button paypal-button">
+                        Pay with PayPal
+                    </div>
+                    <div id="gpay-button-container" class="payment-button gpay-button">
+                        <img src="https://www.gstatic.com/instantbuy/svg/dark_gpay.svg" alt="Google Pay Logo">
+                        Pay with Google Pay
+                    </div>
+                </div>
             </form>
         </div>
     </section>
@@ -834,7 +929,7 @@
     <div class="cta-container">
         <a href="#appointment" class="sticky-cta btn" aria-label="Book an appointment with OAK Dental Hospital">Book Appointment</a>
         <a href="https://wa.me/917569366767" target="_blank" class="chat-button" aria-label="Chat with OAK Dental Hospital on WhatsApp">
-            <i class="fab fa-whatsapp text-xl"></i>
+            <i class="fab fa-whatsapp"></i>
         </a>
     </div>
 
@@ -916,8 +1011,8 @@
                             ${treatment.offer ? `<p class="text-green-600 font-semibold">Offer: ${treatment.offer}</p>` : ''}
                         </div>
                         <div class="carousel-item-media">
-                            ${treatment.image ? `<img src="${treatment.image}" alt="${treatment.name} image" loading="lazy" onerror="this.style.display='none'">` : ''}
-                            ${treatment.video ? `<video controls><source src="${treatment.video}" type="video/mp4" onerror="this.style.display='none'">Your browser does not support the video tag.</video>` : ''}
+                            ${treatment.image ? `<img src="${API_URL}${treatment.image}" alt="${treatment.name} image" loading="lazy" onerror="this.src='https://via.placeholder.com/300x200?text=Image+Not+Found';">` : ''}
+                            ${treatment.video ? `<video controls><source src="${API_URL}${treatment.video}" type="video/mp4" onerror="this.parentElement.style.display='none';">Your browser does not support the video tag.</video>` : ''}
                         </div>
                     `;
                     container.appendChild(div);
@@ -927,7 +1022,7 @@
                 serviceSelect.innerHTML = '<option value="">Select Service</option>';
                 treatments.forEach(treatment => {
                     const option = document.createElement('option');
-                    option.value = treatment._id;
+                    option.value = treatment.id; // Use 'id' as per Sequelize model
                     option.textContent = `${treatment.name} ($${treatment.cost || 'Contact for pricing'})`;
                     serviceSelect.appendChild(option);
                 });
@@ -988,7 +1083,63 @@
             }
         }
 
-        async function initiatePayment() {
+        // Google Pay Configuration
+        const paymentsClient = new google.payments.api.PaymentsClient({
+            environment: 'TEST' // Use 'PRODUCTION' in live environment
+        });
+
+        const gpayButtonConfig = {
+            apiVersion: 2,
+            apiVersionMinor: 0,
+            allowedPaymentMethods: [{
+                type: 'CARD',
+                parameters: {
+                    allowedAuthMethods: ['PAN_ONLY', 'CRYPTOGRAM_3DS'],
+                    allowedCardNetworks: ['AMEX', 'DISCOVER', 'MASTERCARD', 'VISA']
+                },
+                tokenizationSpecification: {
+                    type: 'PAYMENT_GATEWAY',
+                    parameters: {
+                        gateway: 'example', // Replace with your gateway
+                        gatewayMerchantId: 'exampleMerchantId' // Replace with your gateway merchant ID
+                    }
+                }
+            }],
+            merchantInfo: {
+                merchantId: 'YOUR_MERCHANT_ID', // Replace with your Google Pay Merchant ID
+                merchantName: 'OAK Dental Hospital'
+            },
+            transactionInfo: {
+                totalPriceStatus: 'FINAL',
+                totalPrice: '10.00',
+                currencyCode: 'USD',
+                countryCode: 'US'
+            }
+        };
+
+        async function initiateGPayPayment(appointmentData) {
+            try {
+                const paymentDataRequest = { ...gpayButtonConfig };
+                paymentDataRequest.transactionInfo = {
+                    totalPriceStatus: 'FINAL',
+                    totalPrice: '10.00',
+                    currencyCode: 'USD',
+                    countryCode: 'US'
+                };
+
+                const paymentData = await paymentsClient.loadPaymentData(paymentDataRequest);
+                const response = await axios.post(`${API_URL}/gpay/capture-payment`, {
+                    paymentData: paymentData,
+                    appointment: appointmentData
+                });
+                return response.data;
+            } catch (error) {
+                console.error('Google Pay payment error:', error);
+                throw error;
+            }
+        }
+
+        async function initiatePayment(method) {
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
             const phone = document.getElementById('phone').value;
@@ -1002,48 +1153,127 @@
                 return;
             }
 
-            try {
-                const orderResponse = await axios.post(`${API_URL}/paypal/create-order`, {
-                    amount: '10.00',
-                    currency: 'USD',
-                    description: 'Appointment Deposit - OAK Dental Hospital',
-                    payer: { name, email, phone }
-                });
-                const orderId = orderResponse.data.id;
+            const appointmentData = { name, email, phone, date, time, serviceId: service };
 
-                paypal.Buttons({
-                    createOrder: () => orderId,
-                    onApprove: async (data) => {
-                        try {
-                            const captureResponse = await axios.post(`${API_URL}/paypal/capture-order`, {
-                                orderId: data.orderID,
-                                appointment: { name, email, phone, date, time, service }
-                            });
-                            alert('Payment successful! Transaction ID: ' + captureResponse.data.transactionId);
-                            document.getElementById('appointment-modal').style.display = 'flex';
-                            document.getElementById('appointment-form').reset();
-                            gtag('event', 'purchase', {
-                                'event_category': 'Payment',
-                                'event_label': 'Appointment Deposit',
-                                'value': 10
-                            });
-                        } catch (error) {
-                            console.error('Error capturing payment:', error);
-                            alert('Payment capture failed. Please try again.');
+            try {
+                let transactionResponse;
+
+                if (method === 'paypal') {
+                    const orderResponse = await axios.post(`${API_URL}/paypal/create-order`, {
+                        amount: '10.00',
+                        description: 'Appointment Deposit - OAK Dental Hospital',
+                        payer: { name, email, phone }
+                    });
+                    const orderId = orderResponse.data.id;
+
+                    paypal.Buttons({
+                        createOrder: () => orderId,
+                        onApprove: async (data) => {
+                            try {
+                                const captureResponse = await axios.post(`${API_URL}/paypal/capture-order`, {
+                                    orderId: data.orderID,
+                                    appointment: appointmentData
+                                });
+                                transactionResponse = captureResponse.data;
+                                await handlePostPayment(transactionResponse, appointmentData);
+                            } catch (error) {
+                                console.error('Error capturing PayPal payment:', error);
+                                alert('Payment capture failed. Please try again.');
+                            }
+                        },
+                        onError: (err) => {
+                            console.error('PayPal error:', err);
+                            alert('Payment failed. Please check your connection and try again.');
                         }
-                    },
-                    onError: (err) => {
-                        console.error('PayPal error:', err);
-                        alert('Payment failed. Please check your connection and try again.');
-                    }
-                }).render('#appointment-form').catch(err => {
-                    console.error('PayPal button rendering failed:', err);
-                    alert('Failed to load payment system. Please try again later.');
-                });
+                    }).render('#paypal-button-container').catch(err => {
+                        console.error('PayPal button rendering failed:', err);
+                        alert('Failed to load PayPal payment system. Please try again later.');
+                    });
+                } else if (method === 'gpay') {
+                    transactionResponse = await initiateGPayPayment(appointmentData);
+                    await handlePostPayment(transactionResponse, appointmentData);
+                }
             } catch (error) {
-                console.error('Error creating order:', error);
+                console.error('Error initiating payment:', error);
                 alert('Failed to initiate payment. Please try again.');
             }
+        }
+
+        async function handlePostPayment(transactionResponse, appointmentData) {
+            try {
+                // Send Email and SMS Notifications
+                await sendNotifications(appointmentData, transactionResponse);
+
+                // Show Browser Notification
+                if (Notification.permission === 'granted') {
+                    new Notification('Appointment Confirmed', {
+                        body: `Thank you, ${appointmentData.name}! Your appointment is confirmed for ${appointmentData.date} at ${appointmentData.time}.`,
+                        icon: 'https://i.postimg.cc/50vXRG8K/ram.jpg'
+                    });
+                } else if (Notification.permission !== 'denied') {
+                    Notification.requestPermission().then(permission => {
+                        if (permission === 'granted') {
+                            new Notification('Appointment Confirmed', {
+                                body: `Thank you, ${appointmentData.name}! Your appointment is confirmed for ${appointmentData.date} at ${appointmentData.time}.`,
+                                icon: 'https://i.postimg.cc/50vXRG8K/ram.jpg'
+                            });
+                        }
+                    });
+                }
+
+                alert(`Payment successful! Transaction ID: ${transactionResponse.transactionId}`);
+                document.getElementById('appointment-modal').style.display = 'flex';
+                document.getElementById('appointment-form').reset();
+
+                gtag('event', 'purchase', {
+                    'event_category': 'Payment',
+                    'event_label': 'Appointment Deposit',
+                    'value': 10
+                });
+            } catch (error) {
+                console.error('Error handling post-payment:', error);
+                alert('Payment processed, but there was an issue with notifications. Please contact support.');
+            }
+        }
+
+        async function sendNotifications(appointmentData, transactionResponse) {
+            const serviceName = treatments.find(t => t.id === parseInt(appointmentData.serviceId))?.name || 'Unknown Service';
+            const emailBody = `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9;">
+                    <h2 style="color: #0f2a44;">Welcome to OAK Dental Hospital!</h2>
+                    <p style="color: #1e293b;">Dear ${appointmentData.name},</p>
+                    <p style="color: #1e293b;">Thank you for booking an appointment with us. Below are your appointment details:</p>
+                    <div style="background-color: #ffffff; padding: 15px; border-radius: 8px;">
+                        <p><strong>Name:</strong> ${appointmentData.name}</p>
+                        <p><strong>Email:</strong> ${appointmentData.email}</p>
+                        <p><strong>Phone:</strong> ${appointmentData.phone}</p>
+                        <p><strong>Date:</strong> ${appointmentData.date}</p>
+                        <p><strong>Time:</strong> ${appointmentData.time}</p>
+                        <p><strong>Service:</strong> ${serviceName}</p>
+                        <p><strong>Status:</strong> Confirmed</p>
+                        <p><strong>Transaction ID:</strong> ${transactionResponse.transactionId}</p>
+                        <p><strong>Appointment ID:</strong> ${transactionResponse.appointmentId}</p>
+                    </div>
+                    <p style="color: #1e293b;">We look forward to seeing you at OAK Dental Hospital. If you have any questions, feel free to contact us at +91 7569 366 767.</p>
+                    <p style="color: #1e293b;">Best regards,<br>OAK Dental Hospital Team</p>
+                    <hr style="border-top: 1px solid #e5e7eb; margin: 20px 0;">
+                    <p style="color: #6b7280; font-size: 12px;">This is an automated email, please do not reply directly.</p>
+                </div>
+            `;
+            const smsBody = `Dear ${appointmentData.name}, your appointment at OAK Dental Hospital is confirmed for ${appointmentData.date} at ${appointmentData.time}. Service: ${serviceName}. Transaction ID: ${transactionResponse.transactionId}. Contact us at +91 7569 366 767 if needed.`;
+
+            // Send Email
+            await axios.post(`${API_URL}/notifications/send-email`, {
+                to: appointmentData.email,
+                subject: 'Appointment Confirmation - OAK Dental Hospital',
+                html: emailBody
+            }, { timeout: 10000 });
+
+            // Send SMS
+            await axios.post(`${API_URL}/notifications/send-sms`, {
+                to: appointmentData.phone,
+                message: smsBody
+            }, { timeout: 10000 });
         }
 
         function closeModal() {
@@ -1061,7 +1291,7 @@
                 const response = await axios.get(`${API_URL}/appointments/status?email=${encodeURIComponent(email)}`, { timeout: 10000 });
                 const appointment = response.data;
                 if (appointment && Object.keys(appointment).length > 0) {
-                    const serviceName = treatments.find(t => t._id === appointment.service)?.name || 'Unknown Service';
+                    const serviceName = treatments.find(t => t.id === appointment.serviceId)?.name || 'Unknown Service';
                     resultDiv.innerHTML = `
                         <p class="font-semibold"><strong>Name:</strong> ${appointment.name || 'N/A'}</p>
                         <p class="font-semibold"><strong>Date:</strong> ${appointment.date || 'N/A'}</p>
@@ -1187,10 +1417,12 @@
                 });
             });
 
+            document.getElementById('paypal-button-container').addEventListener('click', () => initiatePayment('paypal'));
+            document.getElementById('gpay-button-container').addEventListener('click', () => initiatePayment('gpay'));
+
             loadTreatments();
             loadAppointmentOptions();
         });
     </script>
 </body>
 </html>
-
