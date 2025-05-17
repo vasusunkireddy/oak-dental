@@ -54,7 +54,7 @@ async function initDb() {
                 email VARCHAR(100) UNIQUE NOT NULL
             );
             CREATE TABLE IF NOT EXISTS appointments (
-                id INTEGER PRIMARY KEY,
+                id BIGINT PRIMARY KEY,
                 full_name VARCHAR(100) NOT NULL,
                 phone VARCHAR(15) NOT NULL,
                 treatment VARCHAR(50) NOT NULL,
@@ -163,6 +163,21 @@ async function initDb() {
                 
                 ALTER TABLE feedback
                 ALTER COLUMN description SET NOT NULL;
+            `);
+        }
+
+        // Check if id column in appointments is INTEGER and convert to BIGINT if necessary
+        const idTypeCheck = await pool.query(`
+            SELECT data_type 
+            FROM information_schema.columns 
+            WHERE table_name = 'appointments' AND column_name = 'id'
+        `);
+
+        if (idTypeCheck.rows.length > 0 && idTypeCheck.rows[0].data_type === 'integer') {
+            console.log('Converting appointments.id from INTEGER to BIGINT');
+            await pool.query(`
+                ALTER TABLE appointments
+                ALTER COLUMN id TYPE BIGINT;
             `);
         }
 
@@ -414,7 +429,7 @@ app.post('/api/appointments', async (req, res) => {
 
 app.get('/api/appointments/status', async (req, res) => {
     try {
-        const { identifier } = req.query.identifier;
+        const { identifier } = req.query;
         if (!identifier) {
             return res.status(400).json({ error: 'Identifier is required' });
         }

@@ -14,6 +14,7 @@
         body {
             font-family: 'Poppins', sans-serif;
             margin: 0;
+            font-size: 1rem;
         }
         .hero-bg {
             background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
@@ -22,8 +23,8 @@
         }
         .whatsapp-float {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
+            bottom: 24px;
+            right: 24px;
             z-index: 100;
         }
         .fade-in {
@@ -68,8 +69,9 @@
             background: rgba(0, 0, 0, 0.5);
             color: white;
             border: none;
-            padding: 8px;
+            padding: 10px;
             cursor: pointer;
+            font-size: 1rem;
         }
         .treatment-slide {
             min-width: 33.33%;
@@ -84,16 +86,16 @@
         .doctor-card {
             background: white;
             border-radius: 12px;
-            padding: 2rem;
+            padding: 2.5rem;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            max-width: 450px;
+            max-width: 480px;
             margin: 0 auto;
         }
         .doctor-img {
             border: 8px solid #0d9488;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-            width: 260px;
-            height: 260px;
+            width: 280px;
+            height: 280px;
             object-fit: contain;
             border-radius: 50%;
             margin: 0 auto;
@@ -109,13 +111,13 @@
             background-color: #ffffff;
             overflow-x: hidden;
             transition: width 0.5s ease-in-out;
-            padding-top: 60px;
+            padding-top: 64px;
             box-shadow: 4px 0 15px rgba(0, 0, 0, 0.15);
         }
         .sidenav a {
-            padding: 14px 16px 14px 32px;
+            padding: 16px 18px 16px 36px;
             text-decoration: none;
-            font-size: 1.2rem;
+            font-size: 1.25rem;
             color: #1f2937;
             display: block;
             transition: background-color 0.3s ease, color 0.3s ease;
@@ -126,9 +128,9 @@
         }
         .sidenav .closebtn {
             position: absolute;
-            top: 10px;
-            right: 25px;
-            font-size: 36px;
+            top: 12px;
+            right: 28px;
+            font-size: 2rem;
             margin-left: 50px;
             color: #1f2937;
         }
@@ -139,7 +141,8 @@
         .nav-link {
             font-weight: 500;
             transition: color 0.3s ease, transform 0.3s ease;
-            padding: 0.5rem 1rem;
+            padding: 0.75rem 1.25rem;
+            font-size: 1rem;
         }
         .nav-link:hover {
             color: #f0fdfa !important;
@@ -154,11 +157,12 @@
         .treatment-media {
             max-width: 100%;
             border-radius: 8px;
-            margin-bottom: 1rem;
+            margin-bottom: 1.25rem;
         }
         .rating-stars .star {
             cursor: pointer;
             color: #d1d5db;
+            font-size: 1.25rem;
         }
         .rating-stars .star.selected {
             color: #fbbf24;
@@ -178,7 +182,7 @@
             min-width: 100%;
             display: flex;
             justify-content: space-between;
-            gap: 0.5rem;
+            gap: 0.75rem;
         }
         .gallery-item {
             flex: 1;
@@ -186,53 +190,68 @@
         }
         .gallery-img {
             width: 100%;
-            height: 120px;
+            height: 140px;
             object-fit: cover;
             border-radius: 8px;
         }
         .leave-date-note {
             color: #e53e3e;
             font-size: 0.875rem;
-            margin-top: 0.5rem;
+            margin-top: 0.75rem;
         }
         .status-result {
-            margin-top: 1rem;
-            padding: 1rem;
+            margin-top: 1.25rem;
+            padding: 1.25rem;
             border-radius: 8px;
             background-color: #f7fafc;
         }
         @media (max-width: 640px) {
-            .text-4xl { font-size: 1.75rem; }
-            .text-6xl { font-size: 2.25rem; }
-            .text-3xl { font-size: 1.5rem; }
-            .text-xl { font-size: 1.125rem; }
-            .text-lg { font-size: 1rem; }
-            .h-screen { height: 70vh; }
+            body {
+                font-size: 1.125rem;
+            }
+            .text-4xl { font-size: 2rem; }
+            .text-6xl { font-size: 2.5rem; }
+            .text-3xl { font-size: 1.75rem; }
+            .text-xl { font-size: 1.25rem; }
+            .text-lg { font-size: 1.125rem; }
+            .h-screen { height: 65vh; }
             .grid-cols-3, .grid-cols-2 { grid-template-columns: 1fr; }
-            .max-w-7xl { padding-left: 1rem; padding-right: 1rem; }
-            nav { padding: 0.5rem 0; }
+            .max-w-7xl { padding-left: 1.25rem; padding-right: 1.25rem; }
+            nav { padding: 0.75rem 0; }
             .desktop-nav { display: none; }
-            .hamburger { display: block; }
-            .hero-bg { height: 60vh; }
-            .hero-bg .max-w-3xl { padding: 1rem; }
-            .py-16 { padding-top: 3rem; padding-bottom: 3rem; }
-            .py-8 { padding-top: 2rem; padding-bottom: 2rem; }
-            .mb-12 { margin-bottom: 2rem; }
-            .mb-6 { margin-bottom: 1.5rem; }
-            .mb-4 { margin-bottom: 1rem; }
+            .hamburger { display: block; font-size: 2rem; }
+            .hero-bg { height: 55vh; }
+            .hero-bg .max-w-3xl { padding: 1.25rem; }
+            .py-16 { padding-top: 2.5rem; padding-bottom: 2.5rem; }
+            .py-8 { padding-top: 1.75rem; padding-bottom: 1.75rem; }
+            .mb-12 { margin-bottom: 2.5rem; }
+            .mb-6 { margin-bottom: 1.75rem; }
+            .mb-4 { margin-bottom: 1.25rem; }
             .slider-container { max-width: 100%; }
-            .slide { flex-direction: column; align-items: center; gap: 0.5rem; }
-            .slide img { width: 80%; height: 120px; object-fit: cover; }
+            .slide { flex-direction: column; align-items: center; gap: 0.75rem; }
+            .slide img { width: 85%; height: 140px; object-fit: cover; }
+            .slider-nav button { padding: 8px; font-size: 0.875rem; }
             .treatment-slide { min-width: 100%; }
-            .doctor-img { width: 180px; height: 180px; }
-            .h-48 { height: 180px; }
-            .space-x-4 > :not([hidden]) ~ :not([hidden]) { margin-left: 0.5rem; }
-            .flex.justify-center.fade-in { flex-direction: column; align-items: center; gap: 0.5rem; }
-            .max-w-md { max-width: 100%; }
-            .px-6.py-3 { padding: 0.5rem 1.5rem; }
+            .treatment-media { height: 160px; }
+            .doctor-img { width: 200px; height: 200px; }
+            .doctor-card { padding: 2rem; }
+            .h-48 { height: 200px; }
+            .space-x-4 > :not([hidden]) ~ :not([hidden]) { margin-left: 0.75rem; }
+            .flex.justify-center.fade-in { flex-direction: column; align-items: center; gap: 0.75rem; }
+            .max-w-md { max-width: 100%; padding: 0 1rem; }
+            .px-6.py-3 { padding: 0.75rem 2rem; font-size: 1rem; }
             .gallery-slide { flex-direction: row; }
             .gallery-item { max-width: 32%; }
-            .gallery-img { height: 100px; }
+            .gallery-img { height: 120px; }
+            input, textarea, select {
+                padding: 0.875rem;
+                font-size: 1rem;
+                border-radius: 6px;
+            }
+            .sidenav a { font-size: 1.125rem; padding: 14px 16px 14px 32px; }
+            .sidenav .closebtn { font-size: 1.75rem; }
+            .rating-stars .star { font-size: 1.125rem; }
+            .whatsapp-float img { height: 48px; width: 48px; }
         }
         @media (min-width: 641px) {
             .hamburger { display: none; }
@@ -403,7 +422,7 @@
                             <i class="fas fa-star star" data-rating="5"></i>
                         </div>
                     </div>
-                    <textarea id="feedback-description" placeholder="Your Feedback" class="w-full p-3 mb-4 border rounded-lg" rows="4" required aria-label="Your Feedback"></textarea>
+                    <textarea id="feedback-description" placeholder="Your Feedback" class="w-full p-3 mb-4 border rounded-lg" rows="5" required aria-label="Your Feedback"></textarea>
                     <button onclick="submitFeedback()" class="bg-teal-600 text-white px-6 py-3 rounded-full hover:bg-teal-700" aria-label="Submit Feedback">Submit Feedback</button>
                 </div>
             </div>
@@ -582,7 +601,7 @@
                     <select id="time-slot" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Time Slot">
                         <option value="" disabled selected>Select Time Slot</option>
                     </select>
-                    <textarea id="message" placeholder="Your Message" class="w-full p-3 mb-4 border rounded-lg" rows="4" required aria-label="Your Message"></textarea>
+                    <textarea id="message" placeholder="Your Message" class="w-full p-3 mb-4 border rounded-lg" rows="5" required aria-label="Your Message"></textarea>
                     <div class="space-x-4">
                         <button onclick="submitAppointment()" class="bg-teal-600 text-white px-6 py-3 rounded-full hover:bg-teal-700" aria-label="Submit Appointment Request">Book Appointment</button>
                         <a href="https://wa.me/+91756936767?text=Hello%20Oak%20Dental%20Clinic,%20I%20would%20like%20to%20book%20an%20appointment." target="_blank" class="bg-green-500 text-white px-6 py-3 rounded-full hover:bg-green-600" aria-label="Contact via WhatsApp">WhatsApp Us</a>
@@ -640,7 +659,7 @@
                     <div>
                         <input type="text" placeholder="Your Name" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Your Name">
                         <input type="email" placeholder="Your Email" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Your Email">
-                        <textarea placeholder="Your Message" class="w-full p-3 mb-4 border rounded-lg" rows="4" required aria-label="Your Message"></textarea>
+                        <textarea placeholder="Your Message" class="w-full p-3 mb-4 border rounded-lg" rows="5" required aria-label="Your Message"></textarea>
                         <button class="bg-teal-600 text-white px-6 py-3 rounded-full hover:bg-teal-700" aria-label="Send Message">Send</button>
                     </div>
                 </div>
@@ -690,7 +709,7 @@
 
         // Side Navigation
         function openNav() {
-            document.getElementById("mySidenav").style.width = "250px";
+            document.getElementById("mySidenav").style.width = "280px";
         }
         function closeNav() {
             document.getElementById("mySidenav").style.width = "0";
