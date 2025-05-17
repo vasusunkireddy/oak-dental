@@ -15,7 +15,7 @@
             font-size: 15px;
             line-height: 1.5;
         }
-        .animate-fade Grades-in {
+        .animate-fade-in {
             animation: fadeIn 0.3s ease-out;
         }
         .animate-scale-in {
@@ -185,7 +185,7 @@
             <div id="register-form" class="hidden">
                 <h3 class="text-lg font-medium text-teal-600 mb-4">Register</h3>
                 <input type="text" id="register-username" placeholder="Username" class="form-input mb-4" required aria-label="Username">
-                <input type="email" id="register-email" placeholder="Email" class="form-input mb-4" required aria-label="Email">
+                <input type "email" id="register-email" placeholder="Email" class="form-input mb-4" required aria-label="Email">
                 <input type="password" id="register-password" placeholder="Password" class="form-input mb-4" required aria-label="Password">
                 <button onclick="adminRegister()" class="w-full bg-teal-600 text-white p-3 rounded-lg hover:bg-teal-700 shadow-sm">Register</button>
                 <p class="text-center mt-4 text-sm">Already have an account? <a href="#" onclick="showLoginForm()" class="text-teal-600 hover:underline">Login</a></p>
@@ -210,6 +210,7 @@
                 <a href="#waitlist" onclick="showSection('waitlist')" class="flex items-center"><i class="fas fa-list mr-2"></i> Waitlist</a>
                 <a href="#feedback" onclick="showSection('feedback')" class="flex items-center"><i class="fas fa-comment mr-2"></i> Feedback</a>
                 <a href="#services" onclick="showSection('services')" class="flex items-center"><i class="fas fa-tooth mr-2"></i> Services</a>
+                <a href="#offers" onclick="showSection('offers')" class="flex items-center"><i class="fas fa-tag mr-2"></i> Offers</a>
                 <a href="#leave-dates" onclick="showSection('leave-dates')" class="flex items-center"><i class="fas fa-calendar-times mr-2"></i> Leave Dates</a>
                 <a href="#" onclick="logout()" class="flex items-center"><i class="fas fa-sign-out-alt mr-2"></i> Logout</a>
             </div>
@@ -285,7 +286,7 @@
                     <h3 class="text-lg font-medium text-teal-600 mb-4">Add Service</h3>
                     <input type="text" id="service-title" placeholder="Title" class="form-input mb-4" aria-label="Service Title">
                     <textarea id="service-description" placeholder="Description" class="form-input mb-4" rows="4" aria-label="Service Description"></textarea>
-                    <input type="number" id="service-price" placeholder="Price" class="form-input mb-4" aria-label="Service Price">
+                    <input type="number" id="service-price" placeholder="Price" class="form-input mb-4" step="0.01" aria-label="Service Price">
                     <div class="mb-4">
                         <label class="block text-sm text-gray-600 mb-1">Image (Optional)</label>
                         <input type="file" id="service-image-file" accept="image/*" class="form-input mb-2">
@@ -308,6 +309,35 @@
                             </tr>
                         </thead>
                         <tbody id="services-table"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Offers Section -->
+            <div id="offers" class="section hidden animate-fade-in">
+                <h2 class="text-xl font-semibold text-teal-600 mb-5">Offers</h2>
+                <div class="form-container mb-5 bg-white p-5 rounded-lg shadow-sm">
+                    <h3 class="text-lg font-medium text-teal-600 mb-4">Add Offer</h3>
+                    <input type="text" id="offer-title" placeholder="Title (e.g., OP + Cleaning & Polishing + X-Ray)" class="form-input mb-4" aria-label="Offer Title">
+                    <textarea id="offer-description" placeholder="Description" class="form-input mb-4" rows="4" aria-label="Offer Description"></textarea>
+                    <input type="number" id="offer-price" placeholder="Price (e.g., 999)" class="form-input mb-4" step="0.01" aria-label="Offer Price">
+                    <div class="mb-4">
+                        <label class="block text-sm text-gray-600 mb-1">Offer Image</label>
+                        <input type="file" id="offer-image-file" accept="image/*" class="form-input mb-2" required>
+                    </div>
+                    <button onclick="addOffer()" class="w-full bg-teal-600 text-white p-3 rounded-lg hover:bg-teal-700 shadow-sm">Add Offer</button>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Price</th>
+                                <th>Image</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="offers-table"></tbody>
                     </table>
                 </div>
             </div>
@@ -360,6 +390,7 @@
             loadWaitlist();
             loadFeedback();
             loadServices();
+            loadOffers();
             loadLeaveDates();
             showSection('appointments');
         }
@@ -456,15 +487,21 @@
 
         async function fetchWithAuth(url, options = {}) {
             const token = localStorage.getItem('adminToken');
-            options.headers = {
-                ...options.headers,
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            };
+            if (!token) {
+                alert('Session expired. Please log in again.');
+                logout();
+                throw new Error('No token available');
+            }
+            options.headers = options.headers || {};
+            if (!options.body || !(options.body instanceof FormData)) {
+                options.headers['Content-Type'] = 'application/json';
+            }
+            options.headers['Authorization'] = `Bearer ${token}`;
             const response = await fetch(url, options);
             if (response.status === 401) {
                 alert('Session expired. Please log in again.');
                 logout();
+                throw new Error('Unauthorized');
             }
             return response;
         }
@@ -476,16 +513,17 @@
             try {
                 const response = await fetchWithAuth(`${API_BASE_URL}/api/upload/${type}`, {
                     method: 'POST',
-                    body: formData,
-                    headers: { 'Authorization': `Bearer ${localStorage.getItem('adminToken')}` }
+                    body: formData
                 });
-                if (!response.ok) throw new Error(`Upload failed: ${response.statusText}`);
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`Upload failed: ${errorData.error || response.statusText}`);
+                }
                 const data = await response.json();
-                return data.url;
+                return data.filename; // Expecting the filename from the server
             } catch (error) {
                 console.error(`Error uploading ${type}:`, error);
-                alert(`Failed to upload ${type}.`);
-                return null;
+                throw error;
             }
         }
 
@@ -548,12 +586,13 @@
 
         async function confirmAppointment(id) {
             try {
-                const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/appointments/${id}/confirm`, { method: 'POST' });
+                const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/appointments/${id}/approve`, { method: 'POST' });
                 if (response.ok) {
                     alert('Appointment confirmed');
                     loadAppointments();
                 } else {
-                    alert('Error confirming appointment');
+                    const errorData = await response.json();
+                    alert(errorData.error || 'Error confirming appointment');
                 }
             } catch (error) {
                 console.error('Error confirming appointment:', error);
@@ -561,14 +600,22 @@
         }
 
         async function cancelAppointment(id) {
-            if (!confirm('Cancel this appointment?')) return;
+            const reason = prompt('Please provide a reason for cancellation:');
+            if (!reason) {
+                alert('Cancellation reason is required.');
+                return;
+            }
             try {
-                const response = await fetchWithAuth(`${API_BASE_URL}/api/appointments/${id}/cancel`, { method: 'POST' });
+                const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/appointments/${id}/cancel`, {
+                    method: 'POST',
+                    body: JSON.stringify({ reason })
+                });
                 if (response.ok) {
                     alert('Appointment cancelled');
                     loadAppointments();
                 } else {
-                    alert('Error cancelling appointment');
+                    const errorData = await response.json();
+                    alert(errorData.error || 'Error cancelling appointment');
                 }
             } catch (error) {
                 console.error('Error cancelling appointment:', error);
@@ -699,23 +746,25 @@
                 alert('Please fill in title, description, and price.');
                 return;
             }
-            const imageFile = document.getElementById('service-image-file').files[0];
-            const imageUrl = document.getElementById('service-image-url').value;
-            if (imageFile) {
-                const uploadedImageUrl = await uploadFile(imageFile, 'image');
-                if (uploadedImageUrl) serviceData.image = uploadedImageUrl;
-            } else if (imageUrl) {
-                serviceData.image = imageUrl;
-            }
-            const videoFile = document.getElementById('service-video-file').files[0];
-            const videoUrl = document.getElementById('service-video-url').value;
-            if (videoFile) {
-                const uploadedVideoUrl = await uploadFile(videoFile, 'video');
-                if (uploadedVideoUrl) serviceData.video = uploadedVideoUrl;
-            } else if (videoUrl) {
-                serviceData.video = videoUrl;
-            }
             try {
+                const imageFile = document.getElementById('service-image-file').files[0];
+                const imageUrl = document.getElementById('service-image-url').value;
+                if (imageFile) {
+                    const uploadedImageFilename = await uploadFile(imageFile, 'image');
+                    if (uploadedImageFilename) serviceData.image = uploadedImageFilename;
+                } else if (imageUrl) {
+                    serviceData.image = imageUrl;
+                }
+
+                const videoFile = document.getElementById('service-video-file').files[0];
+                const videoUrl = document.getElementById('service-video-url').value;
+                if (videoFile) {
+                    const uploadedVideoFilename = await uploadFile(videoFile, 'video');
+                    if (uploadedVideoFilename) serviceData.video = uploadedVideoFilename;
+                } else if (videoUrl) {
+                    serviceData.video = videoUrl;
+                }
+
                 const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/services`, {
                     method: 'POST',
                     body: JSON.stringify(serviceData)
@@ -731,11 +780,12 @@
                     document.getElementById('service-video-url').value = '';
                     loadServices();
                 } else {
-                    alert('Error adding service');
+                    const errorData = await response.json();
+                    alert(errorData.error || 'Error adding service');
                 }
             } catch (error) {
                 console.error('Error adding service:', error);
-                alert('Failed to add service.');
+                alert(`Failed to add service: ${error.message}`);
             }
         }
 
@@ -751,10 +801,95 @@
                     alert('Service deleted');
                     loadServices();
                 } else {
-                    alert('Error deleting service');
+                    const errorData = await response.json();
+                    alert(errorData.error || 'Error deleting service');
                 }
             } catch (error) {
                 console.error('Error deleting service:', error);
+            }
+        }
+
+        async function loadOffers() {
+            try {
+                const response = await fetchWithAuth(`${API_BASE_URL}/api/offers`);
+                const offers = await response.json();
+                const table = document.getElementById('offers-table');
+                table.innerHTML = '';
+                offers.forEach(offer => {
+                    table.innerHTML += `
+                        <tr>
+                            <td>${offer.title}</td>
+                            <td>₹${offer.price}</td>
+                            <td>${offer.image ? `<img src="${API_BASE_URL}/Uploads/${offer.image}" alt="${offer.title}" class="h-16">` : 'No Image'}</td>
+                            <td>
+                                <button onclick="deleteOffer('${offer.id}')" class="bg-red-600 text-white action-btn hover:bg-red-700">Delete</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (error) {
+                console.error('Error loading offers:', error);
+            }
+        }
+
+        async function addOffer() {
+            const offerData = {
+                title: document.getElementById('offer-title').value,
+                description: document.getElementById('offer-description').value,
+                price: parseFloat(document.getElementById('offer-price').value)
+            };
+            if (!offerData.title || !offerData.description || !offerData.price) {
+                alert('Please fill in title, description, and price.');
+                return;
+            }
+            try {
+                const imageFile = document.getElementById('offer-image-file').files[0];
+                if (!imageFile) {
+                    alert('Please upload an offer image.');
+                    return;
+                }
+                const uploadedImageFilename = await uploadFile(imageFile, 'image');
+                if (uploadedImageFilename) {
+                    offerData.image = uploadedImageFilename;
+                } else {
+                    alert('Failed to upload offer image.');
+                    return;
+                }
+
+                const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/offers`, {
+                    method: 'POST',
+                    body: JSON.stringify(offerData)
+                });
+                if (response.ok) {
+                    alert('Offer added');
+                    document.getElementById('offer-title').value = '';
+                    document.getElementById('offer-description').value = '';
+                    document.getElementById('offer-price').value = '';
+                    document.getElementById('offer-image-file').value = '';
+                    loadOffers();
+                } else {
+                    const errorData = await response.json();
+                    alert(errorData.error || 'Error adding offer');
+                }
+            } catch (error) {
+                console.error('Error adding offer:', error);
+                alert(`Failed to add offer: ${error.message}`);
+            }
+        }
+
+        async function deleteOffer(id) {
+            if (!confirm('Delete this offer?')) return;
+            try {
+                const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/offers/${id}`, { method: 'DELETE' });
+                if (response.ok) {
+                    alert('Offer deleted');
+                    loadOffers();
+                } else {
+                    const errorData = await response.json();
+                    alert(errorData.error || 'Error deleting offer');
+                }
+            } catch (error) {
+                console.error('Error deleting offer:', error);
             }
         }
 
@@ -795,7 +930,8 @@
                     document.getElementById('leave-date').value = '';
                     loadLeaveDates();
                 } else {
-                    alert('Error adding leave date');
+                    const errorData = await response.json();
+                    alert(errorData.error || 'Error adding leave date');
                 }
             } catch (error) {
                 console.error('Error adding leave date:', error);
@@ -810,7 +946,8 @@
                     alert('Leave date removed');
                     loadLeaveDates();
                 } else {
-                    alert('Error removing leave date');
+                    const errorData = await response.json();
+                    alert(errorData.error || 'Error removing leave date');
                 }
             } catch (error) {
                 console.error('Error removing leave date:', error);

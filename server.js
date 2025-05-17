@@ -12,7 +12,22 @@ const fs = require('fs').promises;
 
 const app = express();
 app.use(cors());
-app.use(express.json());
+
+// Log request bodies for debugging
+app.use(express.json(), (req, res, next) => {
+    if (req.method === 'POST' || req.method === 'PUT') {
+        console.log(`Request to ${req.method} ${req.url} with body:`, req.body);
+    }
+    next();
+});
+
+// Check for empty JSON body
+app.use((req, res, next) => {
+    if (req.method === 'POST' && req.headers['content-type'] === 'application/json' && !req.headers['content-length']) {
+        return res.status(400).json({ error: 'Request body is missing' });
+    }
+    next();
+});
 
 // Environment Variables
 require('dotenv').config();
@@ -45,7 +60,6 @@ async function testDbConnection() {
 // Database Initialization
 async function initDb() {
     try {
-        // Create tables
         await pool.query(`
             CREATE TABLE IF NOT EXISTS admins (
                 id SERIAL PRIMARY KEY,
@@ -56,8 +70,9 @@ async function initDb() {
             CREATE TABLE IF NOT EXISTS appointments (
                 id BIGINT PRIMARY KEY,
                 full_name VARCHAR(100) NOT NULL,
+                email VARCHAR(100) NOT NULL,
                 phone VARCHAR(15) NOT NULL,
-                treatment VARCHAR(50) NOT NULL,
+                treatment VARCHAR(50),
                 price NUMERIC(10,2) NOT NULL DEFAULT 0.00,
                 date DATE NOT NULL,
                 time TIME NOT NULL,
@@ -92,92 +107,141 @@ async function initDb() {
                 image VARCHAR(255),
                 video VARCHAR(255)
             );
+            CREATE TABLE IF NOT EXISTS offers (
+                id SERIAL PRIMARY KEY,
+                title VARCHAR(255) NOT NULL,
+                description TEXT NOT NULL,
+                price DECIMAL(10,2) NOT NULL,
+                image VARCHAR(255),
+                video VARCHAR(255),
+                media_url VARCHAR(255),
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
             CREATE TABLE IF NOT EXISTS leave_dates (
                 date VARCHAR(10) PRIMARY KEY
             );
+            CREATE TABLE IF NOT EXISTS newsletter_subscribers (
+                id SERIAL PRIMARY KEY,
+                email VARCHAR(255) UNIQUE NOT NULL,
+                subscribed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
         `);
 
-        // Check if full_name column exists in feedback table
+        // Ensure full_name column exists in feedback table
         const fullNameCheck = await pool.query(`
             SELECT column_name 
             FROM information_schema.columns 
             WHERE table_name = 'feedback' AND column_name = 'full_name'
         `);
-
         if (fullNameCheck.rows.length === 0) {
             console.log('Adding full_name column to feedback table');
             await pool.query(`
                 ALTER TABLE feedback
                 ADD COLUMN full_name VARCHAR(255);
-                
-                -- Set default for existing rows
                 UPDATE feedback
                 SET full_name = 'Unknown'
                 WHERE full_name IS NULL;
-                
                 ALTER TABLE feedback
                 ALTER COLUMN full_name SET NOT NULL;
             `);
         }
 
-        // Check if email column exists in feedback table
+        // Ensure email column exists in feedback table
         const emailCheck = await pool.query(`
             SELECT column_name 
             FROM information_schema.columns 
             WHERE table_name = 'feedback' AND column_name = 'email'
         `);
-
         if (emailCheck.rows.length === 0) {
             console.log('Adding email column to feedback table');
             await pool.query(`
                 ALTER TABLE feedback
                 ADD COLUMN email VARCHAR(255);
-                
-                -- Set default for existing rows
                 UPDATE feedback
                 SET email = 'unknown@example.com'
                 WHERE email IS NULL;
-                
                 ALTER TABLE feedback
                 ALTER COLUMN email SET NOT NULL;
             `);
         }
 
-        // Check if description column exists in feedback table
+        // Ensure description column exists in feedback table
         const descriptionCheck = await pool.query(`
             SELECT column_name 
             FROM information_schema.columns 
             WHERE table_name = 'feedback' AND column_name = 'description'
         `);
-
         if (descriptionCheck.rows.length === 0) {
             console.log('Adding description column to feedback table');
             await pool.query(`
                 ALTER TABLE feedback
                 ADD COLUMN description TEXT;
-                
-                -- Set default for existing rows
                 UPDATE feedback
                 SET description = ''
                 WHERE description IS NULL;
-                
                 ALTER TABLE feedback
                 ALTER COLUMN description SET NOT NULL;
             `);
         }
 
-        // Check if id column in appointments is INTEGER and convert to BIGINT if necessary
+        // Ensure email column exists in appointments table
+        const emailColumnCheck = await pool.query(`
+            SELECT column_name 
+            FROM information_schema.columns 
+            WHERE table_name = 'appointments' AND column_name = 'email'
+        `);
+        if (emailColumnCheck.rows.length === 0) {
+            console.log('Adding email column to appointments table');
+            await pool.query(`
+                ALTER TABLE appointments
+                ADD COLUMN email VARCHAR(100);
+                UPDATE appointments
+                SET email = 'unknown@example.com'
+                WHERE email IS NULL;
+                ALTER TABLE appointments
+                ALTER COLUMN email SET NOT NULL;
+            `);
+        }
+
+        // Ensure id in appointments table is BIGINT
         const idTypeCheck = await pool.query(`
             SELECT data_type 
             FROM information_schema.columns 
             WHERE table_name = 'appointments' AND column_name = 'id'
         `);
-
         if (idTypeCheck.rows.length > 0 && idTypeCheck.rows[0].data_type === 'integer') {
             console.log('Converting appointments.id from INTEGER to BIGINT');
             await pool.query(`
                 ALTER TABLE appointments
                 ALTER COLUMN id TYPE BIGINT;
+            `);
+        }
+
+        // Add media_url column to offers table if it doesn't exist
+        const mediaUrlCheck = await pool.query(`
+            SELECT column_name 
+            FROM information_schema.columns 
+            WHERE table_name = 'offers' AND column_name = 'media_url'
+        `);
+        if (mediaUrlCheck.rows.length === 0) {
+            console.log('Adding media_url column to offers table');
+            await pool.query(`
+                ALTER TABLE offers
+                ADD COLUMN media_url VARCHAR(255);
+            `);
+        }
+
+        // Add video column to offers table if it doesn't exist
+        const videoCheck = await pool.query(`
+            SELECT column_name 
+            FROM information_schema.columns 
+            WHERE table_name = 'offers' AND column_name = 'video'
+        `);
+        if (videoCheck.rows.length === 0) {
+            console.log('Adding video column to offers table');
+            await pool.query(`
+                ALTER TABLE offers
+                ADD COLUMN video VARCHAR(255);
             `);
         }
 
@@ -227,7 +291,7 @@ const upload = multer({
         if (allowedImageTypes.includes(file.mimetype) || allowedVideoTypes.includes(file.mimetype)) {
             cb(null, true);
         } else {
-            cb(new Error('Invalid file type'));
+            cb(new Error('Invalid file type. Only JPEG, PNG, GIF, MP4, and MPEG files are allowed.'));
         }
     }
 });
@@ -235,7 +299,10 @@ const upload = multer({
 // Middleware to Verify JWT
 const authenticateAdmin = async (req, res, next) => {
     const token = req.headers.authorization?.split(' ')[1];
-    if (!token) return res.status(401).json({ error: 'Unauthorized: No token provided' });
+    if (!token) {
+        console.log('Authentication failed: No token provided');
+        return res.status(401).json({ error: 'Unauthorized: No token provided' });
+    }
 
     try {
         const decoded = jwt.verify(token, JWT_SECRET);
@@ -249,7 +316,7 @@ const authenticateAdmin = async (req, res, next) => {
 
 // Serve Static Files
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/uploads', express.static(path.join(__dirname, 'Uploads')));
+app.use('/Uploads', express.static(path.join(__dirname, 'Uploads')));
 
 // Serve index.html at /
 app.get('/', (req, res) => {
@@ -278,12 +345,20 @@ async function sendEmail(to, subject, html) {
 
 async function sendSMS(to, body) {
     try {
-        await axios.post(SMS_API_URL, {
+        if (!SMS_API_URL) {
+            throw new Error('SMS_API_URL is not defined in environment variables');
+        }
+        const urlPattern = /^https?:\/\/[^\s/$.?#].[^\s]*$/;
+        if (!urlPattern.test(SMS_API_URL)) {
+            throw new Error(`Invalid SMS_API_URL: ${SMS_API_URL}`);
+        }
+
+        const response = await axios.post(SMS_API_URL, {
             api_key: SMS_API_KEY,
             to,
             message: body
         });
-        console.log(`SMS sent to ${to}`);
+        console.log(`SMS sent to ${to}: ${response.status}`);
     } catch (error) {
         console.error('Error sending SMS:', error.message);
     }
@@ -300,6 +375,19 @@ async function getNextAvailableDate(currentDate) {
     } while (true);
 }
 
+// Image/Video Upload Endpoint
+app.post('/api/upload/media', authenticateAdmin, upload.single('media'), async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ error: 'No media file provided' });
+        }
+        res.status(200).json({ filename: req.file.filename, mimetype: req.file.mimetype });
+    } catch (error) {
+        console.error('Error uploading media:', error.message);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 // Admin Authentication Endpoints
 app.post('/api/admin/register', async (req, res) => {
     try {
@@ -308,6 +396,11 @@ app.post('/api/admin/register', async (req, res) => {
         if (!name || !email || !password) {
             console.log('Registration failed: Missing fields');
             return res.status(400).json({ error: 'All fields (name, email, password) are required' });
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ error: 'Invalid email format' });
         }
 
         const existingAdmin = await pool.query('SELECT 1 FROM admins WHERE email = $1', [email]);
@@ -345,6 +438,11 @@ app.post('/api/admin/login', async (req, res) => {
             return res.status(400).json({ error: 'Email and password are required' });
         }
 
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ error: 'Invalid email format' });
+        }
+
         const result = await pool.query('SELECT * FROM admins WHERE email = $1', [email]);
         const admin = result.rows[0];
 
@@ -359,6 +457,47 @@ app.post('/api/admin/login', async (req, res) => {
     } catch (error) {
         console.error('Error logging in admin:', error.message);
         res.status(500).json({ error: 'Internal server error during login' });
+    }
+});
+
+// Newsletter Subscription Endpoint
+app.post('/api/newsletter', async (req, res) => {
+    try {
+        const { email } = req.body;
+        if (!email) {
+            return res.status(400).json({ error: 'Email is required' });
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ error: 'Invalid email format' });
+        }
+
+        const existingSubscriber = await pool.query('SELECT 1 FROM newsletter_subscribers WHERE email = $1', [email]);
+        if (existingSubscriber.rows.length > 0) {
+            return res.status(400).json({ error: 'Email already subscribed' });
+        }
+
+        await pool.query('INSERT INTO newsletter_subscribers (email) VALUES ($1)', [email]);
+
+        await sendEmail(
+            email,
+            'Welcome to Oak Dental Clinic Newsletter',
+            `<p>Dear Subscriber,</p>
+             <p>Thank you for subscribing to the Oak Dental Clinic newsletter!</p>
+             <p>You will receive the latest dental tips, clinic updates, and special offers directly to your inbox.</p>
+             <p>For any queries, contact us at +91756936767.</p>
+             <p>Best regards,<br>Oak Dental Clinic</p>`
+        );
+
+        res.status(201).json({ message: 'Subscribed successfully' });
+    } catch (error) {
+        console.error('Error subscribing to newsletter:', error.message);
+        if (error.code === '23505') {
+            res.status(400).json({ error: 'Email already subscribed' });
+        } else {
+            res.status(500).json({ error: 'Internal server error' });
+        }
     }
 });
 
@@ -392,17 +531,37 @@ app.get('/api/leave-dates', async (req, res) => {
 
 app.post('/api/appointments', async (req, res) => {
     try {
-        const { id, full_name, email, phone, date, time, message } = req.body;
-        if (!id || !full_name || !email || !phone || !date || !time || !message) {
-            return res.status(400).json({ error: 'All fields are required' });
+        const { id, full_name, email, phone, date, time } = req.body;
+        if (!id || !full_name || !email || !phone || !date || !time) {
+            return res.status(400).json({ error: 'All required fields (id, full_name, email, phone, date, time) must be provided' });
         }
 
-        const treatment = message.substring(0, 50);
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ error: 'Invalid email format' });
+        }
+
+        const phoneRegex = /^\d{10}$/;
+        if (!phoneRegex.test(phone)) {
+            return res.status(400).json({ error: 'Phone number must be 10 digits' });
+        }
+
+        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+        if (!dateRegex.test(date)) {
+            return res.status(400).json({ error: 'Invalid date format. Use YYYY-MM-DD' });
+        }
+
+        const timeRegex = /^(1[0-2]|0?[1-9]):([0-5][0-9]) (AM|PM)$/;
+        if (!timeRegex.test(time)) {
+            return res.status(400).json({ error: 'Invalid time format. Use HH:MM AM/PM' });
+        }
+
         const status = 'PENDING';
+        const treatment = 'General Checkup'; // Default value since 'message' is removed
 
         await pool.query(
-            'INSERT INTO appointments (id, full_name, phone, treatment, price, date, time, status) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
-            [id, full_name, phone, treatment, 0.00, date, time, status]
+            'INSERT INTO appointments (id, full_name, email, phone, treatment, price, date, time, status) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)',
+            [id, full_name, email, phone, treatment, 0.00, date, time, status]
         );
 
         await sendEmail(
@@ -410,7 +569,6 @@ app.post('/api/appointments', async (req, res) => {
             'Appointment Confirmation - Oak Dental Clinic',
             `<p>Dear ${full_name},</p>
              <p>Your appointment has been booked for ${date} at ${time}.</p>
-             <p>Treatment: ${treatment}</p>
              <p>We will send a confirmation once approved. For any queries, contact us at +91756936767.</p>
              <p>Thank you,<br>Oak Dental Clinic</p>`
         );
@@ -423,7 +581,11 @@ app.post('/api/appointments', async (req, res) => {
         res.status(201).json({ message: 'Appointment booked successfully' });
     } catch (error) {
         console.error('Error booking appointment:', error.message);
-        res.status(500).json({ error: 'Internal server error' });
+        if (error.code === '23505') {
+            res.status(400).json({ error: 'Appointment ID already exists' });
+        } else {
+            res.status(500).json({ error: 'Internal server error' });
+        }
     }
 });
 
@@ -431,11 +593,17 @@ app.get('/api/appointments/status', async (req, res) => {
     try {
         const { identifier } = req.query;
         if (!identifier) {
-            return res.status(400).json({ error: 'Identifier is required' });
+            return res.status(400).json({ error: 'Identifier (phone or email) is required' });
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const phoneRegex = /^\d{10}$/;
+        if (!emailRegex.test(identifier) && !phoneRegex.test(identifier)) {
+            return res.status(400).json({ error: 'Identifier must be a valid email or 10-digit phone number' });
         }
 
         const result = await pool.query(
-            'SELECT id, full_name, date, time, status FROM appointments WHERE phone = $1 OR email = $1',
+            'SELECT id, full_name, email, date, time, status FROM appointments WHERE phone = $1 OR email = $1',
             [identifier]
         );
 
@@ -490,7 +658,22 @@ app.post('/api/waitlist', async (req, res) => {
     try {
         const { name, email, phone, preferredDate } = req.body;
         if (!name || !email || !phone || !preferredDate) {
-            return res.status(400).json({ error: 'All fields are required' });
+            return res.status(400).json({ error: 'All fields (name, email, phone, preferredDate) are required' });
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ error: 'Invalid email format' });
+        }
+
+        const phoneRegex = /^\d{10}$/;
+        if (!phoneRegex.test(phone)) {
+            return res.status(400).json({ error: 'Phone number must be 10 digits' });
+        }
+
+        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+        if (!dateRegex.test(preferredDate)) {
+            return res.status(400).json({ error: 'Invalid date format. Use YYYY-MM-DD' });
         }
 
         await pool.query(
@@ -524,7 +707,16 @@ app.post('/api/feedback', async (req, res) => {
     try {
         const { full_name, email, rating, description } = req.body;
         if (!full_name || !email || !rating || !description) {
-            return res.status(400).json({ error: 'All fields are required' });
+            return res.status(400).json({ error: 'All fields (full_name, email, rating, description) are required' });
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ error: 'Invalid email format' });
+        }
+
+        if (!Number.isInteger(rating) || rating < 1 || rating > 5) {
+            return res.status(400).json({ error: 'Rating must be an integer between 1 and 5' });
         }
 
         await pool.query(
@@ -571,11 +763,16 @@ app.get('/api/services', async (req, res) => {
     }
 });
 
-app.post('/api/services', authenticateAdmin, upload.fields([{ name: 'image', maxCount: 1 }, { name: 'video', maxCount: 1 }]), async (req, res) => {
+app.post('/api/admin/services', authenticateAdmin, upload.fields([{ name: 'image', maxCount: 1 }, { name: 'video', maxCount: 1 }]), async (req, res) => {
     try {
         const { title, description, price } = req.body;
         if (!title || !description || !price) {
             return res.status(400).json({ error: 'Title, description, and price are required' });
+        }
+
+        const priceValue = parseFloat(price);
+        if (isNaN(priceValue) || priceValue < 0) {
+            return res.status(400).json({ error: 'Price must be a non-negative number' });
         }
 
         const imageFile = req.files.image ? req.files.image[0].filename : null;
@@ -583,7 +780,7 @@ app.post('/api/services', authenticateAdmin, upload.fields([{ name: 'image', max
 
         const result = await pool.query(
             'INSERT INTO services (title, description, price, image, video) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-            [title, description, parseFloat(price), imageFile, videoFile]
+            [title, description, priceValue, imageFile, videoFile]
         );
 
         res.status(201).json(result.rows[0]);
@@ -593,12 +790,17 @@ app.post('/api/services', authenticateAdmin, upload.fields([{ name: 'image', max
     }
 });
 
-app.put('/api/services/:id', authenticateAdmin, upload.fields([{ name: 'image', maxCount: 1 }, { name: 'video', maxCount: 1 }]), async (req, res) => {
+app.put('/api/admin/services/:id', authenticateAdmin, upload.fields([{ name: 'image', maxCount: 1 }, { name: 'video', maxCount: 1 }]), async (req, res) => {
     try {
         const { id } = req.params;
         const { title, description, price } = req.body;
         if (!title || !description || !price) {
             return res.status(400).json({ error: 'Title, description, and price are required' });
+        }
+
+        const priceValue = parseFloat(price);
+        if (isNaN(priceValue) || priceValue < 0) {
+            return res.status(400).json({ error: 'Price must be a non-negative number' });
         }
 
         const existingService = await pool.query('SELECT image, video FROM services WHERE id = $1', [id]);
@@ -609,9 +811,17 @@ app.put('/api/services/:id', authenticateAdmin, upload.fields([{ name: 'image', 
         const imageFile = req.files.image ? req.files.image[0].filename : existingService.rows[0].image;
         const videoFile = req.files.video ? req.files.video[0].filename : existingService.rows[0].video;
 
+        // Delete old files if new ones are uploaded
+        if (req.files.image && existingService.rows[0].image) {
+            await fs.unlink(path.join(__dirname, 'Uploads', existingService.rows[0].image)).catch(err => console.error('Error deleting old image:', err.message));
+        }
+        if (req.files.video && existingService.rows[0].video) {
+            await fs.unlink(path.join(__dirname, 'Uploads', existingService.rows[0].video)).catch(err => console.error('Error deleting old video:', err.message));
+        }
+
         const result = await pool.query(
             'UPDATE services SET title = $1, description = $2, price = $3, image = $4, video = $5 WHERE id = $6 RETURNING *',
-            [title, description, parseFloat(price), imageFile, videoFile, id]
+            [title, description, priceValue, imageFile, videoFile, id]
         );
 
         if (result.rows.length === 0) {
@@ -625,7 +835,7 @@ app.put('/api/services/:id', authenticateAdmin, upload.fields([{ name: 'image', 
     }
 });
 
-app.delete('/api/services/:id', authenticateAdmin, async (req, res) => {
+app.delete('/api/admin/services/:id', authenticateAdmin, async (req, res) => {
     try {
         const { id } = req.params;
         const service = await pool.query('SELECT image, video FROM services WHERE id = $1', [id]);
@@ -645,6 +855,150 @@ app.delete('/api/services/:id', authenticateAdmin, async (req, res) => {
         res.json({ message: 'Service deleted successfully' });
     } catch (error) {
         console.error('Error deleting service:', error.message);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Offer Endpoints
+app.get('/api/offers', async (req, res) => {
+    try {
+        const result = await pool.query('SELECT id, title, description, price, image, video, media_url FROM offers ORDER BY created_at DESC');
+        res.json(result.rows);
+    } catch (error) {
+        console.error('Error fetching offers:', error.message);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+app.post('/api/admin/offers', authenticateAdmin, upload.single('media'), async (req, res) => {
+    try {
+        const { title, description, price, mediaUrl } = req.body;
+        if (!title || !description || !price) {
+            return res.status(400).json({ error: 'Title, description, and price are required' });
+        }
+
+        const priceValue = parseFloat(price);
+        if (isNaN(priceValue) || priceValue < 0) {
+            return res.status(400).json({ error: 'Price must be a non-negative number' });
+        }
+
+        let imageFile = null;
+        let videoFile = null;
+        if (req.file) {
+            const isVideo = req.file.mimetype.startsWith('video');
+            if (isVideo) {
+                videoFile = req.file.filename;
+            } else {
+                imageFile = req.file.filename;
+            }
+        }
+
+        if (mediaUrl) {
+            const urlRegex = /^(https?:\/\/[^\s/$.?#].[^\s]*)$/;
+            if (!urlRegex.test(mediaUrl)) {
+                return res.status(400).json({ error: 'Invalid media URL format' });
+            }
+        }
+
+        const result = await pool.query(
+            'INSERT INTO offers (title, description, price, image, video, media_url) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+            [title, description, priceValue, imageFile, videoFile, mediaUrl || null]
+        );
+
+        res.status(201).json(result.rows[0]);
+    } catch (error) {
+        console.error('Error adding offer:', error.message);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+app.put('/api/admin/offers/:id', authenticateAdmin, upload.single('media'), async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { title, description, price, mediaUrl } = req.body;
+        if (!title || !description || !price) {
+            return res.status(400).json({ error: 'Title, description, and price are required' });
+        }
+
+        const priceValue = parseFloat(price);
+        if (isNaN(priceValue) || priceValue < 0) {
+            return res.status(400).json({ error: 'Price must be a non-negative number' });
+        }
+
+        const existingOffer = await pool.query('SELECT image, video FROM offers WHERE id = $1', [id]);
+        if (existingOffer.rows.length === 0) {
+            return res.status(404).json({ error: 'Offer not found' });
+        }
+
+        let imageFile = existingOffer.rows[0].image;
+        let videoFile = existingOffer.rows[0].video;
+
+        if (req.file) {
+            const isVideo = req.file.mimetype.startsWith('video');
+            if (isVideo) {
+                if (videoFile) {
+                    await fs.unlink(path.join(__dirname, 'Uploads', videoFile)).catch(err => console.error('Error deleting old video:', err.message));
+                }
+                if (imageFile) {
+                    await fs.unlink(path.join(__dirname, 'Uploads', imageFile)).catch(err => console.error('Error deleting old image:', err.message));
+                    imageFile = null;
+                }
+                videoFile = req.file.filename;
+            } else {
+                if (imageFile) {
+                    await fs.unlink(path.join(__dirname, 'Uploads', imageFile)).catch(err => console.error('Error deleting old image:', err.message));
+                }
+                if (videoFile) {
+                    await fs.unlink(path.join(__dirname, 'Uploads', videoFile)).catch(err => console.error('Error deleting old video:', err.message));
+                    videoFile = null;
+                }
+                imageFile = req.file.filename;
+            }
+        }
+
+        if (mediaUrl) {
+            const urlRegex = /^(https?:\/\/[^\s/$.?#].[^\s]*)$/;
+            if (!urlRegex.test(mediaUrl)) {
+                return res.status(400).json({ error: 'Invalid media URL format' });
+            }
+        }
+
+        const result = await pool.query(
+            'UPDATE offers SET title = $1, description = $2, price = $3, image = $4, video = $5, media_url = $6 WHERE id = $7 RETURNING *',
+            [title, description, priceValue, imageFile, videoFile, mediaUrl || null, id]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Offer not found' });
+        }
+
+        res.json(result.rows[0]);
+    } catch (error) {
+        console.error('Error updating offer:', error.message);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+app.delete('/api/admin/offers/:id', authenticateAdmin, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const offer = await pool.query('SELECT image, video FROM offers WHERE id = $1', [id]);
+        if (offer.rows.length === 0) {
+            return res.status(404).json({ error: 'Offer not found' });
+        }
+
+        const { image, video } = offer.rows[0];
+        if (image) {
+            await fs.unlink(path.join(__dirname, 'Uploads', image)).catch(err => console.error('Error deleting offer image:', err.message));
+        }
+        if (video) {
+            await fs.unlink(path.join(__dirname, 'Uploads', video)).catch(err => console.error('Error deleting offer video:', err.message));
+        }
+
+        await pool.query('DELETE FROM offers WHERE id = $1', [id]);
+        res.json({ message: 'Offer deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting offer:', error.message);
         res.status(500).json({ error: 'Internal server error' });
     }
 });
@@ -676,6 +1030,17 @@ app.get('/api/admin/feedback', authenticateAdmin, async (req, res) => {
         res.json(result.rows);
     } catch (error) {
         console.error('Error fetching feedback:', error.message);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+app.get('/api/admin/leave-dates', authenticateAdmin, async (req, res) => {
+    try {
+        const result = await pool.query('SELECT date FROM leave_dates ORDER BY date');
+        const leaveDates = result.rows.map(row => row.date);
+        res.json(leaveDates);
+    } catch (error) {
+        console.error('Error fetching leave dates for admin:', error.message);
         res.status(500).json({ error: 'Internal server error' });
     }
 });
@@ -721,6 +1086,16 @@ app.post('/api/admin/appointments/:id/reschedule', authenticateAdmin, async (req
         const { newDate, newTime, reason } = req.body;
         if (!newDate || !newTime || !reason) {
             return res.status(400).json({ error: 'New date, time, and reason are required' });
+        }
+
+        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+        if (!dateRegex.test(newDate)) {
+            return res.status(400).json({ error: 'Invalid date format. Use YYYY-MM-DD' });
+        }
+
+        const timeRegex = /^(1[0-2]|0?[1-9]):([0-5][0-9]) (AM|PM)$/;
+        if (!timeRegex.test(newTime)) {
+            return res.status(400).json({ error: 'Invalid time format. Use HH:MM AM/PM' });
         }
 
         const result = await pool.query(
@@ -804,6 +1179,11 @@ app.post('/api/admin/leave-dates', authenticateAdmin, async (req, res) => {
             return res.status(400).json({ error: 'Date is required' });
         }
 
+        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+        if (!dateRegex.test(date)) {
+            return res.status(400).json({ error: 'Invalid date format. Use YYYY-MM-DD' });
+        }
+
         await pool.query('INSERT INTO leave_dates (date) VALUES ($1) ON CONFLICT (date) DO NOTHING', [date]);
         res.status(201).json({ message: 'Leave date added successfully' });
     } catch (error) {
@@ -815,6 +1195,11 @@ app.post('/api/admin/leave-dates', authenticateAdmin, async (req, res) => {
 app.delete('/api/admin/leave-dates/:date', authenticateAdmin, async (req, res) => {
     try {
         const { date } = req.params;
+        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+        if (!dateRegex.test(date)) {
+            return res.status(400).json({ error: 'Invalid date format. Use YYYY-MM-DD' });
+        }
+
         const result = await pool.query('DELETE FROM leave_dates WHERE date = $1', [date]);
 
         if (result.rowCount === 0) {
@@ -826,6 +1211,23 @@ app.delete('/api/admin/leave-dates/:date', authenticateAdmin, async (req, res) =
         console.error('Error removing leave date:', error.message);
         res.status(500).json({ error: 'Internal server error' });
     }
+});
+
+// Error Handling Middleware
+app.use((err, req, res, next) => {
+    if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
+        console.error('Invalid JSON payload:', req.body);
+        return res.status(400).json({ error: 'Invalid JSON payload' });
+    }
+    if (err instanceof multer.MulterError) {
+        console.error('Multer error:', err.message);
+        return res.status(400).json({ error: 'File upload error: ' + err.message });
+    }
+    if (err.message.includes('Invalid file type')) {
+        return res.status(400).json({ error: err.message });
+    }
+    console.error('Server error:', err.message);
+    res.status(500).json({ error: 'Internal server error' });
 });
 
 // Start Server

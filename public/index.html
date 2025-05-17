@@ -78,6 +78,18 @@
             box-sizing: border-box;
             padding: 0 10px;
         }
+        .offer-slide {
+            min-width: 33.33%;
+            box-sizing: border-box;
+            padding: 0 10px;
+        }
+        .offer-media {
+            max-width: 100%;
+            height: 160px;
+            border-radius: 8px;
+            margin-bottom: 1.25rem;
+            object-fit: cover;
+        }
         .doctor-bg {
             background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url('https://images.unsplash.com/photo-1620778453907-a75627e31590?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
             background-size: cover;
@@ -205,6 +217,41 @@
             border-radius: 8px;
             background-color: #f7fafc;
         }
+        /* Toast Message Styling */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #10b981;
+            color: white;
+            padding: 16px 24px;
+            border-radius: 8px;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        .toast.error {
+            background-color: #ef4444;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        /* Calendar Leave Dates Styling */
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            cursor: pointer;
+        }
+        input[type="date"] {
+            position: relative;
+        }
+        /* Newsletter Input Fix */
+        input[type="email"] {
+            background-color: white;
+            color: #1f2937;
+            border: 1px solid #d1d5db;
+        }
         @media (max-width: 640px) {
             body {
                 font-size: 1.125rem;
@@ -232,7 +279,9 @@
             .slide img { width: 85%; height: 140px; object-fit: cover; }
             .slider-nav button { padding: 8px; font-size: 0.875rem; }
             .treatment-slide { min-width: 100%; }
+            .offer-slide { min-width: 100%; }
             .treatment-media { height: 160px; }
+            .offer-media { height: 140px; }
             .doctor-img { width: 200px; height: 200px; }
             .doctor-card { padding: 2rem; }
             .h-48 { height: 200px; }
@@ -252,6 +301,12 @@
             .sidenav .closebtn { font-size: 1.75rem; }
             .rating-stars .star { font-size: 1.125rem; }
             .whatsapp-float img { height: 48px; width: 48px; }
+            .toast {
+                top: 10px;
+                right: 10px;
+                padding: 12px 18px;
+                font-size: 0.875rem;
+            }
         }
         @media (min-width: 641px) {
             .hamburger { display: none; }
@@ -280,6 +335,9 @@
     </script>
 </head>
 <body class="bg-gray-100">
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+
     <!-- Side Navigation for Mobile -->
     <div id="mySidenav" class="sidenav">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
@@ -335,6 +393,22 @@
                 <div class="slider-nav">
                     <button onclick="prevTreatmentSlide()" aria-label="Previous Treatment">❮</button>
                     <button onclick="nextTreatmentSlide()" aria-label="Next Treatment">❯</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Offers Section (Slider) -->
+    <section id="offers" class="py-16 bg-teal-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">Special Offers</h2>
+            <div class="slider-container fade-in">
+                <div class="slider" id="offers-slider">
+                    <!-- Offers will be populated dynamically -->
+                </div>
+                <div class="slider-nav">
+                    <button onclick="prevOfferSlide()" aria-label="Previous Offer">❮</button>
+                    <button onclick="nextOfferSlide()" aria-label="Next Offer">❯</button>
                 </div>
             </div>
         </div>
@@ -597,11 +671,11 @@
                     <input type="text" id="full-name" placeholder="Full Name" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Full Name">
                     <input type="email" id="email" placeholder="Your Email" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Your Email">
                     <input type="tel" id="phone" placeholder="Your Phone" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Your Phone">
-                    <input type="date" id="appointment-date" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Appointment Date">
+                    <input type="date" id="appointment-date" class="w-full p-3 mb-4 border rounded-lg" list="leave-dates" required aria-label="Appointment Date">
+                    <datalist id="leave-dates"></datalist>
                     <select id="time-slot" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Time Slot">
                         <option value="" disabled selected>Select Time Slot</option>
                     </select>
-                    <textarea id="message" placeholder="Your Message" class="w-full p-3 mb-4 border rounded-lg" rows="5" required aria-label="Your Message"></textarea>
                     <div class="space-x-4">
                         <button onclick="submitAppointment()" class="bg-teal-600 text-white px-6 py-3 rounded-full hover:bg-teal-700" aria-label="Submit Appointment Request">Book Appointment</button>
                         <a href="https://wa.me/+91756936767?text=Hello%20Oak%20Dental%20Clinic,%20I%20would%20like%20to%20book%20an%20appointment." target="_blank" class="bg-green-500 text-white px-6 py-3 rounded-full hover:bg-green-600" aria-label="Contact via WhatsApp">WhatsApp Us</a>
@@ -673,7 +747,7 @@
             <h2 class="text-3xl font-bold mb-6 fade-in">Stay Updated</h2>
             <p class="text-lg mb-6 fade-in">Subscribe to our newsletter for the latest dental tips and clinic updates.</p>
             <div class="flex justify-center fade-in">
-                <input type="email" placeholder="Enter your email" class="w-full max-w-md p-3 rounded-l-lg border-none focus:outline-none" aria-label="Email for Newsletter">
+                <input type="email" id="newsletter-email" placeholder="Enter your email" class="w-full max-w-md p-3 rounded-l-lg focus:outline-none" aria-label="Email for Newsletter">
                 <button id="newsletter-submit" class="bg-teal-800 text-white px-6 py-3 rounded-r-lg hover:bg-teal-900" aria-label="Subscribe to Newsletter">Subscribe</button>
             </div>
         </div>
@@ -707,6 +781,24 @@
         gtag('js', new Date());
         gtag('config', 'G-YOUR-ID');
 
+        // Toast Message Function
+        function showToast(message, isError = false) {
+            const toastContainer = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${isError ? 'error' : ''}`;
+            toast.textContent = message;
+            toastContainer.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 100);
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 500);
+            }, 3000);
+        }
+
         // Side Navigation
         function openNav() {
             document.getElementById("mySidenav").style.width = "280px";
@@ -727,12 +819,18 @@
 
         // Form Submission (Contact Form)
         document.querySelector('#contact button').addEventListener('click', () => {
-            alert('Message sent! We will get back to you soon.');
+            showToast('Message sent! We will get back to you soon.');
         });
 
         // Newsletter Signup
         document.getElementById('newsletter-submit').addEventListener('click', () => {
-            alert('Thank you for subscribing to our newsletter!');
+            const email = document.getElementById('newsletter-email').value;
+            if (!email) {
+                showToast('Please enter your email.', true);
+                return;
+            }
+            showToast('Thank you for subscribing to our newsletter!');
+            document.getElementById('newsletter-email').value = '';
         });
 
         // Fade-in Animation
@@ -840,6 +938,113 @@
             updateTreatmentSlider();
         }
 
+        // Offers Slider
+        let currentOfferSlide = 0;
+        let offerSlides = [];
+        async function loadOffers() {
+            try {
+                const response = await fetch('http://localhost:3000/api/offers');
+                const offers = await response.json();
+                const offersSlider = document.getElementById('offers-slider');
+                offersSlider.innerHTML = '';
+
+                if (offers.length === 0) {
+                    offersSlider.innerHTML = '<p class="text-center text-gray-600">No offers available at the moment.</p>';
+                    return;
+                }
+
+                offers.forEach(offer => {
+                    const offerSlide = document.createElement('div');
+                    offerSlide.className = 'offer-slide';
+                    let mediaHTML = '';
+                    if (offer.video) {
+                        mediaHTML = `<video src="${offer.video}" controls class="offer-media"></video>`;
+                    } else if (offer.image) {
+                        mediaHTML = `<img src="${offer.image}" alt="${offer.title}" class="offer-media" loading="lazy">`;
+                    } else if (offer.mediaUrl) {
+                        const isVideo = offer.mediaUrl.includes('.mp4') || offer.mediaUrl.includes('.webm');
+                        mediaHTML = isVideo
+                            ? `<video src="${offer.mediaUrl}" controls class="offer-media"></video>`
+                            : `<img src="${offer.mediaUrl}" alt="${offer.title}" class="offer-media" loading="lazy">`;
+                    }
+                    const linkHTML = offer.mediaUrl ? `<a href="${offer.mediaUrl}" target="_blank" class="text-teal-600 hover:underline">View More</a>` : '';
+                    offerSlide.innerHTML = `
+                        <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                            ${mediaHTML}
+                            <h3 class="text-xl font-semibold text-teal-600 mb-2">${offer.title}</h3>
+                            <p class="text-gray-600 mb-2">${offer.description}</p>
+                            ${linkHTML}
+                            <div class="mt-4 space-x-2">
+                                <button onclick="editOffer('${offer.id}')" class="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700">Edit</button>
+                                <button onclick="deleteOffer('${offer.id}')" class="bg-red-600 text-white px-4 py-2 rounded-full hover:bg-red-700">Delete</button>
+                            </div>
+                        </div>
+                    `;
+                    offersSlider.appendChild(offerSlide);
+                });
+
+                offerSlides = document.querySelectorAll('.offer-slide');
+                updateOfferSlider();
+            } catch (error) {
+                console.error('Error loading offers:', error);
+            }
+        }
+        function updateOfferSlider() {
+            const slideWidth = 100 / 3;
+            if (currentOfferSlide >= offerSlides.length - 2) currentOfferSlide = 0;
+            if (currentOfferSlide < 0) currentOfferSlide = Math.max(0, offerSlides.length - 3);
+            document.getElementById('offers-slider').style.transform = `translateX(-${currentOfferSlide * slideWidth}%)`;
+        }
+        function nextOfferSlide() {
+            currentOfferSlide++;
+            updateOfferSlider();
+        }
+        function prevOfferSlide() {
+            currentOfferSlide--;
+            updateOfferSlider();
+        }
+        async function editOffer(id) {
+            // Simulate edit functionality (actual implementation will be in admin panel)
+            const newTitle = prompt('Enter new title:');
+            const newDescription = prompt('Enter new description:');
+            const newMediaUrl = prompt('Enter new media URL (optional):');
+            if (newTitle && newDescription) {
+                try {
+                    const response = await fetch(`http://localhost:3000/api/offers/${id}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ title: newTitle, description: newDescription, mediaUrl: newMediaUrl || undefined })
+                    });
+                    if (response.ok) {
+                        showToast('Offer updated successfully!');
+                        loadOffers();
+                    } else {
+                        showToast('Error updating offer.', true);
+                    }
+                } catch (error) {
+                    console.error('Error updating offer:', error);
+                    showToast('Error updating offer.', true);
+                }
+            }
+        }
+        async function deleteOffer(id) {
+            if (!confirm('Are you sure you want to delete this offer?')) return;
+            try {
+                const response = await fetch(`http://localhost:3000/api/offers/${id}`, {
+                    method: 'DELETE'
+                });
+                if (response.ok) {
+                    showToast('Offer deleted successfully!');
+                    loadOffers();
+                } else {
+                    showToast('Error deleting offer.', true);
+                }
+            } catch (error) {
+                console.error('Error deleting offer:', error);
+                showToast('Error deleting offer.', true);
+            }
+        }
+
         // Feedback Submission
         let currentRating = 0;
         document.querySelectorAll('.rating-stars .star').forEach(star => {
@@ -857,7 +1062,7 @@
             const description = document.getElementById('feedback-description').value;
 
             if (!full_name || !email || !currentRating || !description) {
-                alert('Please fill in all fields and select a rating.');
+                showToast('Please fill in all fields and select a rating.', true);
                 return;
             }
 
@@ -875,13 +1080,13 @@
                     document.getElementById('feedback-description').value = '';
                     currentRating = 0;
                     document.querySelectorAll('.rating-stars .star').forEach(s => s.classList.remove('selected'));
-                    alert('Thank you for your feedback!');
+                    showToast('Thank you for your feedback!');
                 } else {
-                    alert('Error submitting feedback. Please try again.');
+                    showToast('Error submitting feedback. Please try again.', true);
                 }
             } catch (error) {
                 console.error('Error submitting feedback:', error);
-                alert('Error submitting feedback. Please try again.');
+                showToast('Error submitting feedback. Please try again.', true);
             }
         }
 
@@ -956,11 +1161,19 @@
         }
 
         function applyLeaveDateStyles() {
+            const datalist = document.getElementById('leave-dates');
+            leaveDates.forEach(date => {
+                const option = document.createElement('option');
+                option.value = date;
+                option.style.color = 'red';
+                datalist.appendChild(option);
+            });
+
             const dateInput = document.getElementById('appointment-date');
             dateInput.addEventListener('change', () => {
                 const selectedDate = dateInput.value;
                 if (leaveDates.includes(selectedDate)) {
-                    alert(`The doctor is on leave on ${selectedDate}. Please select another date, such as ${getNextAvailableDate(selectedDate)}.`);
+                    showToast(`The doctor is on leave on ${selectedDate}. Please select another date, such as ${getNextAvailableDate(selectedDate)}.`, true);
                     dateInput.value = '';
                 }
             });
@@ -997,20 +1210,19 @@
                 email: document.getElementById('email').value,
                 phone: document.getElementById('phone').value,
                 date: document.getElementById('appointment-date').value,
-                time: document.getElementById('time-slot').value,
-                message: document.getElementById('message').value
+                time: document.getElementById('time-slot').value
             };
         }
 
         async function submitAppointment() {
             const appointmentData = getAppointmentData();
-            if (!appointmentData.full_name || !appointmentData.email || !appointmentData.phone || !appointmentData.date || !appointmentData.time || !appointmentData.message) {
-                alert('Please fill in all fields.');
+            if (!appointmentData.full_name || !appointmentData.email || !appointmentData.phone || !appointmentData.date || !appointmentData.time) {
+                showToast('Please fill in all fields.', true);
                 return;
             }
 
             if (leaveDates.includes(appointmentData.date)) {
-                alert(`The doctor is on leave on ${appointmentData.date}. Please select another date, such as ${getNextAvailableDate(appointmentData.date)}.`);
+                showToast(`The doctor is on leave on ${appointmentData.date}. Please select another date, such as ${getNextAvailableDate(appointmentData.date)}.`, true);
                 return;
             }
 
@@ -1023,19 +1235,18 @@
 
                 if (response.ok) {
                     const result = await response.json();
-                    alert(`Appointment booked for ${appointmentData.full_name} on ${appointmentData.date} at ${appointmentData.time}. Confirmation sent to ${appointmentData.email} and ${appointmentData.phone}.`);
+                    showToast(`Appointment booked successfully for ${appointmentData.full_name} on ${appointmentData.date} at ${appointmentData.time}. Confirmation sent to ${appointmentData.email} and ${appointmentData.phone}.`);
                     document.getElementById('full-name').value = '';
                     document.getElementById('email').value = '';
                     document.getElementById('phone').value = '';
                     document.getElementById('appointment-date').value = '';
                     document.getElementById('time-slot').value = '';
-                    document.getElementById('message').value = '';
                 } else {
-                    alert('Error booking appointment. Please try again.');
+                    showToast('Error booking appointment. Please try again.', true);
                 }
             } catch (error) {
                 console.error('Error booking appointment:', error);
-                alert('Error booking appointment. Please try again.');
+                showToast('Error booking appointment. Please try again.', true);
             }
         }
 
@@ -1048,7 +1259,7 @@
             };
 
             if (!waitlistData.name || !waitlistData.email || !waitlistData.phone || !waitlistData.preferredDate) {
-                alert('Please fill in all waitlist fields.');
+                showToast('Please fill in all waitlist fields.', true);
                 return;
             }
 
@@ -1060,24 +1271,24 @@
                 });
 
                 if (response.ok) {
-                    alert(`You have been added to the waitlist for ${waitlistData.preferredDate}. We will notify you when a slot becomes available.`);
+                    showToast(`You have been added to the waitlist for ${waitlistData.preferredDate}. We will notify you when a slot becomes available.`);
                     document.getElementById('waitlist-name').value = '';
                     document.getElementById('waitlist-email').value = '';
                     document.getElementById('waitlist-phone').value = '';
                     document.getElementById('waitlist-date').value = '';
                 } else {
-                    alert('Error joining waitlist. Please try again.');
+                    showToast('Error joining waitlist. Please try again.', true);
                 }
             } catch (error) {
                 console.error('Error joining waitlist:', error);
-                alert('Error joining waitlist. Please try again.');
+                showToast('Error joining waitlist. Please try again.', true);
             }
         }
 
         async function checkAppointmentStatus() {
             const identifier = document.getElementById('status-identifier').value;
             if (!identifier) {
-                alert('Please enter a mobile number or email.');
+                showToast('Please enter a mobile number or email.', true);
                 return;
             }
 
@@ -1101,7 +1312,7 @@
                 }
             } catch (error) {
                 console.error('Error checking appointment status:', error);
-                alert('Error checking appointment status. Please try again.');
+                showToast('Error checking appointment status. Please try again.', true);
             }
         }
 
@@ -1115,19 +1326,20 @@
                 });
 
                 if (response.ok) {
-                    alert('Appointment cancelled. You will receive a confirmation via email/SMS.');
+                    showToast('Appointment cancelled. You will receive a confirmation via email/SMS.');
                     checkAppointmentStatus();
                 } else {
-                    alert('Error cancelling appointment. Please try again.');
+                    showToast('Error cancelling appointment. Please try again.', true);
                 }
             } catch (error) {
                 console.error('Error cancelling appointment:', error);
-                alert('Error cancelling appointment. Please try again.');
+                showToast('Error cancelling appointment. Please try again.', true);
             }
         }
 
         // Initialize
         loadTreatments();
+        loadOffers();
         loadTestimonials();
         populateTimeSlots();
         fetchLeaveDates();
