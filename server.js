@@ -1120,21 +1120,25 @@ app.get('/api/offers/:id', async (req, res) => {
 
 app.post('/api/admin/offers', authenticateAdmin, upload.single('image'), async (req, res) => {
     try {
-        const { title, description, price } = req.body;
-        logger.info('Offer creation request:', { title, description, price });
+        const { title, description, price, image: imageUrl } = req.body;
+        logger.info('Offer creation request:', { title, description, price, imageUrl });
         if (!title || !description || !price) {
             logger.warn('Offer creation failed: Missing required fields');
             return res.status(400).json({ error: 'Title, description, and price are required' });
         }
-        if (!req.file) {
+
+        // Check if either a file is uploaded or an image URL is provided
+        if (!req.file && !imageUrl) {
             logger.warn('Offer creation failed: Image required');
-            return res.status(400).json({ error: 'Offer image is required' });
+            return res.status(400).json({ error: 'An image file or image URL is required' });
         }
 
-        const imageUrl = req.file.path;
+        // Use the uploaded file's URL if available; otherwise, use the provided image URL
+        const finalImageUrl = req.file ? req.file.path : imageUrl;
+
         const result = await pool.query(
             'INSERT INTO offers (title, description, price, image) VALUES ($1, $2, $3, $4) RETURNING *',
-            [title, description, parseFloat(price), imageUrl]
+            [title, description, parseFloat(price), finalImageUrl]
         );
         logger.info(`Offer created: ID ${result.rows[0].id}`);
         res.status(201).json(result.rows[0]);
@@ -1307,8 +1311,4 @@ async function startServer() {
     app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
 }
 
-<<<<<<< HEAD
 startServer();
-=======
-startServer();
->>>>>>> 404ae4b94bd6621365047aa3485dc6ebb1ac20b4
