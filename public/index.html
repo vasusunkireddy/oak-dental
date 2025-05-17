@@ -24,7 +24,6 @@
         gtag('config', 'G-YOUR_TRACKING_ID');
     </script>
     <script defer src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="https://pay.google.com/gp/p/js/pay.js"></script>
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -338,11 +337,11 @@
                 box-shadow: -4px 0 12px rgba(0, 0, 0, 0.2);
                 transform: translateX(100%);
                 overflow-y: auto;
-                display: block;
+                display: block !important;
             }
             #menu.active {
                 transform: translateX(0);
-                display: block;
+                display: block !important;
             }
             .nav-link, .dropdown > a {
                 padding: 0.8rem;
@@ -788,16 +787,14 @@
                 </div>
                 <a href="#appointment" class="nav-link hover:text-blue-600" aria-label="Go to Book Appointment section">Book Appointment</a>
                 <a href="#contact" class="nav-link hover:text-blue-600" aria-label="Go to Contact section">Contact</a>
-                <a href="/admin.html" class="nav-link hover:text-blue-600 hidden" id="admin-link" aria-label="Go to Admin Dashboard">Admin</a>
             </div>
         </div>
     </nav>
     <div id="menu-overlay"></div>
 
-    <!-- Hero Section -->
+    <!-- Hero Section (Logo Removed) -->
     <section id="home" class="section-animate">
         <div class="container mx-auto px-4 text-center flex flex-col justify-center items-center h-full">
-            <img src="https://i.postimg.cc/50vXRG8K/ram.jpg" alt="OAK Dental Hospital Logo" class="w-24 h-24 mb-4 rounded-full shadow-lg">
             <h1 class="text-4xl md:text-5xl font-extrabold mb-4 hospital-name">Welcome to OAK Dental Hospital</h1>
             <p class="text-lg md:text-xl mb-6 max-w-2xl mx-auto">Experience world-class dental care in Hyderabad. We specialize in Orthodontics, Implants, and Cosmetic Dentistry to help you achieve a confident, radiant smile.</p>
             <div class="flex flex-col space-y-3 md:flex-row md:space-y-0 md:space-x-4 justify-center">
@@ -1276,7 +1273,6 @@
         }
 
         menuToggle.addEventListener('click', toggleMenu);
-
         menuOverlay.addEventListener('click', toggleMenu);
 
         document.querySelectorAll('.nav-link, .dropdown-menu a').forEach(link => {
@@ -1447,7 +1443,7 @@
                 const settings = response.data;
 
                 // Update UPI payment amount based on admin settings
-                adminAmount = settings.appointmentCost || '500.00';
+                adminAmount = settings.appointmentCost || '5.00';
 
                 // Load unavailable dates
                 unavailableDates = settings.unavailableDates || [];
@@ -1465,7 +1461,7 @@
                 '09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM',
                 '01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM'
             ];
-            timeSelect.innerHTML = '<option value="">Select Time</option>';
+                        timeSelect.innerHTML = '<option value="">Select Time</option>';
             times.forEach(time => {
                 const option = document.createElement('option');
                 option.value = time;
@@ -1479,7 +1475,7 @@
             const dateInput = document.getElementById('date');
             dateInput.addEventListener('change', () => {
                 const selectedDate = dateInput.value;
-                                if (unavailableDates.includes(selectedDate)) {
+                if (unavailableDates.includes(selectedDate)) {
                     dateInput.classList.add('unavailable-date');
                     document.getElementById('unavailable-message').classList.add('show');
                     dateInput.value = '';
@@ -1505,10 +1501,10 @@
 
         // Payment Integration
         async function initiateGPayPayment(appointmentData) {
-            const upiId = 'oakdental@upi'; // Admin's UPI ID
+            const upiId = 'svasudevareddy18604@oksbi'; // Updated UPI ID
             const amount = document.getElementById('total-amount').textContent.replace('₹', '');
             const name = appointmentData.name;
-            const upiLink = `upi://pay?pa=${upiId}&pn=OAK%20Dental%20Hospital&am=${amount}&cu=INR&tn=Appointment%20for%20${name}`;
+            const upiLink = `upi://pay?pa=${upiId}&pn=oakdentals&am=${amount}&cu=INR&tn=Appointment%20for%20${name}`;
             const upiWindow = window.open(upiLink, '_blank');
 
             return new Promise((resolve, reject) => {
@@ -1527,10 +1523,10 @@
         }
 
         async function initiatePhonePePayment(appointmentData) {
-            const upiId = 'oakdental@upi'; // Admin's UPI ID
+            const upiId = 'svasudevareddy18604@oksbi'; // Updated UPI ID
             const amount = document.getElementById('total-amount').textContent.replace('₹', '');
             const name = appointmentData.name;
-            const upiLink = `upi://pay?pa=${upiId}&pn=OAK%20Dental%20Hospital&am=${amount}&cu=INR&tn=Appointment%20for%20${name}`;
+            const upiLink = `upi://pay?pa=${upiId}&pn=oakdentals&am=${amount}&cu=INR&tn=Appointment%20for%20${name}`;
             const upiWindow = window.open(upiLink, '_blank');
 
             return new Promise((resolve, reject) => {
@@ -1797,11 +1793,6 @@
 
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('date').setAttribute('min', today);
-
-            const userRole = localStorage.getItem('userRole');
-            if (userRole === 'admin') {
-                document.getElementById('admin-link').classList.remove('hidden');
-            }
 
             document.getElementById('gpay-button-container').addEventListener('click', () => initiatePayment('gpay'));
             document.getElementById('phonepe-button-container').addEventListener('click', () => initiatePayment('phonepe'));
