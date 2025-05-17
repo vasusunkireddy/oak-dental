@@ -98,13 +98,13 @@ async function initDb() {
         `);
 
         // Check if full_name column exists in feedback table
-        const columnCheck = await pool.query(`
+        const fullNameCheck = await pool.query(`
             SELECT column_name 
             FROM information_schema.columns 
             WHERE table_name = 'feedback' AND column_name = 'full_name'
         `);
 
-        if (columnCheck.rows.length === 0) {
+        if (fullNameCheck.rows.length === 0) {
             console.log('Adding full_name column to feedback table');
             await pool.query(`
                 ALTER TABLE feedback
@@ -117,6 +117,52 @@ async function initDb() {
                 
                 ALTER TABLE feedback
                 ALTER COLUMN full_name SET NOT NULL;
+            `);
+        }
+
+        // Check if email column exists in feedback table
+        const emailCheck = await pool.query(`
+            SELECT column_name 
+            FROM information_schema.columns 
+            WHERE table_name = 'feedback' AND column_name = 'email'
+        `);
+
+        if (emailCheck.rows.length === 0) {
+            console.log('Adding email column to feedback table');
+            await pool.query(`
+                ALTER TABLE feedback
+                ADD COLUMN email VARCHAR(255);
+                
+                -- Set default for existing rows
+                UPDATE feedback
+                SET email = 'unknown@example.com'
+                WHERE email IS NULL;
+                
+                ALTER TABLE feedback
+                ALTER COLUMN email SET NOT NULL;
+            `);
+        }
+
+        // Check if description column exists in feedback table
+        const descriptionCheck = await pool.query(`
+            SELECT column_name 
+            FROM information_schema.columns 
+            WHERE table_name = 'feedback' AND column_name = 'description'
+        `);
+
+        if (descriptionCheck.rows.length === 0) {
+            console.log('Adding description column to feedback table');
+            await pool.query(`
+                ALTER TABLE feedback
+                ADD COLUMN description TEXT;
+                
+                -- Set default for existing rows
+                UPDATE feedback
+                SET description = ''
+                WHERE description IS NULL;
+                
+                ALTER TABLE feedback
+                ALTER COLUMN description SET NOT NULL;
             `);
         }
 
@@ -368,7 +414,7 @@ app.post('/api/appointments', async (req, res) => {
 
 app.get('/api/appointments/status', async (req, res) => {
     try {
-        const { identifier } = req.query;
+        const { identifier } = req.query.identifier;
         if (!identifier) {
             return res.status(400).json({ error: 'Identifier is required' });
         }
