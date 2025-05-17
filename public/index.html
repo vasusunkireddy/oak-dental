@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="description" content="OAK Dental Hospital in Hyderabad offers expert dental care, including Orthodontics, Implants, and Cosmetic Dentistry. Book your appointment today!">
     <meta name="keywords" content="dental care, dentist Hyderabad, orthodontics, dental implants, cosmetic dentistry, OAK Dental Hospital">
     <meta name="author" content="OAK Dental Hospital">
@@ -23,13 +23,17 @@
         gtag('js', new Date());
         gtag('config', 'G-YOUR_TRACKING_ID');
     </script>
-    <script defer src="https://www.paypal.com/sdk/js?client-id=AYarbhTihMwB0cn5LEA1FJyOnOfA7aok3BXfTT7rWdbIr2jHnzBSyt0Q3iDWi8mBVLQ1T94GT2dUVajJ&currency=USD"></script>
+    <script defer src="https://www.paypal.com/sdk/js?client-id=AYarbhTihMwB0cn5LEA1FJyOnOfA7aok3BXfTT7rWdbIr2jHnzBSyt0Q3iDWi8mBVLQ1T94GT2dUVajJ&currency=INR"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://pay.google.com/gp/p/js/pay.js"></script>
     <style>
         body {
             font-family: 'Roboto', sans-serif;
             background-color: #f8fafc;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
         h1, h2, h3, .hospital-name {
             font-family: 'Poppins', sans-serif;
@@ -55,28 +59,21 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             font-weight: 800;
-            transition: transform 0.3s ease;
             color: #1e3a8a;
         }
         @media (max-width: 768px) {
             .hospital-name {
-                font-size: 1.5rem;
+                font-size: 1.25rem;
                 background: none;
                 -webkit-text-fill-color: #1e3a8a;
                 color: #1e3a8a;
                 text-align: center;
-                display: block;
-                margin: 0 auto;
             }
         }
-        .hospital-name:hover {
-            transform: scale(1.05);
-        }
         .nav-link, .btn {
-            transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+            transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.2s ease;
         }
         .nav-link:hover, .btn:hover {
-            transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         .btn.bg-blue-600 {
@@ -127,6 +124,7 @@
         }
         html {
             scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
         }
         .cta-container {
             position: fixed;
@@ -134,6 +132,7 @@
             right: 20px;
             z-index: 1000;
             display: flex;
+            flex-direction: column;
             gap: 10px;
         }
         .sticky-cta, .chat-button {
@@ -142,7 +141,7 @@
             justify-content: center;
             border-radius: 50px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-            transition: background-color 0.3s ease, transform 0.2s ease;
+            transition: background-color 0.3s ease;
         }
         .sticky-cta {
             background-color: #2563eb;
@@ -162,18 +161,14 @@
         }
         .sticky-cta:hover {
             background-color: #1e40af;
-            transform: scale(1.05);
         }
         .chat-button:hover {
             background-color: #20b558;
-            transform: scale(1.05);
         }
         @media (max-width: 768px) {
             .cta-container {
-                flex-direction: column;
                 bottom: 10px;
                 right: 10px;
-                gap: 8px;
             }
             .sticky-cta {
                 padding: 8px 16px;
@@ -184,17 +179,6 @@
                 width: 45px;
                 height: 45px;
                 font-size: 16px;
-            }
-            #home {
-                padding-top: 8rem;
-                padding-bottom: 8rem;
-                min-height: 70vh;
-            }
-            #home h1 {
-                font-size: 2rem;
-            }
-            #home p {
-                font-size: 0.9rem;
             }
         }
         #home {
@@ -222,6 +206,18 @@
         #home > * {
             position: relative;
             z-index: 2;
+        }
+        @media (max-width: 768px) {
+            #home {
+                min-height: 70vh;
+                padding: 6rem 1rem;
+            }
+            #home h1 {
+                font-size: 2rem;
+            }
+            #home p {
+                font-size: 0.9rem;
+            }
         }
         .faq-item {
             cursor: pointer;
@@ -253,11 +249,18 @@
             width: 90%;
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
         }
-        #menu {
-            transition: transform 0.3s ease-in-out;
+        nav {
+            padding: 0.5rem 1rem;
         }
-        #menu.active {
-            transform: translateX(0);
+        .nav-link, .dropdown > a {
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            line-height: 1.5;
+            display: inline-flex;
+            align-items: center;
+        }
+        .nav-link:hover, .dropdown > a:hover {
+            background-color: #f3f4f6;
         }
         .dropdown {
             position: relative;
@@ -291,7 +294,29 @@
             background-color: #f3f4f6;
             color: #2563eb;
         }
+        #menu {
+            transition: transform 0.3s ease-in-out;
+        }
+        #menu.active {
+            transform: translateX(0);
+        }
+        #menu-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+        }
+        #menu-overlay.active {
+            display: block;
+        }
         @media (max-width: 768px) {
+            body.nav-open {
+                overflow: hidden;
+            }
             #menu {
                 background-color: #ffffff;
                 padding: 1rem;
@@ -303,25 +328,11 @@
                 z-index: 1000;
                 box-shadow: -4px 0 12px rgba(0, 0, 0, 0.2);
                 transform: translateX(100%);
-                transition: transform 0.3s ease-in-out;
                 overflow-y: auto;
                 display: block;
             }
             #menu.active {
                 transform: translateX(0);
-                display: block;
-            }
-            #menu-overlay {
-                display: none;
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.7);
-                z-index: 999;
-            }
-            #menu-overlay.active {
                 display: block;
             }
             .nav-link, .dropdown > a {
@@ -365,30 +376,16 @@
                 display: none !important;
             }
         }
-        nav {
-            padding: 0.5rem 1rem;
-        }
-        .nav-link, .dropdown > a {
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            line-height: 1.5;
-            display: inline-flex;
-            align-items: center;
-        }
-        .nav-link:hover, .dropdown > a:hover {
-            background-color: #f3f4f6;
-        }
         .card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: box-shadow 0.3s ease;
         }
         .card:hover {
-            transform: translateY(-4px);
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
         }
         #treatments-carousel {
             position: relative;
             overflow: hidden;
-            background: linear-gradient(135deg, #f0f7ff, #e6e6fa);
+            background: linear-gradient(135deg, #e3f2fd, #ede9fe);
             border-radius: 12px;
             padding: 1rem;
         }
@@ -459,7 +456,7 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
         .contact-form {
-            background: linear-gradient(135deg, #ffffff, #e6e6fa);
+            background: linear-gradient(135deg, #ffffff, #ede9fe);
             border-radius: 12px;
             padding: 2rem;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -506,10 +503,10 @@
             font-weight: 600;
             color: white;
             cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
+            transition: background-color 0.3s ease;
         }
         .payment-button:hover {
-            transform: translateY(-2px);
+            opacity: 0.9;
         }
         .paypal-button {
             background-color: #0070BA;
@@ -517,19 +514,19 @@
         .paypal-button:hover {
             background-color: #005EA6;
         }
-        .gpay-button {
+        .gpay-button, .upi-button {
             background-color: #4285F4;
         }
-        .gpay-button:hover {
+        .gpay-button:hover, .upi-button:hover {
             background-color: #3267D6;
         }
-        .gpay-button img, .paypal-button img {
+        .gpay-button img, .paypal-button img, .upi-button img {
             width: 24px;
             height: 24px;
             margin-right: 8px;
         }
         .feedback-form {
-            background: linear-gradient(135deg, #ffffff, #e6e6fa);
+            background: linear-gradient(135deg, #ffffff, #ede9fe);
             border-radius: 12px;
             padding: 2rem;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -565,7 +562,7 @@
             margin-bottom: 0.5rem;
         }
         .stats-section {
-            background: linear-gradient(135deg, #e6e6fa, #f0f7ff);
+            background: linear-gradient(135deg, #ede9fe, #e3f2fd);
             padding: 2rem;
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -581,14 +578,16 @@
             gap: 1rem;
             flex-wrap: wrap;
             margin-bottom: 1rem;
+            justify-content: center;
         }
         .filter-container select {
             padding: 0.5rem;
             border-radius: 8px;
             border: 1px solid #d1d5db;
+            background-color: white;
         }
         #appointment-form {
-            background: linear-gradient(135deg, #ffffff, #e6e6fa);
+            background: linear-gradient(135deg, #ffffff, #ede9fe);
             border-radius: 12px;
             padding: 2rem;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -680,12 +679,34 @@
         @media (max-width: 768px) {
             #appointment .chat-button {
                 display: inline-flex;
-                position: fixed;
-                bottom: 10px;
-                right: 10px;
-                z-index: 1000;
             }
         }
+        /* Enhanced Section Styling */
+        section {
+            padding: 4rem 1rem;
+        }
+        @media (max-width: 768px) {
+            section {
+                padding: 2rem 1rem;
+            }
+        }
+        h2 {
+            color: #1e3a8a;
+            font-weight: 600;
+        }
+        p {
+            color: #4b5563;
+            line-height: 1.6;
+        }
+        .bg-blue-50 { background-color: #eff6ff; }
+        .bg-green-50 { background-color: #f0fdf4; }
+        .bg-orange-50 { background-color: #fff7ed; }
+        .bg-teal-50 { background-color: #e0f7fa; }
+        .bg-purple-50 { background-color: #f3e8ff; }
+        .bg-indigo-50 { background-color: #eef2ff; }
+        .bg-cyan-50 { background-color: #ecfeff; }
+        .bg-gray-100 { background-color: #f3f4f6; }
+        .bg-white { background-color: #ffffff; }
     </style>
     <script type="application/ld+json">
     {
@@ -706,9 +727,9 @@
     }
     </script>
 </head>
-<body class="bg-blue-50 antialiased">
+<body class="antialiased">
     <!-- Navigation -->
-    <nav class="bg-white text-gray-700 shadow-lg sticky top-0 z-50">
+    <nav class="bg-white text-gray-700 shadow-lg fixed top-0 left-0 w-full z-50">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center">
                 <img src="https://i.postimg.cc/50vXRG8K/ram.jpg?fit=500%2C500&quality=80" alt="OAK Dental Hospital Logo" class="mr-2 logo-img">
@@ -744,8 +765,8 @@
     <div id="menu-overlay"></div>
 
     <!-- Hero Section -->
-    <section id="home" class="py-24 section-animate">
-        <div class="container mx-auto px-4 text-center">
+    <section id="home" class="section-animate">
+        <div class="container mx-auto px-4 text-center flex flex-col justify-center items-center h-full">
             <h1 class="text-4xl md:text-6xl font-extrabold mb-4 hospital-name">Healthy Smiles with OAK Dental Hospital</h1>
             <p class="text-xl mb-8 max-w-2xl mx-auto">Transform your smile with expert dental care in Hyderabad. Specializing in Orthodontics, Implants, and Cosmetic Dentistry for a confident, radiant you!</p>
             <div class="flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-4 justify-center">
@@ -756,9 +777,9 @@
     </section>
 
     <!-- Stats Section -->
-    <section id="stats-section" class="py-16 bg-white section-animate">
+    <section id="stats-section" class="bg-white section-animate">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-extrabold text-center mb-8 text-gray-800">Our Achievements</h2>
+            <h2 class="text-3xl font-extrabold text-center mb-8">Our Achievements</h2>
             <div class="stats-section">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div class="stats-card text-center">
@@ -779,9 +800,9 @@
     </section>
 
     <!-- About Us Section -->
-    <section id="about" class="py-16 bg-green-50 section-animate">
+    <section id="about" class="bg-green-50 section-animate">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-extrabold text-center mb-8 text-gray-800">About Us</h2>
+            <h2 class="text-3xl font-extrabold text-center mb-8">About Us</h2>
             <div class="flex flex-col md:flex-row items-center">
                 <div class="md:w-1/3 mb-6 md:mb-0">
                     <img src="https://i.postimg.cc/TwK4Wyry/Screenshot-2025-05-16-001922.png" alt="Modern exterior of OAK Dental Hospital in Hyderabad" class="shadow-md">
@@ -797,9 +818,9 @@
     </section>
 
     <!-- Our Dentist Section -->
-    <section id="dentist" class="py-16 bg-white section-animate">
+    <section id="dentist" class="bg-white section-animate">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-extrabold text-center mb-8 text-gray-800">Our Dentist</h2>
+            <h2 class="text-3xl font-extrabold text-center mb-8">Our Dentist</h2>
             <div class="flex flex-col md:flex-row items-center">
                 <div class="md:w-1/3 mb-6 md:mb-0">
                     <img src="https://i.postimg.cc/FsPBw3P5/IMG-20250516-004749.jpg" alt="Dr. A. Ram Koti Reddy, Prosthodontist and Implantologist at OAK Dental Hospital" class="shadow-md w-full max-w-[250px] mx-auto border border-gray-200 rounded-lg">
@@ -814,9 +835,9 @@
     </section>
 
     <!-- Treatments Section with Carousel and Filters -->
-    <section id="services" class="py-16 bg-gray-100 section-animate">
+    <section id="services" class="bg-gray-100 section-animate">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-extrabold text-center mb-8 text-gray-800">Treatments</h2>
+            <h2 class="text-3xl font-extrabold text-center mb-8">Treatments</h2>
             <div class="filter-container max-w-2xl mx-auto">
                 <select id="category-filter" onchange="filterTreatments()">
                     <option value="">All Categories</option>
@@ -839,9 +860,9 @@
     </section>
 
     <!-- Testimonials Section with Feedback -->
-    <section id="testimonials" class="py-16 bg-blue-50 section-animate">
+    <section id="testimonials" class="bg-blue-50 section-animate">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-extrabold text-center mb-8 text-gray-800">What Our Patients Say</h2>
+            <h2 class="text-3xl font-extrabold text-center mb-8">What Our Patients Say</h2>
             <div class="max-w-lg mx-auto mb-12 feedback-form">
                 <h3 class="text-xl font-semibold text-gray-800 mb-4 text-center">Share Your Feedback</h3>
                 <div class="mb-4">
@@ -869,16 +890,14 @@
                 </div>
                 <button onclick="submitFeedback()" class="btn w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 shadow-md" aria-label="Submit your feedback">Submit Feedback</button>
             </div>
-            <div id="feedback-list" class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-                <!-- Feedback will be dynamically loaded here -->
-            </div>
+            <div id="feedback-list" class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto"></div>
         </div>
     </section>
 
     <!-- Dental Care Tips Section -->
-    <section id="tips" class="py-16 bg-orange-50 section-animate">
+    <section id="tips" class="bg-orange-50 section-animate">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-extrabold text-center mb-8 text-gray-800">Dental Care Tips for Pregnancy</h2>
+            <h2 class="text-3xl font-extrabold text-center mb-8">Dental Care Tips for Pregnancy</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div class="bg-white p-6 rounded-lg shadow-md card">
                     <h3 class="text-xl font-semibold mb-2">1. Frequent Dental Check-ups</h3>
@@ -913,9 +932,9 @@
     </section>
 
     <!-- Virtual Tour Section -->
-    <section id="virtual-tour" class="py-16 bg-teal-50 section-animate">
+    <section id="virtual-tour" class="bg-teal-50 section-animate">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-extrabold text-center mb-8 text-gray-800">Virtual Tour of Our Clinic</h2>
+            <h2 class="text-3xl font-extrabold text-center mb-8">Virtual Tour of Our Clinic</h2>
             <div class="max-w-4xl mx-auto">
                 <div class="virtual-tour-container">
                     <iframe src="https://www.instagram.com/reel/CknEfc8qdYa/embed" frameborder="0" allowtransparency="true" allowfullscreen></iframe>
@@ -926,9 +945,9 @@
     </section>
 
     <!-- Blog Section -->
-    <section id="blog" class="py-16 bg-white section-animate">
+    <section id="blog" class="bg-white section-animate">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-extrabold text-center mb-8 text-gray-800">Dental Health Blog</h2>
+            <h2 class="text-3xl font-extrabold text-center mb-8">Dental Health Blog</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div class="blog-card bg-white rounded-lg shadow-md card">
                     <img src="https://i.postimg.cc/vTjKPVVn/BRACE.jpg" alt="Maintaining Oral Hygiene with Braces" class="w-full">
@@ -962,9 +981,9 @@
     </section>
 
     <!-- Patient Education Section -->
-    <section id="education" class="py-16 bg-gray-100 section-animate">
+    <section id="education" class="bg-gray-100 section-animate">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-extrabold text-center mb-8 text-gray-800">Patient Education</h2>
+            <h2 class="text-3xl font-extrabold text-center mb-8">Patient Education</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div class="bg-white p-6 rounded-lg shadow-md text-center card">
                     <h3 class="text-xl font-semibold mb-2">Guide to Braces</h3>
@@ -986,9 +1005,9 @@
     </section>
 
     <!-- FAQ Section -->
-    <section id="faqs" class="py-16 bg-white section-animate">
+    <section id="faqs" class="bg-white section-animate">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-extrabold text-center mb-8 text-gray-800">Frequently Asked Questions</h2>
+            <h2 class="text-3xl font-extrabold text-center mb-8">Frequently Asked Questions</h2>
             <div class="max-w-2xl mx-auto">
                 <div class="faq-item mb-4 card bg-white p-4 rounded-lg shadow-md">
                     <h3 class="text-xl font-semibold text-gray-800 flex justify-between items-center" onclick="toggleFAQ(this)" tabindex="0" aria-expanded="false" aria-controls="faq1">
@@ -1022,9 +1041,9 @@
     </section>
 
     <!-- Appointment Booking Section -->
-    <section id="appointment" class="py-16 bg-purple-50 section-animate">
+    <section id="appointment" class="bg-purple-50 section-animate">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-extrabold text-center mb-8 text-gray-800">Book an Appointment</h2>
+            <h2 class="text-3xl font-extrabold text-center mb-8">Book an Appointment</h2>
             <form id="appointment-form">
                 <div class="mb-4">
                     <label class="block text-gray-700 mb-2" for="name">Full Name</label>
@@ -1064,6 +1083,10 @@
                         <img src="https://i.postimg.cc/tgKdsgyk/gpay.webp" alt="Google Pay Logo">
                         Pay with Google Pay
                     </div>
+                    <div id="upi-button-container" class="payment-button upi-button">
+                        <img src="https://i.postimg.cc/tgKdsgyk/gpay.webp" alt="UPI Logo">
+                        Pay with UPI
+                    </div>
                 </div>
             </form>
             <a href="https://wa.me/917569366767" target="_blank" class="chat-button" aria-label="Chat with OAK Dental Hospital on WhatsApp">
@@ -1082,9 +1105,9 @@
     </div>
 
     <!-- Appointment Status Section with Cancellation -->
-    <section id="status" class="py-16 bg-indigo-50 section-animate">
+    <section id="status" class="bg-indigo-50 section-animate">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-extrabold text-center mb-8 text-gray-800">Manage Appointments</h2>
+            <h2 class="text-3xl font-extrabold text-center mb-8">Manage Appointments</h2>
             <div id="status-display" class="max-w-lg mx-auto status-card">
                 <p class="text-gray-700 mb-4 alert-message">Enter your email to check or cancel your appointment status.</p>
                 <div class="mt-4">
@@ -1100,9 +1123,9 @@
     </section>
 
     <!-- Gallery Section -->
-    <section id="gallery" class="py-16 bg-gray-100 section-animate">
+    <section id="gallery" class="bg-gray-100 section-animate">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-extrabold text-center mb-8 text-gray-800">Our Clinic</h2>
+            <h2 class="text-3xl font-extrabold text-center mb-8">Our Clinic</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <img src="https://i.postimg.cc/QxXDzmsh/Oak-dental-interior-2.jpg?fit=600%2C400&quality=80" alt="Modern reception area with comfortable seating at OAK Dental Hospital" class="shadow-md card">
                 <img src="https://i.postimg.cc/htYqfqmt/Oak-dental-interior-1.jpg?fit=600%2C400&quality=80" alt="Advanced treatment room with dental chair at OAK Dental Hospital" class="shadow-md card">
@@ -1112,9 +1135,9 @@
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="py-16 bg-cyan-50 section-animate">
+    <section id="contact" class="bg-cyan-50 section-animate">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-extrabold text-center mb-8 text-gray-800">Contact Us</h2>
+            <h2 class="text-3xl font-extrabold text-center mb-8">Contact Us</h2>
             <div class="flex flex-col md:flex-row">
                 <div class="md:w-1/2 mb-6 md:mb-0">
                     <h3 class="text-xl font-semibold mb-4 text-gray-800">Get in Touch</h3>
@@ -1169,6 +1192,9 @@
     <!-- Sticky CTA Button -->
     <div class="cta-container">
         <a href="#appointment" class="sticky-cta btn" aria-label="Book an appointment with OAK Dental Hospital">Book Appointment</a>
+        <a href="https://wa.me/917569366767" target="_blank" class="chat-button" aria-label="Chat with OAK Dental Hospital on WhatsApp">
+            <i class="fab fa-whatsapp"></i>
+        </a>
     </div>
 
     <!-- Tawk.to Live Chat with Pre-Chat Form -->
@@ -1202,17 +1228,16 @@
         const menu = document.getElementById('menu');
         const menuOverlay = document.getElementById('menu-overlay');
 
-        menuToggle.addEventListener('click', () => {
+        function toggleMenu() {
+            const isActive = menu.classList.contains('active');
             menu.classList.toggle('active');
             menuOverlay.classList.toggle('active');
-            document.body.style.overflow = menu.classList.contains('active') ? 'hidden' : '';
-        });
+            document.body.classList.toggle('nav-open', !isActive);
+        }
 
-        menuOverlay.addEventListener('click', () => {
-            menu.classList.remove('active');
-            menuOverlay.classList.remove('active');
-            document.body.style.overflow = '';
-        });
+        menuToggle.addEventListener('click', toggleMenu);
+
+        menuOverlay.addEventListener('click', toggleMenu);
 
         document.querySelectorAll('.nav-link, .dropdown-menu a').forEach(link => {
             link.addEventListener('click', (e) => {
@@ -1222,9 +1247,9 @@
                 if (targetSection) {
                     targetSection.scrollIntoView({ behavior: 'smooth' });
                 }
-                menu.classList.remove('active');
-                menuOverlay.classList.remove('active');
-                document.body.style.overflow = '';
+                if (menu.classList.contains('active')) {
+                    toggleMenu();
+                }
             });
         });
 
@@ -1262,7 +1287,7 @@
                         <div class="carousel-item-content">
                             <h3 class="text-lg font-semibold mb-2">${treatment.name}</h3>
                             <p class="text-gray-700 text-sm mb-2">${treatment.description || 'No description available.'}</p>
-                            <p class="text-gray-700 font-semibold mb-2">$${treatment.cost || 'Contact for pricing'}</p>
+                            <p class="text-gray-700 font-semibold mb-2">₹${treatment.cost || 'Contact for pricing'}</p>
                             ${treatment.offer ? `<p class="text-green-600 font-semibold">Offer: ${treatment.offer}</p>` : ''}
                         </div>
                         <div class="carousel-item-media">
@@ -1278,7 +1303,7 @@
                 treatments.forEach(treatment => {
                     const option = document.createElement('option');
                     option.value = treatment.id;
-                    option.textContent = `${treatment.name} ($${treatment.cost || 'Contact for pricing'})`;
+                    option.textContent = `${treatment.name} (₹${treatment.cost || 'Contact for pricing'})`;
                     serviceSelect.appendChild(option);
                 });
 
@@ -1352,7 +1377,7 @@
                     <div class="carousel-item-content">
                         <h3 class="text-lg font-semibold mb-2">${treatment.name}</h3>
                         <p class="text-gray-700 text-sm mb-2">${treatment.description || 'No description available.'}</p>
-                        <p class="text-gray-700 font-semibold mb-2">$${treatment.cost || 'Contact for pricing'}</p>
+                        <p class="text-gray-700 font-semibold mb-2">₹${treatment.cost || 'Contact for pricing'}</p>
                         ${treatment.offer ? `<p class="text-green-600 font-semibold">Offer: ${treatment.offer}</p>` : ''}
                     </div>
                     <div class="carousel-item-media">
@@ -1385,9 +1410,9 @@
             }
         }
 
-        // Google Pay Configuration
+        // Google Pay and UPI Configuration
         const paymentsClient = new google.payments.api.PaymentsClient({
-            environment: 'TEST' // Use 'PRODUCTION' in live environment
+            environment: 'TEST'
         });
 
         const gpayButtonConfig = {
@@ -1413,9 +1438,9 @@
             },
             transactionInfo: {
                 totalPriceStatus: 'FINAL',
-                totalPrice: '10.00',
-                currencyCode: 'USD',
-                countryCode: 'US'
+                totalPrice: '500.00',
+                currencyCode: 'INR',
+                countryCode: 'IN'
             }
         };
 
@@ -1424,9 +1449,9 @@
                 const paymentDataRequest = { ...gpayButtonConfig };
                 paymentDataRequest.transactionInfo = {
                     totalPriceStatus: 'FINAL',
-                    totalPrice: '10.00',
-                    currencyCode: 'USD',
-                    countryCode: 'US'
+                    totalPrice: '500.00',
+                    currencyCode: 'INR',
+                    countryCode: 'IN'
                 };
 
                 const paymentData = await paymentsClient.loadPaymentData(paymentDataRequest);
@@ -1441,65 +1466,77 @@
             }
         }
 
-        async function initiatePayment(method) {
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const phone = document.getElementById('phone').value;
-            const date = document.getElementById('date').value;
-            const time = document.getElementById('time').value;
-            const serviceId = document.getElementById('service').value;
+                function initiateUPIPayment(appointmentData) {
+            const upiId = 'oakdental@upi'; // Replace with your UPI ID
+            const amount = '500.00';
+            const name = appointmentData.name;
+            const upiLink = `upi://pay?pa=${upiId}&pn=OAK%20Dental%20Hospital&am=${amount}&cu=INR&tn=Appointment%20for%20${name}`;
+            const upiWindow = window.open(upiLink, '_blank');
 
-            if (!name || !email || !phone || !date || !time || !serviceId) {
-                alert('Please fill all fields to book an appointment.', { class: 'alert-message bg-red-100 text-red-600' });
+            return new Promise((resolve, reject) => {
+                setTimeout(async () => {
+                    try {
+                        const response = await axios.post(`${API_URL}/upi/verify-payment`, {
+                            appointment: appointmentData
+                        });
+                        resolve(response.data);
+                    } catch (error) {
+                        console.error('UPI payment verification error:', error);
+                        reject(error);
+                    }
+                }, 10000);
+            });
+        }
+
+        async function initiatePayment(method) {
+            const appointmentData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                date: document.getElementById('date').value,
+                time: document.getElementById('time').value,
+                serviceId: document.getElementById('service').value
+            };
+
+            if (!appointmentData.name || !appointmentData.email || !appointmentData.phone || !appointmentData.date || !appointmentData.time || !appointmentData.serviceId) {
+                alert('Please fill all appointment fields.', { class: 'alert-message bg-red-100 text-red-600' });
                 return;
             }
 
-            const appointmentData = { name, email, phone, date, time, serviceId };
-
             try {
                 let transactionResponse;
-
                 if (method === 'paypal') {
-                    const paypalResponse = await new Promise((resolve, reject) => {
+                    const response = await new Promise((resolve, reject) => {
                         paypal.Buttons({
                             createOrder: (data, actions) => {
                                 return actions.order.create({
                                     purchase_units: [{
-                                        amount: {
-                                            value: '10.00',
-                                            currency_code: 'USD'
-                                        }
+                                        amount: { value: '500.00', currency_code: 'INR' }
                                     }]
                                 });
                             },
                             onApprove: async (data, actions) => {
                                 const order = await actions.order.capture();
-                                resolve({
-                                    transactionId: order.id,
-                                    status: order.status,
-                                    payer: order.payer
-                                });
+                                resolve(order);
                             },
                             onError: (err) => reject(err)
                         }).render('#paypal-button-container');
                     });
-                    transactionResponse = await axios.post(`${API_URL}/paypal/capture-payment`, {
-                        orderId: paypalResponse.transactionId,
-                        appointment: appointmentData
-                    });
-                    transactionResponse = transactionResponse.data;
+                    transactionResponse = { transactionId: response.id };
                 } else if (method === 'gpay') {
                     transactionResponse = await initiateGPayPayment(appointmentData);
+                } else if (method === 'upi') {
+                    transactionResponse = await initiateUPIPayment(appointmentData);
                 }
 
                 await handlePostPayment(transactionResponse, appointmentData);
             } catch (error) {
-                console.error('Payment initiation error:', error);
-                alert('Payment failed. Please try again or contact support.', { class: 'alert-message bg-red-100 text-red-600' });
+                console.error(`Error during ${method} payment:`, error);
+                alert('Payment failed. Please try again or use a different method.', { class: 'alert-message bg-red-100 text-red-600' });
             }
         }
 
-                async function handlePostPayment(transactionResponse, appointmentData) {
+        async function handlePostPayment(transactionResponse, appointmentData) {
             try {
                 await sendNotifications(appointmentData);
                 document.getElementById('appointment-modal').style.display = 'flex';
@@ -1718,6 +1755,7 @@
             }
 
             document.getElementById('gpay-button-container').addEventListener('click', () => initiatePayment('gpay'));
+            document.getElementById('upi-button-container').addEventListener('click', () => initiatePayment('upi'));
         });
     </script>
 </body>
