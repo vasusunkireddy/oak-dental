@@ -6,16 +6,20 @@
     <meta name="description" content="OAK Dental Hospital in Hyderabad offers expert dental care, including Orthodontics, Implants, and Cosmetic Dentistry. Book your appointment today!">
     <meta name="keywords" content="dental care, dentist Hyderabad, orthodontics, dental implants, cosmetic dentistry, OAK Dental Hospital">
     <meta name="author" content="OAK Dental Hospital">
-    <!-- Open Graph Tags for Social Media Sharing -->
+    <!-- Open Graph Tags -->
     <meta property="og:title" content="OAK Dental Hospital - Expert Dental Care in Hyderabad">
-    <meta property="og:description" content="Transform your smile with expert dental care in Hyderabad. Specializing in Orthodontics, Implants, and Cosmetic Dentistry for a confident, radiant you!">
+    <meta property="og:description" content="Transform your smile with expert dental care in Hyderabad. Specializing in Orthodontics, Implants, and Cosmetic Dentistry!">
     <meta property="og:image" content="https://i.postimg.cc/50vXRG8K/ram.jpg">
     <meta property="og:url" content="https://oak-dental.onrender.com">
     <meta property="og:type" content="website">
     <title>OAK Dental Hospital - Expert Dental Care in Hyderabad</title>
+    <!-- Replace with compiled Tailwind CSS file -->
+    <!-- <link rel="stylesheet" href="/path/to/tailwind.min.css"> -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" defer />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Google Analytics (Replace YOUR_TRACKING_ID) -->
+    <!--
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-YOUR_TRACKING_ID"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -23,13 +27,13 @@
         gtag('js', new Date());
         gtag('config', 'G-YOUR_TRACKING_ID');
     </script>
+    -->
     <script defer src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
         body {
             font-family: 'Roboto', sans-serif;
             background-color: #f8fafc;
             margin: 0;
-            padding: 0;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
@@ -40,61 +44,27 @@
             width: 60px;
             height: 60px;
             object-fit: contain;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease;
         }
         .logo-img:hover {
             transform: scale(1.1);
-        }
-        @media (max-width: 768px) {
-            .logo-img {
-                width: 48px;
-                height: 48px;
-            }
         }
         .hospital-name {
             background: linear-gradient(90deg, #1e3a8a, #facc15);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             font-weight: 800;
-            color: #1e3a8a;
-        }
-        @media (max-width: 768px) {
-            .hospital-name {
-                font-size: 1.25rem;
-                background: none;
-                -webkit-text-fill-color: #1e3a8a;
-                color: #1e3a8a;
-                text-align: center;
-            }
         }
         .nav-link, .btn {
-            transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.2s ease;
+            transition: background-color 0.3s ease, box-shadow 0.2s ease;
         }
         .nav-link:hover, .btn:hover {
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        .btn.bg-blue-600 {
-            background-color: #2563eb;
-        }
-        .btn.bg-blue-600:hover {
-            background-color: #1e40af;
         }
         img {
             max-width: 100%;
             height: auto;
             object-fit: cover;
-            border-radius: 8px;
-        }
-        @media (max-width: 768px) {
-            img {
-                height: 150px;
-                object-fit: cover;
-            }
-        }
-        video, iframe {
-            max-width: 100%;
-            height: auto;
             border-radius: 8px;
         }
         input, select, textarea {
@@ -105,24 +75,13 @@
             border-color: #2563eb;
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
-        .btn:focus, .nav-link:focus {
-            outline: 2px solid #2563eb;
-            outline-offset: 2px;
-        }
         .section-animate {
             opacity: 0;
             transform: translateY(20px);
             animation: fadeInUp 0.6s ease-out forwards;
         }
         @keyframes fadeInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        html {
-            scroll-behavior: smooth;
-            -webkit-overflow-scrolling: touch;
+            to { opacity: 1; transform: translateY(0); }
         }
         .cta-container {
             position: fixed;
@@ -134,9 +93,6 @@
             gap: 10px;
         }
         .sticky-cta, .chat-button {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
             border-radius: 50px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
             transition: background-color 0.3s ease;
@@ -151,48 +107,21 @@
         .chat-button {
             background-color: #25D366;
             color: white;
-            padding: 12px;
-            font-size: 18px;
             width: 50px;
             height: 50px;
-            border-radius: 50%;
-        }
-        .sticky-cta:hover {
-            background-color: #1e40af;
-        }
-        .chat-button:hover {
-            background-color: #20b558;
-        }
-        @media (max-width: 768px) {
-            .cta-container {
-                bottom: 10px;
-                right: 10px;
-            }
-            .sticky-cta {
-                padding: 8px 16px;
-                font-size: 12px;
-            }
-            .chat-button {
-                padding: 10px;
-                width: 45px;
-                height: 45px;
-                font-size: 16px;
-            }
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         #home {
-            background-image: url('https://i.postimg.cc/Fz5kq5dH/Premium-Photo-Dentist-examines-the-patients-teeth-at-the-dentist-1.jpg');
+            background-image: url('https://i.postimg.cc/Fz5kq5dH/Premium-Photo-Dentist-examines-the-patients-teeth-at-the-dentist-1.jpg?fit=1920%2C1080&quality=80');
             background-size: cover;
             background-position: center;
-            background-repeat: no-repeat;
-            position: relative;
             min-height: 80vh;
             color: white;
             display: flex;
             align-items: center;
-            justify-content: center;
-            z-index: 0;
-            image-rendering: -webkit-optimize-contrast;
-            image-rendering: crisp-edges;
+            position: relative;
         }
         #home::before {
             content: '';
@@ -204,38 +133,10 @@
             background: rgba(0, 0, 0, 0.5);
             z-index: 1;
         }
-        #home > * {
-            position: relative;
-            z-index: 2;
-        }
-        @media (max-width: 768px) {
-            #home {
-                min-height: 60vh;
-                padding: 4rem 1rem;
-                background-position: top center;
-            }
-            #home h1 {
-                font-size: 1.75rem;
-                line-height: 2rem;
-            }
-            #home p {
-                font-size: 0.9rem;
-                line-height: 1.4rem;
-            }
-            #home .btn {
-                padding: 0.75rem 1.5rem;
-                font-size: 0.9rem;
-            }
-        }
-        .faq-item {
-            cursor: pointer;
-        }
-        .faq-answer {
-            display: none;
-        }
-        .faq-item.active .faq-answer {
-            display: block;
-        }
+        #home > * { position: relative; z-index: 2; }
+        .faq-item { cursor: pointer; }
+        .faq-answer { display: none; }
+        .faq-item.active .faq-answer { display: block; }
         #appointment-modal {
             display: none;
             position: fixed;
@@ -252,28 +153,9 @@
             background: white;
             padding: 20px;
             border-radius: 8px;
-            text-align: center;
             max-width: 400px;
             width: 90%;
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-        }
-        nav {
-            padding: 0.5rem 1rem;
-        }
-        .nav-link, .dropdown > a {
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            line-height: 1.5;
-            display: inline-flex;
-            align-items: center;
-        }
-        .nav-link:hover, .dropdown > a:hover {
-            background-color: #f3f4f6;
-        }
-        .dropdown {
-            position: relative;
-            display: inline-flex;
-            align-items: center;
         }
         .dropdown-menu {
             display: none;
@@ -285,29 +167,8 @@
             border-radius: 4px;
             z-index: 50;
         }
-        .dropdown:hover .dropdown-menu {
-            display: block;
-        }
-        .dropdown-menu.block {
-            display: block;
-        }
-        .dropdown-menu a {
-            display: block;
-            padding: 8px 16px;
-            color: #374151;
-            text-decoration: none;
-            line-height: 1.5;
-        }
-        .dropdown-menu a:hover {
-            background-color: #f3f4f6;
-            color: #2563eb;
-        }
-        #menu {
-            transition: transform 0.3s ease-in-out;
-        }
-        #menu.active {
-            transform: translateX(0);
-        }
+        .dropdown:hover .dropdown-menu { display: block; }
+        #menu { transition: transform 0.3s ease-in-out; }
         #menu-overlay {
             display: none;
             position: fixed;
@@ -318,115 +179,14 @@
             background: rgba(0, 0, 0, 0.7);
             z-index: 999;
         }
-        #menu-overlay.active {
-            display: block;
-        }
-        @media (max-width: 768px) {
-            body.nav-open {
-                overflow: hidden;
-            }
-            #menu {
-                background-color: #ffffff;
-                padding: 1rem;
-                position: fixed;
-                top: 0;
-                right: 0;
-                width: 75%;
-                height: 100%;
-                z-index: 1000;
-                box-shadow: -4px 0 12px rgba(0, 0, 0, 0.2);
-                transform: translateX(100%);
-                overflow-y: auto;
-                display: block !important;
-            }
-            #menu.active {
-                transform: translateX(0);
-                display: block !important;
-            }
-            .nav-link, .dropdown > a {
-                padding: 0.8rem;
-                font-size: 1rem;
-                display: block;
-                color: #374151;
-                border-bottom: 1px solid #e5e7eb;
-            }
-            .dropdown-menu {
-                display: none;
-                position: static;
-                box-shadow: none;
-                background: #f9fafb;
-                padding-left: 1rem;
-            }
-            .dropdown-menu.block {
-                display: block;
-            }
-            .dropdown-menu a {
-                padding: 0.5rem 1rem;
-                color: #374151;
-                font-size: 0.9rem;
-            }
-        }
-        @media (min-width: 769px) {
-            #menu-toggle {
-                display: none;
-            }
-            #menu {
-                display: flex !important;
-                transform: none;
-                position: static;
-                width: auto;
-                height: auto;
-                background: none;
-                box-shadow: none;
-                padding: 0;
-            }
-            #menu-overlay {
-                display: none !important;
-            }
-        }
-        .card {
-            transition: box-shadow 0.3s ease;
-        }
-        .card:hover {
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-        }
-        #treatments-carousel {
-            position: relative;
-            overflow: hidden;
-            background: linear-gradient(135deg, #e3f2fd, #ede9fe);
-            border-radius: 12px;
-            padding: 1rem;
-        }
-        .carousel-container {
-            display: flex;
-            transition: transform 0.5s ease-in-out;
-        }
         .carousel-item {
             min-width: 100%;
             display: flex;
             justify-content: space-between;
-            align-items: center;
             padding: 1.5rem;
             background: white;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-        .carousel-item-content {
-            flex: 1;
-            padding: 1rem;
-        }
-        .carousel-item-media {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-        .carousel-item img, .carousel-item video {
-            width: 100%;
-            max-height: 250px;
-            object-fit: cover;
-            border-radius: 10px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
         }
         .carousel-button {
             position: absolute;
@@ -436,632 +196,431 @@
             color: white;
             padding: 0.75rem;
             cursor: pointer;
-            z-index: 10;
             border-radius: 50%;
-        }
-        .carousel-button.left {
-            left: 10px;
-        }
-        .carousel-button.right {
-            right: 10px;
-        }
-        @media (max-width: 768px) {
-            .carousel-item {
-                flex-direction: column;
-                gap: 1rem;
-            }
-            .carousel-item-media {
-                width: 100%;
-            }
-            .carousel-item img, .carousel-item video {
-                max-height: 180px;
-            }
-        }
-        .status-card {
-            background: linear-gradient(135deg, #ffffff, #f0f7ff);
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-        .contact-form {
-            background: linear-gradient(135deg, #ffffff, #ede9fe);
-            border-radius: 12px;
-            padding: 2rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-        .virtual-tour-container {
-            position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
-            overflow: hidden;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-        .virtual-tour-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-        .blog-card img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 8px 8px 0 0;
-        }
-        @media (max-width: 768px) {
-            .blog-card img {
-                height: 150px;
-            }
-        }
-        .payment-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-            margin-top: 10px;
         }
         .payment-button {
             display: flex;
             align-items: center;
-            justify-content: center;
             padding: 10px 20px;
             border-radius: 8px;
             font-weight: 600;
             color: white;
             cursor: pointer;
-            transition: background-color 0.3s ease;
         }
-        .payment-button:hover {
-            opacity: 0.9;
-        }
-        .gpay-button, .phonepe-button {
-            background-color: #4285F4;
-        }
-        .gpay-button:hover, .phonepe-button:hover {
-            background-color: #3267D6;
-        }
-        .gpay-button img, .phonepe-button img {
-            width: 24px;
-            height: 24px;
-            margin-right: 8px;
-        }
-        .feedback-form {
-            background: linear-gradient(135deg, #ffffff, #ede9fe);
-            border-radius: 12px;
-            padding: 2rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-        .star-rating {
-            display: flex;
-            justify-content: center;
-            gap: 5px;
-            margin-bottom: 1rem;
-        }
-        .star-rating input {
-            display: none;
-        }
-        .star-rating label {
-            font-size: 1.5rem;
-            color: #d1d5db;
-            cursor: pointer;
-            transition: color 0.2s ease;
-        }
-        .star-rating input:checked ~ label,
-        .star-rating label:hover,
-        .star-rating label:hover ~ label {
-            color: #facc15;
-        }
-        .feedback-card {
-            background: white;
-            border-radius: 8px;
-            padding: 1.5rem;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-        .feedback-stars {
-            color: #facc15;
-            margin-bottom: 0.5rem;
-        }
-        .stats-section {
-            background: linear-gradient(135deg, #ede9fe, #e3f2fd);
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-        .stats-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        }
-        .filter-container {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-            margin-bottom: 1rem;
-            justify-content: center;
-        }
-        .filter-container select {
-            padding: 0.5rem;
-            border-radius: 8px;
-            border: 1px solid #d1d5db;
-            background-color: white;
-        }
-        #appointment-form {
-            background: linear-gradient(135deg, #ffffff, #ede9fe);
-            border-radius: 12px;
-            padding: 2rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            max-width: 500px;
-            margin: 0 auto;
-        }
-        @media (max-width: 768px) {
-            #appointment-form {
-                padding: 1.5rem;
-                max-width: 100%;
-            }
-            #appointment-form .mb-4 {
-                margin-bottom: 1rem;
-            }
-            #appointment-form input,
-            #appointment-form select {
-                padding: 0.75rem;
-                font-size: 0.9rem;
-            }
-            #appointment-form label {
-                font-size: 0.9rem;
-            }
-            .payment-buttons {
-                flex-direction: column;
-                gap: 8px;
-            }
-        }
-        .alert-message {
-            text-align: center;
-            padding: 1rem;
-            border-radius: 8px;
-            margin: 0 auto;
-            max-width: 90%;
-            font-size: 1rem;
-            font-weight: 500;
-        }
-        @media (max-width: 768px) {
-            .alert-message {
-                font-size: 0.9rem;
-                padding: 0.75rem;
-            }
-        }
-        .newsletter-form-container {
-            max-width: 500px;
-            margin: 0 auto;
-        }
-        #newsletter-form {
-            display: flex;
-            justify-content: center;
-            gap: 0.5rem;
-            width: 100%;
-        }
-        #newsletter-email {
-            width: 70%;
-            padding: 0.75rem;
-            border: 1px solid #d1d5db;
-            border-radius: 8px 0 0 8px;
-            font-size: 1rem;
-            color: #374151;
-            background-color: #fff;
-        }
-        #newsletter-form button {
-            padding: 0.75rem 1.5rem;
-            border-radius: 0 8px 8px 0;
-            font-size: 1rem;
-        }
-        @media (max-width: 768px) {
-            .newsletter-form-container {
-                max-width: 100%;
-                padding: 0 1rem;
-            }
-            #newsletter-form {
-                flex-direction: row;
-                gap: 0;
-            }
-            #newsletter-email {
-                width: 65%;
-                padding: 0.5rem;
-                font-size: 0.9rem;
-            }
-            #newsletter-form button {
-                padding: 0.5rem 1rem;
-                font-size: 0.9rem;
-            }
-        }
-        #appointment .chat-button {
-            display: none;
-        }
-        @media (max-width: 768px) {
-            #appointment .chat-button {
-                display: inline-flex;
-            }
-        }
-        /* Enhanced Section Styling */
-        section {
-            padding: 4rem 1rem;
-        }
-        @media (max-width: 768px) {
-            section {
-                padding: 2rem 1rem;
-            }
-        }
-        h2 {
-            color: #1e3a8a;
-            font-weight: 600;
-        }
-        p {
-            color: #4b5563;
-            line-height: 1.6;
-        }
-        .bg-blue-50 { background-color: #eff6ff; }
-        .bg-green-50 { background-color: #f0fdf4; }
-        .bg-orange-50 { background-color: #fff7ed; }
-        .bg-teal-50 { background-color: #e0f7fa; }
-        .bg-purple-50 { background-color: #f3e8ff; }
-        .bg-indigo-50 { background-color: #eef2ff; }
-        .bg-cyan-50 { background-color: #ecfeff; }
-        .bg-gray-100 { background-color: #f3f4f6; }
-        .bg-white { background-color: #ffffff; }
-        /* Calendar Date Styling */
-        input[type="date"]::-webkit-calendar-picker-indicator {
-            cursor: pointer;
-            filter: invert(0.5);
-        }
-        .unavailable-date {
-            background-color: #fee2e2;
-            color: #dc2626;
-            cursor: not-allowed;
-        }
-        .unavailable-message {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: #fff;
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-            z-index: 1001;
-            text-align: center;
-            max-width: 90%;
-        }
-        .unavailable-message.show {
-            display: block;
-        }
-    </style>
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "Dentist",
-        "name": "OAK Dental Hospital",
-        "address": {
-            "@type": "PostalAddress",
-            "streetAddress": "2nd Floor, Vision Apartments, Gandhi Nagar, Nizampet Road, Bachupally",
-            "addressLocality": "Hyderabad",
-            "postalCode": "500090",
-            "addressCountry": "IN"
-        },
-        "telephone": "+917569366767",
-        "url": "https://oak-dental.onrender.com",
-        "image": "https://i.postimg.cc/50vXRG8K/ram.jpg",
-        "openingHours": "Mo-Sa 09:00-17:00"
+        .carousel-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(37, 99, 235, 0.8);
+    color: white;
+    padding: 0.75rem;
+    cursor: pointer;
+    border-radius: 50%;
+}
+.carousel-button.left { left: 10px; }
+.carousel-button.right { right: 10px; }
+.star-rating {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    margin-bottom: 1rem;
+}
+.star-rating input { display: none; }
+.star-rating label {
+    font-size: 1.5rem;
+    color: #d1d5db;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+.star-rating input:checked ~ label,
+.star-rating label:hover,
+.star-rating label:hover ~ label { color: #facc15; }
+.feedback-stars { color: #facc15; }
+.alert-message {
+    text-align: center;
+    padding: 1rem;
+    border-radius: 8px;
+    margin: 0 auto;
+    max-width: 90%;
+    font-weight: 500;
+}
+.unavailable-message {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1001;
+    text-align: center;
+}
+.unavailable-message.show { display: block; }
+@media (max-width: 768px) {
+    .logo-img { width: 48px; height: 48px; }
+    .hospital-name {
+        font-size: 1.25rem;
+        background: none;
+        -webkit-text-fill-color: #1e3a8a;
+        text-align: center;
     }
-    </script>
+    img { height: 150px; }
+    #home {
+        min-height: 60vh;
+        padding: 4rem 1rem;
+        background-position: top center;
+    }
+    #home h1 { font-size: 1.75rem; }
+    #home p { font-size: 0.9rem; }
+    .cta-container { bottom: 10px; right: 10px; }
+    .sticky-cta { padding: 8px 16px; font-size: 12px; }
+    .chat-button { width: 45px; height: 45px; font-size: 16px; }
+    #menu {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 75%;
+        height: 100%;
+        background: white;
+        box-shadow: -4px 0 12px rgba(0, 0, 0, 0.2);
+        transform: translateX(100%);
+        z-index: 1000;
+    }
+    #menu.active { transform: translateX(0); }
+    .dropdown-menu {
+        position: static;
+        box-shadow: none;
+        background: #f9fafb;
+        padding-left: 1rem;
+    }
+    .carousel-item { flex-direction: column; gap: 1rem; }
+    .carousel-item img, .carousel-item video { max-height: 200px; }
+    .alert-message { font-size: 0.9rem; padding: 0.75rem; }
+}
+@media (min-width: 769px) {
+    #menu-toggle { display: none; }
+    #menu {
+        display: flex !important;
+        transform: none;
+        position: static;
+        width: auto;
+        background: none;
+        box-shadow: none;
+    }
+}
+</style>
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Dentist",
+    "name": "OAK Dental Hospital",
+    "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "2nd Floor, Vision Apartments, Gandhi Nagar, Nizampet Road, Bachupally",
+        "addressLocality": "Hyderabad",
+        "postalCode": "500090",
+        "addressCountry": "IN"
+    },
+    "telephone": "+917569366767",
+    "url": "https://oak-dental.onrender.com",
+    "image": "https://i.postimg.cc/50vXRG8K/ram.jpg",
+    "openingHours": "Mo-Sa 09:00-17:00"
+}
+</script>
 </head>
 <body class="antialiased">
     <!-- Navigation -->
-    <nav class="bg-white text-gray-700 shadow-lg fixed top-0 left-0 w-full z-50">
+    <nav class="bg-white text-gray-700 shadow-lg fixed top-0 w-full z-50">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center">
-                <img src="https://i.postimg.cc/50vXRG8K/ram.jpg?fit=500%2C500&quality=80" alt="OAK Dental Hospital Logo" class="mr-2 logo-img">
-                <a href="#" class="text-2xl hospital-name">OAK Dental Hospital</a>
+                <img src="https://i.postimg.cc/50vXRG8K/ram.jpg?fit=500%2C500&quality=80" alt="OAK Dental Hospital Logo" class="mr-2 logo-img" loading="lazy">
+                <a href="#home" class="text-2xl hospital-name">OAK Dental Hospital</a>
             </div>
-            <div class="md:hidden">
-                <button id="menu-toggle" class="text-gray-700 focus:outline-none" aria-label="Toggle Menu">
-                    <i class="fas fa-bars text-2xl"></i>
-                </button>
-            </div>
+            <button id="menu-toggle" class="md:hidden text-gray-700 focus:outline-none" aria-label="Toggle Menu">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
             <div id="menu" class="hidden md:flex md:space-x-2 md:items-center">
-                <a href="#home" class="nav-link hover:text-blue-600" aria-label="Go to Home section">Home</a>
-                <a href="#services" class="nav-link hover:text-blue-600" aria-label="Go to Treatments section">Treatments</a>
-                <a href="#dentist" class="nav-link hover:text-blue-600" aria-label="Go to Our Dentist section">Our Dentist</a>
-                <a href="#about" class="nav-link hover:text-blue-600" aria-label="Go to About Us section">About Us</a>
-                <div class="dropdown">
-                    <a href="#" class="nav-link hover:text-blue-600" aria-label="Resources menu">Resources</a>
+                <a href="#home" class="nav-link hover:text-blue-600 px-3 py-2 rounded" aria-label="Home">Home</a>
+                <a href="#services" class="nav-link hover:text-blue-600 px-3 py-2 rounded" aria-label="Treatments">Treatments</a>
+                <a href="#dentist" class="nav-link hover:text-blue-600 px-3 py-2 rounded" aria-label="Our Dentist">Our Dentist</a>
+                <a href="#about" class="nav-link hover:text-blue-600 px-3 py-2 rounded" aria-label="About Us">About Us</a>
+                <div class="dropdown relative">
+                    <a href="#" class="nav-link hover:text-blue-600 px-3 py-2 rounded" aria-label="Resources">Resources</a>
                     <div class="dropdown-menu">
-                        <a href="#testimonials" class="hover:text-blue-600" aria-label="Go to Testimonials section">Testimonials</a>
-                        <a href="#virtual-tour" class="hover:text-blue-600" aria-label="Go to Virtual Tour section">Virtual Tour</a>
-                        <a href="blogs.html" class="hover:text-blue-600" aria-label="Go to Blog section">Blog</a>
-                        <a href="#faqs" class="hover:text-blue-600" aria-label="Go to FAQs section">FAQs</a>
-                        <a href="#education" class="hover:text-blue-600" aria-label="Go to Patient Education section">Education</a>
-                        <a href="#tips" class="hover:text-blue-600" aria-label="Go to Dental Care Tips section">Dental Care Tips</a>
+                        <a href="#testimonials" class="block px-4 py-2 hover:bg-gray-100" aria-label="Testimonials">Testimonials</a>
+                        <a href="#virtual-tour" class="block px-4 py-2 hover:bg-gray-100" aria-label="Virtual Tour">Virtual Tour</a>
+                        <a href="blogs.html" class="block px-4 py-2 hover:bg-gray-100" aria-label="Blog">Blog</a>
+                        <a href="#faqs" class="block px-4 py-2 hover:bg-gray-100" aria-label="FAQs">FAQs</a>
+                        <a href="#education" class="block px-4 py-2 hover:bg-gray-100" aria-label="Patient Education">Education</a>
+                        <a href="#tips" class="block px-4 py-2 hover:bg-gray-100" aria-label="Dental Care Tips">Dental Care Tips</a>
                     </div>
                 </div>
-                <a href="#appointment" class="nav-link hover:text-blue-600" aria-label="Go to Book Appointment section">Book Appointment</a>
-                <a href="#contact" class="nav-link hover:text-blue-600" aria-label="Go to Contact section">Contact</a>
+                <a href="#appointment" class="nav-link hover:text-blue-600 px-3 py-2 rounded" aria-label="Book Appointment">Book Appointment</a>
+                <a href="#contact" class="nav-link hover:text-blue-600 px-3 py-2 rounded" aria-label="Contact">Contact</a>
             </div>
         </div>
+        <div id="menu-overlay" class="hidden"></div>
     </nav>
-    <div id="menu-overlay"></div>
 
-    <!-- Hero Section (Logo Removed) -->
+    <!-- Hero Section -->
     <section id="home" class="section-animate">
         <div class="container mx-auto px-4 text-center flex flex-col justify-center items-center h-full">
             <h1 class="text-4xl md:text-5xl font-extrabold mb-4 hospital-name">Welcome to OAK Dental Hospital</h1>
-            <p class="text-lg md:text-xl mb-6 max-w-2xl mx-auto">Experience world-class dental care in Hyderabad. We specialize in Orthodontics, Implants, and Cosmetic Dentistry to help you achieve a confident, radiant smile.</p>
-            <div class="flex flex-col space-y-3 md:flex-row md:space-y-0 md:space-x-4 justify-center">
-                <a href="#appointment" class="btn bg-blue-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-700 shadow-md" aria-label="Book an appointment with OAK Dental Hospital">Book Appointment</a>
-                <a href="https://wa.me/917569366767" target="_blank" class="btn bg-green-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-green-600 shadow-md" aria-label="Chat with OAK Dental Hospital on WhatsApp">Chat with Us</a>
+            <p class="text-lg md:text-xl mb-6 max-w-2xl">Expert dental care in Hyderabad, specializing in Orthodontics, Implants, and Cosmetic Dentistry.</p>
+            <div class="flex flex-col md:flex-row gap-4">
+                <a href="#appointment" class="btn bg-blue-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-700" aria-label="Book Appointment">Book Appointment</a>
+                <a href="https://wa.me/917569366767" target="_blank" class="btn bg-green-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-green-600" aria-label="Chat on WhatsApp">Chat with Us</a>
             </div>
         </div>
     </section>
 
     <!-- Stats Section -->
-    <section id="stats-section" class="bg-white section-animate">
+    <section id="stats" class="bg-white py-16 section-animate">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-extrabold text-center mb-8">Our Achievements</h2>
-            <div class="stats-section">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="stats-card text-center">
-                        <h3 class="text-4xl font-bold text-blue-600">10,000+</h3>
-                        <p class="text-gray-700">Happy Patients Served</p>
-                    </div>
-                    <div class="stats-card text-center">
-                        <h3 class="text-4xl font-bold text-blue-600">15+</h3>
-                        <p class="text-gray-700">Years of Excellence</p>
-                    </div>
-                    <div class="stats-card text-center">
-                        <h3 class="text-4xl font-bold text-blue-600">50+</h3>
-                        <p class="text-gray-700">Specialized Treatments</p>
-                    </div>
+            <h2 class="text-3xl font-extrabold text-center mb-8 text-gray-800">Our Achievements</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <h3 class="text-4xl font-bold text-blue-600">10,000+</h3>
+                    <p class="text-gray-700">Happy Patients</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <h3 class="text-4xl font-bold text-blue-600">15+</h3>
+                    <p class="text-gray-700">Years of Excellence</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <h3 class="text-4xl font-bold text-blue-600">50+</h3>
+                    <p class="text-gray-700">Specialized Treatments</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- About Us Section -->
-    <section id="about" class="bg-green-50 section-animate">
+    <section id="about" class="bg-gray-100 py-16 section-animate">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-extrabold text-center mb-8">About Us</h2>
+            <h2 class="text-3xl font-extrabold text-center mb-8 text-gray-800">About Us</h2>
             <div class="flex flex-col md:flex-row items-center">
                 <div class="md:w-1/3 mb-6 md:mb-0">
-                    <img src="https://i.postimg.cc/TwK4Wyry/Screenshot-2025-05-16-001922.png" alt="Modern exterior of OAK Dental Hospital in Hyderabad" class="shadow-md">
+                    <img src="https://i.postimg.cc/TwK4Wyry/Screenshot-2025-05-16-001922.png?fit=600%2C400&quality=80" alt="OAK Dental Hospital Exterior" class="shadow-md" loading="lazy">
                 </div>
                 <div class="md:w-2/3 md:pl-8 text-center md:text-left">
-                    <p class="text-gray-700 mb-4">OAK Dental Hospital is a premier dental care provider in Hyderabad, dedicated to delivering exceptional oral health services since 2015. Our mission is to create healthy, confident smiles through advanced dental treatments and compassionate care.</p>
-                    <p class="text-gray-700 mb-4">Led by Dr. A. Ram Koti Reddy, our team of experienced dentists specializes in Orthodontics, Dental Implants, Cosmetic Dentistry, and more. We use state-of-the-art technology and follow strict sterilization protocols to ensure your safety and comfort.</p>
-                    <p class="text-gray-700 mb-4">Located at 2nd Floor, Vision Apartments, Gandhi Nagar, Nizampet Road, Bachupally, Hyderabad - 500090, our modern facility is designed to provide a relaxing environment for all our patients.</p>
-                    <a href="about.html" class="btn inline-block bg-blue-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-700 shadow-md" aria-label="Learn more about OAK Dental Hospital">Learn More</a>
+                    <p class="text-gray-700 mb-4">OAK Dental Hospital, established in 2015, is Hyderabad’s premier dental care provider, offering advanced treatments in a state-of-the-art facility.</p>
+                    <p class="text-gray-700 mb-4">Led by Dr. A. Ram Koti Reddy, our team specializes in Orthodontics, Implants, and Cosmetic Dentistry, ensuring personalized care with cutting-edge technology.</p>
+                    <a href="about.html" class="btn bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700" aria-label="Learn More About Us">Learn More</a>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Our Dentist Section -->
-    <section id="dentist" class="bg-white section-animate">
+    <section id="dentist" class="bg-white py-16 section-animate">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-extrabold text-center mb-8">Our Dentist</h2>
+            <h2 class="text-3xl font-extrabold text-center mb-8 text-gray-800">Our Dentist</h2>
             <div class="flex flex-col md:flex-row items-center">
                 <div class="md:w-1/3 mb-6 md:mb-0">
-                    <img src="https://i.postimg.cc/FsPBw3P5/IMG-20250516-004749.jpg" alt="Dr. A. Ram Koti Reddy, Prosthodontist and Implantologist at OAK Dental Hospital" class="shadow-md w-full max-w-[250px] mx-auto border border-gray-200 rounded-lg">
+                    <img src="https://i.postimg.cc/FsPBw3P5/IMG-20250516-004749.jpg?fit=250%2C250&quality=80" alt="Dr. A. Ram Koti Reddy" class="shadow-md max-w-[250px] mx-auto rounded-lg" loading="lazy">
                 </div>
                 <div class="md:w-2/3 md:pl-8 text-center md:text-left">
                     <h3 class="text-xl font-semibold text-gray-800 mb-2">Dr. A. Ram Koti Reddy, BDS, MDS</h3>
                     <p class="text-gray-700 mb-2">Prosthodontist & Implantologist, Reg. No: A19677</p>
-                    <p class="text-gray-700">With over 15 years of experience, Dr. Reddy leads our team with expertise in prosthodontics and dental implants, ensuring every patient receives personalized, top-quality care. His dedication to patient comfort and advanced dental solutions has made him a trusted name in Hyderabad.</p>
+                    <p class="text-gray-700">With 15+ years of experience, Dr. Reddy delivers top-quality care in prosthodontics and implants.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Treatments Section with Carousel and Filters -->
-    <section id="services" class="bg-gray-100 section-animate">
+    <!-- Treatments Section -->
+    <section id="services" class="bg-gray-100 py-16 section-animate">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-extrabold text-center mb-8">Treatments</h2>
-            <div class="filter-container max-w-2xl mx-auto">
-                <select id="category-filter" onchange="filterTreatments()">
+            <h2 class="text-3xl font-extrabold text-center mb-8 text-gray-800">Treatments</h2>
+            <div class="flex gap-4 justify-center mb-6">
+                <select id="category-filter" class="p-2 border rounded-lg" aria-label="Filter by Category">
                     <option value="">All Categories</option>
                     <option value="Orthodontics">Orthodontics</option>
                     <option value="Implants">Implants</option>
                     <option value="Cosmetic">Cosmetic Dentistry</option>
                 </select>
-                <select id="price-filter" onchange="filterTreatments()">
+                <select id="price-filter" class="p-2 border rounded-lg" aria-label="Sort by Price">
                     <option value="">Sort by Price</option>
                     <option value="low-to-high">Low to High</option>
                     <option value="high-to-low">High to Low</option>
                 </select>
             </div>
-            <div id="treatments-carousel" class="relative">
-                <div id="carousel-container" class="carousel-container"></div>
-                <button class="carousel-button left" onclick="prevSlide()">❮</button>
-                <button class="carousel-button right" onclick="nextSlide()">❯</button>
+            <div id="treatments-carousel" class="relative overflow-hidden rounded-lg">
+                <div id="carousel-container" class="carousel-container flex transition-transform duration-500"></div>
+                <button class="carousel-button left" aria-label="Previous Treatment"><i class="fas fa-chevron-left"></i></button>
+                <button class="carousel-button right" aria-label="Next Treatment"><i class="fas fa-chevron-right"></i></button>
             </div>
         </div>
     </section>
 
-    <!-- Testimonials Section with Feedback -->
-    <section id="testimonials" class="bg-blue-50 section-animate">
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="bg-white py-16 section-animate">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-extrabold text-center mb-8">What Our Patients Say</h2>
-            <div class="max-w-lg mx-auto mb-12 feedback-form">
-                <h3 class="text-xl font-semibold text-gray-800 mb-4 text-center">Share Your Feedback</h3>
-                <div class="mb-4">
-                    <label class="block text-gray-700 mb-2" for="feedback-name">Your Name</label>
-                    <input type="text" id="feedback-name" class="w-full p-3 border rounded-lg shadow-sm" required aria-required="true">
-                </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700 mb-2">Rating</label>
-                    <div class="star-rating">
-                        <input type="radio" id="star5" name="rating" value="5" required aria-required="true">
-                        <label for="star5" class="fas fa-star"></label>
-                        <input type="radio" id="star4" name="rating" value="4">
-                        <label for="star4" class="fas fa-star"></label>
-                        <input type="radio" id="star3" name="rating" value="3">
-                        <label for="star3" class="fas fa-star"></label>
-                        <input type="radio" id="star2" name="rating" value="2">
-                        <label for="star2" class="fas fa-star"></label>
-                        <input type="radio" id="star1" name="rating" value="1">
-                        <label for="star1" class="fas fa-star"></label>
+            <h2 class="text-3xl font-extrabold text-center mb-8 text-gray-800">What Our Patients Say</h2>
+            <div class="max-w-lg mx-auto mb-12 bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-xl font-semibold mb-4 text-center text-gray-800">Share Your Feedback</h3>
+                <form id="feedback-form">
+                    <div class="mb-4">
+                        <label for="feedback-name" class="block text-gray-700 mb-2">Your Name</label>
+                        <input type="text" id="feedback-name" class="w-full p-3 border rounded-lg" required aria-required="true">
                     </div>
-                </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700 mb-2" for="feedback-description">Your Feedback</label>
-                    <textarea id="feedback-description" class="w-full p-3 border rounded-lg shadow-sm" rows="4" required aria-required="true"></textarea>
-                </div>
-                <button onclick="submitFeedback()" class="btn w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 shadow-md" aria-label="Submit your feedback">Submit Feedback</button>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2">Rating</label>
+                        <div class="star-rating">
+                            <input type="radio" id="star5" name="rating" value="5" required aria-required="true">
+                            <label for="star5" class="fas fa-star"></label>
+                            <input type="radio" id="star4" name="rating" value="4">
+                            <label for="star4" class="fas fa-star"></label>
+                            <input type="radio" id="star3" name="rating" value="3">
+                            <label for="star3" class="fas fa-star"></labelastrokes {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+}
+                            <input type="radio" id="star2" name="rating" value="2">
+                            <label for="star2" class="fas fa-star"></label>
+                            <input type="radio" id="star1" name="rating" value="1">
+                            <label for="star1" class="fas fa-star"></label>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label for="feedback-description" class="block text-gray-700 mb-2">Your Feedback</label>
+                        <textarea id="feedback-description" class="w-full p-3 border rounded-lg" rows="4" required aria-required="true"></textarea>
+                    </div>
+                    <button type="button" onclick="submitFeedback()" class="btn w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700" aria-label="Submit Feedback">Submit Feedback</button>
+                </form>
             </div>
             <div id="feedback-list" class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto"></div>
         </div>
     </section>
 
     <!-- Dental Care Tips Section -->
-    <section id="tips" class="bg-orange-50 section-animate">
+    <section id="tips" class="bg-gray-100 py-16 section-animate">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-extrabold text-center mb-8">Dental Care Tips for Pregnancy</h2>
+            <h2 class="text-3xl font-extrabold text-center mb-8 text-gray-800">Dental Care Tips for Pregnancy</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="bg-white p-6 rounded-lg shadow-md card">
-                    <h3 class="text-xl font-semibold mb-2">1. Frequent Dental Check-ups</h3>
-                    <p class="text-gray-700">At least once in 2 months to avoid infections that can affect the fetus.</p>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-2">Frequent Check-ups</h3>
+                    <p class="text-gray-700">Visit every 2 months to prevent infections that may affect the fetus.</p>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-md card">
-                    <h3 class="text-xl font-semibold mb-2">2. Brush and Floss</h3>
-                    <p class="text-gray-700">Brush twice daily and floss before going to bed.</p>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-2">Brush and Floss</h3>
+                    <p class="text-gray-700">Brush twice daily and floss before bed.</p>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-md card">
-                    <h3 class="text-xl font-semibold mb-2">3. Professional Teeth Cleaning</h3>
-                    <p class="text-gray-700">For removal of calculus deposits (scaling).</p>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-2">Professional Cleaning</h3>
+                    <p class="text-gray-700">Remove calculus deposits through scaling.</p>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-md card">
-                    <h3 class="text-xl font-semibold mb-2">4. Avoid Self-Medication</h3>
-                    <p class="text-gray-700 text-red-600 font-bold">Caution: Self-medication is dangerous!</p>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-md card">
-                    <h3 class="text-xl font-semibold mb-2">5. Avoid Certain Drugs</h3>
-                    <p class="text-gray-700">Be extremely cautious on usage of drugs during pregnancy. Avoid tetracycline as they cause discoloration of your child's temporary & permanent teeth.</p>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-md card">
-                    <h3 class="text-xl font-semibold mb-2">6. Be Aware of Risks</h3>
-                    <p class="text-gray-700">
-                        <strong>Pregnancy Gingivitis:</strong> Swollen red gums, bleeding while brushing.<br>
-                        <strong>Pregnancy Tumors:</strong> Benign growths in the gums, subside post-childbirth.<br>
-                        <strong>Premature Delivery:</strong> Bacterial infections can enter bloodstream, leading to premature delivery.
-                    </p>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-2">Avoid Self-Medication</h3>
+                    <p class="text-red-600 font-bold">Self-medication is dangerous!</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Virtual Tour Section -->
-    <section id="virtual-tour" class="bg-teal-50 section-animate">
+    <section id="virtual-tour" class="bg-white py-16 section-animate">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-extrabold text-center mb-8">Virtual Tour of Our Clinic</h2>
+            <h2 class="text-3xl font-extrabold text-center mb-8 text-gray-800">Virtual Tour</h2>
             <div class="max-w-4xl mx-auto">
-                <div class="virtual-tour-container">
-                    <iframe src="https://www.instagram.com/reel/CknEfc8qdYa/embed" frameborder="0" allowtransparency="true" allowfullscreen></iframe>
+                <div class="relative pb-[56.25%] h-0 overflow-hidden rounded-lg shadow-md">
+                    <iframe src="https://www.instagram.com/reel/CknEfc8qdYa/embed" class="absolute top-0 left-0 w-full h-full" frameborder="0" allowtransparency="true" allowfullscreen></iframe>
                 </div>
-                <p class="text-center text-gray-700 mt-4">Explore our state-of-the-art facilities at OAK Dental Hospital through this immersive virtual tour.</p>
             </div>
         </div>
     </section>
 
     <!-- Blog Section -->
-    <section id="blog" class="bg-white section-animate">
+    <section id="blog" class="bg-gray-100 py-16 section-animate">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-extrabold text-center mb-8">Dental Health Blog</h2>
+            <h2 class="text-3xl font-extrabold text-center mb-8 text-gray-800">Dental Health Blog</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="blog-card bg-white rounded-lg shadow-md card">
-                    <img src="https://i.postimg.cc/vTjKPVVn/BRACE.jpg" alt="Maintaining Oral Hygiene with Braces" class="w-full">
+                <div class="bg-white rounded-lg shadow-md">
+                    <img src="https://i.postimg.cc/vTjKPVVn/BRACE.jpg?fit=600%2C400&quality=80" alt="Oral Hygiene with Braces" class="w-full h-48 object-cover rounded-t-lg" loading="lazy">
                     <div class="p-6">
-                        <h3 class="text-xl font-semibold mb-2 text-gray-800">Maintaining Oral Hygiene with Braces</h3>
-                        <p class="text-gray-700 mb-4">Learn essential tips to keep your teeth clean while wearing braces, including brushing techniques and dietary advice.</p>
-                        <a href="blogs.html#oral-hygiene-braces" class="btn inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" aria-label="Read more about maintaining oral hygiene with braces">Read More</a>
+                        <h3 class="text-xl font-semibold mb-2 text-gray-800">Oral Hygiene with Braces</h3>
+                        <p class="text-gray-700 mb-4">Tips for keeping teeth clean while wearing braces.</p>
+                        <a href="blogs.html#oral-hygiene-braces" class="btn bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" aria-label="Read More About Braces">Read More</a>
                     </div>
                 </div>
-                <div class="blog-card bg-white rounded-lg shadow-md card">
-                    <img src="https://i.postimg.cc/T3fzBRDK/BLOG1.jpg" alt="Benefits of Dental Implants" class="w-full">
+                <div class="bg-white rounded-lg shadow-md">
+                    <img src="https://i.postimg.cc/T3fzBRDK/BLOG1.jpg?fit=600%2C400&quality=80" alt="Benefits of Dental Implants" class="w-full h-48 object-cover rounded-t-lg" loading="lazy">
                     <div class="p-6">
                         <h3 class="text-xl font-semibold mb-2 text-gray-800">Benefits of Dental Implants</h3>
-                        <p class="text-gray-700 mb-4">Discover why dental implants are a long-lasting solution for missing teeth and how they can improve your quality of life.</p>
-                        <a href="blogs.html#dental-implants-benefits" class="btn inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" aria-label="Read more about the benefits of dental implants">Read More</a>
+                        <p class="text-gray-700 mb-4">Why implants are a long-lasting solution for missing teeth.</p>
+                        <a href="blogs.html#dental-implants-benefits" class="btn bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" aria-label="Read More About Implants">Read More</a>
                     </div>
                 </div>
-                <div class="blog-card bg-white rounded-lg shadow-md card">
-                    <img src="https://i.postimg.cc/vTjKPVVn/BRACE.jpg" alt="Cosmetic Dentistry Trends" class="w-full">
+                <div class="bg-white rounded-lg shadow-md">
+                    <img src="https://i.postimg.cc/vTjKPVVn/BRACE.jpg?fit=600%2C400&quality=80" alt="Cosmetic Dentistry Trends" class="w-full h-48 object-cover rounded-t-lg" loading="lazy">
                     <div class="p-6">
-                        <h3 class="text-xl font-semibold mb-2 text-gray-800">Cosmetic Dentistry Trends in 2025</h3>
-                        <p class="text-gray-700 mb-4">Explore the latest trends in cosmetic dentistry, from teeth whitening to veneers, and how they can enhance your smile.</p>
-                        <a href="blogs.html#cosmetic-dentistry-trends" class="btn inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" aria-label="Read more about cosmetic dentistry trends in 2025">Read More</a>
+                        <h3 class="text-xl font-semibold mb-2 text-gray-800">Cosmetic Dentistry Trends 2025</h3>
+                        <p class="text-gray-700 mb-4">Latest trends in teeth whitening and veneers.</p>
+                        <a href="blogs.html#cosmetic-dentistry-trends" class="btn bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" aria-label="Read More About Cosmetic Dentistry">Read More</a>
                     </div>
                 </div>
-            </div>
-            <div class="text-center mt-8">
-                <a href="blogs.html" class="btn inline-block bg-green-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-green-700 shadow-md" aria-label="Explore more dental health blogs">Know More</a>
             </div>
         </div>
     </section>
 
     <!-- Patient Education Section -->
-    <section id="education" class="bg-gray-100 section-animate">
+    <section id="education" class="bg-white py-16 section-animate">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-extrabold text-center mb-8">Patient Education</h2>
+            <h2 class="text-3xl font-extrabold text-center mb-8 text-gray-800">Patient Education</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="bg-white p-6 rounded-lg shadow-md text-center card">
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
                     <h3 class="text-xl font-semibold mb-2">Guide to Braces</h3>
-                    <p class="text-gray-700 mb-4">Learn how to care for your braces and maintain oral hygiene with this comprehensive guide.</p>
-                    <a href="#" onclick="downloadPDF('braces-guide')" class="btn bg-blue-600 text-white px-4 py-2 rounded-lg" aria-label="Download Guide to Braces PDF">Download PDF</a>
+                    <p class="text-gray-700 mb-4">Care and hygiene tips for braces.</p>
+                    <a href="/pdfs/braces-guide.pdf" class="btn bg-blue-600 text-white px-4 py-2 rounded-lg" download aria-label="Download Braces Guide">Download PDF</a>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-md text-center card">
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
                     <h3 class="text-xl font-semibold mb-2">Implant Aftercare</h3>
-                    <p class="text-gray-700 mb-4">Essential tips for recovering and maintaining your dental implants for long-term success.</p>
-                    <a href="#" onclick="downloadPDF('implant-aftercare')" class="btn bg-blue-600 text-white px-4 py-2 rounded-lg" aria-label="Download Implant Aftercare PDF">Download PDF</a>
+                    <p class="text-gray-700 mb-4">Tips for maintaining dental implants.</p>
+                    <a href="/pdfs/implant-aftercare.pdf" class="btn bg-blue-600 text-white px-4 py-2 rounded-lg" download aria-label="Download Implant Aftercare">Download PDF</a>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-md text-center card">
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
                     <h3 class="text-xl font-semibold mb-2">Kids’ Dental Care</h3>
-                    <p class="text-gray-700 mb-4">A guide to ensure healthy teeth for your children, from infancy to adolescence.</p>
-                    <a href="#" onclick="downloadPDF('kids-dental-care')" class="btn bg-blue-600 text-white px-4 py-2 rounded-lg" aria-label="Download Kids’ Dental Care PDF">Download PDF</a>
+                    <p class="text-gray-700 mb-4">Healthy teeth for children.</p>
+                    <a href="/pdfs/kids-dental-care.pdf" class="btn bg-blue-600 text-white px-4 py-2 rounded-lg" download aria-label="Download Kids Dental Care">Download PDF</a>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- FAQ Section -->
-    <section id="faqs" class="bg-white section-animate">
+    <section id="faqs" class="bg-gray-100 py-16 section-animate">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-extrabold text-center mb-8">Frequently Asked Questions</h2>
+            <h2 class="text-3xl font-extrabold text-center mb-8 text-gray-800">Frequently Asked Questions</h2>
             <div class="max-w-2xl mx-auto">
-                <div class="faq-item mb-4 card bg-white p-4 rounded-lg shadow-md">
+                <div class="faq-item mb-4 bg-white p-4 rounded-lg shadow-md">
                     <h3 class="text-xl font-semibold text-gray-800 flex justify-between items-center" onclick="toggleFAQ(this)" tabindex="0" aria-expanded="false" aria-controls="faq1">
                         Is root canal treatment painful?
                         <i class="fas fa-chevron-down"></i>
                     </h3>
                     <div class="faq-answer mt-2 text-gray-700" id="faq1">
-                        <p>No, root canal treatments at OAK Dental Hospital are performed under local anesthesia, ensuring a pain-free experience. Our advanced techniques also minimize discomfort during recovery.</p>
+                        <p>Root canal treatments at OAK Dental are pain-free with local anesthesia and advanced techniques.</p>
                     </div>
                 </div>
-                <div class="faq-item mb-4 card bg-white p-4 rounded-lg shadow-md">
+                <div class="faq-item mb-4 bg-white p-4 rounded-lg shadow-md">
                     <h3 class="text-xl font-semibold text-gray-800 flex justify-between items-center" onclick="toggleFAQ(this)" tabindex="0" aria-expanded="false" aria-controls="faq2">
                         How long do dental implants last?
                         <i class="fas fa-chevron-down"></i>
                     </h3>
                     <div class="faq-answer mt-2 text-gray-700" id="faq2">
-                        <p>With proper care, dental implants can last a lifetime. Regular dental check-ups and good oral hygiene are key to their longevity.</p>
+                        <p>With proper care, implants can last a lifetime.</p>
                     </div>
                 </div>
-                <div class="faq-item mb-4 card bg-white p-4 rounded-lg shadow-md">
+                <div class="faq-item mb-4 bg-white p-4 rounded-lg shadow-md">
                     <h3 class="text-xl font-semibold text-gray-800 flex justify-between items-center" onclick="toggleFAQ(this)" tabindex="0" aria-expanded="false" aria-controls="faq3">
-                        Do you offer emergency dental services?
+                        Do you offer emergency services?
                         <i class="fas fa-chevron-down"></i>
                     </h3>
                     <div class="faq-answer mt-2 text-gray-700" id="faq3">
-                        <p>Yes, we provide emergency dental services. Please call us at +91 7569 366 767 to schedule an urgent appointment.</p>
+                        <p>Yes, call +91 7569 366 767 for urgent appointments.</p>
                     </div>
                 </div>
             </div>
@@ -1069,36 +628,36 @@
     </section>
 
     <!-- Appointment Booking Section -->
-    <section id="appointment" class="bg-purple-50 section-animate">
+    <section id="appointment" class="bg-white py-16 section-animate">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-extrabold text-center mb-8">Book an Appointment</h2>
-            <form id="appointment-form">
+            <h2 class="text-3xl font-extrabold text-center mb-8 text-gray-800">Book an Appointment</h2>
+            <form id="appointment-form" class="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md">
                 <div class="mb-4">
-                    <label class="block text-gray-700 mb-2" for="name">Full Name</label>
-                    <input type="text" id="name" class="w-full p-3 border rounded-lg shadow-sm" required aria-required="true">
+                    <label for="name" class="block text-gray-700 mb-2">Full Name</label>
+                    <input type="text" id="name" class="w-full p-3 border rounded-lg" required aria-required="true">
                 </div>
                 <div class="mb-4">
-                    <label class="block text-gray-700 mb-2" for="email">Email</label>
-                    <input type="email" id="email" class="w-full p-3 border rounded-lg shadow-sm" required aria-required="true">
+                    <label for="email" class="block text-gray-700 mb-2">Email</label>
+                    <input type="email" id="email" class="w-full p-3 border rounded-lg" required aria-required="true">
                 </div>
                 <div class="mb-4">
-                    <label class="block text-gray-700 mb-2" for="phone">Phone Number</label>
-                    <input type="tel" id="phone" class="w-full p-3 border rounded-lg shadow-sm" required aria-required="true">
+                    <label for="phone" class="block text-gray-700 mb-2">Phone Number</label>
+                    <input type="tel" id="phone" class="w-full p-3 border rounded-lg" required aria-required="true">
                 </div>
                 <div class="mb-4">
-                    <label class="block text-gray-700 mb-2" for="date">Preferred Date</label>
-                    <input type="date" id="date" class="w-full p-3 border rounded-lg shadow-sm" required aria-required="true">
-                    <p class="text-gray-600 text-sm mt-2">Available slots: 9 AM - 5 PM (Mon-Sat). Unavailable dates are marked in red.</p>
+                    <label for="date" class="block text-gray-700 mb-2">Preferred Date</label>
+                    <input type="date" id="date" class="w-full p-3 border rounded-lg" required aria-required="true">
+                    <p class="text-gray-600 text-sm mt-2">Available: 9 AM - 5 PM (Mon-Sat).</p>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-gray-700 mb-2" for="time">Preferred Time</label>
-                    <select id="time" class="w-full p-3 border rounded-lg shadow-sm" required aria-required="true">
+                    <label for="time" class="block text-gray-700 mb-2">Preferred Time</label>
+                    <select id="time" class="w-full p-3 border rounded-lg" required aria-required="true">
                         <option value="">Select Time</option>
                     </select>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-gray-700 mb-2" for="service">Service</label>
-                    <select id="service" class="w-full p-3 border rounded-lg shadow-sm" required aria-required="true">
+                    <label for="service" class="block text-gray-700 mb-2">Service</label>
+                    <select id="service" class="w-full p-3 border rounded-lg" required aria-required="true">
                         <option value="">Select Service</option>
                     </select>
                 </div>
@@ -1106,18 +665,11 @@
                     <label class="block text-gray-700 mb-2">Total Amount</label>
                     <p id="total-amount" class="text-gray-700 font-semibold">₹0.00</p>
                 </div>
-                <div class="payment-buttons">
-                    <div id="gpay-button-container" class="payment-button gpay-button">
-                        <img src="https://i.postimg.cc/tgKdsgyk/gpay.webp" alt="Google Pay Logo">
-                        Pay with Google Pay
-                    </div>
-                    <div id="phonepe-button-container" class="payment-button phonepe-button">
-                        <img src="https://i.postimg.cc/3xN7WqZx/phonepe.png" alt="PhonePe Logo">
-                        Pay with PhonePe
-                    </div>
+                <div class="flex gap-4 justify-center">
+                    <button type="button" id="pay-button" class="btn bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" aria-label="Pay Now">Pay Now</button>
                 </div>
             </form>
-            <a href="https://wa.me/917569366767" target="_blank" class="chat-button" aria-label="Chat with OAK Dental Hospital on WhatsApp">
+            <a href="https://wa.me/917569366767" target="_blank" class="chat-button md:hidden" aria-label="Chat on WhatsApp">
                 <i class="fab fa-whatsapp"></i>
             </a>
         </div>
@@ -1126,31 +678,29 @@
     <!-- Unavailable Date Message -->
     <div id="unavailable-message" class="unavailable-message">
         <h3 class="text-xl font-semibold text-gray-800 mb-2">Date Unavailable</h3>
-        <p class="text-gray-700 mb-4">Sorry, this date is unavailable due to doctor unavailability. You can select another date. Thank you for your understanding.</p>
-        <button onclick="closeUnavailableMessage()" class="btn bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" aria-label="Close unavailability message">Close</button>
+        <p class="text-gray-700 mb-4">This date is unavailable. Please choose another date.</p>
+        <button onclick="closeUnavailableMessage()" class="btn bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" aria-label="Close">Close</button>
     </div>
 
     <!-- Appointment Confirmation Modal -->
     <div id="appointment-modal">
-        <div class="modal-content">
+        <div class="modal-content text-center">
             <h3 class="text-2xl font-extrabold mb-4 text-gray-800">Appointment Confirmed!</h3>
-            <p class="text-gray-700 mb-4 alert-message">Thank you for booking with OAK Dental Hospital. You will receive a confirmation email and SMS shortly.</p>
-            <button onclick="closeModal()" class="btn bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700" aria-label="Close confirmation modal">Close</button>
+            <p class="text-gray-700 mb-4 alert-message">You will receive a confirmation email and SMS shortly.</p>
+            <button onclick="closeModal()" class="btn bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700" aria-label="Close Modal">Close</button>
         </div>
     </div>
 
-    <!-- Appointment Status Section with Cancellation -->
-    <section id="status" class="bg-indigo-50 section-animate">
+    <!-- Appointment Status Section -->
+    <section id="status" class="bg-gray-100 py-16 section-animate">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-extrabold text-center mb-8">Manage Appointments</h2>
-            <div id="status-display" class="max-w-lg mx-auto status-card">
-                <p class="text-gray-700 mb-4 alert-message">Enter your email to check or cancel your appointment status.</p>
-                <div class="mt-4">
-                    <input type="email" id="status-email" class="w-full p-3 border rounded-lg shadow-sm mb-4" placeholder="Your Email" required aria-required="true">
-                    <div class="flex space-x-4">
-                        <button onclick="checkStatus()" class="btn flex-1 bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 shadow-md" aria-label="Check appointment status">Check Status</button>
-                        <button onclick="cancelAppointment()" class="btn flex-1 bg-red-600 text-white p-3 rounded-lg hover:bg-red-700 shadow-md" aria-label="Cancel appointment">Cancel Appointment</button>
-                    </div>
+            <h2 class="text-3xl font-extrabold text-center mb-8 text-gray-800">Manage Appointments</h2>
+            <div class="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md">
+                <p class="text-gray-700 mb-4 alert-message">Enter your email to check or cancel your appointment.</p>
+                <input type="email" id="status-email" class="w-full p-3 border rounded-lg mb-4" placeholder="Your Email" required aria-required="true">
+                <div class="flex gap-4">
+                    <button onclick="checkStatus()" class="btn flex-1 bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700" aria-label="Check Status">Check Status</button>
+                    <button onclick="cancelAppointment()" class="btn flex-1 bg-red-600 text-white p-3 rounded-lg hover:bg-red-700" aria-label="Cancel Appointment">Cancel Appointment</button>
                 </div>
                 <div id="status-result" class="mt-4 text-gray-700"></div>
             </div>
@@ -1158,46 +708,46 @@
     </section>
 
     <!-- Gallery Section -->
-    <section id="gallery" class="bg-gray-100 section-animate">
+    <section id="gallery" class="bg-white py-16 section-animate">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-extrabold text-center mb-8">Our Clinic</h2>
+            <h2 class="text-3xl font-extrabold text-center mb-8 text-gray-800">Our Clinic</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <img src="https://i.postimg.cc/QxXDzmsh/Oak-dental-interior-2.jpg?fit=600%2C400&quality=80" alt="Modern reception area with comfortable seating at OAK Dental Hospital" class="shadow-md card">
-                <img src="https://i.postimg.cc/htYqfqmt/Oak-dental-interior-1.jpg?fit=600%2C400&quality=80" alt="Advanced treatment room with dental chair at OAK Dental Hospital" class="shadow-md card">
-                <img src="https://i.postimg.cc/j2tpGxpZ/Oak-dental-interior.jpg?fit=600%2C400&quality=80" alt="Sterile dental equipment in treatment room at OAK Dental Hospital" class="shadow-md card">
+                <img src="https://i.postimg.cc/QxXDzmsh/Oak-dental-interior-2.jpg?fit=600%2C400&quality=80" alt="Reception Area" class="shadow-md rounded-lg" loading="lazy">
+                <img src="https://i.postimg.cc/htYqfqmt/Oak-dental-interior-1.jpg?fit=600%2C400&quality=80" alt="Treatment Room" class="shadow-md rounded-lg" loading="lazy">
+                <img src="https://i.postimg.cc/j2tpGxpZ/Oak-dental-interior.jpg?fit=600%2C400&quality=80" alt="Dental Equipment" class="shadow-md rounded-lg" loading="lazy">
             </div>
         </div>
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="bg-cyan-50 section-animate">
+    <section id="contact" class="bg-gray-100 py-16 section-animate">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-extrabold text-center mb-8">Contact Us</h2>
-            <div class="flex flex-col md:flex-row">
-                <div class="md:w-1/2 mb-6 md:mb-0">
+            <h2 class="text-3xl font-extrabold text-center mb-8 text-gray-800">Contact Us</h2>
+            <div class="flex flex-col md:flex-row gap-8">
+                <div class="md:w-1/2">
                     <h3 class="text-xl font-semibold mb-4 text-gray-800">Get in Touch</h3>
                     <p class="text-gray-700 mb-2"><i class="fas fa-map-marker-alt mr-2"></i>2nd Floor, Vision Apartments, Gandhi Nagar, Nizampet Road, Bachupally, Hyderabad - 500090</p>
                     <p class="text-gray-700 mb-2"><i class="fas fa-phone mr-2"></i>+91 7569 366 767</p>
-                    <p class="text-gray-700 mb-2"><i class="fas fa-phone mr-2"></i>+91 9502 030 637</p>
-                    <p class="text-gray-700 mb-2"><i class="fab fa-whatsapp mr-2"></i><a href="https://wa.me/917569366767" target="_blank" class="text-blue-600 hover:underline" aria-label="Chat with OAK Dental Hospital on WhatsApp">Chat on WhatsApp</a></p>
-                    <button onclick="callClinic()" class="btn bg-green-500 text-white px-4 py-2 rounded-lg mt-2 hover:bg-green-600 shadow-md" aria-label="Call OAK Dental Hospital">
+                    <p class="text-gray-700 mb-2"><i class="fab fa-whatsapp mr-2"></i><a href="https://wa.me/917569366767" target="_blank" class="text-blue-600 hover:underline" aria-label="Chat on WhatsApp">Chat on WhatsApp</a></p>
+                    <button onclick="call:
+callClinic()" class="btn bg-green-500 text-white px-4 py-2 rounded-lg mt-2 hover:bg-green-600" aria-label="Call Clinic">
                         <i class="fas fa-phone mr-2"></i>Call Now
                     </button>
                 </div>
-                <form id="contact-form" class="md:w-1/2 contact-form">
+                <form id="contact-form" class="md:w-1/2 bg-white p-6 rounded-lg shadow-md">
                     <div class="mb-4">
-                        <label class="block text-gray-700 mb-2" for="contact-name">Name</label>
-                        <input type="text" id="contact-name" class="w-full p-3 border rounded-lg shadow-sm" required aria-required="true">
+                        <label for="contact-name" class="block text-gray-700 mb-2">Name</label>
+                        <input type="text" id="contact-name" class="w-full p-3 border rounded-lg" required aria-required="true">
                     </div>
                     <div class="mb-4">
-                        <label class="block text-gray-700 mb-2" for="contact-email">Email</label>
-                        <input type="email" id="contact-email" class="w-full p-3 border rounded-lg shadow-sm" required aria-required="true">
+                        <label for="contact-email" class="block text-gray-700 mb-2">Email</label>
+                        <input type="email" id="contact-email" class="w-full p-3 border rounded-lg" required aria-required="true">
                     </div>
                     <div class="mb-4">
-                        <label class="block text-gray-700 mb-2" for="message">Message</label>
-                        <textarea id="message" class="w-full p-3 border rounded-lg shadow-sm" rows="5" required aria-required="true"></textarea>
+                        <label for="message" class="block text-gray-700 mb-2">Message</label>
+                        <textarea id="message" class="w-full p-3 border rounded-lg" rows="5" required aria-required="true"></textarea>
                     </div>
-                    <button type="button" onclick="submitContact()" class="btn w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 shadow-md" aria-label="Send message to OAK Dental Hospital">Send Message</button>
+                    <button type="button" onclick="submitContact()" class="btn w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700" aria-label="Send Message">Send Message</button>
                 </form>
             </div>
         </div>
@@ -1209,56 +759,40 @@
             <p class="text-lg mb-4">© 2025 <span class="hospital-name">OAK Dental Hospital</span>. All rights reserved.</p>
             <div class="mb-4">
                 <h3 class="text-lg font-semibold mb-2">Stay Updated</h3>
-                <div class="newsletter-form-container">
-                    <form id="newsletter-form" class="flex justify-center">
-                        <input type="email" id="newsletter-email" class="p-2 rounded-l-lg border-0 focus:outline-none shadow-sm" placeholder="Enter your email" required aria-required="true">
-                        <button type="button" onclick="subscribeNewsletter()" class="btn bg-blue-600 text-white p-2 rounded-r-lg hover:bg-blue-700" aria-label="Subscribe to newsletter">Subscribe</button>
-                    </form>
-                </div>
+                <form id="newsletter-form" class="flex max-w-md mx-auto">
+                    <input type="email" id="newsletter-email" class="flex-1 p-2 rounded-l-lg border-0" placeholder="Enter your email" required aria-required="true">
+                    <button type="button" onclick="subscribeNewsletter()" class="btn bg-blue-600 text-white p-2 rounded-r-lg hover:bg-blue-700" aria-label="Subscribe to Newsletter">Subscribe</button>
+                </form>
             </div>
-            <div class="flex justify-center space-x-4">
-                <a href="https://facebook.com" target="_blank" class="text-white hover:text-blue-300" aria-label="Visit OAK Dental Hospital on Facebook"><i class="fab fa-facebook-f text-2xl"></i></a>
-                <a href="https://instagram.com" target="_blank" class="text-white hover:text-blue-300" aria-label="Visit OAK Dental Hospital on Instagram"><i class="fab fa-instagram text-2xl"></i></a>
-                <a href="https://twitter.com" target="_blank" class="text-white hover:text-blue-300" aria-label="Visit OAK Dental Hospital on Twitter"><i class="fab fa-twitter text-2xl"></i></a>
+            <div class="flex justify-center gap-4">
+                <a href="https://facebook.com" target="_blank" class="text-white hover:text-blue-300" aria-label="Facebook"><i class="fab fa-facebook-f text-2xl"></i></a>
+                <a href="https://instagram.com" target="_blank" class="text-white hover:text-blue-300" aria-label="Instagram"><i class="fab fa-instagram text-2xl"></i></a>
+                <a href="https://twitter.com" target="_blank" class="text-white hover:text-blue-300" aria-label="Twitter"><i class="fab fa-twitter text-2xl"></i></a>
             </div>
         </div>
     </footer>
 
-    <!-- Sticky CTA Button -->
+    <!-- Sticky CTA -->
     <div class="cta-container">
-        <a href="#appointment" class="sticky-cta btn" aria-label="Book an appointment with OAK Dental Hospital">Book Appointment</a>
-        <a href="https://wa.me/917569366767" target="_blank" class="chat-button" aria-label="Chat with OAK Dental Hospital on WhatsApp">
+        <a href="#appointment" class="sticky-cta btn" aria-label="Book Appointment">Book Appointment</a>
+        <a href="https://wa.me/917569366767" target="_blank" class="chat-button" aria-label="Chat on WhatsApp">
             <i class="fab fa-whatsapp"></i>
         </a>
     </div>
 
-    <!-- Tawk.to Live Chat with Pre-Chat Form -->
     <script>
-        var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-        Tawk_API.onLoad = function(){
-            Tawk_API.setAttributes({
-                'name' : 'Visitor',
-                'email' : 'visitor@oakdental.com'
-            }, function(error){});
-        };
-        Tawk_API.onPrechatSubmit = function(data){
-            console.log('Prechat form submitted:', data);
-        };
-        (function(){
-            var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-            s1.async=true;
-            s1.src='https://embed.tawk.to/YOUR_PROPERTY_ID/default';
-            s1.charset='UTF-8';
-            s1.setAttribute('crossorigin','*');
-            s0.parentNode.insertBefore(s1,s0);
-        })();
-    </script>
+        // Configuration
+        const API_URL = process.env.API_URL || 'https://oak-dental.onrender.com/api';
+        const PAYMENT_API_KEY = process.env.PAYMENT_API_KEY || 'your-razorpay-key';
 
-    <script>
-        // Base API URL
-        const API_URL = 'https://oak-dental.onrender.com/api';
+        // Mock Data (for offline testing)
+        const mockTreatments = [
+            { id: 1, name: 'Braces', category: 'Orthodontics', cost: 30000, description: 'Align your teeth effectively.', image: '/images/braces.jpg' },
+            { id: 2, name: 'Dental Implants', category: 'Implants', cost: 50000, description: 'Permanent tooth replacement.', image: '/images/implants.jpg' },
+            { id: 3, name: 'Teeth Whitening', category: 'Cosmetic', cost: 10000, description: 'Brighten your smile.', image: '/images/whitening.jpg' }
+        ];
 
-        // Navigation Toggle
+        // Navigation
         const menuToggle = document.getElementById('menu-toggle');
         const menu = document.getElementById('menu');
         const menuOverlay = document.getElementById('menu-overlay');
@@ -1270,6 +804,7 @@
             document.body.classList.toggle('nav-open', !isActive);
             menuToggle.querySelector('i').classList.toggle('fa-bars');
             menuToggle.querySelector('i').classList.toggle('fa-times');
+            menuToggle.setAttribute('aria-expanded', !isActive);
         }
 
         menuToggle.addEventListener('click', toggleMenu);
@@ -1279,91 +814,53 @@
             link.addEventListener('click', (e) => {
                 e.preventDefault();
                 const targetId = link.getAttribute('href').substring(1);
-                const targetSection = document.getElementById(targetId);
-                if (targetSection) {
-                    targetSection.scrollIntoView({ behavior: 'smooth' });
-                }
-                if (menu.classList.contains('active')) {
-                    toggleMenu();
-                }
-                document.querySelectorAll('.dropdown-menu').forEach(menu => menu.classList.remove('block'));
+                document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' });
+                if (menu.classList.contains('active')) toggleMenu();
             });
         });
 
-        document.querySelectorAll('.dropdown > a').forEach(dropdown => {
-            dropdown.addEventListener('click', (e) => {
-                if (window.innerWidth <= 768) {
-                    e.preventDefault();
-                    const dropdownMenu = dropdown.nextElementSibling;
-                    const isOpen = dropdownMenu.classList.contains('block');
-                    document.querySelectorAll('.dropdown-menu').forEach(menu => menu.classList.remove('block'));
-                    if (!isOpen) {
-                        dropdownMenu.classList.add('block');
-                    }
-                }
-            });
-        });
-
-        // Carousel for Treatments
+        // Treatments Carousel
         let currentSlide = 0;
         let treatments = [];
         let filteredTreatments = [];
         let slideInterval;
-        let unavailableDates = [];
 
         async function loadTreatments() {
             try {
                 const response = await axios.get(`${API_URL}/treatments`, { timeout: 10000 });
-                treatments = response.data.slice(0, 6).filter(treatment => treatment.name && (treatment.image || treatment.video));
-                filteredTreatments = [...treatments];
-                const container = document.getElementById('carousel-container');
-                container.innerHTML = '';
-                if (filteredTreatments.length === 0) {
-                    container.innerHTML = '<p class="text-gray-700 text-center alert-message">No treatments available at the moment.</p>';
-                    return;
-                }
-                filteredTreatments.forEach((treatment, index) => {
-                    const div = document.createElement('div');
-                    div.className = 'carousel-item card bg-white p-4 rounded-lg shadow-md';
-                    div.innerHTML = `
-                        <div class="carousel-item-content">
-                            <h3 class="text-lg font-semibold mb-2">${treatment.name}</h3>
-                            <p class="text-gray-700 text-sm mb-2">${treatment.description || 'No description available.'}</p>
-                            <p class="text-gray-700 font-semibold mb-2">₹${treatment.cost || 'Contact for pricing'}</p>
-                            ${treatment.offer ? `<p class="text-green-600 font-semibold">Offer: ${treatment.offer}</p>` : ''}
-                        </div>
-                        <div class="carousel-item-media">
-                            ${treatment.image ? `<img src="${API_URL}${treatment.image}" alt="${treatment.name} image" style="width: 100%; height: auto; object-fit: cover; border-radius: 10px;" onerror="this.src='https://via.placeholder.com/300x200?text=Image+Not+Found';">` : ''}
-                            ${treatment.video ? `<video controls style="width: 100%; max-height: 250px; border-radius: 10px;"><source src="${API_URL}${treatment.video}" type="video/mp4">Your browser does not support the video tag.</video>` : ''}
-                        </div>
-                    `;
-                    container.appendChild(div);
-                });
-
-                const serviceSelect = document.getElementById('service');
-                serviceSelect.innerHTML = '<option value="">Select Service</option>';
-                treatments.forEach(treatment => {
-                    const option = document.createElement('option');
-                    option.value = treatment.id;
-                    option.textContent = `${treatment.name} (₹${treatment.cost || 'Contact for pricing'})`;
-                    option.dataset.cost = treatment.cost || '0';
-                    serviceSelect.appendChild(option);
-                });
-
-                serviceSelect.addEventListener('change', updateTotalAmount);
-
-                startAutoSlide();
+                treatments = response.data.slice(0, 6).filter(t => t.name && (t.image || t.video));
             } catch (error) {
                 console.error('Error loading treatments:', error);
-                const container = document.getElementById('carousel-container');
-                container.innerHTML = '<p class="text-red-600 text-center alert-message">Failed to load treatments. Please try again later.</p>';
+                treatments = mockTreatments;
             }
+            filteredTreatments = [...treatments];
+            renderCarousel();
+            populateServiceSelect();
+            startAutoSlide();
+        }
+
+        function renderCarousel() {
+            const container = document.getElementById('carousel-container');
+            container.innerHTML = filteredTreatments.length === 0
+                ? '<p class="text-gray-700 text-center alert-message">No treatments available.</p>'
+                : filteredTreatments.map(treatment => `
+                    <div class="carousel-item">
+                        <div class="flex-1 p-4">
+                            <h3 class="text-lg font-semibold mb-2">${treatment.name}</h3>
+                            <p class="text-gray-700 text-sm mb-2">${treatment.description || 'No description.'}</p>
+                            <p class="text-gray-700 font-semibold">₹${treatment.cost || 'Contact us'}</p>
+                        </div>
+                        <div class="flex-1 p-4">
+                            ${treatment.image ? `<img src="${treatment.image}" alt="${treatment.name}" class="w-full h-auto rounded-lg" loading="lazy">` : ''}
+                            ${treatment.video ? `<video controls class="w-full h-auto rounded-lg"><source src="${treatment.video}" type="video/mp4"></video>` : ''}
+                        </div>
+                    </div>
+                `).join('');
+            updateCarousel();
         }
 
         function startAutoSlide() {
-            slideInterval = setInterval(() => {
-                nextSlide();
-            }, 5000);
+            slideInterval = setInterval(nextSlide, 5000);
         }
 
         function stopAutoSlide() {
@@ -1385,18 +882,16 @@
         }
 
         function updateCarousel() {
-            const container = document.getElementById('carousel-container');
-            container.style.transform = `translateX(-${currentSlide * 100}%)`;
+            document.getElementById('carousel-container').style.transform = `translateX(-${currentSlide * 100}%)`;
         }
 
         function filterTreatments() {
             const category = document.getElementById('category-filter').value;
             const priceSort = document.getElementById('price-filter').value;
-
             filteredTreatments = [...treatments];
 
             if (category) {
-                filteredTreatments = filteredTreatments.filter(treatment => treatment.category === category);
+                filteredTreatments = filteredTreatments.filter(t => t.category === category);
             }
 
             if (priceSort) {
@@ -1409,73 +904,47 @@
 
             currentSlide = 0;
             stopAutoSlide();
-            const container = document.getElementById('carousel-container');
-            container.innerHTML = '';
-            if (filteredTreatments.length === 0) {
-                container.innerHTML = '<p class="text-gray-700 text-center alert-message">No treatments match your criteria.</p>';
-                return;
-            }
-            filteredTreatments.forEach((treatment, index) => {
-                const div = document.createElement('div');
-                div.className = 'carousel-item card bg-white p-4 rounded-lg shadow-md';
-                div.innerHTML = `
-                    <div class="carousel-item-content">
-                        <h3 class="text-lg font-semibold mb-2">${treatment.name || 'Unnamed Treatment'}</h3>
-                        <p class="text-gray-700 text-sm mb-2">${treatment.description || 'No description available.'}</p>
-                        <p class="text-gray-700 font-semibold mb-2">₹${treatment.cost || 'Contact for pricing'}</p>
-                        ${treatment.offer ? `<p class="text-green-600 font-semibold">Offer: ${treatment.offer}</p>` : ''}
-                    </div>
-                    <div class="carousel-item-media">
-                        ${treatment.image ? `<img src="${API_URL}${treatment.image}" alt="${treatment.name || 'Treatment'} image" style="width: 100%; height: auto; object-fit: cover; border-radius: 10px;" onerror="this.src='https://via.placeholder.com/300x200?text=Image+Not+Found';">` : ''}
-                        ${treatment.video ? `<video controls style="width: 100%; max-height: 250px; border-radius: 10px;"><source src="${API_URL}${treatment.video}" type="video/mp4">Your browser does not support the video tag.</video>` : ''}
-                    </div>
-                `;
-                container.appendChild(div);
-            });
-            updateCarousel();
+            renderCarousel();
             startAutoSlide();
         }
 
-        // Load Admin Pricing and Unavailable Dates
+        function populateServiceSelect() {
+            const serviceSelect = document.getElementById('service');
+            serviceSelect.innerHTML = '<option value="">Select Service</option>';
+            treatments.forEach(t => {
+                const option = document.createElement('option');
+                option.value = t.id;
+                option.textContent = `${t.name} (₹${t.cost || 'Contact us'})`;
+                option.dataset.cost = t.cost || '0';
+                serviceSelect.appendChild(option);
+            });
+            serviceSelect.addEventListener('change', updateTotalAmount);
+        }
+
+        // Appointment
+        let unavailableDates = [];
+
         async function loadAdminSettings() {
             try {
                 const response = await axios.get(`${API_URL}/admin-settings`, { timeout: 10000 });
-                const settings = response.data;
-
-                // Update UPI payment amount based on admin settings
-                adminAmount = settings.appointmentCost || '5.00';
-
-                // Load unavailable dates
-                unavailableDates = settings.unavailableDates || [];
-                checkDateAvailability();
+                unavailableDates = response.data.unavailableDates || [];
             } catch (error) {
                 console.error('Error loading admin settings:', error);
-                alert('Failed to load admin settings. Default pricing will be used.', { class: 'alert-message bg-red-100 text-red-600' });
+                unavailableDates = [];
             }
+            checkDateAvailability();
         }
 
-        // Appointment Time Slots
         function loadAppointmentOptions() {
             const timeSelect = document.getElementById('time');
-            const times = [
-                '09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM',
-                '01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM'
-            ];
-                        timeSelect.innerHTML = '<option value="">Select Time</option>';
-            times.forEach(time => {
-                const option = document.createElement('option');
-                option.value = time;
-                option.textContent = time;
-                timeSelect.appendChild(option);
-            });
+            const times = ['09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM'];
+            timeSelect.innerHTML = '<option value="">Select Time</option>' + times.map(time => `<option value="${time}">${time}</option>`).join('');
         }
 
-        // Check Date Availability
         function checkDateAvailability() {
             const dateInput = document.getElementById('date');
             dateInput.addEventListener('change', () => {
-                const selectedDate = dateInput.value;
-                if (unavailableDates.includes(selectedDate)) {
+                if (unavailableDates.includes(dateInput.value)) {
                     dateInput.classList.add('unavailable-date');
                     document.getElementById('unavailable-message').classList.add('show');
                     dateInput.value = '';
@@ -1490,61 +959,13 @@
             document.getElementById('unavailable-message').classList.remove('show');
         }
 
-        // Update Total Amount Based on Selected Service
-        let adminAmount = '500.00'; // Default amount, will be updated by admin settings
         function updateTotalAmount() {
             const serviceSelect = document.getElementById('service');
-            const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
-            const cost = selectedOption ? (selectedOption.dataset.cost || adminAmount) : adminAmount;
+            const cost = serviceSelect.selectedOptions[0]?.dataset.cost || '0';
             document.getElementById('total-amount').textContent = `₹${parseFloat(cost).toFixed(2)}`;
         }
 
-        // Payment Integration
-        async function initiateGPayPayment(appointmentData) {
-            const upiId = 'svasudevareddy18604@oksbi'; // Updated UPI ID
-            const amount = document.getElementById('total-amount').textContent.replace('₹', '');
-            const name = appointmentData.name;
-            const upiLink = `upi://pay?pa=${upiId}&pn=oakdentals&am=${amount}&cu=INR&tn=Appointment%20for%20${name}`;
-            const upiWindow = window.open(upiLink, '_blank');
-
-            return new Promise((resolve, reject) => {
-                setTimeout(async () => {
-                    try {
-                        const response = await axios.post(`${API_URL}/gpay/verify-payment`, {
-                            appointment: appointmentData
-                        });
-                        resolve(response.data);
-                    } catch (error) {
-                        console.error('Google Pay payment verification error:', error);
-                        reject(error);
-                    }
-                }, 10000);
-            });
-        }
-
-        async function initiatePhonePePayment(appointmentData) {
-            const upiId = 'svasudevareddy18604@oksbi'; // Updated UPI ID
-            const amount = document.getElementById('total-amount').textContent.replace('₹', '');
-            const name = appointmentData.name;
-            const upiLink = `upi://pay?pa=${upiId}&pn=oakdentals&am=${amount}&cu=INR&tn=Appointment%20for%20${name}`;
-            const upiWindow = window.open(upiLink, '_blank');
-
-            return new Promise((resolve, reject) => {
-                setTimeout(async () => {
-                    try {
-                        const response = await axios.post(`${API_URL}/phonepe/verify-payment`, {
-                            appointment: appointmentData
-                        });
-                        resolve(response.data);
-                    } catch (error) {
-                        console.error('PhonePe payment verification error:', error);
-                        reject(error);
-                    }
-                }, 10000);
-            });
-        }
-
-        async function initiatePayment(method) {
+        async function initiatePayment() {
             const appointmentData = {
                 name: document.getElementById('name').value,
                 email: document.getElementById('email').value,
@@ -1554,39 +975,48 @@
                 serviceId: document.getElementById('service').value
             };
 
-            if (!appointmentData.name || !appointmentData.email || !appointmentData.phone || !appointmentData.date || !appointmentData.time || !appointmentData.serviceId) {
-                alert('Please fill all appointment fields.', { class: 'alert-message bg-red-100 text-red-600' });
+            if (Object.values(appointmentData).some(v => !v)) {
+                showNotification('Please fill all appointment fields.', 'bg-red-100 text-red-600');
                 return;
             }
 
             if (unavailableDates.includes(appointmentData.date)) {
-                alert('Selected date is unavailable. Please choose another date.', { class: 'alert-message bg-red-100 text-red-600' });
+                showNotification('Selected date is unavailable.', 'bg-red-100 text-red-600');
                 return;
             }
 
             try {
-                let transactionResponse;
-                if (method === 'gpay') {
-                    transactionResponse = await initiateGPayPayment(appointmentData);
-                } else if (method === 'phonepe') {
-                    transactionResponse = await initiatePhonePePayment(appointmentData);
-                }
-
-                await handlePostPayment(transactionResponse, appointmentData);
+                // Mock Razorpay-like payment
+                const response = await axios.post(`${API_URL}/payments`, {
+                    amount: parseFloat(document.getElementById('total-amount').textContent.replace('₹', '')) * 100,
+                    key: PAYMENT_API_KEY
+                });
+                await handlePostPayment(response.data, appointmentData);
             } catch (error) {
-                console.error(`Error during ${method} payment:`, error);
-                alert('Payment failed. Please try again or use a different method.', { class: 'alert-message bg-red-100 text-red-600' });
+                console.error('Payment error:', error);
+                showNotification('Payment failed. Please try again.', 'bg-red-100 text-red-600');
             }
         }
 
-        async function handlePostPayment(transactionResponse, appointmentData) {
+        async function handlePostPayment(transaction, appointmentData) {
             try {
-                await sendNotifications(appointmentData);
+                await Promise.all([
+                    axios.post(`${API_URL}/appointments`, appointmentData),
+                    axios.post(`${API_URL}/send-email`, {
+                        email: appointmentData.email,
+                        subject: 'Appointment Confirmation',
+                        body: `Dear ${appointmentData.name},\n\nYour appointment is confirmed for ${appointmentData.date} at ${appointmentData.time}.`
+                    }),
+                    axios.post(`${API_URL}/send-sms`, {
+                        phone: appointmentData.phone,
+                        message: `Dear ${appointmentData.name}, your appointment is confirmed for ${appointmentData.date} at ${appointmentData.time}.`
+                    })
+                ]);
                 document.getElementById('appointment-modal').style.display = 'flex';
-                localStorage.setItem('appointment', JSON.stringify({ ...appointmentData, transactionId: transactionResponse.transactionId }));
+                localStorage.setItem('appointment', JSON.stringify({ ...appointmentData, transactionId: transaction.id }));
             } catch (error) {
-                console.error('Error post-payment:', error);
-                alert('Error confirming appointment. Please contact support.', { class: 'alert-message bg-red-100 text-red-600' });
+                console.error('Post-payment error:', error);
+                showNotification('Error confirming appointment.', 'bg-red-100 text-red-600');
             }
         }
 
@@ -1594,26 +1024,6 @@
             document.getElementById('appointment-modal').style.display = 'none';
             document.getElementById('appointment-form').reset();
             document.getElementById('total-amount').textContent = '₹0.00';
-        }
-
-        async function sendNotifications(appointmentData) {
-            try {
-                await Promise.all([
-                    axios.post(`${API_URL}/appointments`, appointmentData),
-                    axios.post(`${API_URL}/send-email`, {
-                        email: appointmentData.email,
-                        subject: 'Appointment Confirmation - OAK Dental Hospital',
-                        body: `Dear ${appointmentData.name},\n\nYour appointment has been confirmed for ${appointmentData.date} at ${appointmentData.time}.\n\nThank you for choosing OAK Dental Hospital!`
-                    }),
-                    axios.post(`${API_URL}/send-sms`, {
-                        phone: appointmentData.phone,
-                        message: `Dear ${appointmentData.name}, your appointment at OAK Dental Hospital is confirmed for ${appointmentData.date} at ${appointmentData.time}.`
-                    })
-                ]);
-            } catch (error) {
-                console.error('Error sending notifications:', error);
-                throw error;
-            }
         }
 
         async function checkStatus() {
@@ -1625,11 +1035,9 @@
             try {
                 const response = await axios.get(`${API_URL}/appointments?email=${email}`, { timeout: 10000 });
                 const appointments = response.data;
-                const resultDiv = document.getElementById('status-result');
-                if (appointments.length === 0) {
-                    resultDiv.innerHTML = '<p class="text-gray-700 alert-message">No appointments found for this email.</p>';
-                } else {
-                    resultDiv.innerHTML = appointments.map(app => `
+                document.getElementById('status-result').innerHTML = appointments.length === 0
+                    ? '<p class="text-gray-700 alert-message">No appointments found.</p>'
+                    : appointments.map(app => `
                         <div class="bg-white p-4 rounded-lg shadow-md mb-4">
                             <p><strong>Name:</strong> ${app.name}</p>
                             <p><strong>Date:</strong> ${app.date}</p>
@@ -1637,10 +1045,9 @@
                             <p><strong>Service:</strong> ${treatments.find(t => t.id === app.serviceId)?.name || 'Unknown'}</p>
                         </div>
                     `).join('');
-                }
             } catch (error) {
-                console.error('Error checking status:', error);
-                document.getElementById('status-result').innerHTML = '<p class="text-red-600 alert-message">Failed to check status. Please try again later.</p>';
+                console.error('Status error:', error);
+                document.getElementById('status-result').innerHTML = '<p class="text-red-600 alert-message">Failed to check status.</p>';
             }
         }
 
@@ -1651,57 +1058,53 @@
                 return;
             }
             try {
-                const response = await axios.delete(`${API_URL}/appointments?email=${email}`, { timeout: 10000 });
-                document.getElementById('status-result').innerHTML = '<p class="text-green-600 alert-message">Appointment cancelled successfully.</p>';
+                await axios.delete(`${API_URL}/appointments?email=${email}`, { timeout: 10000 });
+                document.getElementById('status-result').innerHTML = '<p class="text-green-600 alert-message">Appointment cancelled.</p>';
             } catch (error) {
-                console.error('Error cancelling appointment:', error);
-                document.getElementById('status-result').innerHTML = '<p class="text-red-600 alert-message">Failed to cancel appointment. Please try again later.</p>';
+                console.error('Cancel error:', error);
+                document.getElementById('status-result').innerHTML = '<p class="text-red-600 alert-message">Failed to cancel appointment.</p>';
             }
         }
 
         async function submitContact() {
-            const name = document.getElementById('contact-name').value;
-            const email = document.getElementById('contact-email').value;
-            const message = document.getElementById('message').value;
-
-            if (!name || !email || !message) {
-                alert('Please fill all fields in the contact form.', { class: 'alert-message bg-red-100 text-red-600' });
+            const data = {
+                name: document.getElementById('contact-name').value,
+                email: document.getElementById('contact-email').value,
+                message: document.getElementById('message').value
+            };
+            if (Object.values(data).some(v => !v)) {
+                showNotification('Please fill all contact fields.', 'bg-red-100 text-red-600');
                 return;
             }
-
             try {
-                await axios.post(`${API_URL}/contact`, { name, email, message });
-                alert('Message sent successfully!', { class: 'alert-message bg-green-100 text-green-600' });
+                await axios.post(`${API_URL}/contact`, data);
+                showNotification('Message sent successfully!', 'bg-green-100 text-green-600');
                 document.getElementById('contact-form').reset();
             } catch (error) {
-                console.error('Error submitting contact form:', error);
-                alert('Failed to send message. Please try again later.', { class: 'alert-message bg-red-100 text-red-600' });
+                console.error('Contact error:', error);
+                showNotification('Failed to send message.', 'bg-red-100 text-red-600');
             }
         }
 
         async function submitFeedback() {
-            const name = document.getElementById('feedback-name').value;
-            const rating = document.querySelector('input[name="rating"]:checked')?.value;
-            const description = document.getElementById('feedback-description').value;
-
-            if (!name || !rating || !description) {
-                alert('Please fill all fields in the feedback form.', { class: 'alert-message bg-red-100 text-red-600' });
+            const data = {
+                name: document.getElementById('feedback-name').value,
+                rating: document.querySelector('input[name="rating"]:checked')?.value,
+                description: document.getElementById('feedback-description').value,
+                date: new Date().toISOString()
+            };
+            if (Object.values(data).slice(0, 3).some(v => !v)) {
+                showNotification('Please fill all feedback fields.', 'bg-red-100 text-red-600');
                 return;
             }
-
             try {
-                const response = await axios.post(`${API_URL}/feedback`, {
-                    name,
-                    rating,
-                    description,
-                    date: new Date().toISOString()
-                });
-                alert('Feedback submitted successfully!', { class: 'alert-message bg-green-100 text-green-600' });
-                document.querySelector('.feedback-form').reset();
+                await axios.post(`${API_URL}/feedback`, data);
+                showNotification('Feedback submitted!', 'bg-green-100 text-green-600');
+                document.getElementById('feedback-form').reset();
                 loadFeedback();
             } catch (error) {
-                console.error('Error submitting feedback:', error);
-                alert('Failed to submit feedback. Please try again later.', { class: 'alert-message bg-red-100 text-red-600' });
+                console.error('Feedback error:', error);
+                showNotification('Failed to submit feedback.', 'bg-red-100 text-red-600');
             }
         }
 
@@ -1709,27 +1112,21 @@
             try {
                 const response = await axios.get(`${API_URL}/feedback`, { timeout: 10000 });
                 const feedbackList = response.data.slice(0, 4);
-                const feedbackDiv = document.getElementById('feedback-list');
-                feedbackDiv.innerHTML = '';
-                feedbackList.forEach(f => {
-                    const stars = '★'.repeat(f.rating) + '☆'.repeat(5 - f.rating);
-                    feedbackDiv.innerHTML += `
-                        <div class="feedback-card">
-                            <p class="feedback-stars">${stars}</p>
-                            <p class="text-gray-700 mb-2">"${f.description}"</p>
-                            <p class="text-gray-500 text-sm">- ${f.name}, ${new Date(f.date).toLocaleDateString()}</p>
-                        </div>
-                    `;
-                });
+                document.getElementById('feedback-list').innerHTML = feedbackList.map(f => `
+                    <div class="bg-white p-4 rounded-lg shadow-md">
+                        <p class="feedback-stars">${'★'.repeat(f.rating)}${'☆'.repeat(5 - f.rating)}</p>
+                        <p class="text-gray-700 mb-2">"${f.description}"</p>
+                        <p class="text-gray-500 text-sm">- ${f.name}, ${new Date(f.date).toLocaleDateString()}</p>
+                    </div>
+                `).join('');
             } catch (error) {
-                console.error('Error loading feedback:', error);
-                document.getElementById('feedback-list').innerHTML = '<p class="text-red-600 text-center alert-message">Failed to load feedback. Please try again later.</p>';
+                console.error('Feedback load error:', error);
+                document.getElementById('feedback-list').innerHTML = '<p class="text-red-600 alert-message">Failed to load feedback.</p>';
             }
         }
 
         function toggleFAQ(element) {
             const faqItem = element.parentElement;
-            const answer = faqItem.querySelector('.faq-answer');
             const isActive = faqItem.classList.contains('active');
             document.querySelectorAll('.faq-item').forEach(item => {
                 item.classList.remove('active');
@@ -1738,7 +1135,7 @@
             });
             if (!isActive) {
                 faqItem.classList.add('active');
-                answer.style.display = 'block';
+                faqItem.querySelector('.faq-answer').style.display = 'block';
                 element.setAttribute('aria-expanded', 'true');
             }
         }
@@ -1746,16 +1143,16 @@
         async function subscribeNewsletter() {
             const email = document.getElementById('newsletter-email').value;
             if (!email) {
-                alert('Please enter your email to subscribe.', { class: 'alert-message bg-red-100 text-red-600' });
+                showNotification('Please enter your email.', 'bg-red-100 text-red-600');
                 return;
             }
             try {
                 await axios.post(`${API_URL}/newsletter`, { email });
-                alert('Subscribed successfully!', { class: 'alert-message bg-green-100 text-green-600' });
+                showNotification('Subscribed successfully!', 'bg-green-100 text-green-600');
                 document.getElementById('newsletter-email').value = '';
             } catch (error) {
-                console.error('Error subscribing to newsletter:', error);
-                alert('Failed to subscribe. Please try again later.', { class: 'alert-message bg-red-100 text-red-600' });
+                console.error('Newsletter error:', error);
+                showNotification('Failed to subscribe.', 'bg-red-100 text-red-600');
             }
         }
 
@@ -1763,26 +1160,12 @@
             window.location.href = 'tel:+917569366767';
         }
 
-        function downloadPDF(type) {
-            const pdfLinks = {
-                'braces-guide': 'https://example.com/pdfs/braces-guide.pdf',
-                'implant-aftercare': 'https://example.com/pdfs/implant-aftercare.pdf',
-                'kids-dental-care': 'https://example.com/pdfs/kids-dental-care.pdf'
-            };
-            const link = document.createElement('a');
-            link.href = pdfLinks[type];
-            link.download = `${type}.pdf`;
-            link.click();
-        }
-
-        function alert(message, options = {}) {
-            const alertDiv = document.createElement('div');
-            alertDiv.className = `fixed top-4 left-1/2 transform -translate-x-1/2 p-4 rounded-lg shadow-lg ${options.class || 'bg-green-100 text-green-600'}`;
-            alertDiv.innerHTML = message;
-            document.body.appendChild(alertDiv);
-            setTimeout(() => {
-                alertDiv.remove();
-            }, 3000);
+        function showNotification(message, className) {
+            const div = document.createElement('div');
+            div.className = `fixed top-4 left-1/2 transform -translate-x-1/2 p-4 rounded-lg shadow-lg ${className}`;
+            div.textContent = message;
+            document.body.appendChild(div);
+            setTimeout(() => div.remove(), 3000);
         }
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -1790,12 +1173,12 @@
             loadAdminSettings();
             loadAppointmentOptions();
             loadFeedback();
-
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('date').setAttribute('min', today);
-
-            document.getElementById('gpay-button-container').addEventListener('click', () => initiatePayment('gpay'));
-            document.getElementById('phonepe-button-container').addEventListener('click', () => initiatePayment('phonepe'));
+            document.getElementById('date').setAttribute('min', new Date().toISOString().split('T')[0]);
+            document.getElementById('pay-button').addEventListener('click', initiatePayment);
+            document.querySelector('.carousel-button.left').addEventListener('click', prevSlide);
+            document.querySelector('.carousel-button.right').addEventListener('click', nextSlide);
+            document.getElementById('category-filter').addEventListener('change', filterTreatments);
+            document.getElementById('price-filter').addEventListener('change', filterTreatments);
         });
     </script>
 </body>
