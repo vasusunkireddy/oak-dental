@@ -11,7 +11,7 @@
             font-family: 'Poppins', sans-serif;
         }
         .hero-bg {
-            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://i.postimg.cc/Z532nFfg/pexels-karolina-grabowska-6627520.jpg');
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
             background-size: cover;
             background-position: center;
         }
@@ -45,6 +45,7 @@
             min-width: 100%;
             display: flex;
             justify-content: space-between;
+            gap: 1rem;
         }
         .slide img {
             width: 48%;
@@ -62,75 +63,145 @@
             background: rgba(0, 0, 0, 0.5);
             color: white;
             border: none;
-            padding: 10px;
+            padding: 8px;
             cursor: pointer;
+        }
+        .doctor-bg {
+            background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url('https://images.unsplash.com/photo-1588776813678-3e56b86e8490?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+        .doctor-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            max-width: 350px;
+            margin: 0 auto;
         }
         .doctor-img {
             border: 4px solid #0d9488;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
         }
         /* Mobile Optimizations */
         @media (max-width: 640px) {
             .text-4xl {
-                font-size: 2rem;
+                font-size: 1.75rem;
             }
             .text-6xl {
-                font-size: 2.5rem;
-            }
-            .text-lg {
-                font-size: 1rem;
-            }
-            .text-xl {
-                font-size: 1.125rem;
+                font-size: 2.25rem;
             }
             .text-3xl {
                 font-size: 1.5rem;
             }
+            .text-xl {
+                font-size: 1.125rem;
+            }
+            .text-lg {
+                font-size: 1rem;
+            }
             .h-screen {
-                height: 80vh;
+                height: 70vh;
             }
-            .grid-cols-3 {
-                grid-template-columns: 1fr;
-            }
-            .grid-cols-2 {
+            .grid-cols-3, .grid-cols-2 {
                 grid-template-columns: 1fr;
             }
             .max-w-7xl {
                 padding-left: 1rem;
                 padding-right: 1rem;
             }
+            nav {
+                padding: 0.5rem 0;
+            }
+            nav .flex.items-center.space-x-4 {
+                flex-direction: column;
+                gap: 0.25rem;
+                font-size: 0.875rem;
+                padding-top: 0.5rem;
+            }
+            nav .h-16 {
+                height: auto;
+            }
+            .hero-bg {
+                height: 60vh;
+            }
+            .hero-bg .max-w-3xl {
+                padding: 1rem;
+            }
+            .py-16 {
+                padding-top: 3rem;
+                padding-bottom: 3rem;
+            }
+            .py-8 {
+                padding-top: 2rem;
+                padding-bottom: 2rem;
+            }
+            .mb-12 {
+                margin-bottom: 2rem;
+            }
+            .mb-6 {
+                margin-bottom: 1.5rem;
+            }
+            .mb-4 {
+                margin-bottom: 1rem;
+            }
             .slider-container {
                 max-width: 100%;
             }
+            .slide {
+                flex-direction: column;
+                align-items: center;
+                gap: 0.5rem;
+            }
             .slide img {
-                width: 48%;
-                height: 150px;
+                width: 80%;
+                height: 120px;
                 object-fit: cover;
             }
-            .w-32 {
-                width: 100px;
-            }
-            .h-32 {
-                height: 100px;
+            .doctor-img {
+                width: 120px;
+                height: 120px;
             }
             .h-48 {
+                height: 180px;
+            }
+            .w-full.h-64 {
                 height: 200px;
             }
             .space-x-4 > :not([hidden]) ~ :not([hidden]) {
                 margin-left: 0.5rem;
             }
-            nav .flex.items-center.space-x-4 {
-                flex-wrap: wrap;
+            .flex.justify-center.fade-in {
+                flex-direction: column;
+                align-items: center;
                 gap: 0.5rem;
             }
-        }
+            .max-w-md {
+                max-width: 100%;
+            }
+            input, textarea {
+                font-size: 0.875rem;
+            }
+            .px-6.py-3 {
+                padding: 0.5rem 1.5rem;
+            }
+            .md\\:pl-8 {
+                padding-left: 0;
+            }
+            .md\:w-1\/2 {
+    width: 100%;
+}
+
     </style>
 </head>
 <body class="bg-gray-100">
     <!-- Navbar -->
     <nav class="bg-white shadow-lg fixed w-full z-10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
+            <div class="flex flex-col sm:flex-row justify-between h-16">
                 <div class="flex items-center">
                     <img src="https://i.postimg.cc/bY0bwXgj/OAK-LOGO-HD.png" alt="Oak Dental Logo" class="h-12 mr-3">
                     <h1 class="text-2xl font-bold text-teal-600">Oak Dental Clinic</h1>
@@ -213,12 +284,12 @@
     </section>
 
     <!-- Doctors Section -->
-    <section id="doctors" class="py-16 bg-gray-100">
+    <section id="doctors" class="py-16 doctor-bg">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">Meet Our Doctor</h2>
             <div class="flex justify-center">
-                <div class="bg-white p-6 rounded-lg shadow-md text-center fade-in max-w-sm">
-                    <img src="https://i.postimg.cc/c1YbXJmG/RAM-KOTI.jpg" alt="Dr. A. Ram Koti Reddy" class="rounded-full w-32 h-32 mx-auto mb-4 object-cover doctor-img">
+                <div class="doctor-card text-center fade-in">
+                    <img src="https://i.postimg.cc/c1YbXJmG/RAM-KOTI.jpg" alt="Dr. A. Ram Koti Reddy" class="doctor-img mx-auto mb-4">
                     <h3 class="text-xl font-semibold text-teal-600 mb-2">Dr. A. Ram Koti Reddy, BDS, MDS</h3>
                     <p class="text-gray-600">Prosthodontist & Implantologist</p>
                     <p class="text-gray-600">Reg. No: A19677</p>
@@ -438,7 +509,7 @@
             currentSlide--;
             showSlide(currentSlide);
         }
-
+    
         showSlide(currentSlide);
     </script>
 </body>
