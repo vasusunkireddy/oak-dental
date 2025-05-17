@@ -7,6 +7,8 @@ const jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');
 const path = require('path');
 const axios = require('axios');
+const multer = require('multer');
+const fs = require('fs').promises;
 
 const app = express();
 app.use(cors());
@@ -43,8 +45,6 @@ async function testDbConnection() {
 // Database Initialization
 async function initDb() {
     try {
-        // Note: Not dropping tables to preserve existing schema
-        // If schema reset is needed, manually drop tables via psql
         await pool.query(`
             CREATE TABLE IF NOT EXISTS admins (
                 id SERIAL PRIMARY KEY,
@@ -121,6 +121,31 @@ const transporter = nodemailer.createTransport({
     }
 });
 
+// Multer Configuration for File Uploads
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/');
+    },
+    filename: (req, file, cb) => {
+        const ext = path.extname(file.originalname);
+        cb(null, `${uuidv4()}${ext}`);
+    }
+});
+
+const upload = multer({
+    storage,
+    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+    fileFilter: (req, file, cb) => {
+        const allowedImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        const allowedVideoTypes = ['video/mp4', 'video/mpeg'];
+        if (allowedImageTypes.includes(file.mimetype) || allowedVideoTypes.includes(file.mimetype)) {
+            cb(null, true);
+        } else {
+            cb(new Error('Invalid file type'));
+        }
+    }
+});
+
 // Middleware to Verify JWT
 const authenticateAdmin = async (req, res, next) => {
     const token = req.headers.authorization?.split(' ')[1];
@@ -138,6 +163,7 @@ const authenticateAdmin = async (req, res, next) => {
 
 // Serve Static Files
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Serve index.html at /
 app.get('/', (req, res) => {
@@ -247,6 +273,33 @@ app.post('/api/admin/login', async (req, res) => {
     } catch (error) {
         console.error('Error logging in:', error.message, error.stack);
         res.status(500).json({ error: 'Internal server error during login' });
+    }
+});
+
+// File Upload Endpoints
+app.post('/api/upload/image', authenticateAdmin, upload.single('image'), async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ error: 'No image file provided' });
+        }
+        const fileUrl = `${NODE_ENV === 'production' ? 'https://oak-dental.onrender.com' : 'http://localhost:3000'}/uploads/${req.file.filename}`;
+        res.json({ url: fileUrl });
+    } catch (error) {
+        console.error('Error uploading image:', error.message);
+        res.status(500).json({ error: 'Error uploading image' });
+    }
+});
+
+app.post('/api/upload/video', authenticateAdmin, upload.single('video'), async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ error: 'No video file provided' });
+        }
+        const fileUrl = `${NODE_ENV === 'production' ? 'https://oak-dental.onrender.com' : 'http://localhost:3000'}/uploads/${req.file.filename}`;
+        res.json({ url: fileUrl });
+    } catch (error) {
+        console.error('Error uploading video:', error.message);
+        res.status(500).json({ error: 'Error uploading video' });
     }
 });
 
@@ -467,6 +520,50 @@ app.post('/api/admin/appointments/:id/confirm', authenticateAdmin, async (req, r
     }
 });
 
+app.delete('/api/admin/appointments/clear-old', authenticateAdmin, async (req, res) => {
+    try {
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+        const formattedDate = thirtyDaysAgo.toISOString().split('T')[0];
+        
+        const result = await pool.query(
+            'DELETE FROM appointments WHERE date < $1 AND status != $2',
+            [formattedDate, 'CONFIRMED']
+        );
+        
+        res.json({ 
+            message: 'Old appointments cleared',
+            deletedCount: result.rowCount 
+        });
+    } catch (error) {
+        console.error('Error clearing old appointments:', error.message);
+        res.status(500).json({ error: 'Error clearing old appointments' });
+    }
+});
+
+app.post('/api/admin/appointments/clear-selected', authenticateAdmin, async (req, res) => {
+    try {
+        const { ids } = req.body;
+        if (!Array.isArray(ids) || ids.length === 0) {
+            return res.status(400).json({ error: 'No appointment IDs provided' });
+        }
+
+        const result = await pool.query(
+            'DELETE FROM appointments WHERE id = ANY($1::integer[]) RETURNING id',
+            [ids]
+        );
+
+        res.json({
+            message: 'Selected appointments cleared',
+            deletedCount: result.rowCount,
+            deletedIds: result.rows.map(row => row.id)
+        });
+    } catch (error) {
+        console.error('Error clearing selected appointments:', error.message);
+        res.status(500).json({ error: 'Error clearing selected appointments' });
+    }
+});
+
 app.get('/api/admin/waitlist', authenticateAdmin, async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM waitlist ORDER BY created_at DESC');
@@ -584,7 +681,7 @@ app.post('/api/admin/leave-dates', authenticateAdmin, async (req, res) => {
 app.delete('/api/admin/leave-dates/:date', authenticateAdmin, async (req, res) => {
     try {
         const { date } = req.params;
-        const result = await pool.query('DELETE FROM leave_dates WHERE date = $1', [date]);
+        const result = await pool.query('DELETE FROM leave_dates WHERE date = $1', [id]);
         if (result.rowCount === 0) {
             return res.status(404).json({ error: 'Leave date not found' });
         }
@@ -629,6 +726,16 @@ app.get('/cancel/:id', async (req, res) => {
         res.status(500).send('Error cancelling appointment');
     }
 });
+
+// Create Uploads Directory if it Doesn't Exist
+(async () => {
+    try {
+        await fs.mkdir(path.join(__dirname, 'uploads'), { recursive: true });
+        console.log('Uploads directory ready');
+    } catch (error) {
+        console.error('Error creating uploads directory:', error.message);
+    }
+})();
 
 // Start Server
 app.listen(PORT, () => {

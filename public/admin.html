@@ -5,144 +5,179 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Oak Dental Clinic - Admin Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            background: #f1f5f9;
+            background: #e5f0f5;
+            color: #1f2937;
         }
-        .fade-in {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-out;
         }
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
+        .animate-scale-in {
+            animation: scaleIn 0.3s ease-out;
         }
-        .sidebar {
-            height: 100vh;
-            width: 250px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            background: linear-gradient(180deg, #0d9488 0%, #14b8a6 100%);
-            color: white;
-            transition: width 0.3s ease;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        .sidebar a {
-            padding: 1rem;
-            display: block;
-            color: white;
-            text-decoration: none;
-            transition: background 0.3s ease;
+        @keyframes scaleIn {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
         }
-        .sidebar a:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-        .content {
-            margin-left: 250px;
-            padding: 2rem;
-        }
-        .navbar {
-            background: white;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        .gradient-bg {
+            background: linear-gradient(135deg, #0d9488 0%, #4fd1c5 100%);
         }
         .table-container {
+            overflow-x: auto;
             background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            padding: 1rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
-        .login-bg {
-            background: linear-gradient(135deg, #e6f3fa 0%, #d1e8e2 100%);
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            font-size: 0.875rem;
+        }
+        th {
+            background: #e6fffa;
+            font-weight: 600;
+            color: #0d9488;
+        }
+        button {
+            transition: all 0.2s ease;
+        }
+        button:hover {
+            transform: translateY(-1px);
+        }
+        .welcome-modal {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+        }
+        .dropdown-menu a {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: white;
+            font-size: 0.875rem;
+            transition: background 0.2s;
+        }
+        .dropdown-menu a:hover {
+            background: #0b8276;
         }
         @media (max-width: 768px) {
-            .sidebar {
-                width: 0;
-                overflow: hidden;
-            }
-            .sidebar.open {
-                width: 200px;
-            }
             .content {
-                margin-left: 0;
-            }
-            .login-container {
                 padding: 1rem;
+            }
+            th, td {
+                font-size: 0.75rem;
+                padding: 0.5rem;
+            }
+            button, input, textarea {
+                font-size: 0.875rem;
+                padding: 0.5rem;
+            }
+            .welcome-modal img {
+                height: 3rem;
+            }
+            .welcome-modal h2 {
+                font-size: 1.5rem;
+            }
+            .navbar {
+                padding: 0.5rem;
+            }
+            .dropdown-menu {
+                width: calc(100% - 2rem);
+                margin: 0 1rem;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Welcome Modal -->
+    <div id="welcome-modal" class="fixed inset-0 welcome-modal flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-2xl p-8 max-w-md w-full text-center animate-scale-in gradient-bg">
+            <img src="https://i.postimg.cc/bY0bwXgj/OAK-LOGO-HD.png" alt="Oak Dental Clinic Logo" class="h-16 mx-auto mb-4">
+            <h2 class="text-2xl font-bold text-white mb-2">Welcome to Oak Dental Clinic!</h2>
+            <p class="text-white">Manage your admin portal with ease.</p>
+        </div>
+    </div>
+
     <!-- Login/Register Container -->
-    <div id="auth-container" class="min-h-screen flex items-center justify-center login-bg">
-        <div class="max-w-md w-full bg-white rounded-lg shadow-lg p-8 fade-in">
+    <div id="auth-container" class="min-h-screen flex items-center justify-center gradient-bg">
+        <div class="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 animate-fade-in">
             <div class="flex justify-center mb-6">
-                <img src="https://i.postimg.cc/bY0bwXgj/OAK-LOGO-HD.png" alt="Oak Dental Clinic Logo" class="h-16">
+                <img src="https://i.postimg.cc/bY0bwXgj/OAK-LOGO-HD.png" alt="Oak Dental Clinic Logo" class="h-12">
             </div>
             <h2 class="text-2xl font-bold text-center text-teal-600 mb-6">Admin Portal</h2>
             <div id="login-form">
-                <h3 class="text-xl font-semibold text-teal-600 mb-4">Login</h3>
-                <input type="email" id="login-email" placeholder="Email" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Email">
-                <input type="password" id="login-password" placeholder="Password" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Password">
-                <button onclick="adminLogin()" class="w-full bg-teal-600 text-white p-3 rounded-lg hover:bg-teal-700">Login</button>
-                <p class="text-center mt-4">Don't have an account? <a href="#" onclick="showRegisterForm()" class="text-teal-600 hover:underline">Register</a></p>
+                <h3 class="text-lg font-semibold text-teal-600 mb-4">Login</h3>
+                <input type="email" id="login-email" placeholder="Email" class="w-full p-3 mb-3 border rounded-lg focus:ring-2 focus:ring-teal-500" required aria-label="Email">
+                <input type="password" id="login-password" placeholder="Password" class="w-full p-3 mb-3 border rounded-lg focus:ring-2 focus:ring-teal-500" required aria-label="Password">
+                <button onclick="adminLogin()" class="w-full bg-teal-600 text-white p-3 rounded-lg hover:bg-teal-700 shadow-md">Login</button>
+                <p class="text-center mt-4 text-sm">Don't have an account? <a href="#" onclick="showRegisterForm()" class="text-teal-600 hover:underline">Register</a></p>
             </div>
             <div id="register-form" class="hidden">
-                <h3 class="text-xl font-semibold text-teal-600 mb-4">Register</h3>
-                <input type="text" id="register-username" placeholder="Username" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Username">
-                <input type="email" id="register-email" placeholder="Email" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Email">
-                <input type="password" id="register-password" placeholder="Password" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Password">
-                <button onclick="adminRegister()" class="w-full bg-teal-600 text-white p-3 rounded-lg hover:bg-teal-700">Register</button>
-                <p class="text-center mt-4">Already have an account? <a href="#" onclick="showLoginForm()" class="text-teal-600 hover:underline">Login</a></p>
+                <h3 class="text-lg font-semibold text-teal-600 mb-4">Register</h3>
+                <input type="text" id="register-username" placeholder="Username" class="w-full p-3 mb-3 border rounded-lg focus:ring-2 focus:ring-teal-500" required aria-label="Username">
+                <input type="email" id="register-email" placeholder="Email" class="w-full p-3 mb-3 border rounded-lg focus:ring-2 focus:ring-teal-500" required aria-label="Email">
+                <input type="password" id="register-password" placeholder="Password" class="w-full p-3 mb-3 border rounded-lg focus:ring-2 focus:ring-teal-500" required aria-label="Password">
+                <button onclick="adminRegister()" class="w-full bg-teal-600 text-white p-3 rounded-lg hover:bg-teal-700 shadow-md">Register</button>
+                <p class="text-center mt-4 text-sm">Already have an account? <a href="#" onclick="showLoginForm()" class="text-teal-600 hover:underline">Login</a></p>
             </div>
         </div>
     </div>
 
     <!-- Dashboard Container (Hidden Initially) -->
     <div id="dashboard-container" class="hidden">
-        <!-- Sidebar -->
-        <div class="sidebar" id="sidebar">
-            <div class="flex items-center justify-center py-4">
-                <img src="https://i.postimg.cc/bY0bwXgj/OAK-LOGO-HD.png" alt="Oak Dental Clinic Logo" class="h-12">
-            </div>
-            <a href="#appointments" onclick="showSection('appointments')"><i class="fas fa-calendar-check mr-2"></i> Appointments</a>
-            <a href="#waitlist" onclick="showSection('waitlist')"><i class="fas fa-list mr-2"></i> Waitlist</a>
-            <a href="#feedback" onclick="showSection('feedback')"><i class="fas fa-comment mr-2"></i> Feedback</a>
-            <a href="#services" onclick="showSection('services')"><i class="fas fa-tooth mr-2"></i> Services</a>
-            <a href="#leave-dates" onclick="showSection('leave-dates')"><i class="fas fa-calendar-times mr-2"></i> Leave Dates</a>
-            <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt mr-2"></i> Logout</a>
-        </div>
-
         <!-- Navbar -->
-        <nav class="navbar p-4 flex justify-between items-center">
+        <nav class="bg-white p-4 flex justify-between items-center shadow-lg sticky top-0 z-40">
             <div class="flex items-center">
-                <button class="md:hidden text-teal-600 text-2xl" onclick="toggleSidebar()">☰</button>
-                <h1 class="text-xl font-semibold text-teal-600 ml-4">Oak Dental Clinic - Admin Dashboard</h1>
+                <button class="text-teal-600 text-xl" onclick="toggleDropdown()"><i class="fas fa-bars"></i></button>
+                <img src="https://i.postimg.cc/bY0bwXgj/OAK-LOGO-HD.png" alt="Oak Dental Clinic Logo" class="h-8 ml-3">
+                <h1 class="text-lg font-semibold text-teal-600 ml-2">Oak Dental Clinic - Admin</h1>
             </div>
             <div>
-                <span id="admin-username" class="text-gray-600"></span>
+                <span id="admin-username" class="text-gray-600 text-sm"></span>
+            </div>
+            <div id="dropdown-menu" class="hidden absolute top-16 left-0 right-0 bg-teal-600 rounded-lg shadow-lg z-50">
+                <a href="#appointments" onclick="showSection('appointments')" class="flex items-center"><i class="fas fa-calendar-check mr-2"></i> Appointments</a>
+                <a href="#waitlist" onclick="showSection('waitlist')" class="flex items-center"><i class="fas fa-list mr-2"></i> Waitlist</a>
+                <a href="#feedback" onclick="showSection('feedback')" class="flex items-center"><i class="fas fa-comment mr-2"></i> Feedback</a>
+                <a href="#services" onclick="showSection('services')" class="flex items-center"><i class="fas fa-tooth mr-2"></i> Services</a>
+                <a href="#leave-dates" onclick="showSection('leave-dates')" class="flex items-center"><i class="fas fa-calendar-times mr-2"></i> Leave Dates</a>
+                <a href="#" onclick="logout()" class="flex items-center"><i class="fas fa-sign-out-alt mr-2"></i> Logout</a>
             </div>
         </nav>
 
         <!-- Content -->
-        <div class="content">
+        <div class="content max-w-7xl mx-auto py-6 px-4">
             <!-- Appointments Section -->
-            <div id="appointments" class="section">
-                <h2 class="text-2xl font-bold text-teal-600 mb-6">Manage Appointments</h2>
+            <div id="appointments" class="section animate-fade-in">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-teal-600">Manage Appointments</h2>
+                    <div class="space-x-2">
+                        <button onclick="clearSelectedAppointments()" class="bg-red-600 text-white p-2 rounded-lg hover:bg-red-700 text-sm shadow-md">Clear Selected</button>
+                        <button onclick="clearOldAppointments()" class="bg-red-600 text-white p-2 rounded-lg hover:bg-red-700 text-sm shadow-md">Clear Old Appointments</button>
+                    </div>
+                </div>
                 <div class="table-container">
-                    <table class="w-full">
+                    <table>
                         <thead>
-                            <tr class="bg-teal-100">
-                                <th class="p-2">Name</th>
-                                <th class="p-2">Phone</th>
-                                <th class="p-2">Treatment</th>
-                                <th class="p-2">Date</th>
-                                <th class="p-2">Time</th>
-                                <th class="p-2">Status</th>
-                                <th class="p-2">Actions</th>
+                            <tr>
+                                <th><input type="checkbox" id="select-all-appointments" onclick="toggleSelectAll()"></th>
+                                <th>Name</th>
+                                <th>Phone</th>
+                                <th>Treatment</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Status</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="appointments-table"></tbody>
@@ -151,17 +186,17 @@
             </div>
 
             <!-- Waitlist Section -->
-            <div id="waitlist" class="section hidden">
+            <div id="waitlist" class="section hidden animate-fade-in">
                 <h2 class="text-2xl font-bold text-teal-600 mb-6">Manage Waitlist</h2>
                 <div class="table-container">
-                    <table class="w-full">
+                    <table>
                         <thead>
-                            <tr class="bg-teal-100">
-                                <th class="p-2">Name</th>
-                                <th class="p-2">Email</th>
-                                <th class="p-2">Phone</th>
-                                <th class="p-2">Preferred Date</th>
-                                <th class="p-2">Actions</th>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Preferred Date</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="waitlist-table"></tbody>
@@ -170,17 +205,17 @@
             </div>
 
             <!-- Feedback Section -->
-            <div id="feedback" class="section hidden">
+            <div id="feedback" class="section hidden animate-fade-in">
                 <h2 class="text-2xl font-bold text-teal-600 mb-6">Manage Feedback</h2>
                 <div class="table-container">
-                    <table class="w-full">
+                    <table>
                         <thead>
-                            <tr class="bg-teal-100">
-                                <th class="p-2">Name</th>
-                                <th class="p-2">Email</th>
-                                <th class="p-2">Rating</th>
-                                <th class="p-2">Description</th>
-                                <th class="p-2">Actions</th>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Rating</th>
+                                <th>Description</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="feedback-table"></tbody>
@@ -189,26 +224,34 @@
             </div>
 
             <!-- Services Section -->
-            <div id="services" class="section hidden">
+            <div id="services" class="section hidden animate-fade-in">
                 <h2 class="text-2xl font-bold text-teal-600 mb-6">Manage Services</h2>
-                <div class="mb-6">
-                    <h3 class="text-xl font-semibold text-teal-600 mb-4">Add Service</h3>
-                    <input type="text" id="service-title" placeholder="Title" class="w-full p-3 mb-4 border rounded-lg" aria-label="Service Title">
-                    <textarea id="service-description" placeholder="Description" class="w-full p-3 mb-4 border rounded-lg" rows="4" aria-label="Service Description"></textarea>
-                    <input type="number" id="service-price" placeholder="Price" class="w-full p-3 mb-4 border rounded-lg" aria-label="Service Price">
-                    <input type="text" id="service-image" placeholder="Image URL" class="w-full p-3 mb-4 border rounded-lg" aria-label="Service Image URL">
-                    <input type="text" id="service-video" placeholder="Video URL (optional)" class="w-full p-3 mb-4 border rounded-lg" aria-label="Service Video URL">
-                    <button onclick="addService()" class="bg-teal-600 text-white p-3 rounded-lg hover:bg-teal-700">Add Service</button>
+                <div class="mb-6 bg-white p-6 rounded-2xl shadow-xl">
+                    <h3 class="text-lg font-semibold text-teal-600 mb-4">Add Service</h3>
+                    <input type="text" id="service-title" placeholder="Title" class="w-full p-3 mb-3 border rounded-lg focus:ring-2 focus:ring-teal-500" aria-label="Service Title">
+                    <textarea id="service-description" placeholder="Description" class="w-full p-3 mb-3 border rounded-lg focus:ring-2 focus:ring-teal-500" rows="4" aria-label="Service Description"></textarea>
+                    <input type="number" id="service-price" placeholder="Price" class="w-full p-3 mb-3 border rounded-lg focus:ring-2 focus:ring-teal-500" aria-label="Service Price">
+                    <div class="mb-3">
+                        <label class="block text-sm text-gray-600 mb-1">Image (Optional - Upload or URL)</label>
+                        <input type="file" id="service-image-file" accept="image/*" class="w-full p-2 mb-2 border rounded-lg">
+                        <input type="text" id="service-image-url" placeholder="Image URL (optional)" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-teal-500" aria-label="Service Image URL">
+                    </div>
+                    <div class="mb-3">
+                        <label class="block text-sm text-gray-600 mb-1">Video (Optional - Upload or URL)</label>
+                        <input type="file" id="service-video-file" accept="video/*" class="w-full p-2 mb-2 border rounded-lg">
+                        <input type="text" id="service-video-url" placeholder="Video URL (optional)" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-teal-500" aria-label="Service Video URL">
+                    </div>
+                    <button onclick="addService()" class="bg-teal-600 text-white p-3 rounded-lg hover:bg-teal-700 shadow-md">Add Service</button>
                 </div>
                 <div class="table-container">
-                    <table class="w-full">
+                    <table>
                         <thead>
-                            <tr class="bg-teal-100">
-                                <th class="p-2">Title</th>
-                                <th class="p-2">Description</th>
-                                <th class="p-2">Price</th>
-                                <th class="p-2">Image/Video</th>
-                                <th class="p-2">Actions</th>
+                            <tr>
+                                <th>Title</th>
+                                <th>Description</th>
+                                <th>Price</th>
+                                <th>Image/Video</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="services-table"></tbody>
@@ -217,19 +260,19 @@
             </div>
 
             <!-- Leave Dates Section -->
-            <div id="leave-dates" class="section hidden">
+            <div id="leave-dates" class="section hidden animate-fade-in">
                 <h2 class="text-2xl font-bold text-teal-600 mb-6">Manage Leave Dates</h2>
-                <div class="mb-6">
-                    <h3 class="text-xl font-semibold text-teal-600 mb-4">Add Leave Date</h3>
-                    <input type="date" id="leave-date" class="w-full p-3 mb-4 border rounded-lg" aria-label="Leave Date">
-                    <button onclick="addLeaveDate()" class="bg-teal-600 text-white p-3 rounded-lg hover:bg-teal-700">Add Leave Date</button>
+                <div class="mb-6 bg-white p-6 rounded-2xl shadow-xl">
+                    <h3 class="text-lg font-semibold text-teal-600 mb-4">Add Leave Date</h3>
+                    <input type="date" id="leave-date" class="w-full p-3 mb-3 border rounded-lg focus:ring-2 focus:ring-teal-500" aria-label="Leave Date">
+                    <button onclick="addLeaveDate()" class="bg-teal-600 text-white p-3 rounded-lg hover:bg-teal-700 shadow-md">Add Leave Date</button>
                 </div>
                 <div class="table-container">
-                    <table class="w-full">
+                    <table>
                         <thead>
-                            <tr class="bg-teal-100">
-                                <th class="p-2">Date</th>
-                                <th class="p-2">Actions</th>
+                            <tr>
+                                <th>Date</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="leave-dates-table"></tbody>
@@ -254,19 +297,29 @@
         function showAuth() {
             document.getElementById('auth-container').classList.remove('hidden');
             document.getElementById('dashboard-container').classList.add('hidden');
-            const fadeInElements = document.querySelectorAll('.fade-in');
+            const fadeInElements = document.querySelectorAll('.animate-fade-in');
             fadeInElements.forEach(element => element.classList.add('visible'));
         }
 
         function showDashboard() {
             document.getElementById('auth-container').classList.add('hidden');
             document.getElementById('dashboard-container').classList.remove('hidden');
+            showWelcomeModal();
             loadAppointments();
             loadWaitlist();
             loadFeedback();
             loadServices();
             loadLeaveDates();
             showSection('appointments');
+        }
+
+        function showWelcomeModal() {
+            const modal = document.getElementById('welcome-modal');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 3000);
+            modal.addEventListener('click', () => modal.classList.add('hidden'));
         }
 
         function showRegisterForm() {
@@ -342,8 +395,9 @@
             }
         }
 
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('open');
+        function toggleDropdown() {
+            const dropdown = document.getElementById('dropdown-menu');
+            dropdown.classList.toggle('hidden');
         }
 
         function showSection(sectionId) {
@@ -351,9 +405,7 @@
                 section.classList.add('hidden');
             });
             document.getElementById(sectionId).classList.remove('hidden');
-            if (window.innerWidth <= 768) {
-                document.getElementById('sidebar').classList.remove('open');
-            }
+            document.getElementById('dropdown-menu').classList.add('hidden');
         }
 
         function logout() {
@@ -366,7 +418,6 @@
             const token = localStorage.getItem('adminToken');
             options.headers = {
                 ...options.headers,
-                'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             };
             const response = await fetch(url, options);
@@ -377,6 +428,36 @@
             return response;
         }
 
+        // File Upload Helper
+        async function uploadFile(file, type) {
+            if (!file) {
+                console.log(`No ${type} file provided for upload`);
+                return null;
+            }
+
+            const formData = new FormData();
+            formData.append(type, file);
+            try {
+                const response = await fetchWithAuth(`${API_BASE_URL}/api/upload/${type}`, {
+                    method: 'POST',
+                    body: formData,
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('adminToken')}` }
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`Upload failed: ${response.status} ${response.statusText} - ${errorText}`);
+                }
+
+                const data = await response.json();
+                return data.url;
+            } catch (error) {
+                console.error(`Error uploading ${type}:`, error);
+                alert(`Failed to upload ${type}: ${error.message}`);
+                return null;
+            }
+        }
+
         // Appointments
         async function loadAppointments() {
             try {
@@ -384,19 +465,21 @@
                 const appointments = await response.json();
                 const table = document.getElementById('appointments-table');
                 table.innerHTML = '';
+                appointments.sort((a, b) => new Date(a.date) - new Date(b.date));
                 appointments.forEach(apt => {
                     table.innerHTML += `
                         <tr>
-                            <td class="p-2">${apt.full_name}</td>
-                            <td class="p-2">${apt.phone}</td>
-                            <td class="p-2">${apt.treatment}</td>
-                            <td class="p-2">${apt.date}</td>
-                            <td class="p-2">${apt.time}</td>
-                            <td class="p-2">${apt.status}</td>
-                            <td class="p-2">
+                            <td><input type="checkbox" class="appointment-checkbox" data-id="${apt.id}"></td>
+                            <td>${apt.full_name}</td>
+                            <td>${apt.phone}</td>
+                            <td>${apt.treatment}</td>
+                            <td>${apt.date}</td>
+                            <td>${apt.time}</td>
+                            <td>${apt.status}</td>
+                            <td>
                                 ${apt.status !== 'CANCELLED' ? `
-                                    <button onclick="confirmAppointment('${apt.id}')" class="bg-green-600 text-white p-1 rounded hover:bg-green-700">Confirm</button>
-                                    <button onclick="cancelAppointment('${apt.id}')" class="bg-red-600 text-white p-1 rounded hover:bg-red-700">Cancel</button>
+                                    <button onclick="confirmAppointment('${apt.id}')" class="bg-green-600 text-white p-1 rounded hover:bg-green-700 text-xs">Confirm</button>
+                                    <button onclick="cancelAppointment('${apt.id}')" class="bg-red-600 text-white p-1 rounded hover:bg-red-700 text-xs">Cancel</button>
                                 ` : ''}
                             </td>
                         </tr>
@@ -404,6 +487,40 @@
                 });
             } catch (error) {
                 console.error('Error loading appointments:', error);
+            }
+        }
+
+        function toggleSelectAll() {
+            const selectAll = document.getElementById('select-all-appointments');
+            const checkboxes = document.querySelectorAll('.appointment-checkbox');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = selectAll.checked;
+            });
+        }
+
+        async function clearSelectedAppointments() {
+            const checkboxes = document.querySelectorAll('.appointment-checkbox:checked');
+            const selectedIds = Array.from(checkboxes).map(checkbox => checkbox.dataset.id);
+            if (selectedIds.length === 0) {
+                alert('No appointments selected.');
+                return;
+            }
+            if (!confirm(`Are you sure you want to delete ${selectedIds.length} selected appointments?`)) return;
+
+            try {
+                const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/appointments/clear-selected`, {
+                    method: 'POST',
+                    body: JSON.stringify({ ids: selectedIds })
+                });
+                if (response.ok) {
+                    alert('Selected appointments cleared');
+                    loadAppointments();
+                    document.getElementById('select-all-appointments').checked = false;
+                } else {
+                    alert('Error clearing selected appointments');
+                }
+            } catch (error) {
+                console.error('Error clearing selected appointments:', error);
             }
         }
 
@@ -436,6 +553,21 @@
             }
         }
 
+        async function clearOldAppointments() {
+            if (!confirm('Are you sure you want to clear all old appointments (older than 30 days)?')) return;
+            try {
+                const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/appointments/clear-old`, { method: 'DELETE' });
+                if (response.ok) {
+                    alert('Old appointments cleared');
+                    loadAppointments();
+                } else {
+                    alert('Error clearing appointments');
+                }
+            } catch (error) {
+                console.error('Error clearing appointments:', error);
+            }
+        }
+
         // Waitlist
         async function loadWaitlist() {
             try {
@@ -446,12 +578,12 @@
                 waitlist.forEach(entry => {
                     table.innerHTML += `
                         <tr>
-                            <td class="p-2">${entry.full_name}</td>
-                            <td class="p-2">${entry.email}</td>
-                            <td class="p-2">${entry.phone}</td>
-                            <td class="p-2">${entry.preferred_date}</td>
-                            <td class="p-2">
-                                <button onclick="deleteWaitlist('${entry.id}')" class="bg-red-600 text-white p-1 rounded hover:bg-red-700">Delete</button>
+                            <td>${entry.full_name}</td>
+                            <td>${entry.email}</td>
+                            <td>${entry.phone}</td>
+                            <td>${entry.preferred_date}</td>
+                            <td>
+                                <button onclick="deleteWaitlist('${entry.id}')" class="bg-red-600 text-white p-1 rounded hover:bg-red-700 text-xs">Delete</button>
                             </td>
                         </tr>
                     `;
@@ -486,12 +618,12 @@
                 feedbacks.forEach(fb => {
                     table.innerHTML += `
                         <tr>
-                            <td class="p-2">${fb.full_name}</td>
-                            <td class="p-2">${fb.email}</td>
-                            <td class="p-2">${fb.rating}★</td>
-                            <td class="p-2">${fb.description}</td>
-                            <td class="p-2">
-                                <button onclick="deleteFeedback('${fb.id}')" class="bg-red-600 text-white p-1 rounded hover:bg-red-700">Delete</button>
+                            <td>${fb.full_name}</td>
+                            <td>${fb.email}</td>
+                            <td>${fb.rating}★</td>
+                            <td>${fb.description}</td>
+                            <td>
+                                <button onclick="deleteFeedback('${fb.id}')" class="bg-red-600 text-white p-1 rounded hover:bg-red-700 text-xs">Delete</button>
                             </td>
                         </tr>
                     `;
@@ -526,13 +658,13 @@
                 services.forEach(svc => {
                     table.innerHTML += `
                         <tr>
-                            <td class="p-2">${svc.title}</td>
-                            <td class="p-2">${svc.description}</td>
-                            <td class="p-2">₹${svc.price}</td>
-                            <td class="p-2">${svc.image || svc.video || 'N/A'}</td>
-                            <td class="p-2">
-                                <button onclick="editService('${svc.id}')" class="bg-blue-600 text-white p-1 rounded hover:bg-blue-700">Edit</button>
-                                <button onclick="deleteService('${svc.id}')" class="bg-red-600 text-white p-1 rounded hover:bg-red-700">Delete</button>
+                            <td>${svc.title}</td>
+                            <td>${svc.description}</td>
+                            <td>₹${svc.price}</td>
+                            <td>${svc.image || svc.video || 'N/A'}</td>
+                            <td>
+                                <button onclick="editService('${svc.id}')" class="bg-blue-600 text-white p-1 rounded hover:bg-blue-700 text-xs">Edit</button>
+                                <button onclick="deleteService('${svc.id}')" class="bg-red-600 text-white p-1 rounded hover:bg-red-700 text-xs">Delete</button>
                             </td>
                         </tr>
                     `;
@@ -547,13 +679,39 @@
                 title: document.getElementById('service-title').value,
                 description: document.getElementById('service-description').value,
                 price: parseFloat(document.getElementById('service-price').value),
-                image: document.getElementById('service-image').value || null,
-                video: document.getElementById('service-video').value || null
             };
 
             if (!serviceData.title || !serviceData.description || !serviceData.price) {
-                alert('Please fill in all required fields.');
+                alert('Please fill in title, description, and price.');
                 return;
+            }
+
+            // Handle Image
+            const imageFile = document.getElementById('service-image-file').files[0];
+            const imageUrl = document.getElementById('service-image-url').value;
+            if (imageFile) {
+                const uploadedImageUrl = await uploadFile(imageFile, 'image');
+                if (uploadedImageUrl) {
+                    serviceData.image = uploadedImageUrl;
+                }
+            } else if (imageUrl) {
+                serviceData.image = imageUrl;
+            } else {
+                serviceData.image = null;
+            }
+
+            // Handle Video
+            const videoFile = document.getElementById('service-video-file').files[0];
+            const videoUrl = document.getElementById('service-video-url').value;
+            if (videoFile) {
+                const uploadedVideoUrl = await uploadFile(videoFile, 'video');
+                if (uploadedVideoUrl) {
+                    serviceData.video = uploadedVideoUrl;
+                }
+            } else if (videoUrl) {
+                serviceData.video = videoUrl;
+            } else {
+                serviceData.video = null;
             }
 
             try {
@@ -562,18 +720,22 @@
                     body: JSON.stringify(serviceData)
                 });
                 if (response.ok) {
-                    alert('Service added');
+                    alert('Service added successfully');
                     document.getElementById('service-title').value = '';
                     document.getElementById('service-description').value = '';
                     document.getElementById('service-price').value = '';
-                    document.getElementById('service-image').value = '';
-                    document.getElementById('service-video').value = '';
+                    document.getElementById('service-image-file').value = '';
+                    document.getElementById('service-image-url').value = '';
+                    document.getElementById('service-video-file').value = '';
+                    document.getElementById('service-video-url').value = '';
                     loadServices();
                 } else {
-                    alert('Error adding service');
+                    const errorData = await response.json();
+                    alert(errorData.error || 'Error adding service');
                 }
             } catch (error) {
                 console.error('Error adding service:', error);
+                alert('Failed to add service. Please try again.');
             }
         }
 
@@ -606,9 +768,9 @@
                 leaveDates.forEach(date => {
                     table.innerHTML += `
                         <tr>
-                            <td class="p-2">${date}</td>
-                            <td class="p-2">
-                                <button onclick="deleteLeaveDate('${date}')" class="bg-red-600 text-white p-1 rounded hover:bg-red-700">Delete</button>
+                            <td>${date}</td>
+                            <td>
+                                <button onclick="deleteLeaveDate('${date}')" class="bg-red-600 text-white p-1 rounded hover:bg-red-700 text-xs">Delete</button>
                             </td>
                         </tr>
                     `;
