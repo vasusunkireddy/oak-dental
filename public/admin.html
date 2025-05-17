@@ -103,7 +103,6 @@
             padding: 8px 12px;
             font-size: 12px;
         }
-        /* Toast Notification Styles */
         .toast {
             position: fixed;
             bottom: 20px;
@@ -127,7 +126,6 @@
         @keyframes toastIn {
             to { opacity: 1; transform: translateY(0); }
         }
-        /* Modal Styles */
         .modal {
             background: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(4px);
@@ -386,6 +384,7 @@
                             <tr>
                                 <th>Title</th>
                                 <th>Price</th>
+                                <th>Image</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -447,6 +446,9 @@
     </div>
 
     <script>
+        // Cache-busting to ensure the latest script is loaded
+        const cacheBuster = Date.now();
+
         // Determine API Base URL
         const API_BASE_URL = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://oak-dental.onrender.com';
 
@@ -616,7 +618,7 @@
                     throw new Error(errorData.error || 'Upload failed');
                 }
                 const data = await response.json();
-                return data.filename;
+                return data.url; // Changed to return the URL directly
             } catch (error) {
                 console.error('Error uploading media:', error);
                 throw error;
@@ -847,10 +849,13 @@
                 const table = document.getElementById('services-table');
                 table.innerHTML = '';
                 services.forEach(svc => {
+                    const imageSrc = svc.image ? svc.image : '';
+                    console.log(`Service ${svc.id} - Image URL: ${imageSrc}`);
                     table.innerHTML += `
                         <tr>
                             <td>${svc.title}</td>
                             <td>₹${svc.price}</td>
+                            <td>${imageSrc ? `<img src="${imageSrc}" alt="${svc.title}" class="h-16" onerror="console.error('Failed to load image for service ${svc.id}: ${imageSrc}', event);this.parentElement.textContent='No Image'">` : 'No Image'}</td>
                             <td>
                                 <button onclick="editService('${svc.id}')" class="bg-blue-600 text-white action-btn hover:bg-blue-700">Edit</button>
                                 <button onclick="deleteService('${svc.id}')" class="bg-red-600 text-white action-btn hover:bg-red-700">Delete</button>
@@ -868,7 +873,9 @@
             const serviceData = {
                 title: document.getElementById('service-title').value,
                 description: document.getElementById('service-description').value,
-                price: parseFloat(document.getElementById('service-price').value)
+                price: parseFloat(document.getElementById('service-price').value),
+                image: document.getElementById('service-image-url').value || null,
+                video: document.getElementById('service-video-url').value || null
             };
             if (!serviceData.title || !serviceData.description || isNaN(serviceData.price)) {
                 showToast('Please fill in title, description, and price.', 'error');
@@ -876,21 +883,14 @@
             }
             try {
                 const imageFile = document.getElementById('service-image-file').files[0];
-                const imageUrl = document.getElementById('service-image-url').value;
-                if (imageFile) {
-                    const uploadedImageFilename = await uploadFile(imageFile);
-                    if (uploadedImageFilename) serviceData.image = uploadedImageFilename;
-                } else if (imageUrl) {
-                    serviceData.image = imageUrl;
-                }
-
                 const videoFile = document.getElementById('service-video-file').files[0];
-                const videoUrl = document.getElementById('service-video-url').value;
+                if (imageFile) {
+                    const uploadedImageUrl = await uploadFile(imageFile);
+                    if (uploadedImageUrl) serviceData.image = uploadedImageUrl;
+                }
                 if (videoFile) {
-                    const uploadedVideoFilename = await uploadFile(videoFile);
-                    if (uploadedVideoFilename) serviceData.video = uploadedVideoFilename;
-                } else if (videoUrl) {
-                    serviceData.video = videoUrl;
+                    const uploadedVideoUrl = await uploadFile(videoFile);
+                    if (uploadedVideoUrl) serviceData.video = uploadedVideoUrl;
                 }
 
                 const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/services`, {
@@ -943,7 +943,9 @@
             const serviceData = {
                 title: document.getElementById('edit-service-title').value,
                 description: document.getElementById('edit-service-description').value,
-                price: parseFloat(document.getElementById('edit-service-price').value)
+                price: parseFloat(document.getElementById('edit-service-price').value),
+                image: document.getElementById('edit-service-image-url').value || null,
+                video: document.getElementById('edit-service-video-url').value || null
             };
             const id = document.getElementById('edit-service-id').value;
             if (!serviceData.title || !serviceData.description || isNaN(serviceData.price)) {
@@ -952,21 +954,14 @@
             }
             try {
                 const imageFile = document.getElementById('edit-service-image-file').files[0];
-                const imageUrl = document.getElementById('edit-service-image-url').value;
-                if (imageFile) {
-                    const uploadedImageFilename = await uploadFile(imageFile);
-                    if (uploadedImageFilename) serviceData.image = uploadedImageFilename;
-                } else if (imageUrl) {
-                    serviceData.image = imageUrl;
-                }
-
                 const videoFile = document.getElementById('edit-service-video-file').files[0];
-                const videoUrl = document.getElementById('edit-service-video-url').value;
+                if (imageFile) {
+                    const uploadedImageUrl = await uploadFile(imageFile);
+                    if (uploadedImageUrl) serviceData.image = uploadedImageUrl;
+                }
                 if (videoFile) {
-                    const uploadedVideoFilename = await uploadFile(videoFile);
-                    if (uploadedVideoFilename) serviceData.video = uploadedVideoFilename;
-                } else if (videoUrl) {
-                    serviceData.video = videoUrl;
+                    const uploadedVideoUrl = await uploadFile(videoFile);
+                    if (uploadedVideoUrl) serviceData.video = uploadedVideoUrl;
                 }
 
                 const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/services/${id}`, {
@@ -1011,14 +1006,12 @@
                 const table = document.getElementById('offers-table');
                 table.innerHTML = '';
                 offers.forEach(offer => {
-                    const imageSrc = offer.image ? 
-                        (offer.image.startsWith('http') ? offer.image : `${API_BASE_URL}/Uploads/${offer.image}`) : 
-                        '';
+                    const imageSrc = offer.image ? offer.image : '';
                     table.innerHTML += `
                         <tr>
                             <td>${offer.title}</td>
                             <td>₹${offer.price}</td>
-                            <td>${imageSrc ? `<img src="${imageSrc}" alt="${offer.title}" class="h-16" onerror="this.src='';this.parentElement.textContent='No Image'">` : 'No Image'}</td>
+                            <td>${imageSrc ? `<img src="${imageSrc}" alt="${offer.title}" class="h-16" onerror="this.parentElement.textContent='No Image'">` : 'No Image'}</td>
                             <td>
                                 <button onclick="editOffer('${offer.id}')" class="bg-blue-600 text-white action-btn hover:bg-blue-700">Edit</button>
                                 <button onclick="deleteOffer('${offer.id}')" class="bg-red-600 text-white action-btn hover:bg-red-700">Delete</button>
@@ -1048,9 +1041,9 @@
                     showToast('Please upload an offer image.', 'error');
                     return;
                 }
-                const uploadedImageFilename = await uploadFile(imageFile);
-                if (uploadedImageFilename) {
-                    offerData.image = uploadedImageFilename;
+                const uploadedImageUrl = await uploadFile(imageFile);
+                if (uploadedImageUrl) {
+                    offerData.image = uploadedImageUrl;
                 } else {
                     showToast('Failed to upload offer image.', 'error');
                     return;
@@ -1102,7 +1095,8 @@
             const offerData = {
                 title: document.getElementById('edit-offer-title').value,
                 description: document.getElementById('edit-offer-description').value,
-                price: parseFloat(document.getElementById('edit-offer-price').value)
+                price: parseFloat(document.getElementById('edit-offer-price').value),
+                image: document.getElementById('edit-offer-image-url').value || null
             };
             const id = document.getElementById('edit-offer-id').value;
             if (!offerData.title || !offerData.description || isNaN(offerData.price)) {
@@ -1111,12 +1105,9 @@
             }
             try {
                 const imageFile = document.getElementById('edit-offer-image-file').files[0];
-                const imageUrl = document.getElementById('edit-offer-image-url').value;
                 if (imageFile) {
-                    const uploadedImageFilename = await uploadFile(imageFile);
-                    if (uploadedImageFilename) offerData.image = uploadedImageFilename;
-                } else if (imageUrl) {
-                    offerData.image = imageUrl;
+                    const uploadedImageUrl = await uploadFile(imageFile);
+                    if (uploadedImageUrl) offerData.image = uploadedImageUrl;
                 }
 
                 const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/offers/${id}`, {
