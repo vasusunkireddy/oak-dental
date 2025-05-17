@@ -161,6 +161,43 @@
         .rating-stars .star.selected {
             color: #fbbf24;
         }
+        /* Gallery Slider Styles */
+        .gallery-slider-container {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+        .gallery-slider {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+        .gallery-slide {
+            min-width: 100%;
+            display: flex;
+            justify-content: space-between;
+            gap: 0.5rem;
+        }
+        .gallery-item {
+            flex: 1;
+            max-width: 33%;
+        }
+        .gallery-img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        /* Leave Date Styling */
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            cursor: pointer;
+        }
+        .leave-date-note {
+            color: #e53e3e;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
         @media (max-width: 640px) {
             .text-4xl { font-size: 1.75rem; }
             .text-6xl { font-size: 2.25rem; }
@@ -191,10 +228,17 @@
             .max-w-md { max-width: 100%; }
             input, textarea { font-size: 0.875rem; }
             .px-6.py-3 { padding: 0.5rem 1.5rem; }
+            /* Gallery Mobile Styles */
+            .gallery-slide { flex-direction: row; }
+            .gallery-item { max-width: 32%; }
+            .gallery-img { height: 100px; }
         }
         @media (min-width: 641px) {
             .hamburger { display: none; }
             .sidenav { display: none; }
+            .gallery-slide { justify-content: center; }
+            .gallery-item { max-width: 33.33%; }
+            .gallery-img { height: 180px; }
         }
     </style>
     <script type="application/ld+json">
@@ -283,37 +327,37 @@
                     <i class="fas fa-tooth text-teal-600 text-4xl mb-4"></i>
                     <h3 class="text-xl font-semibold text-teal-600 mb-4">General Dentistry</h3>
                     <p class="text-gray-600 mb-4">Routine check-ups, cleanings, and fillings to keep your smile bright.</p>
-                    <p class="text-gray-600">Learn More</p>
+                    <a href="services.html#general-dentistry" class="text-teal-600 hover:underline">Learn More</a>
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-md text-center fade-in">
                     <i class="fas fa-smile text-teal-600 text-4xl mb-4"></i>
                     <h3 class="text-xl font-semibold text-teal-600 mb-4">Cosmetic Dentistry</h3>
                     <p class="text-gray-600 mb-4">Teeth whitening, veneers, and more to enhance your smile.</p>
-                    <p class="text-gray-600">Learn More</p>
+                    <a href="services.html#cosmetic-dentistry" class="text-teal-600 hover:underline">Learn More</a>
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-md text-center fade-in">
                     <i class="fas fa-align-center text-teal-600 text-4xl mb-4"></i>
                     <h3 class="text-xl font-semibold text-teal-600 mb-4">Orthodontics</h3>
                     <p class="text-gray-600 mb-4">Braces and aligners for perfectly aligned teeth.</p>
-                    <p class="text-gray-600">Learn More</p>
+                    <a href="services.html#orthodontics" class="text-teal-600 hover:underline">Learn More</a>
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-md text-center fade-in">
                     <i class="fas fa-tooth text-teal-600 text-4xl mb-4"></i>
                     <h3 class="text-xl font-semibold text-teal-600 mb-4">Dental Implants</h3>
                     <p class="text-gray-600 mb-4">Permanent solutions for missing teeth with advanced technology.</p>
-                    <p class="text-gray-600">Learn More</p>
+                    <a href="services.html#dental-implants" class="text-teal-600 hover:underline">Learn More</a>
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-md text-center fade-in">
                     <i class="fas fa-tools text-teal-600 text-4xl mb-4"></i>
                     <h3 class="text-xl font-semibold text-teal-600 mb-4">Root Canal Therapy</h3>
                     <p class="text-gray-600 mb-4">Pain-free treatment to save damaged teeth.</p>
-                    <p class="text-gray-600">Learn More</p>
+                    <a href="services.html#root-canal-therapy" class="text-teal-600 hover:underline">Learn More</a>
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-md text-center fade-in">
                     <i class="fas fa-baby text-teal-600 text-4xl mb-4"></i>
                     <h3 class="text-xl font-semibold text-teal-600 mb-4">Pediatric Dentistry</h3>
                     <p class="text-gray-600 mb-4">Gentle dental care for children and teens.</p>
-                    <p class="text-gray-600">Learn More</p>
+                    <a href="services.html#pediatric-dentistry" class="text-teal-600 hover:underline">Learn More</a>
                 </div>
             </div>
             <div class="text-center mt-8 fade-in">
@@ -410,24 +454,33 @@
     <section id="gallery" class="py-16 bg-yellow-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">Our Clinic in Bachupally</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="fade-in">
-                    <picture>
-                        <source srcset="https://i.postimg.cc/Xvfrsdpy/Oak-dental-interior-3.jpg?fm=webp" type="image/webp">
-                        <img src="https://i.postimg.cc/Xvfrsdpy/Oak-dental-interior-3.jpg" alt="Oak Dental Clinic Interior 1" class="rounded-lg shadow-md w-full h-48 object-cover" loading="lazy">
-                    </picture>
+            <div class="gallery-slider-container fade-in">
+                <div class="gallery-slider" id="gallery-slider">
+                    <!-- Slide 1 -->
+                    <div class="gallery-slide flex">
+                        <div class="gallery-item">
+                            <picture>
+                                <source srcset="https://i.postimg.cc/Xvfrsdpy/Oak-dental-interior-3.jpg?fm=webp" type="image/webp">
+                                <img src="https://i.postimg.cc/Xvfrsdpy/Oak-dental-interior-3.jpg" alt="Oak Dental Clinic Interior 1" class="gallery-img" loading="lazy">
+                            </picture>
+                        </div>
+                        <div class="gallery-item">
+                            <picture>
+                                <source srcset="https://i.postimg.cc/tTDYjbdq/Oak-dental-interior-4.jpg?fm=webp" type="image/webp">
+                                <img src="https://i.postimg.cc/tTDYjbdq/Oak-dental-interior-4.jpg" alt="Oak Dental Clinic Interior 2" class="gallery-img" loading="lazy">
+                            </picture>
+                        </div>
+                        <div class="gallery-item">
+                            <picture>
+                                <source srcset="https://i.postimg.cc/qvnq7ycZ/Oak-dental-interior-5.jpg?fm=webp" type="image/webp">
+                                <img src="https://i.postimg.cc/qvnq7ycZ/Oak-dental-interior-5.jpg" alt="Oak Dental Clinic Interior 3" class="gallery-img" loading="lazy">
+                            </picture>
+                        </div>
+                    </div>
                 </div>
-                <div class="fade-in">
-                    <picture>
-                        <source srcset="https://i.postimg.cc/tTDYjbdq/Oak-dental-interior-4.jpg?fm=webp" type="image/webp">
-                        <img src="https://i.postimg.cc/tTDYjbdq/Oak-dental-interior-4.jpg" alt="Oak Dental Clinic Interior 2" class="rounded-lg shadow-md w-full h-48 object-cover" loading="lazy">
-                    </picture>
-                </div>
-                <div class="fade-in">
-                    <picture>
-                        <source srcset="https://i.postimg.cc/qvnq7ycZ/Oak-dental-interior-5.jpg?fm=webp" type="image/webp">
-                        <img src="https://i.postimg.cc/qvnq7ycZ/Oak-dental-interior-5.jpg" alt="Oak Dental Clinic Interior 3" class="rounded-lg shadow-md w-full h-48 object-cover" loading="lazy">
-                    </picture>
+                <div class="slider-nav">
+                    <button onclick="prevGallerySlide()" aria-label="Previous Gallery Slide">❮</button>
+                    <button onclick="nextGallerySlide()" aria-label="Next Gallery Slide">❯</button>
                 </div>
             </div>
         </div>
@@ -503,6 +556,7 @@
             <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">Book an Appointment</h2>
             <div class="max-w-md mx-auto fade-in">
                 <h3 class="text-xl font-semibold text-teal-600 mb-4">Appointment Details</h3>
+                <p class="leave-date-note">Note: Dates marked in red indicate the doctor is on leave. Please select another date.</p>
                 <div>
                     <input type="text" id="name" placeholder="Your Name" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Your Name">
                     <input type="email" id="email" placeholder="Your Email" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Your Email">
@@ -510,7 +564,6 @@
                     <input type="date" id="appointment-date" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Appointment Date">
                     <select id="time-slot" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Time Slot">
                         <option value="" disabled selected>Select Time Slot</option>
-                        <!-- Time slots populated by JavaScript -->
                     </select>
                     <textarea id="message" placeholder="Your Message" class="w-full p-3 mb-4 border rounded-lg" rows="4" required aria-label="Your Message"></textarea>
                     <div class="space-x-4">
@@ -595,7 +648,7 @@
                 <a href="#" class="hover:text-gray-200" aria-label="Facebook">Facebook</a>
                 <a href="#" class="hover:text-gray-200" aria-label="Twitter">Twitter</a>
                 <a href="#" class="hover:text-gray-200" aria-label="Instagram">Instagram</a>
-                <a href="privacy-policy.html" class="hover:text-gray-200" aria-label="Privacy Policy">Privacy Policy</a>
+                <a href="privacy-policy вложить документальный фильм о природе.html" class="hover:text-gray-200" aria-label="Privacy Policy">Privacy Policy</a>
                 <a href="terms.html" class="hover:text-gray-200" aria-label="Terms of Use">Terms of Use</a>
             </div>
         </div>
@@ -666,44 +719,68 @@
         }
         showSlide(currentSlide);
 
+        // Gallery Slider
+        let currentGallerySlide = 0;
+        const gallerySlides = document.querySelectorAll('.gallery-slide');
+        const gallerySlider = document.getElementById('gallery-slider');
+        function showGallerySlide(index) {
+            if (index >= gallerySlides.length) currentGallerySlide = 0;
+            if (index < 0) currentGallerySlide = gallerySlides.length - 1;
+            gallerySlider.style.transform = `translateX(-${currentGallerySlide * 100}%)`;
+        }
+        function nextGallerySlide() {
+            currentGallerySlide++;
+            showGallerySlide(currentGallerySlide);
+        }
+        function prevGallerySlide() {
+            currentGallerySlide--;
+            showGallerySlide(currentGallerySlide);
+        }
+        showGallerySlide(currentGallerySlide);
+
         // Treatments Slider
         let currentTreatmentSlide = 0;
         let treatmentSlides = [];
-        function loadTreatments() {
-            const treatmentsSlider = document.getElementById('treatments-slider');
-            const treatments = JSON.parse(localStorage.getItem('treatments') || '[]');
-            treatmentsSlider.innerHTML = '';
+        async function loadTreatments() {
+            try {
+                const response = await fetch('http://localhost:3000/api/services');
+                const treatments = await response.json();
+                const treatmentsSlider = document.getElementById('treatments-slider');
+                treatmentsSlider.innerHTML = '';
 
-            if (treatments.length === 0) {
-                treatmentsSlider.innerHTML = '<p class="text-center text-gray-600">No treatments available at the moment.</p>';
-                return;
-            }
-
-            treatments.forEach(treatment => {
-                const treatmentSlide = document.createElement('div');
-                treatmentSlide.className = 'treatment-slide';
-                let mediaHTML = '';
-                if (treatment.video) {
-                    mediaHTML = `<video src="${treatment.video}" controls class="treatment-media"></video>`;
-                } else if (treatment.image) {
-                    mediaHTML = `<img src="${treatment.image}" alt="${treatment.title}" class="treatment-media" loading="lazy">`;
+                if (treatments.length === 0) {
+                    treatmentsSlider.innerHTML = '<p class="text-center text-gray-600">No treatments available at the moment.</p>';
+                    return;
                 }
-                treatmentSlide.innerHTML = `
-                    <div class="bg-white p-6 rounded-lg shadow-md text-center">
-                        ${mediaHTML}
-                        <h3 class="text-xl font-semibold text-teal-600 mb-2">${treatment.title}</h3>
-                        <p class="text-gray-600 mb-2">${treatment.description}</p>
-                        <p class="text-gray-800 font-semibold">Price: ₹${treatment.price}</p>
-                    </div>
-                `;
-                treatmentsSlider.appendChild(treatmentSlide);
-            });
 
-            treatmentSlides = document.querySelectorAll('.treatment-slide');
-            updateTreatmentSlider();
+                treatments.forEach(treatment => {
+                    const treatmentSlide = document.createElement('div');
+                    treatmentSlide.className = 'treatment-slide';
+                    let mediaHTML = '';
+                    if (treatment.video) {
+                        mediaHTML = `<video src="${treatment.video}" controls class="treatment-media"></video>`;
+                    } else if (treatment.image) {
+                        mediaHTML = `<img src="${treatment.image}" alt="${treatment.title}" class="treatment-media" loading="lazy">`;
+                    }
+                    treatmentSlide.innerHTML = `
+                        <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                            ${mediaHTML}
+                            <h3 class="text-xl font-semibold text-teal-600 mb-2">${treatment.title}</h3>
+                            <p class="text-gray-600 mb-2">${treatment.description}</p>
+                            <p class="text-gray-800 font-semibold">Price: ₹${treatment.price}</p>
+                        </div>
+                    `;
+                    treatmentsSlider.appendChild(treatmentSlide);
+                });
+
+                treatmentSlides = document.querySelectorAll('.treatment-slide');
+                updateTreatmentSlider();
+            } catch (error) {
+                console.error('Error loading treatments:', error);
+            }
         }
         function updateTreatmentSlider() {
-            const slideWidth = 100 / 3; // Show 3 slides at a time on desktop
+            const slideWidth = 100 / 3;
             if (currentTreatmentSlide >= treatmentSlides.length - 2) currentTreatmentSlide = 0;
             if (currentTreatmentSlide < 0) currentTreatmentSlide = Math.max(0, treatmentSlides.length - 3);
             document.getElementById('treatments-slider').style.transform = `translateX(-${currentTreatmentSlide * slideWidth}%)`;
@@ -728,7 +805,7 @@
             });
         });
 
-        function submitFeedback() {
+        async function submitFeedback() {
             const name = document.getElementById('feedback-name').value;
             const email = document.getElementById('feedback-email').value;
             const description = document.getElementById('feedback-description').value;
@@ -738,59 +815,72 @@
                 return;
             }
 
-            const feedback = { name, email, rating: currentRating, description };
-            let feedbacks = JSON.parse(localStorage.getItem('feedbacks') || '[]');
-            feedbacks.push(feedback);
-            localStorage.setItem('feedbacks', JSON.stringify(feedbacks));
+            try {
+                const response = await fetch('http://localhost:3000/api/feedback', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, rating: currentRating, description })
+                });
 
-            loadTestimonials();
-
-            document.getElementById('feedback-name').value = '';
-            document.getElementById('feedback-email').value = '';
-            document.getElementById('feedback-description').value = '';
-            currentRating = 0;
-            document.querySelectorAll('.rating-stars .star').forEach(s => s.classList.remove('selected'));
-
-            alert('Thank you for your feedback!');
+                if (response.ok) {
+                    loadTestimonials();
+                    document.getElementById('feedback-name').value = '';
+                    document.getElementById('feedback-email').value = '';
+                    document.getElementById('feedback-description').value = '';
+                    currentRating = 0;
+                    document.querySelectorAll('.rating-stars .star').forEach(s => s.classList.remove('selected'));
+                    alert('Thank you for your feedback!');
+                } else {
+                    alert('Error submitting feedback. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error submitting feedback:', error);
+                alert('Error submitting feedback. Please try again.');
+            }
         }
 
         // Testimonials Carousel
         let testimonialIndex = 0;
         let testimonials = [];
-        function loadTestimonials() {
-            const testimonialSlider = document.getElementById('testimonial-slider');
-            const feedbacks = JSON.parse(localStorage.getItem('feedbacks') || '[]');
-            testimonialSlider.innerHTML = '';
+        async function loadTestimonials() {
+            try {
+                const response = await fetch('http://localhost:3000/api/feedback');
+                const feedbacks = await response.json();
+                const testimonialSlider = document.getElementById('testimonial-slider');
+                testimonialSlider.innerHTML = '';
 
-            if (feedbacks.length === 0) {
-                testimonialSlider.innerHTML = `
-                    <div class="testimonial-slide bg-white p-6 rounded-lg shadow-md active">
-                        <p class="text-gray-600 mb-4">"The team at Oak Dental Clinic made my visit so comfortable! My smile has never looked better."</p>
-                        <p class="text-teal-600 font-semibold">— Priya S., Bachupally</p>
-                    </div>
-                    <div class="testimonial-slide bg-white p-6 rounded-lg shadow-md">
-                        <p class="text-gray-600 mb-4">"Professional staff and top-notch facilities. I highly recommend Oak Dental for any dental needs."</p>
-                        <p class="text-teal-600 font-semibold">— Rahul K., Hyderabad</p>
-                    </div>
-                    <div class="testimonial-slide bg-white p-6 rounded-lg shadow-md">
-                        <p class="text-gray-600 mb-4">"The best dental care in Hyderabad! My implants were done perfectly."</p>
-                        <p class="text-teal-600 font-semibold">— Anjali M., Bachupally</p>
-                    </div>
-                `;
-            } else {
-                feedbacks.forEach(feedback => {
-                    const slide = document.createElement('div');
-                    slide.className = 'testimonial-slide bg-white p-6 rounded-lg shadow-md';
-                    slide.innerHTML = `
-                        <p class="text-gray-600 mb-4">"${feedback.description}"</p>
-                        <p class="text-teal-600 font-semibold">— ${feedback.name}, ${feedback.rating}★</p>
+                if (feedbacks.length === 0) {
+                    testimonialSlider.innerHTML = `
+                        <div class="testimonial-slide bg-white p-6 rounded-lg shadow-md active">
+                            <p class="text-gray-600 mb-4">"The team at Oak Dental Clinic made my visit so comfortable! My smile has never looked better."</p>
+                            <p class="text-teal-600 font-semibold">— Priya S., Bachupally</p>
+                        </div>
+                        <div class="testimonial-slide bg-white p-6 rounded-lg shadow-md">
+                            <p class="text-gray-600 mb-4">"Professional staff and top-notch facilities. I highly recommend Oak Dental for any dental needs."</p>
+                            <p class="text-teal-600 font-semibold">— Rahul K., Hyderabad</p>
+                        </div>
+                        <div class="testimonial-slide bg-white p-6 rounded-lg shadow-md">
+                            <p class="text-gray-600 mb-4">"The best dental care in Hyderabad! My implants were done perfectly."</p>
+                            <p class="text-teal-600 font-semibold">— Anjali M., Bachupally</p>
+                        </div>
                     `;
-                    testimonialSlider.appendChild(slide);
-                });
-            }
+                } else {
+                    feedbacks.forEach(feedback => {
+                        const slide = document.createElement('div');
+                        slide.className = 'testimonial-slide bg-white p-6 rounded-lg shadow-md';
+                        slide.innerHTML = `
+                            <p class="text-gray-600 mb-4">"${feedback.description}"</p>
+                            <p class="text-teal-600 font-semibold">— ${feedback.name}, ${feedback.rating}★</p>
+                        `;
+                        testimonialSlider.appendChild(slide);
+                    });
+                }
 
-            testimonials = document.querySelectorAll('.testimonial-slide');
-            showTestimonial(testimonialIndex);
+                testimonials = document.querySelectorAll('.testimonial-slide');
+                showTestimonial(testimonialIndex);
+            } catch (error) {
+                console.error('Error loading testimonials:', error);
+            }
         }
         function showTestimonial(index) {
             testimonials.forEach((slide, i) => {
@@ -808,16 +898,53 @@
         setInterval(nextTestimonial, 5000);
 
         // Appointment Handling
-        function populateTimeSlots() {
-            const timeSlots = JSON.parse(localStorage.getItem('timeSlots') || '[]');
-            const timeSlotSelect = document.getElementById('time-slot');
-            timeSlotSelect.innerHTML = '<option value="" disabled selected>Select Time Slot</option>';
-            timeSlots.forEach(slot => {
-                timeSlotSelect.innerHTML += `<option value="${slot}">${slot}</option>`;
+        let leaveDates = [];
+        async function fetchLeaveDates() {
+            try {
+                const response = await fetch('http://localhost:3000/api/leave-dates');
+                leaveDates = await response.json();
+                applyLeaveDateStyles();
+            } catch (error) {
+                console.error('Error fetching leave dates:', error);
+            }
+        }
+
+        function applyLeaveDateStyles() {
+            const dateInput = document.getElementById('appointment-date');
+            dateInput.addEventListener('change', () => {
+                const selectedDate = dateInput.value;
+                if (leaveDates.includes(selectedDate)) {
+                    alert(`The doctor is on leave on ${selectedDate}. Please select another date, such as ${getNextAvailableDate(selectedDate)}.`);
+                    dateInput.value = '';
+                }
             });
         }
 
-        function submitAppointment() {
+        function getNextAvailableDate(currentDate) {
+            const date = new Date(currentDate);
+            let nextDate;
+            do {
+                date.setDate(date.getDate() + 1);
+                nextDate = date.toISOString().split('T')[0];
+            } while (leaveDates.includes(nextDate));
+            return nextDate;
+        }
+
+        async function populateTimeSlots() {
+            try {
+                const response = await fetch('http://localhost:3000/api/time-slots');
+                const timeSlots = await response.json();
+                const timeSlotSelect = document.getElementById('time-slot');
+                timeSlotSelect.innerHTML = '<option value="" disabled selected>Select Time Slot</option>';
+                timeSlots.forEach(slot => {
+                    timeSlotSelect.innerHTML += `<option value="${slot}">${slot}</option>`;
+                });
+            } catch (error) {
+                console.error('Error fetching time slots:', error);
+            }
+        }
+
+        async function submitAppointment() {
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
             const phone = document.getElementById('phone').value;
@@ -830,25 +957,40 @@
                 return;
             }
 
-            const leaveDates = JSON.parse(localStorage.getItem('leaveDates') || '[]');
             if (leaveDates.includes(date)) {
-                alert('Sorry, the doctor is on leave on this date. Please select another date.');
+                alert(`The doctor is on leave on ${date}. Please select another date, such as ${getNextAvailableDate(date)}.`);
                 return;
             }
 
-            alert(`Appointment booked for ${name} on ${date} at ${time}. We will confirm your booking soon.`);
-            document.getElementById('name').value = '';
-            document.getElementById('email').value = '';
-            document.getElementById('phone').value = '';
-            document.getElementById('appointment-date').value = '';
-            document.getElementById('time-slot').value = '';
-            document.getElementById('message').value = '';
+            try {
+                const response = await fetch('http://localhost:3000/api/appointments', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, phone, date, time, message })
+                });
+
+                if (response.ok) {
+                    alert(`Appointment booked for ${name} on ${date} at ${time}. We will confirm your booking soon.`);
+                    document.getElementById('name').value = '';
+                    document.getElementById('email').value = '';
+                    document.getElementById('phone').value = '';
+                    document.getElementById('appointment-date').value = '';
+                    document.getElementById('time-slot').value = '';
+                    document.getElementById('message').value = '';
+                } else {
+                    alert('Error booking appointment. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error booking appointment:', error);
+                alert('Error booking appointment. Please try again.');
+            }
         }
 
-        // Initialize Treatments, Testimonials, and Time Slots
+        // Initialize
         loadTreatments();
         loadTestimonials();
         populateTimeSlots();
+        fetchLeaveDates();
     </script>
 </body>
 </html>

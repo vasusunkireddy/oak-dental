@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Detailed dental tips and updates from Oak Dental Clinic in Hyderabad. Learn more about oral health and dental care.">
+    <meta name="keywords" content="dental tips, oral health, dental care, Oak Dental Clinic, Hyderabad">
+    <title>Dental Tips & Updates - Oak Dental Clinic</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+        }
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .blog-image {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        @media (max-width: 640px) {
+            .text-4xl { font-size: 1.75rem; }
+            .text-3xl { font-size: 1.5rem; }
+            .text-xl { font-size: 1.125rem; }
+            .text-lg { font-size: 1rem; }
+            .max-w-4xl { padding-left: 1rem; padding-right: 1rem; }
+            .py-16 { padding-top: 3rem; padding-bottom: 3rem; }
+            .mb-12 { margin-bottom: 2rem; }
+            .mb-6 { margin-bottom: 1.5rem; }
+            .mb-4 { margin-bottom: 1rem; }
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-lg fixed w-full z-10" aria-label="Main navigation">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="index.html">
+                        <img src="https://i.postimg.cc/bY0bwXgj/OAK-LOGO-HD.png" alt="Oak Dental Clinic Logo" class="h-12 mr-3" loading="lazy">
+                    </a>
+                    <h1 class="text-2xl font-bold text-teal-600">Oak Dental Clinic</h1>
+                </div>
+                <div class="flex items-center">
+                    <a href="index.html" class="text-gray-700 hover:text-teal-600 px-4">Back to Home</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Blog Post Section -->
+    <section class="py-16 bg-white pt-24">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div id="blog-content" class="fade-in">
+                <!-- Blog content will be populated dynamically -->
+            </div>
+            <div class="mt-8 flex space-x-4 fade-in">
+                <a id="facebook-share" href="#" class="text-teal-600 hover:text-teal-800">Share on Facebook</a>
+                <a id="twitter-share" href="#" class="text-teal-600 hover:text-teal-800">Share on Twitter</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-teal-600 text-white py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p>© 2025 Oak Dental Clinic. All rights reserved.</p>
+            <div class="mt-4 flex justify-center space-x-4">
+                <a href="#" class="hover:text-gray-200" aria-label="Facebook">Facebook</a>
+                <a href="#" class="hover:text-gray-200" aria-label="Twitter">Twitter</a>
+                <a href="#" class="hover:text-gray-200" aria-label="Instagram">Instagram</a>
+                <a href="privacy-policy.html" class="hover:text-gray-200" aria-label="Privacy Policy">Privacy Policy</a>
+                <a href="terms.html" class="hover:text-gray-200" aria-label="Terms of Use">Terms of Use</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Fade-in Animation
+        const fadeInElements = document.querySelectorAll('.fade-in');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+        fadeInElements.forEach(element => observer.observe(element));
+
+        // Blog Posts Data
+        const blogPosts = {
+            'healthy-teeth': {
+                title: '5 Tips for Healthy Teeth',
+                image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                content: `
+                    <p class="text-gray-600 mb-4">Maintaining healthy teeth is essential for a confident smile and overall well-being. Here are five expert tips to keep your teeth in top condition:</p>
+                    <h3 class="text-xl font-semibold text-teal-600 mb-2">1. Brush Twice Daily</h3>
+                    <p class="text-gray-600 mb-4">Brushing your teeth twice a day with a fluoride toothpaste helps remove plaque and prevent cavities. Use a soft-bristled toothbrush and brush for at least two minutes each time.</p>
+                    <img src="https://images.unsplash.com/photo-1590413211118-2f8d274a7e8e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Brushing Teeth" class="blog-image" loading="lazy">
+                    <h3 class="text-xl font-semibold text-teal-600 mb-2">2. Floss Daily</h3>
+                    <p class="text-gray-600 mb-4">Flossing removes food particles and plaque from between your teeth, where your toothbrush can't reach. Make it a daily habit to prevent gum disease.</p>
+                    <h3 class="text-xl font-semibold text-teal-600 mb-2">3. Limit Sugary Foods</h3>
+                    <p class="text-gray-600 mb-4">Sugary foods and drinks can lead to tooth decay. Opt for healthier snacks like fruits and vegetables, and rinse your mouth with water after consuming sweets.</p>
+                    <h3 class="text-xl font-semibold text-teal-600 mb-2">4. Visit Your Dentist Regularly</h3>
+                    <p class="text-gray-600 mb-4">Regular dental check-ups (every 6 months) help catch problems early. Professional cleanings also remove tartar buildup that brushing alone can't handle.</p>
+                    <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Dental Check-up" class="blog-image" loading="lazy">
+                    <h3 class="text-xl font-semibold text-teal-600 mb-2">5. Use Mouthwash</h3>
+                    <p class="text-gray-600 mb-4">Mouthwash can help kill bacteria, freshen your breath, and reach areas that brushing and flossing might miss. Choose an alcohol-free option for a gentler experience.</p>
+                `
+            },
+            'dental-implants': {
+                title: 'Guide to Dental Implants',
+                image: 'https://images.unsplash.com/photo-1618498082410-b4aa22193b38?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                content: `
+                    <p class="text-gray-600 mb-4">Dental implants are a permanent solution for missing teeth, offering both functional and aesthetic benefits. Here's everything you need to know:</p>
+                    <h3 class="text-xl font-semibold text-teal-600 mb-2">What Are Dental Implants?</h3>
+                    <p class="text-gray-600 mb-4">Dental implants are titanium posts surgically placed into the jawbone to act as artificial tooth roots. They support crowns, bridges, or dentures, providing a natural look and feel.</p>
+                    <img src="https://images.unsplash.com/photo-1618498082410-b4aa22193b38?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Dental Implant" class="blog-image" loading="lazy">
+                    <h3 class="text-xl font-semibold text-teal-600 mb-2">Benefits of Dental Implants</h3>
+                    <p class="text-gray-600 mb-4">Implants prevent bone loss, improve chewing ability, and enhance your smile. Unlike dentures, they don't slip or require adhesives.</p>
+                    <h3 class="text-xl font-semibold text-teal-600 mb-2">The Procedure</h3>
+                    <p class="text-gray-600 mb-4">The process involves a consultation, implant placement, healing period (osseointegration), and attaching the prosthetic tooth. It can take several months but ensures long-lasting results.</p>
+                    <h3 class="text-xl font-semibold text-teal-600 mb-2">Aftercare Tips</h3>
+                    <p class="text-gray-600 mb-4">Maintain good oral hygiene by brushing and flossing daily. Avoid hard foods during healing, and attend follow-up appointments to monitor progress.</p>
+                    <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Dental Care" class="blog-image" loading="lazy">
+                `
+            },
+            'teeth-whitening': {
+                title: 'Top 5 Myths About Teeth Whitening',
+                image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                content: `
+                    <p class="text-gray-600 mb-4">Teeth whitening is a popular cosmetic procedure, but there are many misconceptions about it. Let's debunk the top five myths:</p>
+                    <h3 class="text-xl font-semibold text-teal-600 mb-2">Myth 1: Whitening Damages Enamel</h3>
+                    <p class="text-gray-600 mb-4">Professional whitening, when done correctly, does not harm enamel. Our treatments at Oak Dental Clinic use safe, dentist-approved products.</p>
+                    <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Teeth Whitening" class="blog-image" loading="lazy">
+                    <h3 class="text-xl font-semibold text-teal-600 mb-2">Myth 2: Results Are Permanent</h3>
+                    <p class="text-gray-600 mb-4">Whitening results can last for months, but they aren't permanent. Lifestyle factors like coffee, tea, and smoking can cause stains to return.</p>
+                    <h3 class="text-xl font-semibold text-teal-600 mb-2">Myth 3: Whitening Works for Everyone</h3>
+                    <p class="text-gray-600 mb-4">Whitening is most effective on natural teeth with surface stains. It may not work on crowns, veneers, or deep internal stains.</p>
+                    <h3 class="text-xl font-semibold text-teal-600 mb-2">Myth 4: Over-the-Counter Kits Are Just as Good</h3>
+                    <p class="text-gray-600 mb-4">Professional whitening provides better, safer results than OTC kits, which can cause sensitivity or uneven whitening if misused.</p>
+                    <h3 class="text-xl font-semibold text-teal-600 mb-2">Myth 5: Whitening Is Painful</h3>
+                    <p class="text-gray-600 mb-4">Some patients may experience temporary sensitivity, but the procedure itself is painless. We take steps to minimize discomfort.</p>
+                    <img src="https://images.unsplash.com/photo-1618498082410-b4aa22193b38?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Healthy Smile" class="blog-image" loading="lazy">
+                `
+            }
+        };
+
+                // Load Blog Post
+        function loadBlogPost() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const postId = urlParams.get('post');
+            const blogContent = document.getElementById('blog-content');
+            const facebookShare = document.getElementById('facebook-share');
+            const twitterShare = document.getElementById('twitter-share');
+
+            if (blogPosts[postId]) {
+                const post = blogPosts[postId];
+                blogContent.innerHTML = `
+                    <h2 class="text-3xl font-bold text-gray-800 mb-6">${post.title}</h2>
+                    <img src="${post.image}" alt="${post.title}" class="blog-image" loading="lazy">
+                    ${post.content}
+                `;
+
+                const shareUrl = window.location.href;
+                facebookShare.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
+                twitterShare.href = `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}`;
+            } else {
+                blogContent.innerHTML = `
+                    <h2 class="text-3xl font-bold text-gray-800 mb-6">Post Not Found</h2>
+                    <p class="text-gray-600">Sorry, the blog post you are looking for does not exist. <a href="index.html#blog" class="text-teal-600 hover:underline">Go back to Dental Tips & News</a>.</p>
+                `;
+            }
+        }
+
+        // Initialize Blog Post
+        loadBlogPost();
+    </script>
+</body>
+</html>
