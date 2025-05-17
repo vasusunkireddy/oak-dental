@@ -103,6 +103,35 @@
             padding: 8px 12px;
             font-size: 12px;
         }
+        /* Toast Notification Styles */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #1e293b;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: toastIn 0.3s ease-out forwards;
+        }
+        .toast.success {
+            background: #0d9488;
+        }
+        .toast.error {
+            background: #dc2626;
+        }
+        @keyframes toastIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Modal Styles */
+        .modal {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+        }
         @media (max-width: 640px) {
             body {
                 font-size: 14px;
@@ -155,6 +184,11 @@
             .auth-container {
                 padding: 18px;
             }
+            .toast {
+                right: 10px;
+                left: 10px;
+                bottom: 10px;
+            }
         }
     </style>
 </head>
@@ -165,6 +199,51 @@
             <img src="https://i.postimg.cc/bY0bwXgj/OAK-LOGO-HD.png" alt="Oak Dental Clinic Logo" class="h-14 mx-auto mb-4">
             <h2 class="text-2xl font-semibold text-white mb-2">Welcome!</h2>
             <p class="text-white text-sm">Manage your admin portal with ease.</p>
+        </div>
+    </div>
+
+    <!-- Edit Offer Modal -->
+    <div id="edit-offer-modal" class="fixed inset-0 modal flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg p-6 max-w-md w-full animate-scale-in">
+            <h3 class="text-lg font-medium text-teal-600 mb-4">Edit Offer</h3>
+            <input type="hidden" id="edit-offer-id">
+            <input type="text" id="edit-offer-title" placeholder="Title" class="form-input mb-4" aria-label="Offer Title">
+            <textarea id="edit-offer-description" placeholder="Description" class="form-input mb-4" rows="4" aria-label="Offer Description"></textarea>
+            <input type="number" id="edit-offer-price" placeholder="Price" class="form-input mb-4" step="0.01" aria-label="Offer Price">
+            <div class="mb-4">
+                <label class="block text-sm text-gray-600 mb-1">Offer Image (Optional)</label>
+                <input type="file" id="edit-offer-image-file" accept="image/*" class="form-input mb-2">
+                <input type="text" id="edit-offer-image-url" placeholder="Image URL" class="form-input" aria-label="Offer Image URL">
+            </div>
+            <div class="flex justify-end space-x-2">
+                <button onclick="closeEditOfferModal()" class="bg-gray-500 text-white p-3 rounded-lg hover:bg-gray-600">Cancel</button>
+                <button onclick="saveOfferChanges()" class="bg-teal-600 text-white p-3 rounded-lg hover:bg-teal-700">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Service Modal -->
+    <div id="edit-service-modal" class="fixed inset-0 modal flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg p-6 max-w-md w-full animate-scale-in">
+            <h3 class="text-lg font-medium text-teal-600 mb-4">Edit Service</h3>
+            <input type="hidden" id="edit-service-id">
+            <input type="text" id="edit-service-title" placeholder="Title" class="form-input mb-4" aria-label="Service Title">
+            <textarea id="edit-service-description" placeholder="Description" class="form-input mb-4" rows="4" aria-label="Service Description"></textarea>
+            <input type="number" id="edit-service-price" placeholder="Price" class="form-input mb-4" step="0.01" aria-label="Service Price">
+            <div class="mb-4">
+                <label class="block text-sm text-gray-600 mb-1">Image (Optional)</label>
+                <input type="file" id="edit-service-image-file" accept="image/*" class="form-input mb-2">
+                <input type="text" id="edit-service-image-url" placeholder="Image URL" class="form-input" aria-label="Service Image URL">
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm text-gray-600 mb-1">Video (Optional)</label>
+                <input type="file" id="edit-service-video-file" accept="video/*" class="form-input mb-2">
+                <input type="text" id="edit-service-video-url" placeholder="Video URL" class="form-input" aria-label="Service Video URL">
+            </div>
+            <div class="flex justify-end space-x-2">
+                <button onclick="closeEditServiceModal()" class="bg-gray-500 text-white p-3 rounded-lg hover:bg-gray-600">Cancel</button>
+                <button onclick="saveServiceChanges()" class="bg-teal-600 text-white p-3 rounded-lg hover:bg-teal-700">Save</button>
+            </div>
         </div>
     </div>
 
@@ -185,7 +264,7 @@
             <div id="register-form" class="hidden">
                 <h3 class="text-lg font-medium text-teal-600 mb-4">Register</h3>
                 <input type="text" id="register-username" placeholder="Username" class="form-input mb-4" required aria-label="Username">
-                <input type "email" id="register-email" placeholder="Email" class="form-input mb-4" required aria-label="Email">
+                <input type="email" id="register-email" placeholder="Email" class="form-input mb-4" required aria-label="Email">
                 <input type="password" id="register-password" placeholder="Password" class="form-input mb-4" required aria-label="Password">
                 <button onclick="adminRegister()" class="w-full bg-teal-600 text-white p-3 rounded-lg hover:bg-teal-700 shadow-sm">Register</button>
                 <p class="text-center mt-4 text-sm">Already have an account? <a href="#" onclick="showLoginForm()" class="text-teal-600 hover:underline">Login</a></p>
@@ -235,6 +314,7 @@
                                 <th>Name</th>
                                 <th>Treatment</th>
                                 <th>Date</th>
+                                <th>Status</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -253,6 +333,7 @@
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Date</th>
+                                <th>Status</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -369,6 +450,18 @@
         // Determine API Base URL
         const API_BASE_URL = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://oak-dental.onrender.com';
 
+        // Toast Notification Function
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
         // Check Authentication
         if (localStorage.getItem('adminToken')) {
             showDashboard();
@@ -416,7 +509,7 @@
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
             if (!email || !password) {
-                alert('Please fill in all fields.');
+                showToast('Please fill in all fields.', 'error');
                 return;
             }
             try {
@@ -431,12 +524,13 @@
                     localStorage.setItem('adminUsername', data.admin.username);
                     showDashboard();
                     document.getElementById('admin-username').textContent = `${data.admin.username}`;
+                    showToast('Logged in successfully');
                 } else {
-                    alert(data.error || 'Error logging in');
+                    showToast(data.error || 'Error logging in', 'error');
                 }
             } catch (error) {
                 console.error('Error logging in:', error);
-                alert('Error logging in.');
+                showToast('Error logging in', 'error');
             }
         }
 
@@ -445,7 +539,7 @@
             const email = document.getElementById('register-email').value;
             const password = document.getElementById('register-password').value;
             if (!username || !email || !password) {
-                alert('Please fill in all fields.');
+                showToast('Please fill in all fields.', 'error');
                 return;
             }
             try {
@@ -460,12 +554,13 @@
                     localStorage.setItem('adminUsername', data.admin.username);
                     showDashboard();
                     document.getElementById('admin-username').textContent = `${data.admin.username}`;
+                    showToast('Registered successfully');
                 } else {
-                    alert(data.error || 'Error registering');
+                    showToast(data.error || 'Error registering', 'error');
                 }
             } catch (error) {
                 console.error('Error registering:', error);
-                alert('Error registering.');
+                showToast('Error registering', 'error');
             }
         }
 
@@ -483,12 +578,13 @@
             localStorage.removeItem('adminToken');
             localStorage.removeItem('adminUsername');
             showAuth();
+            showToast('Logged out successfully');
         }
 
         async function fetchWithAuth(url, options = {}) {
             const token = localStorage.getItem('adminToken');
             if (!token) {
-                alert('Session expired. Please log in again.');
+                showToast('Session expired. Please log in again.', 'error');
                 logout();
                 throw new Error('No token available');
             }
@@ -499,30 +595,30 @@
             options.headers['Authorization'] = `Bearer ${token}`;
             const response = await fetch(url, options);
             if (response.status === 401) {
-                alert('Session expired. Please log in again.');
+                showToast('Session expired. Please log in again.', 'error');
                 logout();
                 throw new Error('Unauthorized');
             }
             return response;
         }
 
-        async function uploadFile(file, type) {
+        async function uploadFile(file) {
             if (!file) return null;
             const formData = new FormData();
-            formData.append(type, file);
+            formData.append('media', file);
             try {
-                const response = await fetchWithAuth(`${API_BASE_URL}/api/upload/${type}`, {
+                const response = await fetchWithAuth(`${API_BASE_URL}/api/upload/media`, {
                     method: 'POST',
                     body: formData
                 });
                 if (!response.ok) {
                     const errorData = await response.json();
-                    throw new Error(`Upload failed: ${errorData.error || response.statusText}`);
+                    throw new Error(errorData.error || 'Upload failed');
                 }
                 const data = await response.json();
-                return data.filename; // Expecting the filename from the server
+                return data.filename;
             } catch (error) {
-                console.error(`Error uploading ${type}:`, error);
+                console.error('Error uploading media:', error);
                 throw error;
             }
         }
@@ -538,9 +634,10 @@
                     table.innerHTML += `
                         <tr>
                             <td><input type="checkbox" class="appointment-checkbox" data-id="${apt.id}"></td>
-                            <td>${apt.full_name}</td>
-                            <td>${apt.treatment}</td>
+                            <td>${apt.full_name || 'Unknown'}</td>
+                            <td>${apt.treatment || '-'}</td>
                             <td>${apt.date}</td>
+                            <td>${apt.status || 'PENDING'}</td>
                             <td>
                                 ${apt.status !== 'CANCELLED' ? `
                                     <button onclick="confirmAppointment('${apt.id}')" class="bg-green-600 text-white action-btn hover:bg-green-700">Confirm</button>
@@ -552,6 +649,7 @@
                 });
             } catch (error) {
                 console.error('Error loading appointments:', error);
+                showToast('Failed to load appointments', 'error');
             }
         }
 
@@ -563,7 +661,7 @@
         async function clearSelectedAppointments() {
             const selectedIds = Array.from(document.querySelectorAll('.appointment-checkbox:checked')).map(cb => cb.dataset.id);
             if (!selectedIds.length) {
-                alert('No appointments selected.');
+                showToast('No appointments selected.', 'error');
                 return;
             }
             if (!confirm(`Delete ${selectedIds.length} selected appointments?`)) return;
@@ -573,14 +671,15 @@
                     body: JSON.stringify({ ids: selectedIds })
                 });
                 if (response.ok) {
-                    alert('Selected appointments cleared');
+                    showToast('Selected appointments cleared');
                     loadAppointments();
                     document.getElementById('select-all-appointments').checked = false;
                 } else {
-                    alert('Error clearing appointments');
+                    showToast('Error clearing appointments', 'error');
                 }
             } catch (error) {
                 console.error('Error clearing appointments:', error);
+                showToast('Failed to clear appointments', 'error');
             }
         }
 
@@ -588,21 +687,22 @@
             try {
                 const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/appointments/${id}/approve`, { method: 'POST' });
                 if (response.ok) {
-                    alert('Appointment confirmed');
+                    showToast('Appointment confirmed');
                     loadAppointments();
                 } else {
                     const errorData = await response.json();
-                    alert(errorData.error || 'Error confirming appointment');
+                    showToast(errorData.error || 'Error confirming appointment', 'error');
                 }
             } catch (error) {
                 console.error('Error confirming appointment:', error);
+                showToast('Failed to confirm appointment', 'error');
             }
         }
 
         async function cancelAppointment(id) {
             const reason = prompt('Please provide a reason for cancellation:');
             if (!reason) {
-                alert('Cancellation reason is required.');
+                showToast('Cancellation reason is required.', 'error');
                 return;
             }
             try {
@@ -611,14 +711,15 @@
                     body: JSON.stringify({ reason })
                 });
                 if (response.ok) {
-                    alert('Appointment cancelled');
+                    showToast('Appointment cancelled');
                     loadAppointments();
                 } else {
                     const errorData = await response.json();
-                    alert(errorData.error || 'Error cancelling appointment');
+                    showToast(errorData.error || 'Error cancelling appointment', 'error');
                 }
             } catch (error) {
                 console.error('Error cancelling appointment:', error);
+                showToast('Failed to cancel appointment', 'error');
             }
         }
 
@@ -627,13 +728,14 @@
             try {
                 const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/appointments/clear-old`, { method: 'DELETE' });
                 if (response.ok) {
-                    alert('Old appointments cleared');
+                    showToast('Old appointments cleared');
                     loadAppointments();
                 } else {
-                    alert('Error clearing appointments');
+                    showToast('Error clearing appointments', 'error');
                 }
             } catch (error) {
                 console.error('Error clearing appointments:', error);
+                showToast('Failed to clear appointments', 'error');
             }
         }
 
@@ -646,17 +748,39 @@
                 waitlist.forEach(entry => {
                     table.innerHTML += `
                         <tr>
-                            <td>${entry.full_name}</td>
+                            <td>${entry.full_name || 'Unknown'}</td>
                             <td>${entry.email}</td>
                             <td>${entry.preferred_date}</td>
+                            <td>${entry.status || 'PENDING'}</td>
                             <td>
-                                <button onclick="deleteWaitlist('${entry.id}')" class="bg-red-600 text-white action-btn hover:bg-red-700">Delete</button>
+                                ${entry.status !== 'ACCEPTED' ? `
+                                    <button onclick="acceptWaitlist('${entry.id}')" class="bg-green-600 text-white action-btn hover:bg-green-700">Accept</button>
+                                    <button onclick="deleteWaitlist('${entry.id}')" class="bg-red-600 text-white action-btn hover:bg-red-700">Delete</button>
+                                ` : 'Accepted'}
                             </td>
                         </tr>
                     `;
                 });
             } catch (error) {
                 console.error('Error loading waitlist:', error);
+                showToast('Failed to load waitlist', 'error');
+            }
+        }
+
+        async function acceptWaitlist(id) {
+            try {
+                const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/waitlist/${id}/accept`, { method: 'POST' });
+                if (response.ok) {
+                    showToast('Waitlist entry accepted');
+                    loadWaitlist();
+                    loadAppointments();
+                } else {
+                    const errorData = await response.json();
+                    showToast(errorData.error || 'Error accepting waitlist entry', 'error');
+                }
+            } catch (error) {
+                console.error('Error accepting waitlist entry:', error);
+                showToast('Failed to accept waitlist entry', 'error');
             }
         }
 
@@ -665,13 +789,14 @@
             try {
                 const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/waitlist/${id}`, { method: 'DELETE' });
                 if (response.ok) {
-                    alert('Waitlist entry deleted');
+                    showToast('Waitlist entry deleted');
                     loadWaitlist();
                 } else {
-                    alert('Error deleting waitlist entry');
+                    showToast('Error deleting waitlist entry', 'error');
                 }
             } catch (error) {
                 console.error('Error deleting waitlist entry:', error);
+                showToast('Failed to delete waitlist entry', 'error');
             }
         }
 
@@ -684,7 +809,7 @@
                 feedbacks.forEach(fb => {
                     table.innerHTML += `
                         <tr>
-                            <td>${fb.full_name}</td>
+                            <td>${fb.full_name || 'Unknown'}</td>
                             <td>${fb.rating}★</td>
                             <td>${fb.description.slice(0, 50)}${fb.description.length > 50 ? '...' : ''}</td>
                             <td>
@@ -695,6 +820,7 @@
                 });
             } catch (error) {
                 console.error('Error loading feedback:', error);
+                showToast('Failed to load feedback', 'error');
             }
         }
 
@@ -703,13 +829,14 @@
             try {
                 const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/feedback/${id}`, { method: 'DELETE' });
                 if (response.ok) {
-                    alert('Feedback deleted');
+                    showToast('Feedback deleted');
                     loadFeedback();
                 } else {
-                    alert('Error deleting feedback');
+                    showToast('Error deleting feedback', 'error');
                 }
             } catch (error) {
                 console.error('Error deleting feedback:', error);
+                showToast('Failed to delete feedback', 'error');
             }
         }
 
@@ -733,6 +860,7 @@
                 });
             } catch (error) {
                 console.error('Error loading services:', error);
+                showToast('Failed to load services', 'error');
             }
         }
 
@@ -742,15 +870,15 @@
                 description: document.getElementById('service-description').value,
                 price: parseFloat(document.getElementById('service-price').value)
             };
-            if (!serviceData.title || !serviceData.description || !serviceData.price) {
-                alert('Please fill in title, description, and price.');
+            if (!serviceData.title || !serviceData.description || isNaN(serviceData.price)) {
+                showToast('Please fill in title, description, and price.', 'error');
                 return;
             }
             try {
                 const imageFile = document.getElementById('service-image-file').files[0];
                 const imageUrl = document.getElementById('service-image-url').value;
                 if (imageFile) {
-                    const uploadedImageFilename = await uploadFile(imageFile, 'image');
+                    const uploadedImageFilename = await uploadFile(imageFile);
                     if (uploadedImageFilename) serviceData.image = uploadedImageFilename;
                 } else if (imageUrl) {
                     serviceData.image = imageUrl;
@@ -759,7 +887,7 @@
                 const videoFile = document.getElementById('service-video-file').files[0];
                 const videoUrl = document.getElementById('service-video-url').value;
                 if (videoFile) {
-                    const uploadedVideoFilename = await uploadFile(videoFile, 'video');
+                    const uploadedVideoFilename = await uploadFile(videoFile);
                     if (uploadedVideoFilename) serviceData.video = uploadedVideoFilename;
                 } else if (videoUrl) {
                     serviceData.video = videoUrl;
@@ -770,7 +898,7 @@
                     body: JSON.stringify(serviceData)
                 });
                 if (response.ok) {
-                    alert('Service added');
+                    showToast('Service added');
                     document.getElementById('service-title').value = '';
                     document.getElementById('service-description').value = '';
                     document.getElementById('service-price').value = '';
@@ -781,16 +909,82 @@
                     loadServices();
                 } else {
                     const errorData = await response.json();
-                    alert(errorData.error || 'Error adding service');
+                    showToast(errorData.error || 'Error adding service', 'error');
                 }
             } catch (error) {
                 console.error('Error adding service:', error);
-                alert(`Failed to add service: ${error.message}`);
+                showToast(`Failed to add service: ${error.message}`, 'error');
             }
         }
 
-        async function editService(id) {
-            alert('Edit service not implemented in this demo.');
+        function editService(id) {
+            fetchWithAuth(`${API_BASE_URL}/api/services/${id}`)
+                .then(response => response.json())
+                .then(svc => {
+                    document.getElementById('edit-service-id').value = svc.id;
+                    document.getElementById('edit-service-title').value = svc.title;
+                    document.getElementById('edit-service-description').value = svc.description;
+                    document.getElementById('edit-service-price').value = svc.price;
+                    document.getElementById('edit-service-image-url').value = svc.image || '';
+                    document.getElementById('edit-service-video-url').value = svc.video || '';
+                    document.getElementById('edit-service-modal').classList.remove('hidden');
+                })
+                .catch(error => {
+                    console.error('Error fetching service:', error);
+                    showToast('Failed to load service', 'error');
+                });
+        }
+
+        function closeEditServiceModal() {
+            document.getElementById('edit-service-modal').classList.add('hidden');
+        }
+
+        async function saveServiceChanges() {
+            const serviceData = {
+                title: document.getElementById('edit-service-title').value,
+                description: document.getElementById('edit-service-description').value,
+                price: parseFloat(document.getElementById('edit-service-price').value)
+            };
+            const id = document.getElementById('edit-service-id').value;
+            if (!serviceData.title || !serviceData.description || isNaN(serviceData.price)) {
+                showToast('Please fill in title, description, and price.', 'error');
+                return;
+            }
+            try {
+                const imageFile = document.getElementById('edit-service-image-file').files[0];
+                const imageUrl = document.getElementById('edit-service-image-url').value;
+                if (imageFile) {
+                    const uploadedImageFilename = await uploadFile(imageFile);
+                    if (uploadedImageFilename) serviceData.image = uploadedImageFilename;
+                } else if (imageUrl) {
+                    serviceData.image = imageUrl;
+                }
+
+                const videoFile = document.getElementById('edit-service-video-file').files[0];
+                const videoUrl = document.getElementById('edit-service-video-url').value;
+                if (videoFile) {
+                    const uploadedVideoFilename = await uploadFile(videoFile);
+                    if (uploadedVideoFilename) serviceData.video = uploadedVideoFilename;
+                } else if (videoUrl) {
+                    serviceData.video = videoUrl;
+                }
+
+                const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/services/${id}`, {
+                    method: 'PUT',
+                    body: JSON.stringify(serviceData)
+                });
+                if (response.ok) {
+                    showToast('Service updated');
+                    closeEditServiceModal();
+                    loadServices();
+                } else {
+                    const errorData = await response.json();
+                    showToast(errorData.error || 'Error updating service', 'error');
+                }
+            } catch (error) {
+                console.error('Error updating service:', error);
+                showToast('Failed to update service', 'error');
+            }
         }
 
         async function deleteService(id) {
@@ -798,14 +992,15 @@
             try {
                 const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/services/${id}`, { method: 'DELETE' });
                 if (response.ok) {
-                    alert('Service deleted');
+                    showToast('Service deleted');
                     loadServices();
                 } else {
                     const errorData = await response.json();
-                    alert(errorData.error || 'Error deleting service');
+                    showToast(errorData.error || 'Error deleting service', 'error');
                 }
             } catch (error) {
                 console.error('Error deleting service:', error);
+                showToast('Failed to delete service', 'error');
             }
         }
 
@@ -816,12 +1011,16 @@
                 const table = document.getElementById('offers-table');
                 table.innerHTML = '';
                 offers.forEach(offer => {
+                    const imageSrc = offer.image ? 
+                        (offer.image.startsWith('http') ? offer.image : `${API_BASE_URL}/Uploads/${offer.image}`) : 
+                        '';
                     table.innerHTML += `
                         <tr>
                             <td>${offer.title}</td>
                             <td>₹${offer.price}</td>
-                            <td>${offer.image ? `<img src="${API_BASE_URL}/Uploads/${offer.image}" alt="${offer.title}" class="h-16">` : 'No Image'}</td>
+                            <td>${imageSrc ? `<img src="${imageSrc}" alt="${offer.title}" class="h-16" onerror="this.src='';this.parentElement.textContent='No Image'">` : 'No Image'}</td>
                             <td>
+                                <button onclick="editOffer('${offer.id}')" class="bg-blue-600 text-white action-btn hover:bg-blue-700">Edit</button>
                                 <button onclick="deleteOffer('${offer.id}')" class="bg-red-600 text-white action-btn hover:bg-red-700">Delete</button>
                             </td>
                         </tr>
@@ -829,6 +1028,7 @@
                 });
             } catch (error) {
                 console.error('Error loading offers:', error);
+                showToast('Failed to load offers', 'error');
             }
         }
 
@@ -838,21 +1038,21 @@
                 description: document.getElementById('offer-description').value,
                 price: parseFloat(document.getElementById('offer-price').value)
             };
-            if (!offerData.title || !offerData.description || !offerData.price) {
-                alert('Please fill in title, description, and price.');
+            if (!offerData.title || !offerData.description || isNaN(offerData.price)) {
+                showToast('Please fill in title, description, and price.', 'error');
                 return;
             }
             try {
                 const imageFile = document.getElementById('offer-image-file').files[0];
                 if (!imageFile) {
-                    alert('Please upload an offer image.');
+                    showToast('Please upload an offer image.', 'error');
                     return;
                 }
-                const uploadedImageFilename = await uploadFile(imageFile, 'image');
+                const uploadedImageFilename = await uploadFile(imageFile);
                 if (uploadedImageFilename) {
                     offerData.image = uploadedImageFilename;
                 } else {
-                    alert('Failed to upload offer image.');
+                    showToast('Failed to upload offer image.', 'error');
                     return;
                 }
 
@@ -861,7 +1061,7 @@
                     body: JSON.stringify(offerData)
                 });
                 if (response.ok) {
-                    alert('Offer added');
+                    showToast('Offer added');
                     document.getElementById('offer-title').value = '';
                     document.getElementById('offer-description').value = '';
                     document.getElementById('offer-price').value = '';
@@ -869,11 +1069,71 @@
                     loadOffers();
                 } else {
                     const errorData = await response.json();
-                    alert(errorData.error || 'Error adding offer');
+                    showToast(errorData.error || 'Error adding offer', 'error');
                 }
             } catch (error) {
                 console.error('Error adding offer:', error);
-                alert(`Failed to add offer: ${error.message}`);
+                showToast(`Failed to add offer: ${error.message}`, 'error');
+            }
+        }
+
+        function editOffer(id) {
+            fetchWithAuth(`${API_BASE_URL}/api/offers/${id}`)
+                .then(response => response.json())
+                .then(offer => {
+                    document.getElementById('edit-offer-id').value = offer.id;
+                    document.getElementById('edit-offer-title').value = offer.title;
+                    document.getElementById('edit-offer-description').value = offer.description;
+                    document.getElementById('edit-offer-price').value = offer.price;
+                    document.getElementById('edit-offer-image-url').value = offer.image || '';
+                    document.getElementById('edit-offer-modal').classList.remove('hidden');
+                })
+                .catch(error => {
+                    console.error('Error fetching offer:', error);
+                    showToast('Failed to load offer', 'error');
+                });
+        }
+
+        function closeEditOfferModal() {
+            document.getElementById('edit-offer-modal').classList.add('hidden');
+        }
+
+        async function saveOfferChanges() {
+            const offerData = {
+                title: document.getElementById('edit-offer-title').value,
+                description: document.getElementById('edit-offer-description').value,
+                price: parseFloat(document.getElementById('edit-offer-price').value)
+            };
+            const id = document.getElementById('edit-offer-id').value;
+            if (!offerData.title || !offerData.description || isNaN(offerData.price)) {
+                showToast('Please fill in title, description, and price.', 'error');
+                return;
+            }
+            try {
+                const imageFile = document.getElementById('edit-offer-image-file').files[0];
+                const imageUrl = document.getElementById('edit-offer-image-url').value;
+                if (imageFile) {
+                    const uploadedImageFilename = await uploadFile(imageFile);
+                    if (uploadedImageFilename) offerData.image = uploadedImageFilename;
+                } else if (imageUrl) {
+                    offerData.image = imageUrl;
+                }
+
+                const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/offers/${id}`, {
+                    method: 'PUT',
+                    body: JSON.stringify(offerData)
+                });
+                if (response.ok) {
+                    showToast('Offer updated');
+                    closeEditOfferModal();
+                    loadOffers();
+                } else {
+                    const errorData = await response.json();
+                    showToast(errorData.error || 'Error updating offer', 'error');
+                }
+            } catch (error) {
+                console.error('Error updating offer:', error);
+                showToast('Failed to update offer', 'error');
             }
         }
 
@@ -882,14 +1142,15 @@
             try {
                 const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/offers/${id}`, { method: 'DELETE' });
                 if (response.ok) {
-                    alert('Offer deleted');
+                    showToast('Offer deleted');
                     loadOffers();
                 } else {
                     const errorData = await response.json();
-                    alert(errorData.error || 'Error deleting offer');
+                    showToast(errorData.error || 'Error deleting offer', 'error');
                 }
             } catch (error) {
                 console.error('Error deleting offer:', error);
+                showToast('Failed to delete offer', 'error');
             }
         }
 
@@ -911,13 +1172,14 @@
                 });
             } catch (error) {
                 console.error('Error loading leave dates:', error);
+                showToast('Failed to load leave dates', 'error');
             }
         }
 
         async function addLeaveDate() {
             const date = document.getElementById('leave-date').value;
             if (!date) {
-                alert('Please select a date.');
+                showToast('Please select a date.', 'error');
                 return;
             }
             try {
@@ -926,15 +1188,16 @@
                     body: JSON.stringify({ date })
                 });
                 if (response.ok) {
-                    alert('Leave date added');
+                    showToast('Leave date added');
                     document.getElementById('leave-date').value = '';
                     loadLeaveDates();
                 } else {
                     const errorData = await response.json();
-                    alert(errorData.error || 'Error adding leave date');
+                    showToast(errorData.error || 'Error adding leave date', 'error');
                 }
             } catch (error) {
                 console.error('Error adding leave date:', error);
+                showToast('Failed to add leave date', 'error');
             }
         }
 
@@ -943,14 +1206,15 @@
             try {
                 const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/leave-dates/${date}`, { method: 'DELETE' });
                 if (response.ok) {
-                    alert('Leave date removed');
+                    showToast('Leave date removed');
                     loadLeaveDates();
                 } else {
                     const errorData = await response.json();
-                    alert(errorData.error || 'Error removing leave date');
+                    showToast(errorData.error || 'Error removing leave date', 'error');
                 }
             } catch (error) {
                 console.error('Error removing leave date:', error);
+                showToast('Failed to remove leave date', 'error');
             }
         }
     </script>

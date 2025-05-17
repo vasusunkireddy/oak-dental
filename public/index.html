@@ -9,6 +9,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-YOUR-ID"></script>
     <style>
         body {
@@ -45,7 +47,6 @@
         }
         .slider {
             display: flex;
-            transition: transform 0.5s ease;
         }
         .slide {
             min-width: 100%;
@@ -57,35 +58,19 @@
             width: 48%;
             border-radius: 8px;
         }
-        .slider-nav {
-            position: absolute;
-            top: 50%;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            transform: translateY(-50%);
-        }
-        .slider-nav button {
-            background: rgba(0, 0, 0, 0.5);
-            color: white;
-            border: none;
-            padding: 10px;
-            cursor: pointer;
-            font-size: 1rem;
-        }
         .treatment-slide {
             min-width: 33.33%;
             box-sizing: border-box;
             padding: 0 10px;
         }
         .offer-slide {
-            min-width: 33.33%;
+            min-width: 100%;
             box-sizing: border-box;
             padding: 0 10px;
         }
         .offer-media {
             max-width: 100%;
-            height: 160px;
+            height: 240px;
             border-radius: 8px;
             margin-bottom: 1.25rem;
             object-fit: cover;
@@ -160,11 +145,20 @@
             color: #f0fdfa !important;
             transform: translateY(-2px);
         }
-        .testimonial-slide {
-            display: none;
+        .testimonial-slider-container {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            overflow: hidden;
         }
-        .testimonial-slide.active {
-            display: block;
+        .testimonial-slider {
+            display: flex;
+        }
+        .testimonial-slide {
+            min-width: 33.33%;
+            box-sizing: border-box;
+            padding: 0 10px;
         }
         .treatment-media {
             max-width: 100%;
@@ -188,7 +182,6 @@
         }
         .gallery-slider {
             display: flex;
-            transition: transform 0.5s ease;
         }
         .gallery-slide {
             min-width: 100%;
@@ -239,12 +232,28 @@
             opacity: 1;
             transform: translateY(0);
         }
-        /* Calendar Leave Dates Styling */
-        input[type="date"]::-webkit-calendar-picker-indicator {
-            cursor: pointer;
+        /* Flatpickr Custom Styling */
+        .flatpickr-day.disabled,
+        .flatpickr-day.disabled:hover {
+            color: #ff0000 !important;
+            background: none !important;
+            border-color: transparent !important;
+            cursor: not-allowed !important;
+            font-weight: bold;
         }
-        input[type="date"] {
-            position: relative;
+        .flatpickr-day {
+            color: #000000 !important; /* Non-leave dates in black */
+        }
+        .flatpickr-day:hover {
+            background: #e6e6e6 !important;
+        }
+        input[type="text"].flatpickr-input {
+            background-color: white;
+            color: #1f2937;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            padding: 0.75rem;
+            width: 100%;
         }
         /* Newsletter Input Fix */
         input[type="email"] {
@@ -277,11 +286,10 @@
             .slider-container { max-width: 100%; }
             .slide { flex-direction: column; align-items: center; gap: 0.75rem; }
             .slide img { width: 85%; height: 140px; object-fit: cover; }
-            .slider-nav button { padding: 8px; font-size: 0.875rem; }
             .treatment-slide { min-width: 100%; }
             .offer-slide { min-width: 100%; }
             .treatment-media { height: 160px; }
-            .offer-media { height: 140px; }
+            .offer-media { height: 200px; }
             .doctor-img { width: 200px; height: 200px; }
             .doctor-card { padding: 2rem; }
             .h-48 { height: 200px; }
@@ -307,6 +315,11 @@
                 padding: 12px 18px;
                 font-size: 0.875rem;
             }
+            .flatpickr-calendar {
+                width: 100% !important;
+                max-width: 300px !important;
+            }
+            .testimonial-slide { min-width: 100%; }
         }
         @media (min-width: 641px) {
             .hamburger { display: none; }
@@ -382,7 +395,7 @@
         </div>
     </section>
 
-    <!-- Treatments Section (Slider) -->
+    <!-- Treatments Section (Static) -->
     <section id="treatments" class="py-16 bg-gray-100">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">Our Treatments</h2>
@@ -390,31 +403,36 @@
                 <div class="slider" id="treatments-slider">
                     <!-- Treatments will be populated dynamically -->
                 </div>
-                <div class="slider-nav">
-                    <button onclick="prevTreatmentSlide()" aria-label="Previous Treatment">❮</button>
-                    <button onclick="nextTreatmentSlide()" aria-label="Next Treatment">❯</button>
-                </div>
             </div>
         </div>
     </section>
 
-    <!-- Offers Section (Slider) -->
+    <!-- Offers Section (Static, Two Offers, One Visible) -->
     <section id="offers" class="py-16 bg-teal-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">Special Offers</h2>
             <div class="slider-container fade-in">
                 <div class="slider" id="offers-slider">
-                    <!-- Offers will be populated dynamically -->
-                </div>
-                <div class="slider-nav">
-                    <button onclick="prevOfferSlide()" aria-label="Previous Offer">❮</button>
-                    <button onclick="nextOfferSlide()" aria-label="Next Offer">❯</button>
+                    <div class="offer-slide">
+                        <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                            <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Offer 1" class="offer-media" loading="lazy">
+                            <h3 class="text-xl font-semibold text-teal-600 mb-2">50% Off Teeth Whitening</h3>
+                            <p class="text-gray-600 mb-2">Brighten your smile with our exclusive teeth whitening offer!</p>
+                        </div>
+                    </div>
+                    <div class="offer-slide hidden">
+                        <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                            <img src="https://images.unsplash.com/photo-1618498082410-b4aa22193b38?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Offer 2" class="offer-media" loading="lazy">
+                            <h3 class="text-xl font-semibold text-teal-600 mb-2">Free Dental Check-Up</h3>
+                            <p class="text-gray-600 mb-2">Book a free dental check-up this month!</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Services Section -->
+    <!-- Services Section (Static, Side-by-Side) -->
     <section id="services" class="py-16 bg-blue-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">Our Dental Services in Hyderabad</h2>
@@ -503,24 +521,24 @@
         </div>
     </section>
 
-    <!-- Before-and-After Slider -->
+    <!-- Before-and-After Section (Static, Three Slides) -->
     <section class="py-16 bg-green-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">Before & After Transformations</h2>
             <div class="slider-container fade-in">
                 <div class="slider" id="before-after-slider">
                     <div class="slide">
-                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Before Treatment" loading="lazy">
-                        <img src="https://images.unsplash.com/photo-1618498082410-b4aa22193b38?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="After Treatment" loading="lazy">
+                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Before Treatment 1" loading="lazy">
+                        <img src="https://images.unsplash.com/photo-1618498082410-b4aa22193b38?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="After Treatment 1" loading="lazy">
                     </div>
-                    <div class="slide">
-                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Before Treatment" loading="lazy">
-                        <img src="https://images.unsplash.com/photo-1618498082410-b4aa22193b38?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="After Treatment" loading="lazy">
+                    <div class="slide hidden">
+                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Before Treatment 2" loading="lazy">
+                        <img src="https://images.unsplash.com/photo-1618498082410-b4aa22193b38?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="After Treatment 2" loading="lazy">
                     </div>
-                </div>
-                <div class="slider-nav">
-                    <button onclick="prevSlide()" aria-label="Previous Slide">❮</button>
-                    <button onclick="nextSlide()" aria-label="Next Slide">❯</button>
+                    <div class="slide hidden">
+                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Before Treatment 3" loading="lazy">
+                        <img src="https://images.unsplash.com/photo-1618498082410-b4aa22193b38?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="After Treatment 3" loading="lazy">
+                    </div>
                 </div>
             </div>
         </div>
@@ -546,7 +564,7 @@
         </div>
     </section>
 
-    <!-- Gallery Section -->
+    <!-- Gallery Section (Static) -->
     <section id="gallery" class="py-16 bg-yellow-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">Our Clinic in Bachupally</h2>
@@ -573,25 +591,17 @@
                         </div>
                     </div>
                 </div>
-                <div class="slider-nav">
-                    <button onclick="prevGallerySlide()" aria-label="Previous Gallery Slide">❮</button>
-                    <button onclick="nextGallerySlide()" aria-label="Next Gallery Slide">❯</button>
-                </div>
             </div>
         </div>
     </section>
 
-    <!-- Testimonials Section -->
+    <!-- Testimonials Section (Static, Three Visible) -->
     <section id="testimonials" class="py-16 bg-gray-100">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">What Our Hyderabad Patients Say</h2>
-            <div class="slider-container fade-in">
-                <div id="testimonial-slider">
+            <div class="testimonial-slider-container fade-in">
+                <div class="testimonial-slider" id="testimonial-slider">
                     <!-- Testimonials will be populated dynamically -->
-                </div>
-                <div class="slider-nav">
-                    <button onclick="prevTestimonial()" aria-label="Previous Testimonial">❮</button>
-                    <button onclick="nextTestimonial()" aria-label="Next Testimonial">❯</button>
                 </div>
             </div>
         </div>
@@ -671,8 +681,7 @@
                     <input type="text" id="full-name" placeholder="Full Name" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Full Name">
                     <input type="email" id="email" placeholder="Your Email" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Your Email">
                     <input type="tel" id="phone" placeholder="Your Phone" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Your Phone">
-                    <input type="date" id="appointment-date" class="w-full p-3 mb-4 border rounded-lg" list="leave-dates" required aria-label="Appointment Date">
-                    <datalist id="leave-dates"></datalist>
+                    <input type="text" id="appointment-date" placeholder="Select Appointment Date" class="w-full p-3 mb-4 border rounded-lg flatpickr-input" required aria-label="Appointment Date">
                     <select id="time-slot" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Time Slot">
                         <option value="" disabled selected>Select Time Slot</option>
                     </select>
@@ -688,7 +697,7 @@
                     <input type="text" id="waitlist-name" placeholder="Your Name" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Your Name">
                     <input type="email" id="waitlist-email" placeholder="Your Email" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Your Email">
                     <input type="tel" id="waitlist-phone" placeholder="Your Phone" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Your Phone">
-                    <input type="date" id="waitlist-date" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Preferred Date">
+                    <input type="text" id="waitlist-date" placeholder="Select Preferred Date" class="w-full p-3 mb-4 border rounded-lg flatpickr-input" required aria-label="Preferred Date">
                     <button onclick="joinWaitlist()" class="bg-teal-600 text-white px-6 py-3 rounded-full hover:bg-teal-700" aria-label="Join Waitlist">Join Waitlist</button>
                 </div>
             </div>
@@ -777,7 +786,7 @@
     <script>
         // Google Analytics
         window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
+        function gtag() { dataLayer.push(arguments); }
         gtag('js', new Date());
         gtag('config', 'G-YOUR-ID');
 
@@ -809,7 +818,7 @@
 
         // Smooth Scrolling
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
+            anchor.addEventListener('click', function(e) {
                 e.preventDefault();
                 document.querySelector(this.getAttribute('href')).scrollIntoView({
                     behavior: 'smooth'
@@ -844,47 +853,7 @@
         }, { threshold: 0.1 });
         fadeInElements.forEach(element => observer.observe(element));
 
-        // Before-and-After Slider
-        let currentSlide = 0;
-        const slides = document.querySelectorAll('.slide');
-        const slider = document.getElementById('before-after-slider');
-        function showSlide(index) {
-            if (index >= slides.length) currentSlide = 0;
-            if (index < 0) currentSlide = slides.length - 1;
-            slider.style.transform = `translateX(-${currentSlide * 100}%)`;
-        }
-        function nextSlide() {
-            currentSlide++;
-            showSlide(currentSlide);
-        }
-        function prevSlide() {
-            currentSlide--;
-            showSlide(currentSlide);
-        }
-        showSlide(currentSlide);
-
-        // Gallery Slider
-        let currentGallerySlide = 0;
-        const gallerySlides = document.querySelectorAll('.gallery-slide');
-        const gallerySlider = document.getElementById('gallery-slider');
-        function showGallerySlide(index) {
-            if (index >= gallerySlides.length) currentGallerySlide = 0;
-            if (index < 0) currentGallerySlide = gallerySlides.length - 1;
-            gallerySlider.style.transform = `translateX(-${currentGallerySlide * 100}%)`;
-        }
-        function nextGallerySlide() {
-            currentGallerySlide++;
-            showGallerySlide(currentGallerySlide);
-        }
-        function prevGallerySlide() {
-            currentGallerySlide--;
-            showGallerySlide(currentGallerySlide);
-        }
-        showGallerySlide(currentGallerySlide);
-
-        // Treatments Slider
-        let currentTreatmentSlide = 0;
-        let treatmentSlides = [];
+        // Treatments Loader (Static)
         async function loadTreatments() {
             try {
                 const response = await fetch('http://localhost:3000/api/services');
@@ -897,7 +866,7 @@
                     return;
                 }
 
-                treatments.forEach(treatment => {
+                treatments.slice(0, 3).forEach(treatment => {
                     const treatmentSlide = document.createElement('div');
                     treatmentSlide.className = 'treatment-slide';
                     let mediaHTML = '';
@@ -916,132 +885,8 @@
                     `;
                     treatmentsSlider.appendChild(treatmentSlide);
                 });
-
-                treatmentSlides = document.querySelectorAll('.treatment-slide');
-                updateTreatmentSlider();
             } catch (error) {
                 console.error('Error loading treatments:', error);
-            }
-        }
-        function updateTreatmentSlider() {
-            const slideWidth = 100 / 3;
-            if (currentTreatmentSlide >= treatmentSlides.length - 2) currentTreatmentSlide = 0;
-            if (currentTreatmentSlide < 0) currentTreatmentSlide = Math.max(0, treatmentSlides.length - 3);
-            document.getElementById('treatments-slider').style.transform = `translateX(-${currentTreatmentSlide * slideWidth}%)`;
-        }
-        function nextTreatmentSlide() {
-            currentTreatmentSlide++;
-            updateTreatmentSlider();
-        }
-        function prevTreatmentSlide() {
-            currentTreatmentSlide--;
-            updateTreatmentSlider();
-        }
-
-        // Offers Slider
-        let currentOfferSlide = 0;
-        let offerSlides = [];
-        async function loadOffers() {
-            try {
-                const response = await fetch('http://localhost:3000/api/offers');
-                const offers = await response.json();
-                const offersSlider = document.getElementById('offers-slider');
-                offersSlider.innerHTML = '';
-
-                if (offers.length === 0) {
-                    offersSlider.innerHTML = '<p class="text-center text-gray-600">No offers available at the moment.</p>';
-                    return;
-                }
-
-                offers.forEach(offer => {
-                    const offerSlide = document.createElement('div');
-                    offerSlide.className = 'offer-slide';
-                    let mediaHTML = '';
-                    if (offer.video) {
-                        mediaHTML = `<video src="${offer.video}" controls class="offer-media"></video>`;
-                    } else if (offer.image) {
-                        mediaHTML = `<img src="${offer.image}" alt="${offer.title}" class="offer-media" loading="lazy">`;
-                    } else if (offer.mediaUrl) {
-                        const isVideo = offer.mediaUrl.includes('.mp4') || offer.mediaUrl.includes('.webm');
-                        mediaHTML = isVideo
-                            ? `<video src="${offer.mediaUrl}" controls class="offer-media"></video>`
-                            : `<img src="${offer.mediaUrl}" alt="${offer.title}" class="offer-media" loading="lazy">`;
-                    }
-                    const linkHTML = offer.mediaUrl ? `<a href="${offer.mediaUrl}" target="_blank" class="text-teal-600 hover:underline">View More</a>` : '';
-                    offerSlide.innerHTML = `
-                        <div class="bg-white p-6 rounded-lg shadow-md text-center">
-                            ${mediaHTML}
-                            <h3 class="text-xl font-semibold text-teal-600 mb-2">${offer.title}</h3>
-                            <p class="text-gray-600 mb-2">${offer.description}</p>
-                            ${linkHTML}
-                            <div class="mt-4 space-x-2">
-                                <button onclick="editOffer('${offer.id}')" class="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700">Edit</button>
-                                <button onclick="deleteOffer('${offer.id}')" class="bg-red-600 text-white px-4 py-2 rounded-full hover:bg-red-700">Delete</button>
-                            </div>
-                        </div>
-                    `;
-                    offersSlider.appendChild(offerSlide);
-                });
-
-                offerSlides = document.querySelectorAll('.offer-slide');
-                updateOfferSlider();
-            } catch (error) {
-                console.error('Error loading offers:', error);
-            }
-        }
-        function updateOfferSlider() {
-            const slideWidth = 100 / 3;
-            if (currentOfferSlide >= offerSlides.length - 2) currentOfferSlide = 0;
-            if (currentOfferSlide < 0) currentOfferSlide = Math.max(0, offerSlides.length - 3);
-            document.getElementById('offers-slider').style.transform = `translateX(-${currentOfferSlide * slideWidth}%)`;
-        }
-        function nextOfferSlide() {
-            currentOfferSlide++;
-            updateOfferSlider();
-        }
-        function prevOfferSlide() {
-            currentOfferSlide--;
-            updateOfferSlider();
-        }
-        async function editOffer(id) {
-            // Simulate edit functionality (actual implementation will be in admin panel)
-            const newTitle = prompt('Enter new title:');
-            const newDescription = prompt('Enter new description:');
-            const newMediaUrl = prompt('Enter new media URL (optional):');
-            if (newTitle && newDescription) {
-                try {
-                    const response = await fetch(`http://localhost:3000/api/offers/${id}`, {
-                        method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ title: newTitle, description: newDescription, mediaUrl: newMediaUrl || undefined })
-                    });
-                    if (response.ok) {
-                        showToast('Offer updated successfully!');
-                        loadOffers();
-                    } else {
-                        showToast('Error updating offer.', true);
-                    }
-                } catch (error) {
-                    console.error('Error updating offer:', error);
-                    showToast('Error updating offer.', true);
-                }
-            }
-        }
-        async function deleteOffer(id) {
-            if (!confirm('Are you sure you want to delete this offer?')) return;
-            try {
-                const response = await fetch(`http://localhost:3000/api/offers/${id}`, {
-                    method: 'DELETE'
-                });
-                if (response.ok) {
-                    showToast('Offer deleted successfully!');
-                    loadOffers();
-                } else {
-                    showToast('Error deleting offer.', true);
-                }
-            } catch (error) {
-                console.error('Error deleting offer:', error);
-                showToast('Error deleting offer.', true);
             }
         }
 
@@ -1090,9 +935,7 @@
             }
         }
 
-        // Testimonials Carousel
-        let testimonialIndex = 0;
-        let testimonials = [];
+        // Testimonials Loader (Static)
         async function loadTestimonials() {
             try {
                 const response = await fetch('http://localhost:3000/api/feedback');
@@ -1102,7 +945,7 @@
 
                 if (feedbacks.length === 0) {
                     testimonialSlider.innerHTML = `
-                        <div class="testimonial-slide bg-white p-6 rounded-lg shadow-md active">
+                        <div class="testimonial-slide bg-white p-6 rounded-lg shadow-md">
                             <p class="text-gray-600 mb-4">"The team at Oak Dental Clinic made my visit so comfortable! My smile has never looked better."</p>
                             <p class="text-teal-600 font-semibold">— Priya S., Bachupally</p>
                         </div>
@@ -1116,7 +959,7 @@
                         </div>
                     `;
                 } else {
-                    feedbacks.forEach(feedback => {
+                    feedbacks.slice(0, 3).forEach(feedback => {
                         const slide = document.createElement('div');
                         slide.className = 'testimonial-slide bg-white p-6 rounded-lg shadow-md';
                         slide.innerHTML = `
@@ -1126,55 +969,60 @@
                         testimonialSlider.appendChild(slide);
                     });
                 }
-
-                testimonials = document.querySelectorAll('.testimonial-slide');
-                showTestimonial(testimonialIndex);
             } catch (error) {
                 console.error('Error loading testimonials:', error);
             }
         }
-        function showTestimonial(index) {
-            testimonials.forEach((slide, i) => {
-                slide.classList.toggle('active', i === index);
-            });
-        }
-        function nextTestimonial() {
-            testimonialIndex = (testimonialIndex + 1) % testimonials.length;
-            showTestimonial(testimonialIndex);
-        }
-        function prevTestimonial() {
-            testimonialIndex = (testimonialIndex - 1 + testimonials.length) % testimonials.length;
-            showTestimonial(testimonialIndex);
-        }
-        setInterval(nextTestimonial, 5000);
 
         // Appointment Handling
         let leaveDates = [];
         async function fetchLeaveDates() {
             try {
                 const response = await fetch('http://localhost:3000/api/leave-dates');
-                leaveDates = await response.json();
-                applyLeaveDateStyles();
+                const rawDates = await response.json();
+                leaveDates = rawDates.map(date => {
+                    const d = new Date(date);
+                    return d.toISOString().split('T')[0];
+                });
+                initializeCalendars();
             } catch (error) {
                 console.error('Error fetching leave dates:', error);
+                showToast('Error loading calendar. Please try again.', true);
             }
         }
 
-        function applyLeaveDateStyles() {
-            const datalist = document.getElementById('leave-dates');
-            leaveDates.forEach(date => {
-                const option = document.createElement('option');
-                option.value = date;
-                option.style.color = 'red';
-                datalist.appendChild(option);
+        function initializeCalendars() {
+            flatpickr('#appointment-date', {
+                dateFormat: 'Y-m-d',
+                minDate: 'today',
+                disable: leaveDates,
+                onChange: (selectedDates, dateStr) => {
+                    if (leaveDates.includes(dateStr)) {
+                        showToast(`The doctor is on leave on ${dateStr}. Please select another date, such as ${getNextAvailableDate(dateStr)}.`, true);
+                        document.getElementById('appointment-date').value = '';
+                    }
+                },
+                onDayCreate: function(dObj, dStr, fp, dayElem) {
+                    const dayDate = dayElem.dateObj.toISOString().split('T')[0];
+                    if (leaveDates.includes(dayDate)) {
+                        dayElem.classList.add('disabled');
+                        dayElem.style.color = '#ff0000';
+                        dayElem.style.fontWeight = 'bold';
+                    }
+                }
             });
 
-            const dateInput = document.getElementById('appointment-date');
-            dateInput.addEventListener('change', () => {
-                const selectedDate = dateInput.value;
-                if (leaveDates.includes(selectedDate)) {
-                    showToast(`The doctor is on leave on ${selectedDate}. Please select another date, such as ${getNextAvailableDate(selectedDate)}.`, true);
-                    dateInput.value = '';
+            flatpickr('#waitlist-date', {
+                dateFormat: 'Y-m-d',
+                minDate: 'today',
+                disable: leaveDates,
+                onDayCreate: function(dObj, dStr, fp, dayElem) {
+                    const dayDate = dayElem.dateObj.toISOString().split('T')[0];
+                    if (leaveDates.includes(dayDate)) {
+                        dayElem.classList.add('disabled');
+                        dayElem.style.color = '#ff0000';
+                        dayElem.style.fontWeight = 'bold';
+                    }
                 }
             });
         }
@@ -1259,7 +1107,7 @@
             };
 
             if (!waitlistData.name || !waitlistData.email || !waitlistData.phone || !waitlistData.preferredDate) {
-                showToast('Please fill in all waitlist fields.', true);
+                showToast('Please fill in all fields.', true);
                 return;
             }
 
@@ -1271,7 +1119,7 @@
                 });
 
                 if (response.ok) {
-                    showToast(`You have been added to the waitlist for ${waitlistData.preferredDate}. We will notify you when a slot becomes available.`);
+                    showToast('Successfully joined the waitlist! We will notify you if a slot opens up.');
                     document.getElementById('waitlist-name').value = '';
                     document.getElementById('waitlist-email').value = '';
                     document.getElementById('waitlist-phone').value = '';
@@ -1287,62 +1135,47 @@
 
         async function checkAppointmentStatus() {
             const identifier = document.getElementById('status-identifier').value;
+            const statusResult = document.getElementById('status-result');
+
             if (!identifier) {
-                showToast('Please enter a mobile number or email.', true);
+                showToast('Please enter your mobile number or email.', true);
                 return;
             }
 
             try {
-                const response = await fetch(`http://localhost:3000/api/appointments/status?identifier=${encodeURIComponent(identifier)}`);
-                const result = await response.json();
-                const statusResult = document.getElementById('status-result');
-                statusResult.classList.remove('hidden');
+                const response = await fetch(`http://localhost:3000/api/appointments?identifier=${encodeURIComponent(identifier)}`);
+                const appointments = await response.json();
 
-                if (result.appointment) {
-                    const { full_name, date, time, status, id } = result.appointment;
+                if (response.ok && appointments.length > 0) {
+                    statusResult.classList.remove('hidden');
                     statusResult.innerHTML = `
-                        <p><strong>Name:</strong> ${full_name}</p>
-                        <p><strong>Date:</strong> ${date}</p>
-                        <p><strong>Time:</strong> ${time}</p>
-                        <p><strong>Status:</strong> ${status}</p>
-                        ${status !== 'CANCELLED' ? `<button onclick="cancelAppointment('${id}')" class="bg-red-600 text-white px-4 py-2 rounded-full hover:bg-red-700 mt-2">Cancel Appointment</button>` : ''}
+                        <h4 class="text-lg font-semibold text-teal-600 mb-2">Your Appointment Details:</h4>
+                        ${appointments.map(appointment => `
+                            <p class="text-gray-600">Name: ${appointment.full_name}</p>
+                            <p class="text-gray-600">Date: ${appointment.date}</p>
+                            <p class="text-gray-600">Time: ${appointment.time}</p>
+                            <hr class="my-2">
+                        `).join('')}
                     `;
                 } else {
-                    statusResult.innerHTML = '<p>No appointment found with this mobile number or email.</p>';
+                    statusResult.classList.remove('hidden');
+                    statusResult.innerHTML = '<p class="text-red-600">No appointments found for this identifier.</p>';
                 }
             } catch (error) {
                 console.error('Error checking appointment status:', error);
                 showToast('Error checking appointment status. Please try again.', true);
+                statusResult.classList.remove('hidden');
+                statusResult.innerHTML = '<p class="text-red-600">Error checking status. Please try again later.</p>';
             }
         }
 
-        async function cancelAppointment(appointmentId) {
-            if (!confirm('Are you sure you want to cancel this appointment?')) return;
-
-            try {
-                const response = await fetch(`http://localhost:3000/api/appointments/${appointmentId}/cancel`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' }
-                });
-
-                if (response.ok) {
-                    showToast('Appointment cancelled. You will receive a confirmation via email/SMS.');
-                    checkAppointmentStatus();
-                } else {
-                    showToast('Error cancelling appointment. Please try again.', true);
-                }
-            } catch (error) {
-                console.error('Error cancelling appointment:', error);
-                showToast('Error cancelling appointment. Please try again.', true);
-            }
-        }
-
-        // Initialize
-        loadTreatments();
-        loadOffers();
-        loadTestimonials();
-        populateTimeSlots();
-        fetchLeaveDates();
+        // Initialize on Page Load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTreatments();
+            loadTestimonials();
+            fetchLeaveDates();
+            populateTimeSlots();
+        });
     </script>
 </body>
 </html>

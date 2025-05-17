@@ -60,3 +60,134 @@
 {"level":"info","message":"Server running on http://localhost:3000","timestamp":"2025-05-17T09:50:26.619Z"}
 {"databaseUrl":"postgresql://delicute_db_user:5wsu1Frd1uHr1PDWEGglf1iFle6SlR69@dpg-d0eoa3p5pdvs73asuobg-a.oregon-postgres.render.com/delicute_db","level":"info","message":"Database connection successful","timestamp":"2025-05-17T09:50:31.525Z"}
 {"level":"info","message":"Database synced successfully","timestamp":"2025-05-17T09:50:48.894Z"}
+{"level":"info","message":"Server running on http://localhost:3000","timestamp":"2025-05-17T16:07:16.246Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-05-17T16:07:17.961Z"}
+{"level":"info","message":"Adding price column to offers table","timestamp":"2025-05-17T16:07:19.800Z"}
+{"level":"info","message":"Database tables initialized successfully","timestamp":"2025-05-17T16:07:20.568Z"}
+{"level":"error","message":"Error fetching offers: column \"created_at\" does not exist","timestamp":"2025-05-17T16:07:22.229Z"}
+{"level":"error","message":"Error fetching offers: column \"created_at\" does not exist","timestamp":"2025-05-17T16:07:33.433Z"}
+{"body":{},"level":"info","message":"Request to POST /api/upload/image with body:","timestamp":"2025-05-17T16:08:18.693Z"}
+{"level":"warn","message":"Unhandled request: POST /api/upload/image","timestamp":"2025-05-17T16:08:18.696Z"}
+{"level":"error","message":"Error fetching offers: column \"created_at\" does not exist","timestamp":"2025-05-17T16:08:57.100Z"}
+{"body":{},"level":"info","message":"Request to POST /api/upload/image with body:","timestamp":"2025-05-17T16:09:22.685Z"}
+{"level":"warn","message":"Unhandled request: POST /api/upload/image","timestamp":"2025-05-17T16:09:22.687Z"}
+{"level":"error","message":"Error fetching offers: column \"created_at\" does not exist","timestamp":"2025-05-17T16:10:15.554Z"}
+{"level":"info","message":"Server running on http://localhost:3000","timestamp":"2025-05-17T16:15:49.514Z"}
+{"level":"error","message":"Error fetching offers: column \"created_at\" does not exist","timestamp":"2025-05-17T16:15:51.486Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-05-17T16:15:51.525Z"}
+{"level":"error","message":"Error fetching offers: column \"created_at\" does not exist","timestamp":"2025-05-17T16:15:52.081Z"}
+{"level":"info","message":"Adding created_at column to offers table","timestamp":"2025-05-17T16:15:54.581Z"}
+{"level":"info","message":"Database tables initialized successfully","timestamp":"2025-05-17T16:15:54.838Z"}
+{"level":"warn","message":"Unhandled request: GET /Uploads/https://images.unsplash.com/photo-1513106580091-1d82408b8cd6","timestamp":"2025-05-17T16:16:21.993Z"}
+{"level":"warn","message":"Unhandled request: GET /Uploads/https://images.unsplash.com/photo-1565299624946-b28f40a0ae38","timestamp":"2025-05-17T16:16:21.998Z"}
+{"body":{},"level":"info","message":"Request to POST /api/admin/appointments/1747487733292/approve with body:","timestamp":"2025-05-17T16:16:26.058Z"}
+{"level":"info","message":"Email sent to unknown@example.com","timestamp":"2025-05-17T16:16:29.030Z"}
+{"level":"error","message":"Error sending SMS: Invalid SMS_API_URL: your_sms_api_url","timestamp":"2025-05-17T16:16:29.032Z"}
+{"body":{},"level":"info","message":"Request to POST /api/upload/image with body:","timestamp":"2025-05-17T16:17:08.286Z"}
+{"level":"warn","message":"Unhandled request: POST /api/upload/image","timestamp":"2025-05-17T16:17:08.288Z"}
+{"level":"warn","message":"Unhandled request: DELETE /api/offers/2","timestamp":"2025-05-17T16:17:56.001Z"}
+{"level":"error","message":"Error deleting offer image: ENOENT: no such file or directory, unlink 'C:\\Users\\svasu\\OneDrive\\Desktop\\oak\\Uploads\\https:\\images.unsplash.com\\photo-1513106580091-1d82408b8cd6'","timestamp":"2025-05-17T16:18:08.381Z"}
+{"level":"warn","message":"Unhandled request: GET /Uploads/https://images.unsplash.com/photo-1565299624946-b28f40a0ae38","timestamp":"2025-05-17T16:18:11.538Z"}
+{"level":"warn","message":"Unhandled request: GET /Uploads/https://images.unsplash.com/photo-1565299624946-b28f40a0ae38","timestamp":"2025-05-17T16:18:50.277Z"}
+{"body":{},"level":"info","message":"Request to POST /api/upload/media with body:","timestamp":"2025-05-17T16:19:13.151Z"}
+{"body":{},"file":{"destination":"Uploads/","encoding":"7bit","fieldname":"media","filename":"cbf3ff34-010c-4d9a-b06d-175a552b0fb4.jpg","mimetype":"image/jpeg","originalname":"DENTAL BACK.jpg","path":"Uploads\\cbf3ff34-010c-4d9a-b06d-175a552b0fb4.jpg","size":39617},"level":"info","message":"Upload media request received","timestamp":"2025-05-17T16:19:13.174Z"}
+{"body":{"description":"HI","image":"cbf3ff34-010c-4d9a-b06d-175a552b0fb4.jpg","price":999,"title":"DENATL CLEANING"},"level":"info","message":"Request to POST /api/admin/services with body:","timestamp":"2025-05-17T16:19:13.185Z"}
+{"level":"error","message":"Error adding service: Cannot read properties of undefined (reading 'image')","timestamp":"2025-05-17T16:19:13.198Z"}
+{"body":{},"level":"info","message":"Request to POST /api/upload/media with body:","timestamp":"2025-05-17T16:19:18.268Z"}
+{"body":{},"file":{"destination":"Uploads/","encoding":"7bit","fieldname":"media","filename":"2810b37f-bce2-4cba-b4c0-e808b1725c42.jpg","mimetype":"image/jpeg","originalname":"DENTAL BACK.jpg","path":"Uploads\\2810b37f-bce2-4cba-b4c0-e808b1725c42.jpg","size":39617},"level":"info","message":"Upload media request received","timestamp":"2025-05-17T16:19:18.277Z"}
+{"body":{"description":"HI","image":"2810b37f-bce2-4cba-b4c0-e808b1725c42.jpg","price":999,"title":"DENATL CLEANING"},"level":"info","message":"Request to POST /api/admin/services with body:","timestamp":"2025-05-17T16:19:18.288Z"}
+{"level":"error","message":"Error adding service: Cannot read properties of undefined (reading 'image')","timestamp":"2025-05-17T16:19:18.291Z"}
+{"level":"info","message":"Server running on http://localhost:3000","timestamp":"2025-05-17T16:19:39.637Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-05-17T16:19:41.526Z"}
+{"level":"info","message":"Database tables initialized successfully","timestamp":"2025-05-17T16:19:44.502Z"}
+{"level":"warn","message":"Unhandled request: GET /Uploads/https://images.unsplash.com/photo-1565299624946-b28f40a0ae38","timestamp":"2025-05-17T16:19:50.098Z"}
+{"body":{},"level":"info","message":"Request to POST /api/upload/media with body:","timestamp":"2025-05-17T16:20:09.262Z"}
+{"body":{},"file":{"destination":"Uploads/","encoding":"7bit","fieldname":"media","filename":"223a08c7-d095-4946-8dcc-119abbbabaee.jpg","mimetype":"image/jpeg","originalname":"DENTAL BACK.jpg","path":"Uploads\\223a08c7-d095-4946-8dcc-119abbbabaee.jpg","size":39617},"level":"info","message":"Upload media request received","timestamp":"2025-05-17T16:20:09.285Z"}
+{"body":{"description":"NN","image":"223a08c7-d095-4946-8dcc-119abbbabaee.jpg","price":999,"title":"NN"},"level":"info","message":"Request to POST /api/admin/offers with body:","timestamp":"2025-05-17T16:20:09.344Z"}
+{"level":"warn","message":"Unhandled request: GET /Uploads/https://images.unsplash.com/photo-1565299624946-b28f40a0ae38","timestamp":"2025-05-17T16:20:13.176Z"}
+{"body":{},"level":"info","message":"Request to POST /api/upload/media with body:","timestamp":"2025-05-17T16:20:29.937Z"}
+{"body":{},"file":{"destination":"Uploads/","encoding":"7bit","fieldname":"media","filename":"0bec9ee6-342b-4bf2-84ef-8fa13d9ec832.jpg","mimetype":"image/jpeg","originalname":"DENTAL BACK.jpg","path":"Uploads\\0bec9ee6-342b-4bf2-84ef-8fa13d9ec832.jpg","size":39617},"level":"info","message":"Upload media request received","timestamp":"2025-05-17T16:20:29.947Z"}
+{"body":{"description":"HI","image":"0bec9ee6-342b-4bf2-84ef-8fa13d9ec832.jpg","price":999,"title":"OP+CLEANING+X RAY"},"level":"info","message":"Request to POST /api/admin/offers with body:","timestamp":"2025-05-17T16:20:29.957Z"}
+{"level":"warn","message":"Unhandled request: GET /Uploads/https://images.unsplash.com/photo-1565299624946-b28f40a0ae38","timestamp":"2025-05-17T16:20:33.874Z"}
+{"level":"warn","message":"Unhandled request: DELETE /api/offers/2","timestamp":"2025-05-17T16:21:52.668Z"}
+{"body":{},"level":"info","message":"Request to POST /api/upload/media with body:","timestamp":"2025-05-17T16:22:28.985Z"}
+{"body":{},"file":{"destination":"Uploads/","encoding":"7bit","fieldname":"media","filename":"35ac9bb9-1492-47f5-99cd-51e5d0682ad5.jpg","mimetype":"image/jpeg","originalname":"DENTAL BACK.jpg","path":"Uploads\\35ac9bb9-1492-47f5-99cd-51e5d0682ad5.jpg","size":39617},"level":"info","message":"Upload media request received","timestamp":"2025-05-17T16:22:28.990Z"}
+{"body":{"description":"HI","image":"35ac9bb9-1492-47f5-99cd-51e5d0682ad5.jpg","price":999,"title":"DENATL CLEANING"},"level":"info","message":"Request to POST /api/admin/services with body:","timestamp":"2025-05-17T16:22:28.997Z"}
+{"level":"error","message":"Error adding service: Cannot read properties of undefined (reading 'image')","timestamp":"2025-05-17T16:22:29.004Z"}
+{"level":"error","message":"Error deleting offer image: ENOENT: no such file or directory, unlink 'C:\\Users\\svasu\\OneDrive\\Desktop\\oak\\Uploads\\https:\\images.unsplash.com\\photo-1565299624946-b28f40a0ae38'","timestamp":"2025-05-17T16:25:03.165Z"}
+{"body":{},"level":"info","message":"Request to POST /api/appointments/1747489094092/cancel with body:","timestamp":"2025-05-17T16:31:35.947Z"}
+{"level":"info","message":"Email sent to svasudevareddy18604@gmail.com","timestamp":"2025-05-17T16:31:39.664Z"}
+{"level":"error","message":"Error sending SMS: Invalid SMS_API_URL: your_sms_api_url","timestamp":"2025-05-17T16:31:39.665Z"}
+{"level":"info","message":"Server running on http://localhost:3000","timestamp":"2025-05-17T16:35:56.443Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-05-17T16:35:58.171Z"}
+{"level":"info","message":"Database tables initialized successfully","timestamp":"2025-05-17T16:36:00.932Z"}
+{"body":{},"level":"info","message":"Request to POST /api/admin/appointments/1747487733292/approve with body:","timestamp":"2025-05-17T16:36:27.914Z"}
+{"level":"info","message":"Email sent to unknown@example.com","timestamp":"2025-05-17T16:36:31.441Z"}
+{"level":"error","message":"Error sending SMS: Invalid SMS_API_URL: your_sms_api_url","timestamp":"2025-05-17T16:36:31.442Z"}
+{"body":{},"level":"info","message":"Request to POST /api/admin/appointments/1747487733292/approve with body:","timestamp":"2025-05-17T16:36:51.540Z"}
+{"body":{},"level":"info","message":"Request to POST /api/admin/appointments/1747487733292/approve with body:","timestamp":"2025-05-17T16:36:55.469Z"}
+{"level":"info","message":"Email sent to unknown@example.com","timestamp":"2025-05-17T16:36:55.734Z"}
+{"level":"error","message":"Error sending SMS: Invalid SMS_API_URL: your_sms_api_url","timestamp":"2025-05-17T16:36:55.735Z"}
+{"level":"info","message":"Email sent to unknown@example.com","timestamp":"2025-05-17T16:36:59.032Z"}
+{"level":"error","message":"Error sending SMS: Invalid SMS_API_URL: your_sms_api_url","timestamp":"2025-05-17T16:36:59.033Z"}
+{"body":{},"level":"info","message":"Request to POST /api/upload/media with body:","timestamp":"2025-05-17T16:37:21.623Z"}
+{"body":{},"file":{"destination":"Uploads/","encoding":"7bit","fieldname":"media","filename":"3e35ad29-af78-4579-a4f3-a44151545382.jpg","mimetype":"image/jpeg","originalname":"pexels-karolina-grabowska-6627520.jpg","path":"Uploads\\3e35ad29-af78-4579-a4f3-a44151545382.jpg","size":1264806},"level":"info","message":"Upload media request received","timestamp":"2025-05-17T16:37:21.677Z"}
+{"body":{"description":"nn","image":"3e35ad29-af78-4579-a4f3-a44151545382.jpg","price":99,"title":"DENATL CLEANING"},"level":"info","message":"Request to POST /api/admin/services with body:","timestamp":"2025-05-17T16:37:21.687Z"}
+{"level":"error","message":"Error adding service: Cannot read properties of undefined (reading 'image')","timestamp":"2025-05-17T16:37:21.691Z"}
+{"level":"warn","message":"Unhandled request: GET /api/offers/4","timestamp":"2025-05-17T16:37:37.914Z"}
+{"body":{},"level":"info","message":"Request to POST /api/upload/media with body:","timestamp":"2025-05-17T16:37:53.904Z"}
+{"body":{},"file":{"destination":"Uploads/","encoding":"7bit","fieldname":"media","filename":"0afa5a09-ba24-4e20-b58e-bd0afcc0f67b.jpg","mimetype":"image/jpeg","originalname":"DENTAL BACK.jpg","path":"Uploads\\0afa5a09-ba24-4e20-b58e-bd0afcc0f67b.jpg","size":39617},"level":"info","message":"Upload media request received","timestamp":"2025-05-17T16:37:53.913Z"}
+{"body":{"description":"undefined","image":"0afa5a09-ba24-4e20-b58e-bd0afcc0f67b.jpg","price":99,"title":"mm"},"level":"info","message":"Request to PUT /api/admin/offers/undefined with body:","timestamp":"2025-05-17T16:37:53.919Z"}
+{"body":{},"level":"info","message":"Request to POST /api/upload/media with body:","timestamp":"2025-05-17T16:37:55.546Z"}
+{"body":{},"file":{"destination":"Uploads/","encoding":"7bit","fieldname":"media","filename":"7b4a7591-8cce-466b-8ce7-a3fdb187c666.jpg","mimetype":"image/jpeg","originalname":"DENTAL BACK.jpg","path":"Uploads\\7b4a7591-8cce-466b-8ce7-a3fdb187c666.jpg","size":39617},"level":"info","message":"Upload media request received","timestamp":"2025-05-17T16:37:55.551Z"}
+{"body":{"description":"undefined","image":"7b4a7591-8cce-466b-8ce7-a3fdb187c666.jpg","price":99,"title":"mm"},"level":"info","message":"Request to PUT /api/admin/offers/undefined with body:","timestamp":"2025-05-17T16:37:55.555Z"}
+{"level":"error","message":"Error updating offer: invalid input syntax for type integer: \"undefined\"","timestamp":"2025-05-17T16:37:56.499Z"}
+{"level":"error","message":"Error updating offer: invalid input syntax for type integer: \"undefined\"","timestamp":"2025-05-17T16:37:57.362Z"}
+{"body":{},"level":"info","message":"Request to POST /api/upload/media with body:","timestamp":"2025-05-17T16:38:12.204Z"}
+{"body":{},"file":{"destination":"Uploads/","encoding":"7bit","fieldname":"media","filename":"fe764674-1239-402f-8cce-e81c2ae2db22.jpg","mimetype":"image/jpeg","originalname":"DENTAL BACK.jpg","path":"Uploads\\fe764674-1239-402f-8cce-e81c2ae2db22.jpg","size":39617},"level":"info","message":"Upload media request received","timestamp":"2025-05-17T16:38:12.212Z"}
+{"body":{"description":"mm","image":"fe764674-1239-402f-8cce-e81c2ae2db22.jpg","price":999,"title":"OP+CLEANING+X RAY"},"level":"info","message":"Request to POST /api/admin/offers with body:","timestamp":"2025-05-17T16:38:12.221Z"}
+{"level":"info","message":"Server running on http://localhost:3000","timestamp":"2025-05-17T16:46:05.982Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-05-17T16:46:07.667Z"}
+{"level":"info","message":"Adding status column to waitlist table","timestamp":"2025-05-17T16:46:10.523Z"}
+{"level":"info","message":"Database tables initialized successfully","timestamp":"2025-05-17T16:46:10.785Z"}
+{"body":{},"level":"info","message":"Request to POST /api/admin/waitlist/1/accept with body:","timestamp":"2025-05-17T16:46:40.638Z"}
+{"level":"warn","message":"Waitlist accept failed: Date and time required","timestamp":"2025-05-17T16:46:40.644Z"}
+{"body":{},"level":"info","message":"Request to POST /api/admin/waitlist/1/accept with body:","timestamp":"2025-05-17T16:46:46.659Z"}
+{"level":"warn","message":"Waitlist accept failed: Date and time required","timestamp":"2025-05-17T16:46:46.663Z"}
+{"body":{},"level":"info","message":"Request to POST /api/upload/media with body:","timestamp":"2025-05-17T16:47:26.815Z"}
+{"body":{},"file":{"destination":"Uploads/","encoding":"7bit","fieldname":"media","filename":"296f7999-c31d-48f2-84ea-6c87863fd818.jpg","mimetype":"image/jpeg","originalname":"Oak dental - interior (3).jpg","path":"Uploads\\296f7999-c31d-48f2-84ea-6c87863fd818.jpg","size":106985},"level":"info","message":"Upload media request received","timestamp":"2025-05-17T16:47:26.824Z"}
+{"body":{"description":"MM","image":"296f7999-c31d-48f2-84ea-6c87863fd818.jpg","price":999,"title":"DENATL CLEANING"},"level":"info","message":"Request to POST /api/admin/services with body:","timestamp":"2025-05-17T16:47:26.830Z"}
+{"id":2,"level":"info","message":"Service added","timestamp":"2025-05-17T16:47:28.744Z"}
+{"body":{},"level":"info","message":"Request to POST /api/upload/media with body:","timestamp":"2025-05-17T16:48:10.545Z"}
+{"body":{},"file":{"destination":"Uploads/","encoding":"7bit","fieldname":"media","filename":"af398d48-2613-45bd-9a00-ebd12e2734a4.jpg","mimetype":"image/jpeg","originalname":"BRACE.jpg","path":"Uploads\\af398d48-2613-45bd-9a00-ebd12e2734a4.jpg","size":42537},"level":"info","message":"Upload media request received","timestamp":"2025-05-17T16:48:10.551Z"}
+{"body":{"description":"MM","image":"af398d48-2613-45bd-9a00-ebd12e2734a4.jpg","price":999,"title":"OP+CLEANING+X RAY"},"level":"info","message":"Request to POST /api/admin/offers with body:","timestamp":"2025-05-17T16:48:10.561Z"}
+{"id":6,"level":"info","message":"Offer added","timestamp":"2025-05-17T16:48:12.157Z"}
+{"body":{},"level":"info","message":"Request to POST /api/upload/media with body:","timestamp":"2025-05-17T16:49:46.679Z"}
+{"level":"error","message":"Token verification error: jwt expired","timestamp":"2025-05-17T16:49:46.685Z"}
+{"body":{"email":"svasu18604@gmail.com","password":"1234"},"level":"info","message":"Request to POST /api/admin/login with body:","timestamp":"2025-05-17T16:50:11.077Z"}
+{"email":"svasu18604@gmail.com","level":"info","message":"Login request:","password":"[REDACTED]","timestamp":"2025-05-17T16:50:11.080Z"}
+{"level":"info","message":"Admin logged in: svasu18604@gmail.com","timestamp":"2025-05-17T16:50:12.935Z"}
+{"body":{},"level":"info","message":"Request to POST /api/upload/media with body:","timestamp":"2025-05-17T16:50:33.781Z"}
+{"body":{},"file":{"destination":"Uploads/","encoding":"7bit","fieldname":"media","filename":"26f1bdf9-6ee6-4044-8772-b3b5e9724c4b.png","mimetype":"image/png","originalname":"OAK_LOGO_HD.png","path":"Uploads\\26f1bdf9-6ee6-4044-8772-b3b5e9724c4b.png","size":238639},"level":"info","message":"Upload media request received","timestamp":"2025-05-17T16:50:33.787Z"}
+{"body":{"description":"mm","image":"26f1bdf9-6ee6-4044-8772-b3b5e9724c4b.png","price":999,"title":"svasu18604@gmail.com"},"level":"info","message":"Request to POST /api/admin/services with body:","timestamp":"2025-05-17T16:50:33.791Z"}
+{"id":3,"level":"info","message":"Service added","timestamp":"2025-05-17T16:50:35.362Z"}
+{"body":{},"level":"info","message":"Request to POST /api/upload/media with body:","timestamp":"2025-05-17T16:51:06.248Z"}
+{"body":{},"file":{"destination":"Uploads/","encoding":"7bit","fieldname":"media","filename":"0201f88f-1b4e-45a7-a228-ff8a9de1534b.jpg","mimetype":"image/jpeg","originalname":"Oak dental - interior (3).jpg","path":"Uploads\\0201f88f-1b4e-45a7-a228-ff8a9de1534b.jpg","size":106985},"level":"info","message":"Upload media request received","timestamp":"2025-05-17T16:51:06.254Z"}
+{"body":{"description":"mm","image":"0201f88f-1b4e-45a7-a228-ff8a9de1534b.jpg","price":99,"title":"svasu18604@gmail.com"},"level":"info","message":"Request to POST /api/admin/services with body:","timestamp":"2025-05-17T16:51:06.259Z"}
+{"id":4,"level":"info","message":"Service added","timestamp":"2025-05-17T16:51:07.910Z"}
+{"body":{"description":"OFFER FOR TODAY 3000","image":"https://i.postimg.cc/rwgqTZc8/BRACE3.jpg","price":500,"title":"DENTAL BRACER"},"level":"info","message":"Request to PUT /api/admin/services/1 with body:","timestamp":"2025-05-17T17:04:58.879Z"}
+{"id":"1","level":"info","message":"Service updated","timestamp":"2025-05-17T17:04:59.475Z"}
+{"id":"2","level":"info","message":"Service deleted","timestamp":"2025-05-17T17:05:05.670Z"}
+{"body":{"description":"MM","price":99,"title":"OP+CLEANING+X RAY"},"level":"info","message":"Request to PUT /api/admin/offers/6 with body:","timestamp":"2025-05-17T17:05:54.030Z"}
+{"id":"6","level":"info","message":"Offer updated","timestamp":"2025-05-17T17:05:54.570Z"}
+{"id":"5","level":"info","message":"Offer deleted","timestamp":"2025-05-17T17:05:59.660Z"}
+{"body":{},"level":"info","message":"Request to POST /api/admin/appointments/1747487733292/approve with body:","timestamp":"2025-05-17T17:06:08.290Z"}
+{"level":"info","message":"Email sent to unknown@example.com","timestamp":"2025-05-17T17:06:11.886Z"}
+{"level":"warn","message":"Skipping SMS due to invalid SMS_API_URL: your_sms_api_url","timestamp":"2025-05-17T17:06:11.887Z"}
+{"id":"1747487733292","level":"info","message":"Appointment approved","timestamp":"2025-05-17T17:06:11.888Z"}
+{"body":{"reason":"WE ARE NOT AVAILABLE PLEASE RESHEDULE "},"level":"info","message":"Request to POST /api/admin/appointments/1747487733292/cancel with body:","timestamp":"2025-05-17T17:06:31.219Z"}
+{"level":"info","message":"Email sent to unknown@example.com","timestamp":"2025-05-17T17:06:35.300Z"}
+{"level":"warn","message":"Skipping SMS due to invalid SMS_API_URL: your_sms_api_url","timestamp":"2025-05-17T17:06:35.301Z"}
+{"id":"1747487733292","level":"info","message":"Appointment cancelled","timestamp":"2025-05-17T17:06:35.301Z"}
+{"body":{"ids":["1747489443394","1747487733292","1747489094092"]},"level":"info","message":"Request to POST /api/admin/appointments/clear-selected with body:","timestamp":"2025-05-17T17:07:58.671Z"}
+{"level":"info","message":"Cleared 3 appointments","timestamp":"2025-05-17T17:07:58.928Z"}
