@@ -45,6 +45,7 @@ async function testDbConnection() {
 // Database Initialization
 async function initDb() {
     try {
+        // Create tables
         await pool.query(`
             CREATE TABLE IF NOT EXISTS admins (
                 id SERIAL PRIMARY KEY,
@@ -95,6 +96,30 @@ async function initDb() {
                 date VARCHAR(10) PRIMARY KEY
             );
         `);
+
+        // Check if full_name column exists in feedback table
+        const columnCheck = await pool.query(`
+            SELECT column_name 
+            FROM information_schema.columns 
+            WHERE table_name = 'feedback' AND column_name = 'full_name'
+        `);
+
+        if (columnCheck.rows.length === 0) {
+            console.log('Adding full_name column to feedback table');
+            await pool.query(`
+                ALTER TABLE feedback
+                ADD COLUMN full_name VARCHAR(255);
+                
+                -- Set default for existing rows
+                UPDATE feedback
+                SET full_name = 'Unknown'
+                WHERE full_name IS NULL;
+                
+                ALTER TABLE feedback
+                ALTER COLUMN full_name SET NOT NULL;
+            `);
+        }
+
         console.log('Database tables initialized successfully');
     } catch (error) {
         console.error('Error initializing database:', error.message);
@@ -124,7 +149,7 @@ const transporter = nodemailer.createTransport({
 // Multer Configuration for File Uploads
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'uploads/');
+        cb(null, 'Uploads/');
     },
     filename: (req, file, cb) => {
         const ext = path.extname(file.originalname);
@@ -163,7 +188,7 @@ const authenticateAdmin = async (req, res, next) => {
 
 // Serve Static Files
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, 'Uploads')));
 
 // Serve index.html at /
 app.get('/', (req, res) => {
@@ -271,168 +296,73 @@ app.post('/api/admin/login', async (req, res) => {
         console.log(`Admin logged in: ${email}`);
         res.json({ token, admin: { username: admin.username, email: admin.email } });
     } catch (error) {
-        console.error('Error logging in:', error.message, error.stack);
+        console.error('Error logging in admin:', error.message);
         res.status(500).json({ error: 'Internal server error during login' });
     }
 });
 
-// File Upload Endpoints
-app.post('/api/upload/image', authenticateAdmin, upload.single('image'), async (req, res) => {
+// Appointment Endpoints
+app.get('/api/time-slots', async (req, res) => {
     try {
-        if (!req.file) {
-            return res.status(400).json({ error: 'No image file provided' });
-        }
-        const fileUrl = `${NODE_ENV === 'production' ? 'https://oak-dental.onrender.com' : 'http://localhost:3000'}/uploads/${req.file.filename}`;
-        res.json({ url: fileUrl });
+        const timeSlots = [
+            '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM',
+            '12:00 PM', '12:30 PM', '01:00 PM', '01:30 PM',
+            '02:00 PM', '02:30 PM', '03:00 PM', '03:30 PM',
+            '04:00 PM', '04:30 PM', '05:00 PM', '05:30 PM',
+            '06:00 PM', '06:30 PM', '07:00 PM', '07:30 PM'
+        ];
+        res.json(timeSlots);
     } catch (error) {
-        console.error('Error uploading image:', error.message);
-        res.status(500).json({ error: 'Error uploading image' });
+        console.error('Error fetching time slots:', error.message);
+        res.status(500).json({ error: 'Internal server error' });
     }
-});
-
-app.post('/api/upload/video', authenticateAdmin, upload.single('video'), async (req, res) => {
-    try {
-        if (!req.file) {
-            return res.status(400).json({ error: 'No video file provided' });
-        }
-        const fileUrl = `${NODE_ENV === 'production' ? 'https://oak-dental.onrender.com' : 'http://localhost:3000'}/uploads/${req.file.filename}`;
-        res.json({ url: fileUrl });
-    } catch (error) {
-        console.error('Error uploading video:', error.message);
-        res.status(500).json({ error: 'Error uploading video' });
-    }
-});
-
-// Public Endpoints
-app.get('/api/services', async (req, res) => {
-    try {
-        const result = await pool.query('SELECT * FROM services');
-        res.json(result.rows);
-    } catch (error) {
-        console.error('Error fetching services:', error.message);
-        res.status(500).json({ error: 'Error fetching services' });
-    }
-});
-
-app.get('/api/time-slots', (req, res) => {
-    const timeSlots = ['10:00 AM', '11:00 AM', '2:00 PM', '3:00 PM'];
-    res.json(timeSlots);
 });
 
 app.get('/api/leave-dates', async (req, res) => {
     try {
         const result = await pool.query('SELECT date FROM leave_dates');
-        res.json(result.rows.map(row => row.date));
+        const leaveDates = result.rows.map(row => row.date);
+        res.json(leaveDates);
     } catch (error) {
         console.error('Error fetching leave dates:', error.message);
-        res.status(500).json({ error: 'Error fetching leave dates' });
-    }
-});
-
-app.get('/api/feedback', async (req, res) => {
-    try {
-        const result = await pool.query('SELECT * FROM feedback ORDER BY created_at DESC');
-        res.json(result.rows);
-    } catch (error) {
-        console.error('Error fetching feedback:', error.message);
-        res.status(500).json({ error: 'Error fetching feedback' });
-    }
-});
-
-app.post('/api/feedback', async (req, res) => {
-    try {
-        const { name, email, rating, description } = req.body;
-        if (!name || !email || !rating || !description) {
-            return res.status(400).json({ error: 'All fields are required' });
-        }
-        await pool.query(
-            'INSERT INTO feedback (full_name, email, rating, description) VALUES ($1, $2, $3, $4)',
-            [name, email, rating, description]
-        );
-        res.status(200).json({ message: 'Feedback submitted' });
-    } catch (error) {
-        console.error('Error submitting feedback:', error.message);
-        res.status(500).json({ error: 'Error submitting feedback' });
+        res.status(500).json({ error: 'Internal server error' });
     }
 });
 
 app.post('/api/appointments', async (req, res) => {
     try {
-        const appointmentData = { ...req.body, id: Math.floor(Math.random() * 1000000) }; // Use random ID for integer
-        console.log('Booking appointment:', appointmentData);
-        if (!appointmentData.name || !appointmentData.phone || !appointmentData.treatment || !appointmentData.date || !appointmentData.time) {
-            console.log('Appointment failed: Missing fields');
-            return res.status(400).json({ error: 'All required fields (name, phone, treatment, date, time) must be provided' });
-        }
-        await pool.query(
-            'INSERT INTO appointments (id, full_name, phone, treatment, date, time, status) VALUES ($1, $2, $3, $4, $5, $6, $7)',
-            [
-                appointmentData.id,
-                appointmentData.name,
-                appointmentData.phone,
-                appointmentData.treatment || 'General Checkup',
-                appointmentData.date,
-                appointmentData.time,
-                'CONFIRMED'
-            ]
-        );
-
-        const baseUrl = NODE_ENV === 'production' ? 'https://oak-dental.onrender.com' : 'http://localhost:3000';
-        const confirmationMessage = `
-            <h2>Appointment Confirmed</h2>
-            <p>Dear ${appointmentData.name},</p>
-            <p>Your appointment is confirmed for ${appointmentData.date} at ${appointmentData.time}.</p>
-            <p><a href="${baseUrl}/reschedule/${appointmentData.id}">Reschedule</a> | <a href="${baseUrl}/cancel/${appointmentData.id}">Cancel</a></p>
-        `;
-        await sendEmail(appointmentData.email || 'svasudevareddy18604@gmail.com', 'Appointment Confirmation - Oak Dental Clinic', confirmationMessage);
-        // Comment out SMS due to missing API key
-        // await sendSMS(appointmentData.phone, `Appointment confirmed for ${appointmentData.date} at ${appointmentData.time}. Reply RESCHEDULE or CANCEL to modify.`);
-
-        const waitlistResult = await pool.query('SELECT * FROM waitlist WHERE preferred_date = $1', [appointmentData.date]);
-        if (waitlistResult.rows.length > 0) {
-            const nextAvailableDate = await getNextAvailableDate(appointmentData.date);
-            for (const entry of waitlistResult.rows) {
-                await sendEmail(entry.email, 'Slot Available - Oak Dental Clinic', `
-                    <h2>Slot Available</h2>
-                    <p>Dear ${entry.full_name},</p>
-                    <p>A slot is available on ${nextAvailableDate}. Book now: <a href="${baseUrl}/#appointment">Book</a></p>
-                `);
-                // await sendSMS(entry.phone, `A slot is available on ${nextAvailableDate}. Book now at oakdental.com.`);
-                await pool.query('DELETE FROM waitlist WHERE id = $1', [entry.id]);
-            }
-        }
-
-        console.log(`Appointment booked: ${appointmentData.id}`);
-        res.status(200).json({ message: 'Appointment booked' });
-    } catch (error) {
-        console.error('Error booking appointment:', error.message, error.stack);
-        res.status(500).json({ error: 'Error booking appointment' });
-    }
-});
-
-app.post('/api/waitlist', async (req, res) => {
-    try {
-        const { name, email, phone, preferredDate } = req.body;
-        if (!name || !email || !phone || !preferredDate) {
+        const { id, full_name, email, phone, date, time, message } = req.body;
+        if (!id || !full_name || !email || !phone || !date || !time || !message) {
             return res.status(400).json({ error: 'All fields are required' });
         }
+
+        const treatment = message.substring(0, 50);
+        const status = 'PENDING';
+
         await pool.query(
-            'INSERT INTO waitlist (full_name, email, phone, preferred_date) VALUES ($1, $2, $3, $4)',
-            [name, email, phone, preferredDate]
+            'INSERT INTO appointments (id, full_name, phone, treatment, price, date, time, status) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
+            [id, full_name, phone, treatment, 0.00, date, time, status]
         );
 
-        const baseUrl = NODE_ENV === 'production' ? 'https://oak-dental.onrender.com' : 'http://localhost:3000';
-        await sendEmail(email, 'Waitlist Confirmation - Oak Dental Clinic', `
-            <h2>Waitlist Confirmation</h2>
-            <p>Dear ${name},</p>
-            <p>You have been added to the waitlist for ${preferredDate}. We will notify you when a slot becomes available.</p>
-        `);
-        // await sendSMS(phone, `Added to waitlist for ${preferredDate}. We'll notify you when a slot is available.`);
+        await sendEmail(
+            email,
+            'Appointment Confirmation - Oak Dental Clinic',
+            `<p>Dear ${full_name},</p>
+             <p>Your appointment has been booked for ${date} at ${time}.</p>
+             <p>Treatment: ${treatment}</p>
+             <p>We will send a confirmation once approved. For any queries, contact us at +91756936767.</p>
+             <p>Thank you,<br>Oak Dental Clinic</p>`
+        );
 
-        res.status(200).json({ message: 'Added to waitlist' });
+        await sendSMS(
+            phone,
+            `Dear ${full_name}, your appointment at Oak Dental Clinic is booked for ${date} at ${time}. Awaiting approval. Contact: +91756936767`
+        );
+
+        res.status(201).json({ message: 'Appointment booked successfully' });
     } catch (error) {
-        console.error('Error joining waitlist:', error.message);
-        res.status(500).json({ error: 'Error joining waitlist' });
+        console.error('Error booking appointment:', error.message);
+        res.status(500).json({ error: 'Internal server error' });
     }
 });
 
@@ -442,14 +372,20 @@ app.get('/api/appointments/status', async (req, res) => {
         if (!identifier) {
             return res.status(400).json({ error: 'Identifier is required' });
         }
+
         const result = await pool.query(
-            'SELECT * FROM appointments WHERE phone = $1 AND status IN ($2, $3)',
-            [identifier, 'CONFIRMED', 'CANCELLED']
+            'SELECT id, full_name, date, time, status FROM appointments WHERE phone = $1 OR email = $1',
+            [identifier]
         );
-        res.json({ appointment: result.rows[0] || null });
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ message: 'No appointment found' });
+        }
+
+        res.json({ appointment: result.rows[0] });
     } catch (error) {
         console.error('Error checking appointment status:', error.message);
-        res.status(500).json({ error: 'Error checking appointment status' });
+        res.status(500).json({ error: 'Internal server error' });
     }
 });
 
@@ -457,134 +393,219 @@ app.post('/api/appointments/:id/cancel', async (req, res) => {
     try {
         const { id } = req.params;
         const result = await pool.query(
-            'UPDATE appointments SET status = $1, cancel_reason = $2 WHERE id = $3 AND status = $4 RETURNING *',
-            ['CANCELLED', 'Cancelled by user', id, 'CONFIRMED']
-        );
-
-        if (result.rows.length === 0) {
-            return res.status(404).json({ error: 'Appointment not found or already cancelled' });
-        }
-
-        const appointment = result.rows[0];
-        const baseUrl = NODE_ENV === 'production' ? 'https://oak-dental.onrender.com' : 'http://localhost:3000';
-        await sendEmail('svasudevareddy18604@gmail.com', 'Appointment Cancelled - Oak Dental Clinic', `
-            <h2>Appointment Cancelled</h2>
-            <p>Dear ${appointment.full_name},</p>
-            <p>Your appointment on ${appointment.date} at ${appointment.time} has been cancelled.</p>
-            <p>Book a new appointment: <a href="${baseUrl}/#appointment">Book</a></p>
-        `);
-        // await sendSMS(appointment.phone, `Your appointment on ${appointment.date} at ${appointment.time} has been cancelled. Book a new slot at oakdental.com.`);
-
-        res.status(200).json({ message: 'Appointment cancelled' });
-    } catch (error) {
-        console.error('Error cancelling appointment:', error.message);
-        res.status(500).json({ error: 'Error cancelling appointment' });
-    }
-});
-
-// Admin Endpoints (Protected)
-app.get('/api/admin/appointments', authenticateAdmin, async (req, res) => {
-    try {
-        const result = await pool.query('SELECT * FROM appointments ORDER BY date, time');
-        res.json(result.rows);
-    } catch (error) {
-        console.error('Error fetching appointments:', error.message);
-        res.status(500).json({ error: 'Error fetching appointments' });
-    }
-});
-
-app.post('/api/admin/appointments/:id/confirm', authenticateAdmin, async (req, res) => {
-    try {
-        const { id } = req.params;
-        const result = await pool.query(
-            'UPDATE appointments SET status = $1, approved = $2 WHERE id = $3 RETURNING *',
-            ['CONFIRMED', true, id]
+            'UPDATE appointments SET status = $1, cancel_reason = $2 WHERE id = $3 RETURNING full_name, email, phone, date, time',
+            ['CANCELLED', 'Cancelled by patient', id]
         );
 
         if (result.rows.length === 0) {
             return res.status(404).json({ error: 'Appointment not found' });
         }
 
-        const appointment = result.rows[0];
-        await sendEmail('svasudevareddy18604@gmail.com', 'Appointment Confirmed - Oak Dental Clinic', `
-            <h2>Appointment Confirmed</h2>
-            <p>Dear ${appointment.full_name},</p>
-            <p>Your appointment on ${appointment.date} at ${appointment.time} has been confirmed.</p>
-        `);
-        // await sendSMS(appointment.phone, `Your appointment on ${appointment.date} at ${appointment.time} is confirmed.`);
+        const { full_name, email, phone, date, time } = result.rows[0];
 
-        res.json({ message: 'Appointment confirmed' });
-    } catch (error) {
-        console.error('Error confirming appointment:', error.message);
-        res.status(500).json({ error: 'Error confirming appointment' });
-    }
-});
-
-app.delete('/api/admin/appointments/clear-old', authenticateAdmin, async (req, res) => {
-    try {
-        const thirtyDaysAgo = new Date();
-        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-        const formattedDate = thirtyDaysAgo.toISOString().split('T')[0];
-        
-        const result = await pool.query(
-            'DELETE FROM appointments WHERE date < $1 AND status != $2',
-            [formattedDate, 'CONFIRMED']
+        await sendEmail(
+            email,
+            'Appointment Cancelled - Oak Dental Clinic',
+            `<p>Dear ${full_name},</p>
+             <p>Your appointment on ${date} at ${time} has been cancelled.</p>
+             <p>For any queries, contact us at +91756936767.</p>
+             <p>Thank you,<br>Oak Dental Clinic</p>`
         );
-        
-        res.json({ 
-            message: 'Old appointments cleared',
-            deletedCount: result.rowCount 
-        });
+
+        await sendSMS(
+            phone,
+            `Dear ${full_name}, your appointment on ${date} at ${time} at Oak Dental Clinic has been cancelled. Contact: +91756936767`
+        );
+
+        res.json({ message: 'Appointment cancelled successfully' });
     } catch (error) {
-        console.error('Error clearing old appointments:', error.message);
-        res.status(500).json({ error: 'Error clearing old appointments' });
+        console.error('Error cancelling appointment:', error.message);
+        res.status(500).json({ error: 'Internal server error' });
     }
 });
 
-app.post('/api/admin/appointments/clear-selected', authenticateAdmin, async (req, res) => {
+// Waitlist Endpoints
+app.post('/api/waitlist', async (req, res) => {
     try {
-        const { ids } = req.body;
-        if (!Array.isArray(ids) || ids.length === 0) {
-            return res.status(400).json({ error: 'No appointment IDs provided' });
+        const { name, email, phone, preferredDate } = req.body;
+        if (!name || !email || !phone || !preferredDate) {
+            return res.status(400).json({ error: 'All fields are required' });
         }
 
-        const result = await pool.query(
-            'DELETE FROM appointments WHERE id = ANY($1::integer[]) RETURNING id',
-            [ids]
+        await pool.query(
+            'INSERT INTO waitlist (full_name, email, phone, preferred_date) VALUES ($1, $2, $3, $4)',
+            [name, email, phone, preferredDate]
         );
 
-        res.json({
-            message: 'Selected appointments cleared',
-            deletedCount: result.rowCount,
-            deletedIds: result.rows.map(row => row.id)
-        });
+        await sendEmail(
+            email,
+            'Waitlist Confirmation - Oak Dental Clinic',
+            `<p>Dear ${name},</p>
+             <p>You have been added to the waitlist for ${preferredDate}.</p>
+             <p>We will notify you when a slot becomes available. For any queries, contact us at +91756936767.</p>
+             <p>Thank you,<br>Oak Dental Clinic</p>`
+        );
+
+        await sendSMS(
+            phone,
+            `Dear ${name}, you are on the waitlist for ${preferredDate} at Oak Dental Clinic. We will notify you when a slot is available. Contact: +91756936767`
+        );
+
+        res.status(201).json({ message: 'Added to waitlist successfully' });
     } catch (error) {
-        console.error('Error clearing selected appointments:', error.message);
-        res.status(500).json({ error: 'Error clearing selected appointments' });
+        console.error('Error joining waitlist:', error.message);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Feedback Endpoints
+app.post('/api/feedback', async (req, res) => {
+    try {
+        const { full_name, email, rating, description } = req.body;
+        if (!full_name || !email || !rating || !description) {
+            return res.status(400).json({ error: 'All fields are required' });
+        }
+
+        await pool.query(
+            'INSERT INTO feedback (full_name, email, rating, description) VALUES ($1, $2, $3, $4)',
+            [full_name, email, rating, description]
+        );
+
+        await sendEmail(
+            email,
+            'Thank You for Your Feedback - Oak Dental Clinic',
+            `<p>Dear ${full_name},</p>
+             <p>Thank you for your feedback. We value your input and will use it to improve our services.</p>
+             <p>Rating: ${rating}/5</p>
+             <p>Feedback: ${description}</p>
+             <p>For any queries, contact us at +91756936767.</p>
+             <p>Thank you,<br>Oak Dental Clinic</p>`
+        );
+
+        res.status(201).json({ message: 'Feedback submitted successfully' });
+    } catch (error) {
+        console.error('Error submitting feedback:', error.message);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+app.get('/api/feedback', async (req, res) => {
+    try {
+        const result = await pool.query('SELECT id, full_name, email, rating, description, created_at FROM feedback ORDER BY created_at DESC');
+        res.json(result.rows);
+    } catch (error) {
+        console.error('Error fetching feedback:', error.message);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Service Endpoints
+app.get('/api/services', async (req, res) => {
+    try {
+        const result = await pool.query('SELECT id, title, description, price, image, video FROM services');
+        res.json(result.rows);
+    } catch (error) {
+        console.error('Error fetching services:', error.message);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+app.post('/api/services', authenticateAdmin, upload.fields([{ name: 'image', maxCount: 1 }, { name: 'video', maxCount: 1 }]), async (req, res) => {
+    try {
+        const { title, description, price } = req.body;
+        if (!title || !description || !price) {
+            return res.status(400).json({ error: 'Title, description, and price are required' });
+        }
+
+        const imageFile = req.files.image ? req.files.image[0].filename : null;
+        const videoFile = req.files.video ? req.files.video[0].filename : null;
+
+        const result = await pool.query(
+            'INSERT INTO services (title, description, price, image, video) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+            [title, description, parseFloat(price), imageFile, videoFile]
+        );
+
+        res.status(201).json(result.rows[0]);
+    } catch (error) {
+        console.error('Error adding service:', error.message);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+app.put('/api/services/:id', authenticateAdmin, upload.fields([{ name: 'image', maxCount: 1 }, { name: 'video', maxCount: 1 }]), async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { title, description, price } = req.body;
+        if (!title || !description || !price) {
+            return res.status(400).json({ error: 'Title, description, and price are required' });
+        }
+
+        const existingService = await pool.query('SELECT image, video FROM services WHERE id = $1', [id]);
+        if (existingService.rows.length === 0) {
+            return res.status(404).json({ error: 'Service not found' });
+        }
+
+        const imageFile = req.files.image ? req.files.image[0].filename : existingService.rows[0].image;
+        const videoFile = req.files.video ? req.files.video[0].filename : existingService.rows[0].video;
+
+        const result = await pool.query(
+            'UPDATE services SET title = $1, description = $2, price = $3, image = $4, video = $5 WHERE id = $6 RETURNING *',
+            [title, description, parseFloat(price), imageFile, videoFile, id]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Service not found' });
+        }
+
+        res.json(result.rows[0]);
+    } catch (error) {
+        console.error('Error updating service:', error.message);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+app.delete('/api/services/:id', authenticateAdmin, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const service = await pool.query('SELECT image, video FROM services WHERE id = $1', [id]);
+        if (service.rows.length === 0) {
+            return res.status(404).json({ error: 'Service not found' });
+        }
+
+        const { image, video } = service.rows[0];
+        if (image) {
+            await fs.unlink(path.join(__dirname, 'Uploads', image)).catch(err => console.error('Error deleting image:', err.message));
+        }
+        if (video) {
+            await fs.unlink(path.join(__dirname, 'Uploads', video)).catch(err => console.error('Error deleting video:', err.message));
+        }
+
+        await pool.query('DELETE FROM services WHERE id = $1', [id]);
+        res.json({ message: 'Service deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting service:', error.message);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Admin Management Endpoints
+app.get('/api/admin/appointments', authenticateAdmin, async (req, res) => {
+    try {
+        const result = await pool.query('SELECT * FROM appointments ORDER BY date, time');
+        res.json(result.rows);
+    } catch (error) {
+        console.error('Error fetching appointments:', error.message);
+        res.status(500).json({ error: 'Internal server error' });
     }
 });
 
 app.get('/api/admin/waitlist', authenticateAdmin, async (req, res) => {
     try {
-        const result = await pool.query('SELECT * FROM waitlist ORDER BY created_at DESC');
+        const result = await pool.query('SELECT * FROM waitlist ORDER BY created_at');
         res.json(result.rows);
     } catch (error) {
         console.error('Error fetching waitlist:', error.message);
-        res.status(500).json({ error: 'Error fetching waitlist' });
-    }
-});
-
-app.delete('/api/admin/waitlist/:id', authenticateAdmin, async (req, res) => {
-    try {
-        const { id } = req.params;
-        const result = await pool.query('DELETE FROM waitlist WHERE id = $1', [id]);
-        if (result.rowCount === 0) {
-            return res.status(404).json({ error: 'Waitlist entry not found' });
-        }
-        res.json({ message: 'Waitlist entry deleted' });
-    } catch (error) {
-        console.error('Error deleting waitlist entry:', error.message);
-        res.status(500).json({ error: 'Error deleting waitlist entry' });
+        res.status(500).json({ error: 'Internal server error' });
     }
 });
 
@@ -594,73 +615,124 @@ app.get('/api/admin/feedback', authenticateAdmin, async (req, res) => {
         res.json(result.rows);
     } catch (error) {
         console.error('Error fetching feedback:', error.message);
-        res.status(500).json({ error: 'Error fetching feedback' });
+        res.status(500).json({ error: 'Internal server error' });
     }
 });
 
-app.delete('/api/admin/feedback/:id', authenticateAdmin, async (req, res) => {
+app.post('/api/admin/appointments/:id/approve', authenticateAdmin, async (req, res) => {
     try {
         const { id } = req.params;
-        const result = await pool.query('DELETE FROM feedback WHERE id = $1', [id]);
-        if (result.rowCount === 0) {
-            return res.status(404).json({ error: 'Feedback not found' });
-        }
-        res.json({ message: 'Feedback deleted' });
-    } catch (error) {
-        console.error('Error deleting feedback:', error.message);
-        res.status(500).json({ error: 'Error deleting feedback' });
-    }
-});
-
-app.post('/api/admin/services', authenticateAdmin, async (req, res) => {
-    try {
-        const { title, description, price, image, video } = req.body;
-        if (!title || !description || !price) {
-            return res.status(400).json({ error: 'Title, description, and price are required' });
-        }
-        await pool.query(
-            'INSERT INTO services (title, description, price, image, video) VALUES ($1, $2, $3, $4, $5)',
-            [title, description, price, image || null, video || null]
-        );
-        res.status(201).json({ message: 'Service added' });
-    } catch (error) {
-        console.error('Error adding service:', error.message);
-        res.status(500).json({ error: 'Error adding service' });
-    }
-});
-
-app.put('/api/admin/services/:id', authenticateAdmin, async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { title, description, price, image, video } = req.body;
-        if (!title || !description || !price) {
-            return res.status(400).json({ error: 'Title, description, and price are required' });
-        }
         const result = await pool.query(
-            'UPDATE services SET title = $1, description = $2, price = $3, image = $4, video = $5 WHERE id = $6',
-            [title, description, price, image || null, video || null, id]
+            'UPDATE appointments SET status = $1, approved = $2 WHERE id = $3 RETURNING full_name, email, phone, date, time',
+            ['APPROVED', true, id]
         );
-        if (result.rowCount === 0) {
-            return res.status(404).json({ error: 'Service not found' });
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Appointment not found' });
         }
-        res.json({ message: 'Service updated' });
+
+        const { full_name, email, phone, date, time } = result.rows[0];
+
+        await sendEmail(
+            email,
+            'Appointment Approved - Oak Dental Clinic',
+            `<p>Dear ${full_name},</p>
+             <p>Your appointment on ${date} at ${time} has been approved.</p>
+             <p>For any queries, contact us at +91756936767.</p>
+             <p>Thank you,<br>Oak Dental Clinic</p>`
+        );
+
+        await sendSMS(
+            phone,
+            `Dear ${full_name}, your appointment on ${date} at ${time} at Oak Dental Clinic has been approved. Contact: +91756936767`
+        );
+
+        res.json({ message: 'Appointment approved successfully' });
     } catch (error) {
-        console.error('Error updating service:', error.message);
-        res.status(500).json({ error: 'Error updating service' });
+        console.error('Error approving appointment:', error.message);
+        res.status(500).json({ error: 'Internal server error' });
     }
 });
 
-app.delete('/api/admin/services/:id', authenticateAdmin, async (req, res) => {
+app.post('/api/admin/appointments/:id/reschedule', authenticateAdmin, async (req, res) => {
     try {
         const { id } = req.params;
-        const result = await pool.query('DELETE FROM services WHERE id = $1', [id]);
-        if (result.rowCount === 0) {
-            return res.status(404).json({ error: 'Service not found' });
+        const { newDate, newTime, reason } = req.body;
+        if (!newDate || !newTime || !reason) {
+            return res.status(400).json({ error: 'New date, time, and reason are required' });
         }
-        res.json({ message: 'Service deleted' });
+
+        const result = await pool.query(
+            'UPDATE appointments SET date = $1, time = $2, status = $3, reschedule_reason = $4 WHERE id = $5 RETURNING full_name, email, phone',
+            [newDate, newTime, 'RESCHEDULED', reason, id]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Appointment not found' });
+        }
+
+        const { full_name, email, phone } = result.rows[0];
+
+        await sendEmail(
+            email,
+            'Appointment Rescheduled - Oak Dental Clinic',
+            `<p>Dear ${full_name},</p>
+             <p>Your appointment has been rescheduled to ${newDate} at ${newTime}.</p>
+             <p>Reason: ${reason}</p>
+             <p>For any queries, contact us at +91756936767.</p>
+             <p>Thank you,<br>Oak Dental Clinic</p>`
+        );
+
+        await sendSMS(
+            phone,
+            `Dear ${full_name}, your appointment at Oak Dental Clinic has been rescheduled to ${newDate} at ${newTime}. Reason: ${reason}. Contact: +91756936767`
+        );
+
+        res.json({ message: 'Appointment rescheduled successfully' });
     } catch (error) {
-        console.error('Error deleting service:', error.message);
-        res.status(500).json({ error: 'Error deleting service' });
+        console.error('Error rescheduling appointment:', error.message);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+app.post('/api/admin/appointments/:id/cancel', authenticateAdmin, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { reason } = req.body;
+        if (!reason) {
+            return res.status(400).json({ error: 'Cancellation reason is required' });
+        }
+
+        const result = await pool.query(
+            'UPDATE appointments SET status = $1, admin_reason = $2 WHERE id = $3 RETURNING full_name, email, phone, date, time',
+            ['CANCELLED', reason, id]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Appointment not found' });
+        }
+
+        const { full_name, email, phone, date, time } = result.rows[0];
+
+        await sendEmail(
+            email,
+            'Appointment Cancelled - Oak Dental Clinic',
+            `<p>Dear ${full_name},</p>
+             <p>Your appointment on ${date} at ${time} has been cancelled.</p>
+             <p>Reason: ${reason}</p>
+             <p>For any queries, contact us at +91756936767.</p>
+             <p>Thank you,<br>Oak Dental Clinic</p>`
+        );
+
+        await sendSMS(
+            phone,
+            `Dear ${full_name}, your appointment on ${date} at ${time} at Oak Dental Clinic has been cancelled. Reason: ${reason}. Contact: +91756936767`
+        );
+
+        res.json({ message: 'Appointment cancelled successfully' });
+    } catch (error) {
+        console.error('Error cancelling appointment:', error.message);
+        res.status(500).json({ error: 'Internal server error' });
     }
 });
 
@@ -670,72 +742,30 @@ app.post('/api/admin/leave-dates', authenticateAdmin, async (req, res) => {
         if (!date) {
             return res.status(400).json({ error: 'Date is required' });
         }
-        await pool.query('INSERT INTO leave_dates (date) VALUES ($1) ON CONFLICT DO NOTHING', [date]);
-        res.status(201).json({ message: 'Leave date added' });
+
+        await pool.query('INSERT INTO leave_dates (date) VALUES ($1) ON CONFLICT (date) DO NOTHING', [date]);
+        res.status(201).json({ message: 'Leave date added successfully' });
     } catch (error) {
         console.error('Error adding leave date:', error.message);
-        res.status(500).json({ error: 'Error adding leave date' });
+        res.status(500).json({ error: 'Internal server error' });
     }
 });
 
 app.delete('/api/admin/leave-dates/:date', authenticateAdmin, async (req, res) => {
     try {
         const { date } = req.params;
-        const result = await pool.query('DELETE FROM leave_dates WHERE date = $1', [id]);
+        const result = await pool.query('DELETE FROM leave_dates WHERE date = $1', [date]);
+
         if (result.rowCount === 0) {
             return res.status(404).json({ error: 'Leave date not found' });
         }
-        res.json({ message: 'Leave date removed' });
+
+        res.json({ message: 'Leave date removed successfully' });
     } catch (error) {
         console.error('Error removing leave date:', error.message);
-        res.status(500).json({ error: 'Error removing leave date' });
+        res.status(500).json({ error: 'Internal server error' });
     }
 });
-
-// Placeholder for Reschedule
-app.get('/reschedule/:id', (req, res) => {
-    const baseUrl = NODE_ENV === 'production' ? 'https://oak-dental.onrender.com' : 'http://localhost:3000';
-    res.redirect(`${baseUrl}/#appointment`);
-});
-
-app.get('/cancel/:id', async (req, res) => {
-    try {
-        const { id } = req.params;
-        const result = await pool.query(
-            'UPDATE appointments SET status = $1, cancel_reason = $2 WHERE id = $3 AND status = $4 RETURNING *',
-            ['CANCELLED', 'Cancelled via link', id, 'CONFIRMED']
-        );
-
-        if (result.rows.length === 0) {
-            return res.status(404).send('Appointment not found or already cancelled');
-        }
-
-        const appointment = result.rows[0];
-        const baseUrl = NODE_ENV === 'production' ? 'https://oak-dental.onrender.com' : 'http://localhost:3000';
-        await sendEmail('svasudevareddy18604@gmail.com', 'Appointment Cancelled - Oak Dental Clinic', `
-            <h2>Appointment Cancelled</h2>
-            <p>Dear ${appointment.full_name},</p>
-            <p>Your appointment on ${appointment.date} at ${appointment.time} has been cancelled.</p>
-            <p>Book a new appointment: <a href="${baseUrl}/#appointment">Book</a></p>
-        `);
-        // await sendSMS(appointment.phone, `Your appointment on ${appointment.date} at ${appointment.time} has been cancelled. Book a new slot at oakdental.com.`);
-
-        res.redirect(`${baseUrl}/#appointment`);
-    } catch (error) {
-        console.error('Error cancelling appointment:', error.message);
-        res.status(500).send('Error cancelling appointment');
-    }
-});
-
-// Create Uploads Directory if it Doesn't Exist
-(async () => {
-    try {
-        await fs.mkdir(path.join(__dirname, 'uploads'), { recursive: true });
-        console.log('Uploads directory ready');
-    } catch (error) {
-        console.error('Error creating uploads directory:', error.message);
-    }
-})();
 
 // Start Server
 app.listen(PORT, () => {

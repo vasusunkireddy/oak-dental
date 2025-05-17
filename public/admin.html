@@ -5,26 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Oak Dental Clinic - Admin Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
         body {
-            font-family: 'Poppins', sans-serif;
-            background: #e5f0f5;
-            color: #1f2937;
+            font-family: 'Inter', sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+            font-size: 14px;
+            line-height: 1.5;
         }
         .animate-fade-in {
-            animation: fadeIn 0.5s ease-out;
+            animation: fadeIn 0.3s ease-out;
         }
         .animate-scale-in {
-            animation: scaleIn 0.3s ease-out;
+            animation: scaleIn 0.2s ease-out;
         }
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
         }
         @keyframes scaleIn {
-            from { transform: scale(0.95); opacity: 0; }
+            from { transform: scale(0.96); opacity: 0; }
             to { transform: scale(1); opacity: 1; }
         }
         .gradient-bg {
@@ -33,67 +35,125 @@
         .table-container {
             overflow-x: auto;
             background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
         table {
             width: 100%;
             border-collapse: collapse;
         }
         th, td {
-            padding: 0.75rem;
+            padding: 8px 10px;
             text-align: left;
-            font-size: 0.875rem;
+            font-size: 12px;
         }
         th {
-            background: #e6fffa;
-            font-weight: 600;
+            background: #f0fdfa;
+            font-weight: 500;
             color: #0d9488;
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
         button {
             transition: all 0.2s ease;
+            font-size: 12px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            touch-action: manipulation;
         }
         button:hover {
             transform: translateY(-1px);
         }
         .welcome-modal {
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(5px);
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+        }
+        .dropdown-menu {
+            width: 100%;
+            background: #0d9488;
+            border-radius: 0 0 8px 8px;
         }
         .dropdown-menu a {
-            display: block;
-            padding: 0.75rem 1rem;
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
             color: white;
-            font-size: 0.875rem;
+            font-size: 13px;
             transition: background 0.2s;
         }
         .dropdown-menu a:hover {
             background: #0b8276;
         }
-        @media (max-width: 768px) {
+        .form-input {
+            font-size: 13px;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #d1d5db;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: #0d9488;
+            box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.2);
+        }
+        .action-btn {
+            margin-right: 6px;
+            padding: 6px 10px;
+            font-size: 11px;
+        }
+        @media (max-width: 640px) {
+            body {
+                font-size: 13px;
+            }
             .content {
-                padding: 1rem;
-            }
-            th, td {
-                font-size: 0.75rem;
-                padding: 0.5rem;
-            }
-            button, input, textarea {
-                font-size: 0.875rem;
-                padding: 0.5rem;
-            }
-            .welcome-modal img {
-                height: 3rem;
-            }
-            .welcome-modal h2 {
-                font-size: 1.5rem;
+                padding: 12px;
             }
             .navbar {
-                padding: 0.5rem;
+                padding: 12px;
             }
-            .dropdown-menu {
-                width: calc(100% - 2rem);
-                margin: 0 1rem;
+            h2 {
+                font-size: 18px;
+            }
+            th, td {
+                font-size: 11px;
+                padding: 6px 8px;
+            }
+            button {
+                font-size: 11px;
+                padding: 8px 10px;
+            }
+            .form-input {
+                font-size: 12px;
+                padding: 8px;
+            }
+            .welcome-modal img {
+                height: 40px;
+            }
+            .welcome-modal h2 {
+                font-size: 18px;
+            }
+            .welcome-modal p {
+                font-size: 12px;
+            }
+            .dropdown-menu a {
+                font-size: 12px;
+                padding: 10px 14px;
+            }
+            .table-container {
+                margin: 0 -12px;
+                border-radius: 0;
+            }
+            .action-btn {
+                padding: 5px 8px;
+                font-size: 10px;
+            }
+            .form-container {
+                padding: 12px;
+            }
+            .auth-container {
+                padding: 16px;
             }
         }
     </style>
@@ -101,34 +161,34 @@
 <body>
     <!-- Welcome Modal -->
     <div id="welcome-modal" class="fixed inset-0 welcome-modal flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-2xl p-8 max-w-md w-full text-center animate-scale-in gradient-bg">
-            <img src="https://i.postimg.cc/bY0bwXgj/OAK-LOGO-HD.png" alt="Oak Dental Clinic Logo" class="h-16 mx-auto mb-4">
-            <h2 class="text-2xl font-bold text-white mb-2">Welcome to Oak Dental Clinic!</h2>
-            <p class="text-white">Manage your admin portal with ease.</p>
+        <div class="bg-white rounded-lg p-6 max-w-xs w-full text-center animate-scale-in gradient-bg">
+            <img src="https://i.postimg.cc/bY0bwXgj/OAK-LOGO-HD.png" alt="Oak Dental Clinic Logo" class="h-12 mx-auto mb-3">
+            <h2 class="text-xl font-semibold text-white mb-2">Welcome!</h2>
+            <p class="text-white text-sm">Manage your admin portal with ease.</p>
         </div>
     </div>
 
     <!-- Login/Register Container -->
     <div id="auth-container" class="min-h-screen flex items-center justify-center gradient-bg">
-        <div class="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 animate-fade-in">
-            <div class="flex justify-center mb-6">
-                <img src="https://i.postimg.cc/bY0bwXgj/OAK-LOGO-HD.png" alt="Oak Dental Clinic Logo" class="h-12">
+        <div class="auth-container max-w-sm w-full bg-white rounded-lg shadow-lg p-6 animate-fade-in">
+            <div class="flex justify-center mb-4">
+                <img src="https://i.postimg.cc/bY0bwXgj/OAK-LOGO-HD.png" alt="Oak Dental Clinic Logo" class="h-10">
             </div>
-            <h2 class="text-2xl font-bold text-center text-teal-600 mb-6">Admin Portal</h2>
+            <h2 class="text-xl font-semibold text-center text-teal-600 mb-4">Admin Portal</h2>
             <div id="login-form">
-                <h3 class="text-lg font-semibold text-teal-600 mb-4">Login</h3>
-                <input type="email" id="login-email" placeholder="Email" class="w-full p-3 mb-3 border rounded-lg focus:ring-2 focus:ring-teal-500" required aria-label="Email">
-                <input type="password" id="login-password" placeholder="Password" class="w-full p-3 mb-3 border rounded-lg focus:ring-2 focus:ring-teal-500" required aria-label="Password">
-                <button onclick="adminLogin()" class="w-full bg-teal-600 text-white p-3 rounded-lg hover:bg-teal-700 shadow-md">Login</button>
-                <p class="text-center mt-4 text-sm">Don't have an account? <a href="#" onclick="showRegisterForm()" class="text-teal-600 hover:underline">Register</a></p>
+                <h3 class="text-base font-medium text-teal-600 mb-3">Login</h3>
+                <input type="email" id="login-email" placeholder="Email" class="form-input mb-3" required aria-label="Email">
+                <input type="password" id="login-password" placeholder="Password" class="form-input mb-3" required aria-label="Password">
+                <button onclick="adminLogin()" class="w-full bg-teal-600 text-white p-2 rounded-lg hover:bg-teal-700 shadow-sm">Login</button>
+                <p class="text-center mt-3 text-xs">Don't have an account? <a href="#" onclick="showRegisterForm()" class="text-teal-600 hover:underline">Register</a></p>
             </div>
             <div id="register-form" class="hidden">
-                <h3 class="text-lg font-semibold text-teal-600 mb-4">Register</h3>
-                <input type="text" id="register-username" placeholder="Username" class="w-full p-3 mb-3 border rounded-lg focus:ring-2 focus:ring-teal-500" required aria-label="Username">
-                <input type="email" id="register-email" placeholder="Email" class="w-full p-3 mb-3 border rounded-lg focus:ring-2 focus:ring-teal-500" required aria-label="Email">
-                <input type="password" id="register-password" placeholder="Password" class="w-full p-3 mb-3 border rounded-lg focus:ring-2 focus:ring-teal-500" required aria-label="Password">
-                <button onclick="adminRegister()" class="w-full bg-teal-600 text-white p-3 rounded-lg hover:bg-teal-700 shadow-md">Register</button>
-                <p class="text-center mt-4 text-sm">Already have an account? <a href="#" onclick="showLoginForm()" class="text-teal-600 hover:underline">Login</a></p>
+                <h3 class="text-base font-medium text-teal-600 mb-3">Register</h3>
+                <input type="text" id="register-username" placeholder="Username" class="form-input mb-3" required aria-label="Username">
+                <input type="email" id="register-email" placeholder="Email" class="form-input mb-3" required aria-label="Email">
+                <input type="password" id="register-password" placeholder="Password" class="form-input mb-3" required aria-label="Password">
+                <button onclick="adminRegister()" class="w-full bg-teal-600 text-white p-2 rounded-lg hover:bg-teal-700 shadow-sm">Register</button>
+                <p class="text-center mt-3 text-xs">Already have an account? <a href="#" onclick="showLoginForm()" class="text-teal-600 hover:underline">Login</a></p>
             </div>
         </div>
     </div>
@@ -136,16 +196,16 @@
     <!-- Dashboard Container (Hidden Initially) -->
     <div id="dashboard-container" class="hidden">
         <!-- Navbar -->
-        <nav class="bg-white p-4 flex justify-between items-center shadow-lg sticky top-0 z-40">
+        <nav class="bg-white p-3 flex justify-between items-center shadow-sm sticky top-0 z-40">
             <div class="flex items-center">
-                <button class="text-teal-600 text-xl" onclick="toggleDropdown()"><i class="fas fa-bars"></i></button>
-                <img src="https://i.postimg.cc/bY0bwXgj/OAK-LOGO-HD.png" alt="Oak Dental Clinic Logo" class="h-8 ml-3">
-                <h1 class="text-lg font-semibold text-teal-600 ml-2">Oak Dental Clinic - Admin</h1>
+                <button class="text-teal-600 text-lg" onclick="toggleDropdown()"><i class="fas fa-bars"></i></button>
+                <img src="https://i.postimg.cc/bY0bwXgj/OAK-LOGO-HD.png" alt="Oak Dental Clinic Logo" class="h-6 ml-2">
+                <h1 class="text-base font-medium text-teal-600 ml-2">Oak Dental Admin</h1>
             </div>
             <div>
-                <span id="admin-username" class="text-gray-600 text-sm"></span>
+                <span id="admin-username" class="text-gray-600 text-xs"></span>
             </div>
-            <div id="dropdown-menu" class="hidden absolute top-16 left-0 right-0 bg-teal-600 rounded-lg shadow-lg z-50">
+            <div id="dropdown-menu" class="hidden absolute top-[52px] left-0 right-0 dropdown-menu shadow-lg z-50">
                 <a href="#appointments" onclick="showSection('appointments')" class="flex items-center"><i class="fas fa-calendar-check mr-2"></i> Appointments</a>
                 <a href="#waitlist" onclick="showSection('waitlist')" class="flex items-center"><i class="fas fa-list mr-2"></i> Waitlist</a>
                 <a href="#feedback" onclick="showSection('feedback')" class="flex items-center"><i class="fas fa-comment mr-2"></i> Feedback</a>
@@ -156,14 +216,14 @@
         </nav>
 
         <!-- Content -->
-        <div class="content max-w-7xl mx-auto py-6 px-4">
+        <div class="content max-w-full mx-auto py-4 px-3">
             <!-- Appointments Section -->
             <div id="appointments" class="section animate-fade-in">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold text-teal-600">Manage Appointments</h2>
-                    <div class="space-x-2">
-                        <button onclick="clearSelectedAppointments()" class="bg-red-600 text-white p-2 rounded-lg hover:bg-red-700 text-sm shadow-md">Clear Selected</button>
-                        <button onclick="clearOldAppointments()" class="bg-red-600 text-white p-2 rounded-lg hover:bg-red-700 text-sm shadow-md">Clear Old Appointments</button>
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-semibold text-teal-600">Appointments</h2>
+                    <div class="flex space-x-2">
+                        <button onclick="clearSelectedAppointments()" class="bg-red-600 text-white action-btn hover:bg-red-700 shadow-sm">Clear Selected</button>
+                        <button onclick="clearOldAppointments()" class="bg-red-600 text-white action-btn hover:bg-red-700 shadow-sm">Clear Old</button>
                     </div>
                 </div>
                 <div class="table-container">
@@ -172,11 +232,8 @@
                             <tr>
                                 <th><input type="checkbox" id="select-all-appointments" onclick="toggleSelectAll()"></th>
                                 <th>Name</th>
-                                <th>Phone</th>
                                 <th>Treatment</th>
                                 <th>Date</th>
-                                <th>Time</th>
-                                <th>Status</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -187,15 +244,14 @@
 
             <!-- Waitlist Section -->
             <div id="waitlist" class="section hidden animate-fade-in">
-                <h2 class="text-2xl font-bold text-teal-600 mb-6">Manage Waitlist</h2>
+                <h2 class="text-lg font-semibold text-teal-600 mb-4">Waitlist</h2>
                 <div class="table-container">
                     <table>
                         <thead>
                             <tr>
                                 <th>Name</th>
                                 <th>Email</th>
-                                <th>Phone</th>
-                                <th>Preferred Date</th>
+                                <th>Date</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -206,13 +262,12 @@
 
             <!-- Feedback Section -->
             <div id="feedback" class="section hidden animate-fade-in">
-                <h2 class="text-2xl font-bold text-teal-600 mb-6">Manage Feedback</h2>
+                <h2 class="text-lg font-semibold text-teal-600 mb-4">Feedback</h2>
                 <div class="table-container">
                     <table>
                         <thead>
                             <tr>
                                 <th>Name</th>
-                                <th>Email</th>
                                 <th>Rating</th>
                                 <th>Description</th>
                                 <th>Actions</th>
@@ -225,32 +280,30 @@
 
             <!-- Services Section -->
             <div id="services" class="section hidden animate-fade-in">
-                <h2 class="text-2xl font-bold text-teal-600 mb-6">Manage Services</h2>
-                <div class="mb-6 bg-white p-6 rounded-2xl shadow-xl">
-                    <h3 class="text-lg font-semibold text-teal-600 mb-4">Add Service</h3>
-                    <input type="text" id="service-title" placeholder="Title" class="w-full p-3 mb-3 border rounded-lg focus:ring-2 focus:ring-teal-500" aria-label="Service Title">
-                    <textarea id="service-description" placeholder="Description" class="w-full p-3 mb-3 border rounded-lg focus:ring-2 focus:ring-teal-500" rows="4" aria-label="Service Description"></textarea>
-                    <input type="number" id="service-price" placeholder="Price" class="w-full p-3 mb-3 border rounded-lg focus:ring-2 focus:ring-teal-500" aria-label="Service Price">
+                <h2 class="text-lg font-semibold text-teal-600 mb-4">Services</h2>
+                <div class="form-container mb-4 bg-white p-4 rounded-lg shadow-sm">
+                    <h3 class="text-base font-medium text-teal-600 mb-3">Add Service</h3>
+                    <input type="text" id="service-title" placeholder="Title" class="form-input mb-3" aria-label="Service Title">
+                    <textarea id="service-description" placeholder="Description" class="form-input mb-3" rows="3" aria-label="Service Description"></textarea>
+                    <input type="number" id="service-price" placeholder="Price" class="form-input mb-3" aria-label="Service Price">
                     <div class="mb-3">
-                        <label class="block text-sm text-gray-600 mb-1">Image (Optional - Upload or URL)</label>
-                        <input type="file" id="service-image-file" accept="image/*" class="w-full p-2 mb-2 border rounded-lg">
-                        <input type="text" id="service-image-url" placeholder="Image URL (optional)" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-teal-500" aria-label="Service Image URL">
+                        <label class="block text-xs text-gray-600 mb-1">Image (Optional)</label>
+                        <input type="file" id="service-image-file" accept="image/*" class="form-input mb-2">
+                        <input type="text" id="service-image-url" placeholder="Image URL" class="form-input" aria-label="Service Image URL">
                     </div>
                     <div class="mb-3">
-                        <label class="block text-sm text-gray-600 mb-1">Video (Optional - Upload or URL)</label>
-                        <input type="file" id="service-video-file" accept="video/*" class="w-full p-2 mb-2 border rounded-lg">
-                        <input type="text" id="service-video-url" placeholder="Video URL (optional)" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-teal-500" aria-label="Service Video URL">
+                        <label class="block text-xs text-gray-600 mb-1">Video (Optional)</label>
+                        <input type="file" id="service-video-file" accept="video/*" class="form-input mb-2">
+                        <input type="text" id="service-video-url" placeholder="Video URL" class="form-input" aria-label="Service Video URL">
                     </div>
-                    <button onclick="addService()" class="bg-teal-600 text-white p-3 rounded-lg hover:bg-teal-700 shadow-md">Add Service</button>
+                    <button onclick="addService()" class="w-full bg-teal-600 text-white p-2 rounded-lg hover:bg-teal-700 shadow-sm">Add Service</button>
                 </div>
                 <div class="table-container">
                     <table>
                         <thead>
                             <tr>
                                 <th>Title</th>
-                                <th>Description</th>
                                 <th>Price</th>
-                                <th>Image/Video</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -261,11 +314,11 @@
 
             <!-- Leave Dates Section -->
             <div id="leave-dates" class="section hidden animate-fade-in">
-                <h2 class="text-2xl font-bold text-teal-600 mb-6">Manage Leave Dates</h2>
-                <div class="mb-6 bg-white p-6 rounded-2xl shadow-xl">
-                    <h3 class="text-lg font-semibold text-teal-600 mb-4">Add Leave Date</h3>
-                    <input type="date" id="leave-date" class="w-full p-3 mb-3 border rounded-lg focus:ring-2 focus:ring-teal-500" aria-label="Leave Date">
-                    <button onclick="addLeaveDate()" class="bg-teal-600 text-white p-3 rounded-lg hover:bg-teal-700 shadow-md">Add Leave Date</button>
+                <h2 class="text-lg font-semibold text-teal-600 mb-4">Leave Dates</h2>
+                <div class="form-container mb-4 bg-white p-4 rounded-lg shadow-sm">
+                    <h3 class="text-base font-medium text-teal-600 mb-3">Add Leave Date</h3>
+                    <input type="date" id="leave-date" class="form-input mb-3" aria-label="Leave Date">
+                    <button onclick="addLeaveDate()" class="w-full bg-teal-600 text-white p-2 rounded-lg hover:bg-teal-700 shadow-sm">Add Leave Date</button>
                 </div>
                 <div class="table-container">
                     <table>
@@ -289,7 +342,7 @@
         // Check Authentication
         if (localStorage.getItem('adminToken')) {
             showDashboard();
-            document.getElementById('admin-username').textContent = `Welcome, ${localStorage.getItem('adminUsername')}`;
+            document.getElementById('admin-username').textContent = `${localStorage.getItem('adminUsername')}`;
         } else {
             showAuth();
         }
@@ -297,8 +350,6 @@
         function showAuth() {
             document.getElementById('auth-container').classList.remove('hidden');
             document.getElementById('dashboard-container').classList.add('hidden');
-            const fadeInElements = document.querySelectorAll('.animate-fade-in');
-            fadeInElements.forEach(element => element.classList.add('visible'));
         }
 
         function showDashboard() {
@@ -316,9 +367,7 @@
         function showWelcomeModal() {
             const modal = document.getElementById('welcome-modal');
             modal.classList.remove('hidden');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-            }, 3000);
+            setTimeout(() => modal.classList.add('hidden'), 2000);
             modal.addEventListener('click', () => modal.classList.add('hidden'));
         }
 
@@ -335,31 +384,28 @@
         async function adminLogin() {
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
-
             if (!email || !password) {
                 alert('Please fill in all fields.');
                 return;
             }
-
             try {
                 const response = await fetch(`${API_BASE_URL}/api/admin/login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password })
                 });
-
                 const data = await response.json();
                 if (response.ok) {
                     localStorage.setItem('adminToken', data.token);
                     localStorage.setItem('adminUsername', data.admin.username);
                     showDashboard();
-                    document.getElementById('admin-username').textContent = `Welcome, ${data.admin.username}`;
+                    document.getElementById('admin-username').textContent = `${data.admin.username}`;
                 } else {
                     alert(data.error || 'Error logging in');
                 }
             } catch (error) {
                 console.error('Error logging in:', error);
-                alert('Error logging in. Please try again.');
+                alert('Error logging in.');
             }
         }
 
@@ -367,43 +413,37 @@
             const username = document.getElementById('register-username').value;
             const email = document.getElementById('register-email').value;
             const password = document.getElementById('register-password').value;
-
             if (!username || !email || !password) {
                 alert('Please fill in all fields.');
                 return;
             }
-
             try {
                 const response = await fetch(`${API_BASE_URL}/api/admin/register`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name: username, email, password })
                 });
-
                 const data = await response.json();
                 if (response.ok) {
                     localStorage.setItem('adminToken', data.token);
                     localStorage.setItem('adminUsername', data.admin.username);
                     showDashboard();
-                    document.getElementById('admin-username').textContent = `Welcome, ${data.admin.username}`;
+                    document.getElementById('admin-username').textContent = `${data.admin.username}`;
                 } else {
                     alert(data.error || 'Error registering');
                 }
             } catch (error) {
                 console.error('Error registering:', error);
-                alert('Error registering. Please try again.');
+                alert('Error registering.');
             }
         }
 
         function toggleDropdown() {
-            const dropdown = document.getElementById('dropdown-menu');
-            dropdown.classList.toggle('hidden');
+            document.getElementById('dropdown-menu').classList.toggle('hidden');
         }
 
         function showSection(sectionId) {
-            document.querySelectorAll('.section').forEach(section => {
-                section.classList.add('hidden');
-            });
+            document.querySelectorAll('.section').forEach(section => section.classList.add('hidden'));
             document.getElementById(sectionId).classList.remove('hidden');
             document.getElementById('dropdown-menu').classList.add('hidden');
         }
@@ -418,7 +458,8 @@
             const token = localStorage.getItem('adminToken');
             options.headers = {
                 ...options.headers,
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
             };
             const response = await fetch(url, options);
             if (response.status === 401) {
@@ -428,13 +469,8 @@
             return response;
         }
 
-        // File Upload Helper
         async function uploadFile(file, type) {
-            if (!file) {
-                console.log(`No ${type} file provided for upload`);
-                return null;
-            }
-
+            if (!file) return null;
             const formData = new FormData();
             formData.append(type, file);
             try {
@@ -443,22 +479,16 @@
                     body: formData,
                     headers: { 'Authorization': `Bearer ${localStorage.getItem('adminToken')}` }
                 });
-
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    throw new Error(`Upload failed: ${response.status} ${response.statusText} - ${errorText}`);
-                }
-
+                if (!response.ok) throw new Error(`Upload failed: ${response.statusText}`);
                 const data = await response.json();
                 return data.url;
             } catch (error) {
                 console.error(`Error uploading ${type}:`, error);
-                alert(`Failed to upload ${type}: ${error.message}`);
+                alert(`Failed to upload ${type}.`);
                 return null;
             }
         }
 
-        // Appointments
         async function loadAppointments() {
             try {
                 const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/appointments`);
@@ -471,16 +501,13 @@
                         <tr>
                             <td><input type="checkbox" class="appointment-checkbox" data-id="${apt.id}"></td>
                             <td>${apt.full_name}</td>
-                            <td>${apt.phone}</td>
                             <td>${apt.treatment}</td>
                             <td>${apt.date}</td>
-                            <td>${apt.time}</td>
-                            <td>${apt.status}</td>
                             <td>
                                 ${apt.status !== 'CANCELLED' ? `
-                                    <button onclick="confirmAppointment('${apt.id}')" class="bg-green-600 text-white p-1 rounded hover:bg-green-700 text-xs">Confirm</button>
-                                    <button onclick="cancelAppointment('${apt.id}')" class="bg-red-600 text-white p-1 rounded hover:bg-red-700 text-xs">Cancel</button>
-                                ` : ''}
+                                    <button onclick="confirmAppointment('${apt.id}')" class="bg-green-600 text-white action-btn hover:bg-green-700">Confirm</button>
+                                    <button onclick="cancelAppointment('${apt.id}')" class="bg-red-600 text-white action-btn hover:bg-red-700">Cancel</button>
+                                ` : 'Cancelled'}
                             </td>
                         </tr>
                     `;
@@ -492,21 +519,16 @@
 
         function toggleSelectAll() {
             const selectAll = document.getElementById('select-all-appointments');
-            const checkboxes = document.querySelectorAll('.appointment-checkbox');
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = selectAll.checked;
-            });
+            document.querySelectorAll('.appointment-checkbox').forEach(cb => cb.checked = selectAll.checked);
         }
 
         async function clearSelectedAppointments() {
-            const checkboxes = document.querySelectorAll('.appointment-checkbox:checked');
-            const selectedIds = Array.from(checkboxes).map(checkbox => checkbox.dataset.id);
-            if (selectedIds.length === 0) {
+            const selectedIds = Array.from(document.querySelectorAll('.appointment-checkbox:checked')).map(cb => cb.dataset.id);
+            if (!selectedIds.length) {
                 alert('No appointments selected.');
                 return;
             }
-            if (!confirm(`Are you sure you want to delete ${selectedIds.length} selected appointments?`)) return;
-
+            if (!confirm(`Delete ${selectedIds.length} selected appointments?`)) return;
             try {
                 const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/appointments/clear-selected`, {
                     method: 'POST',
@@ -517,10 +539,10 @@
                     loadAppointments();
                     document.getElementById('select-all-appointments').checked = false;
                 } else {
-                    alert('Error clearing selected appointments');
+                    alert('Error clearing appointments');
                 }
             } catch (error) {
-                console.error('Error clearing selected appointments:', error);
+                console.error('Error clearing appointments:', error);
             }
         }
 
@@ -539,7 +561,7 @@
         }
 
         async function cancelAppointment(id) {
-            if (!confirm('Are you sure you want to cancel this appointment?')) return;
+            if (!confirm('Cancel this appointment?')) return;
             try {
                 const response = await fetchWithAuth(`${API_BASE_URL}/api/appointments/${id}/cancel`, { method: 'POST' });
                 if (response.ok) {
@@ -554,7 +576,7 @@
         }
 
         async function clearOldAppointments() {
-            if (!confirm('Are you sure you want to clear all old appointments (older than 30 days)?')) return;
+            if (!confirm('Clear appointments older than 30 days?')) return;
             try {
                 const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/appointments/clear-old`, { method: 'DELETE' });
                 if (response.ok) {
@@ -568,7 +590,6 @@
             }
         }
 
-        // Waitlist
         async function loadWaitlist() {
             try {
                 const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/waitlist`);
@@ -580,10 +601,9 @@
                         <tr>
                             <td>${entry.full_name}</td>
                             <td>${entry.email}</td>
-                            <td>${entry.phone}</td>
                             <td>${entry.preferred_date}</td>
                             <td>
-                                <button onclick="deleteWaitlist('${entry.id}')" class="bg-red-600 text-white p-1 rounded hover:bg-red-700 text-xs">Delete</button>
+                                <button onclick="deleteWaitlist('${entry.id}')" class="bg-red-600 text-white action-btn hover:bg-red-700">Delete</button>
                             </td>
                         </tr>
                     `;
@@ -594,7 +614,7 @@
         }
 
         async function deleteWaitlist(id) {
-            if (!confirm('Are you sure you want to delete this waitlist entry?')) return;
+            if (!confirm('Delete this waitlist entry?')) return;
             try {
                 const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/waitlist/${id}`, { method: 'DELETE' });
                 if (response.ok) {
@@ -608,7 +628,6 @@
             }
         }
 
-        // Feedback
         async function loadFeedback() {
             try {
                 const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/feedback`);
@@ -619,11 +638,10 @@
                     table.innerHTML += `
                         <tr>
                             <td>${fb.full_name}</td>
-                            <td>${fb.email}</td>
                             <td>${fb.rating}★</td>
-                            <td>${fb.description}</td>
+                            <td>${fb.description.slice(0, 50)}${fb.description.length > 50 ? '...' : ''}</td>
                             <td>
-                                <button onclick="deleteFeedback('${fb.id}')" class="bg-red-600 text-white p-1 rounded hover:bg-red-700 text-xs">Delete</button>
+                                <button onclick="deleteFeedback('${fb.id}')" class="bg-red-600 text-white action-btn hover:bg-red-700">Delete</button>
                             </td>
                         </tr>
                     `;
@@ -634,7 +652,7 @@
         }
 
         async function deleteFeedback(id) {
-            if (!confirm('Are you sure you want to delete this feedback?')) return;
+            if (!confirm('Delete this feedback?')) return;
             try {
                 const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/feedback/${id}`, { method: 'DELETE' });
                 if (response.ok) {
@@ -648,7 +666,6 @@
             }
         }
 
-        // Services
         async function loadServices() {
             try {
                 const response = await fetchWithAuth(`${API_BASE_URL}/api/services`);
@@ -659,12 +676,10 @@
                     table.innerHTML += `
                         <tr>
                             <td>${svc.title}</td>
-                            <td>${svc.description}</td>
                             <td>₹${svc.price}</td>
-                            <td>${svc.image || svc.video || 'N/A'}</td>
                             <td>
-                                <button onclick="editService('${svc.id}')" class="bg-blue-600 text-white p-1 rounded hover:bg-blue-700 text-xs">Edit</button>
-                                <button onclick="deleteService('${svc.id}')" class="bg-red-600 text-white p-1 rounded hover:bg-red-700 text-xs">Delete</button>
+                                <button onclick="editService('${svc.id}')" class="bg-blue-600 text-white action-btn hover:bg-blue-700">Edit</button>
+                                <button onclick="deleteService('${svc.id}')" class="bg-red-600 text-white action-btn hover:bg-red-700">Delete</button>
                             </td>
                         </tr>
                     `;
@@ -678,49 +693,35 @@
             const serviceData = {
                 title: document.getElementById('service-title').value,
                 description: document.getElementById('service-description').value,
-                price: parseFloat(document.getElementById('service-price').value),
+                price: parseFloat(document.getElementById('service-price').value)
             };
-
             if (!serviceData.title || !serviceData.description || !serviceData.price) {
                 alert('Please fill in title, description, and price.');
                 return;
             }
-
-            // Handle Image
             const imageFile = document.getElementById('service-image-file').files[0];
             const imageUrl = document.getElementById('service-image-url').value;
             if (imageFile) {
                 const uploadedImageUrl = await uploadFile(imageFile, 'image');
-                if (uploadedImageUrl) {
-                    serviceData.image = uploadedImageUrl;
-                }
+                if (uploadedImageUrl) serviceData.image = uploadedImageUrl;
             } else if (imageUrl) {
                 serviceData.image = imageUrl;
-            } else {
-                serviceData.image = null;
             }
-
-            // Handle Video
             const videoFile = document.getElementById('service-video-file').files[0];
             const videoUrl = document.getElementById('service-video-url').value;
             if (videoFile) {
                 const uploadedVideoUrl = await uploadFile(videoFile, 'video');
-                if (uploadedVideoUrl) {
-                    serviceData.video = uploadedVideoUrl;
-                }
+                if (uploadedVideoUrl) serviceData.video = uploadedVideoUrl;
             } else if (videoUrl) {
                 serviceData.video = videoUrl;
-            } else {
-                serviceData.video = null;
             }
-
             try {
                 const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/services`, {
                     method: 'POST',
                     body: JSON.stringify(serviceData)
                 });
                 if (response.ok) {
-                    alert('Service added successfully');
+                    alert('Service added');
                     document.getElementById('service-title').value = '';
                     document.getElementById('service-description').value = '';
                     document.getElementById('service-price').value = '';
@@ -730,21 +731,20 @@
                     document.getElementById('service-video-url').value = '';
                     loadServices();
                 } else {
-                    const errorData = await response.json();
-                    alert(errorData.error || 'Error adding service');
+                    alert('Error adding service');
                 }
             } catch (error) {
                 console.error('Error adding service:', error);
-                alert('Failed to add service. Please try again.');
+                alert('Failed to add service.');
             }
         }
 
         async function editService(id) {
-            alert('Edit service functionality not fully implemented in this demo.');
+            alert('Edit service not implemented in this demo.');
         }
 
         async function deleteService(id) {
-            if (!confirm('Are you sure you want to delete this service?')) return;
+            if (!confirm('Delete this service?')) return;
             try {
                 const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/services/${id}`, { method: 'DELETE' });
                 if (response.ok) {
@@ -758,7 +758,6 @@
             }
         }
 
-        // Leave Dates
         async function loadLeaveDates() {
             try {
                 const response = await fetchWithAuth(`${API_BASE_URL}/api/leave-dates`);
@@ -770,7 +769,7 @@
                         <tr>
                             <td>${date}</td>
                             <td>
-                                <button onclick="deleteLeaveDate('${date}')" class="bg-red-600 text-white p-1 rounded hover:bg-red-700 text-xs">Delete</button>
+                                <button onclick="deleteLeaveDate('${date}')" class="bg-red-600 text-white action-btn hover:bg-red-700">Delete</button>
                             </td>
                         </tr>
                     `;
@@ -786,7 +785,6 @@
                 alert('Please select a date.');
                 return;
             }
-
             try {
                 const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/leave-dates`, {
                     method: 'POST',
@@ -805,7 +803,7 @@
         }
 
         async function deleteLeaveDate(date) {
-            if (!confirm('Are you sure you want to remove this leave date?')) return;
+            if (!confirm('Remove this leave date?')) return;
             try {
                 const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/leave-dates/${date}`, { method: 'DELETE' });
                 if (response.ok) {
