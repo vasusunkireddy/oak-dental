@@ -38,7 +38,7 @@
         .slider-container {
             position: relative;
             width: 100%;
-            max-width: 600px;
+            max-width: 900px;
             margin: 0 auto;
             overflow: hidden;
         }
@@ -71,6 +71,11 @@
             padding: 8px;
             cursor: pointer;
         }
+        .treatment-slide {
+            min-width: 33.33%;
+            box-sizing: border-box;
+            padding: 0 10px;
+        }
         .doctor-bg {
             background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url('https://images.unsplash.com/photo-1588776813678-3e56b86e8490?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
             background-size: cover;
@@ -79,16 +84,16 @@
         .doctor-card {
             background: white;
             border-radius: 12px;
-            padding: 1.5rem;
+            padding: 2rem;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            max-width: 350px;
+            max-width: 450px;
             margin: 0 auto;
         }
         .doctor-img {
-            border: 4px solid #0d9488;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            width: 200px;
-            height: 200px;
+            border: 6px solid #0d9488;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            width: 300px;
+            height: 300px;
             object-fit: cover;
             object-position: center;
         }
@@ -99,28 +104,44 @@
             z-index: 1000;
             top: 0;
             left: 0;
-            background-color: #f7fafc;
+            background-color: #ffffff;
             overflow-x: hidden;
-            transition: 0.3s;
+            transition: width 0.5s ease-in-out;
             padding-top: 60px;
+            box-shadow: 4px 0 15px rgba(0, 0, 0, 0.15);
         }
         .sidenav a {
-            padding: 8px 8px 8px 32px;
+            padding: 14px 16px 14px 32px;
             text-decoration: none;
-            font-size: 1rem;
-            color: #4a5568;
+            font-size: 1.2rem;
+            color: #1f2937;
             display: block;
-            transition: 0.3s;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
         .sidenav a:hover {
+            background-color: #f0fdfa;
             color: #0d9488;
         }
         .sidenav .closebtn {
             position: absolute;
-            top: 0;
+            top: 10px;
             right: 25px;
             font-size: 36px;
             margin-left: 50px;
+            color: #1f2937;
+        }
+        .nav-gradient {
+            background: linear-gradient(90deg, #0d9488 0%, #14b8a6 100%);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .nav-link {
+            font-weight: 500;
+            transition: color 0.3s ease, transform 0.3s ease;
+            padding: 0.5rem 1rem;
+        }
+        .nav-link:hover {
+            color: #f0fdfa !important;
+            transform: translateY(-2px);
         }
         .testimonial-slide {
             display: none;
@@ -128,56 +149,17 @@
         .testimonial-slide.active {
             display: block;
         }
-        .calendar-container {
-            max-width: 300px;
-            margin: 0 auto;
-        }
-        .calendar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        .calendar {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 5px;
-        }
-        .calendar div {
-            padding: 10px;
-            text-align: center;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        .calendar .header {
-            background: #0d9488;
-            color: white;
-            font-weight: bold;
-        }
-        .calendar .day {
-            background: #f7fafc;
-        }
-        .calendar .day:hover {
-            background: #e6fffa;
-        }
-        .calendar .leave {
-            background: #ef4444;
-            color: white;
-            cursor: not-allowed;
-        }
-        .calendar .selected {
-            background: #0d9488;
-            color: white;
-        }
-        .error-message {
-            color: #ef4444;
-            margin-top: 10px;
-            display: none;
-        }
         .treatment-media {
             max-width: 100%;
             border-radius: 8px;
             margin-bottom: 1rem;
+        }
+        .rating-stars .star {
+            cursor: pointer;
+            color: #d1d5db;
+        }
+        .rating-stars .star.selected {
+            color: #fbbf24;
         }
         @media (max-width: 640px) {
             .text-4xl { font-size: 1.75rem; }
@@ -201,14 +183,14 @@
             .slider-container { max-width: 100%; }
             .slide { flex-direction: column; align-items: center; gap: 0.5rem; }
             .slide img { width: 80%; height: 120px; object-fit: cover; }
-            .doctor-img { width: 150px; height: 150px; }
+            .treatment-slide { min-width: 100%; }
+            .doctor-img { width: 200px; height: 200px; }
             .h-48 { height: 180px; }
             .space-x-4 > :not([hidden]) ~ :not([hidden]) { margin-left: 0.5rem; }
             .flex.justify-center.fade-in { flex-direction: column; align-items: center; gap: 0.5rem; }
             .max-w-md { max-width: 100%; }
             input, textarea { font-size: 0.875rem; }
             .px-6.py-3 { padding: 0.5rem 1.5rem; }
-            .calendar-container { max-width: 100%; }
         }
         @media (min-width: 641px) {
             .hamburger { display: none; }
@@ -238,39 +220,27 @@
     <div id="mySidenav" class="sidenav">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
         <a href="#home" onclick="closeNav()">Home</a>
-        <a href="#treatments" onclick="closeNav()">Treatments</a>
-        <a href="#services" onclick="closeNav()">Services</a>
-        <a href="#about" onclick="closeNav()">About</a>
-        <a href="#doctors" onclick="closeNav()">Doctors</a>
-        <a href="#gallery" onclick="closeNav()">Gallery</a>
-        <a href="#testimonials" onclick="closeNav()">Testimonials</a>
-        <a href="#blog" onclick="closeNav()">Blog</a>
-        <a href="#appointment" onclick="closeNav()">Book Appointment</a>
-        <a href="#faq" onclick="closeNav()">FAQ</a>
-        <a href="#contact" onclick="closeNav()">Contact</a>
+        <a href="#treatments" onclick="closeNav()">Our Treatments</a>
+        <a href="#about" onclick="closeNav()">About Us</a>
+        <a href="#contact" onclick="closeNav()">Contact Us</a>
+        <a href="#appointment" onclick="closeNav()">Book Appointments</a>
     </div>
 
     <!-- Navbar -->
-    <nav class="bg-white shadow-lg fixed w-full z-10" aria-label="Main navigation">
+    <nav class="nav-gradient shadow-lg fixed w-full z-10" aria-label="Main navigation">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <span class="hamburger text-3xl cursor-pointer md:hidden" onclick="openNav()">☰</span>
-                    <img src="https://i.postimg.cc/bY0bwXgj/OAK-LOGO-HD.png" alt="Oak Dental Clinic Logo" class="h-12 mr-3" loading="lazy">
-                    <h1 class="text-2xl font-bold text-teal-600">Oak Dental Clinic</h1>
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center space-x-3">
+                    <span class="hamburger text-3xl cursor-pointer md:hidden text-white" onclick="openNav()">☰</span>
+                    <img src="https://i.postimg.cc/bY0bwXgj/OAK-LOGO-HD.png" alt="Oak Dental Clinic Logo" class="h-12" loading="lazy">
+                    <h1 class="text-2xl font-semibold text-white tracking-tight">Oak Dental Clinic</h1>
                 </div>
-                <div class="desktop-nav flex items-center space-x-4 hidden md:flex">
-                    <a href="#home" class="text-gray-700 hover:text-teal-600">Home</a>
-                    <a href="#treatments" class="text-gray-700 hover:text-teal-600">Treatments</a>
-                    <a href="#services" class="text-gray-700 hover:text-teal-600">Services</a>
-                    <a href="#about" class="text-gray-700 hover:text-teal-600">About</a>
-                    <a href="#doctors" class="text-gray-700 hover:text-teal-600">Doctors</a>
-                    <a href="#gallery" class="text-gray-700 hover:text-teal-600">Gallery</a>
-                    <a href="#testimonials" class="text-gray-700 hover:text-teal-600">Testimonials</a>
-                    <a href="#blog" class="text-gray-700 hover:text-teal-600">Blog</a>
-                    <a href="#appointment" class="text-gray-700 hover:text-teal-600">Book Appointment</a>
-                    <a href="#faq" class="text-gray-700 hover:text-teal-600">FAQ</a>
-                    <a href="#contact" class="text-gray-700 hover:text-teal-600">Contact</a>
+                <div class="desktop-nav flex items-center space-x-6 hidden md:flex">
+                    <a href="#home" class="text-white nav-link">Home</a>
+                    <a href="#treatments" class="text-white nav-link">Our Treatments</a>
+                    <a href="#about" class="text-white nav-link">About Us</a>
+                    <a href="#contact" class="text-white nav-link">Contact Us</a>
+                    <a href="#appointment" class="text-white nav-link">Book Appointments</a>
                 </div>
             </div>
         </div>
@@ -288,12 +258,18 @@
         </div>
     </section>
 
-    <!-- Treatments Section -->
+    <!-- Treatments Section (Slider) -->
     <section id="treatments" class="py-16 bg-gray-100">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">Our Treatments</h2>
-            <div id="treatments-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Treatments will be populated dynamically -->
+            <div class="slider-container fade-in">
+                <div class="slider" id="treatments-slider">
+                    <!-- Treatments will be populated dynamically -->
+                </div>
+                <div class="slider-nav">
+                    <button onclick="prevTreatmentSlide()" aria-label="Previous Treatment">❮</button>
+                    <button onclick="nextTreatmentSlide()" aria-label="Next Treatment">❯</button>
+                </div>
             </div>
         </div>
     </section>
@@ -361,6 +337,32 @@
         </div>
     </section>
 
+    <!-- Feedback Section -->
+    <section id="feedback" class="py-16 bg-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">Share Your Feedback</h2>
+            <div class="max-w-md mx-auto fade-in">
+                <h3 class="text-xl font-semibold text-teal-600 mb-4">Submit Your Feedback</h3>
+                <div>
+                    <input type="text" id="feedback-name" placeholder="Your Name" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Your Name">
+                    <input type="email" id="feedback-email" placeholder="Your Email" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Your Email">
+                    <div class="mb-4">
+                        <label class="block text-gray-600 mb-2">Rating:</label>
+                        <div class="rating-stars flex space-x-1">
+                            <i class="fas fa-star star" data-rating="1"></i>
+                            <i class="fas fa-star star" data-rating="2"></i>
+                            <i class="fas fa-star star" data-rating="3"></i>
+                            <i class="fas fa-star star" data-rating="4"></i>
+                            <i class="fas fa-star star" data-rating="5"></i>
+                        </div>
+                    </div>
+                    <textarea id="feedback-description" placeholder="Your Feedback" class="w-full p-3 mb-4 border rounded-lg" rows="4" required aria-label="Your Feedback"></textarea>
+                    <button onclick="submitFeedback()" class="bg-teal-600 text-white px-6 py-3 rounded-full hover:bg-teal-700" aria-label="Submit Feedback">Submit Feedback</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Before-and-After Slider -->
     <section class="py-16 bg-green-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -391,8 +393,8 @@
             <div class="flex flex-col md:flex-row items-center">
                 <div class="w-full md:w-1/2 mb-6 md:mb-0 fade-in">
                     <picture>
-                        <source srcset="https://images.unsplash.com/photo-1629904869113-1b4b56d87404?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80&fm=webp" type="image/webp">
-                        <img src="https://images.unsplash.com/photo-1629904869113-1b4b56d87404?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" alt="Oak Dental Clinic Team" class="rounded-lg shadow-md" loading="lazy">
+                        <source srcset="https://i.postimg.cc/TwK4Wyry/Screenshot-2025-05-16-001922.png" type="image/webp">
+                        <img src="https://i.postimg.cc/TwK4Wyry/Screenshot-2025-05-16-001922.png" alt="Oak Dental Clinic Team" class="rounded-lg shadow-md" loading="lazy">
                     </picture>
                 </div>
                 <div class="w-full md:w-1/2 md:pl-8 fade-in">
@@ -437,18 +439,7 @@
             <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">What Our Hyderabad Patients Say</h2>
             <div class="slider-container fade-in">
                 <div id="testimonial-slider">
-                    <div class="testimonial-slide bg-white p-6 rounded-lg shadow-md active">
-                        <p class="text-gray-600 mb-4">"The team at Oak Dental Clinic made my visit so comfortable! My smile has never looked better."</p>
-                        <p class="text-teal-600 font-semibold">— Priya S., Bachupally</p>
-                    </div>
-                    <div class="testimonial-slide bg-white p-6 rounded-lg shadow-md">
-                        <p class="text-gray-600 mb-4">"Professional staff and top-notch facilities. I highly recommend Oak Dental for any dental needs."</p>
-                        <p class="text-teal-600 font-semibold">— Rahul K., Hyderabad</p>
-                    </div>
-                    <div class="testimonial-slide bg-white p-6 rounded-lg shadow-md">
-                        <p class="text-gray-600 mb-4">"The best dental care in Hyderabad! My implants were done perfectly."</p>
-                        <p class="text-teal-600 font-semibold">— Anjali M., Bachupally</p>
-                    </div>
+                    <!-- Testimonials will be populated dynamically -->
                 </div>
                 <div class="slider-nav">
                     <button onclick="prevTestimonial()" aria-label="Previous Testimonial">❮</button>
@@ -461,7 +452,7 @@
     <!-- Blog Section -->
     <section id="blog" class="py-16 bg-blue-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">Dental Tips & Updates</h2>
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">Dental Tips & News</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div class="bg-white p-6 rounded-lg shadow-md fade-in">
                     <picture>
@@ -470,7 +461,7 @@
                     </picture>
                     <h3 class="text-xl font-semibold text-teal-600 mb-2">5 Tips for Healthy Teeth</h3>
                     <p class="text-gray-600 mb-4">Learn how to keep your smile bright with these simple habits.</p>
-                    <a href="blog-post.html" class="text-teal-600 hover:underline">Read More</a>
+                    <a href="dentaltips.html?post=healthy-teeth" class="text-teal-600 hover:underline">Read More</a>
                     <div class="flex space-x-4 mt-4">
                         <a href="https://www.facebook.com/sharer/sharer.php?u=your-blog-url" class="text-teal-600 hover:text-teal-800">Share on Facebook</a>
                         <a href="https://twitter.com/intent/tweet?url=your-blog-url" class="text-teal-600 hover:text-teal-800">Share on Twitter</a>
@@ -483,7 +474,7 @@
                     </picture>
                     <h3 class="text-xl font-semibold text-teal-600 mb-2">Guide to Dental Implants</h3>
                     <p class="text-gray-600 mb-4">Everything you need to know about dental implants.</p>
-                    <a href="blog-post.html" class="text-teal-600 hover:underline">Read More</a>
+                    <a href="dentaltips.html?post=dental-implants" class="text-teal-600 hover:underline">Read More</a>
                     <div class="flex space-x-4 mt-4">
                         <a href="https://www.facebook.com/sharer/sharer.php?u=your-blog-url" class="text-teal-600 hover:text-teal-800">Share on Facebook</a>
                         <a href="https://twitter.com/intent/tweet?url=your-blog-url" class="text-teal-600 hover:text-teal-800">Share on Twitter</a>
@@ -496,7 +487,7 @@
                     </picture>
                     <h3 class="text-xl font-semibold text-teal-600 mb-2">Top 5 Myths About Teeth Whitening</h3>
                     <p class="text-gray-600 mb-4">Debunking common misconceptions about whitening.</p>
-                    <a href="blog-post.html" class="text-teal-600 hover:underline">Read More</a>
+                    <a href="dentaltips.html?post=teeth-whitening" class="text-teal-600 hover:underline">Read More</a>
                     <div class="flex space-x-4 mt-4">
                         <a href="https://www.facebook.com/sharer/sharer.php?u=your-blog-url" class="text-teal-600 hover:text-teal-800">Share on Facebook</a>
                         <a href="https://twitter.com/intent/tweet?url=your-blog-url" class="text-teal-600 hover:text-teal-800">Share on Twitter</a>
@@ -510,37 +501,21 @@
     <section id="appointment" class="py-16 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">Book an Appointment</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="fade-in">
-                    <h3 class="text-xl font-semibold text-teal-600 mb-4">Select Date and Time</h3>
-                    <div class="calendar-container">
-                        <div class="calendar-header">
-                            <button onclick="prevMonth()" aria-label="Previous Month">❮</button>
-                            <h3 id="month-year" class="text-lg font-semibold"></h3>
-                            <button onclick="nextMonth()" aria-label="Next Month">❯</button>
-                        </div>
-                        <div class="calendar" id="calendar">
-                            <!-- Calendar days will be populated by JavaScript -->
-                        </div>
-                    </div>
-                    <p class="error-message" id="error-message">Sorry for the inconvenience, the doctor is on leave on this date. Thank you for your understanding.</p>
-                </div>
-                <div class="fade-in">
-                    <h3 class="text-xl font-semibold text-teal-600 mb-4">Appointment Details</h3>
-                    <div>
-                        <input type="text" id="name" placeholder="Your Name" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Your Name">
-                        <input type="email" id="email" placeholder="Your Email" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Your Email">
-                        <input type="tel" id="phone" placeholder="Your Phone" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Your Phone">
-                        <input type="date" id="appointment-date" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Appointment Date" readonly>
-                        <select id="time-slot" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Time Slot">
-                            <option value="" disabled selected>Select Time Slot</option>
-                            <!-- Time slots populated by JavaScript -->
-                        </select>
-                        <textarea id="message" placeholder="Your Message" class="w-full p-3 mb-4 border rounded-lg" rows="4" required aria-label="Your Message"></textarea>
-                        <div class="space-x-4">
-                            <button onclick="submitAppointment()" class="bg-teal-600 text-white px-6 py-3 rounded-full hover:bg-teal-700" aria-label="Submit Appointment Request">Submit</button>
-                            <a href="https://wa.me/+91756936767?text=Hello%20Oak%20Dental%20Clinic,%20I%20would%20like%20to%20book%20an%20appointment." target="_blank" class="bg-green-500 text-white px-6 py-3 rounded-full hover:bg-green-600" aria-label="Contact via WhatsApp">WhatsApp Us</a>
-                        </div>
+            <div class="max-w-md mx-auto fade-in">
+                <h3 class="text-xl font-semibold text-teal-600 mb-4">Appointment Details</h3>
+                <div>
+                    <input type="text" id="name" placeholder="Your Name" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Your Name">
+                    <input type="email" id="email" placeholder="Your Email" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Your Email">
+                    <input type="tel" id="phone" placeholder="Your Phone" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Your Phone">
+                    <input type="date" id="appointment-date" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Appointment Date">
+                    <select id="time-slot" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Time Slot">
+                        <option value="" disabled selected>Select Time Slot</option>
+                        <!-- Time slots populated by JavaScript -->
+                    </select>
+                    <textarea id="message" placeholder="Your Message" class="w-full p-3 mb-4 border rounded-lg" rows="4" required aria-label="Your Message"></textarea>
+                    <div class="space-x-4">
+                        <button onclick="submitAppointment()" class="bg-teal-600 text-white px-6 py-3 rounded-full hover:bg-teal-700" aria-label="Submit Appointment Request">Submit</button>
+                        <a href="https://wa.me/+91756936767?text=Hello%20Oak%20Dental%20Clinic,%20I%20would%20like%20to%20book%20an%20appointment." target="_blank" class="bg-green-500 text-white px-6 py-3 rounded-full hover:bg-green-600" aria-label="Contact via WhatsApp">WhatsApp Us</a>
                     </div>
                 </div>
             </div>
@@ -691,9 +666,132 @@
         }
         showSlide(currentSlide);
 
+        // Treatments Slider
+        let currentTreatmentSlide = 0;
+        let treatmentSlides = [];
+        function loadTreatments() {
+            const treatmentsSlider = document.getElementById('treatments-slider');
+            const treatments = JSON.parse(localStorage.getItem('treatments') || '[]');
+            treatmentsSlider.innerHTML = '';
+
+            if (treatments.length === 0) {
+                treatmentsSlider.innerHTML = '<p class="text-center text-gray-600">No treatments available at the moment.</p>';
+                return;
+            }
+
+            treatments.forEach(treatment => {
+                const treatmentSlide = document.createElement('div');
+                treatmentSlide.className = 'treatment-slide';
+                let mediaHTML = '';
+                if (treatment.video) {
+                    mediaHTML = `<video src="${treatment.video}" controls class="treatment-media"></video>`;
+                } else if (treatment.image) {
+                    mediaHTML = `<img src="${treatment.image}" alt="${treatment.title}" class="treatment-media" loading="lazy">`;
+                }
+                treatmentSlide.innerHTML = `
+                    <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                        ${mediaHTML}
+                        <h3 class="text-xl font-semibold text-teal-600 mb-2">${treatment.title}</h3>
+                        <p class="text-gray-600 mb-2">${treatment.description}</p>
+                        <p class="text-gray-800 font-semibold">Price: ₹${treatment.price}</p>
+                    </div>
+                `;
+                treatmentsSlider.appendChild(treatmentSlide);
+            });
+
+            treatmentSlides = document.querySelectorAll('.treatment-slide');
+            updateTreatmentSlider();
+        }
+        function updateTreatmentSlider() {
+            const slideWidth = 100 / 3; // Show 3 slides at a time on desktop
+            if (currentTreatmentSlide >= treatmentSlides.length - 2) currentTreatmentSlide = 0;
+            if (currentTreatmentSlide < 0) currentTreatmentSlide = Math.max(0, treatmentSlides.length - 3);
+            document.getElementById('treatments-slider').style.transform = `translateX(-${currentTreatmentSlide * slideWidth}%)`;
+        }
+        function nextTreatmentSlide() {
+            currentTreatmentSlide++;
+            updateTreatmentSlider();
+        }
+        function prevTreatmentSlide() {
+            currentTreatmentSlide--;
+            updateTreatmentSlider();
+        }
+
+        // Feedback Submission
+        let currentRating = 0;
+        document.querySelectorAll('.rating-stars .star').forEach(star => {
+            star.addEventListener('click', () => {
+                currentRating = parseInt(star.dataset.rating);
+                document.querySelectorAll('.rating-stars .star').forEach(s => {
+                    s.classList.toggle('selected', parseInt(s.dataset.rating) <= currentRating);
+                });
+            });
+        });
+
+        function submitFeedback() {
+            const name = document.getElementById('feedback-name').value;
+            const email = document.getElementById('feedback-email').value;
+            const description = document.getElementById('feedback-description').value;
+
+            if (!name || !email || !currentRating || !description) {
+                alert('Please fill in all fields and select a rating.');
+                return;
+            }
+
+            const feedback = { name, email, rating: currentRating, description };
+            let feedbacks = JSON.parse(localStorage.getItem('feedbacks') || '[]');
+            feedbacks.push(feedback);
+            localStorage.setItem('feedbacks', JSON.stringify(feedbacks));
+
+            loadTestimonials();
+
+            document.getElementById('feedback-name').value = '';
+            document.getElementById('feedback-email').value = '';
+            document.getElementById('feedback-description').value = '';
+            currentRating = 0;
+            document.querySelectorAll('.rating-stars .star').forEach(s => s.classList.remove('selected'));
+
+            alert('Thank you for your feedback!');
+        }
+
         // Testimonials Carousel
         let testimonialIndex = 0;
-        const testimonials = document.querySelectorAll('.testimonial-slide');
+        let testimonials = [];
+        function loadTestimonials() {
+            const testimonialSlider = document.getElementById('testimonial-slider');
+            const feedbacks = JSON.parse(localStorage.getItem('feedbacks') || '[]');
+            testimonialSlider.innerHTML = '';
+
+            if (feedbacks.length === 0) {
+                testimonialSlider.innerHTML = `
+                    <div class="testimonial-slide bg-white p-6 rounded-lg shadow-md active">
+                        <p class="text-gray-600 mb-4">"The team at Oak Dental Clinic made my visit so comfortable! My smile has never looked better."</p>
+                        <p class="text-teal-600 font-semibold">— Priya S., Bachupally</p>
+                    </div>
+                    <div class="testimonial-slide bg-white p-6 rounded-lg shadow-md">
+                        <p class="text-gray-600 mb-4">"Professional staff and top-notch facilities. I highly recommend Oak Dental for any dental needs."</p>
+                        <p class="text-teal-600 font-semibold">— Rahul K., Hyderabad</p>
+                    </div>
+                    <div class="testimonial-slide bg-white p-6 rounded-lg shadow-md">
+                        <p class="text-gray-600 mb-4">"The best dental care in Hyderabad! My implants were done perfectly."</p>
+                        <p class="text-teal-600 font-semibold">— Anjali M., Bachupally</p>
+                    </div>
+                `;
+            } else {
+                feedbacks.forEach(feedback => {
+                    const slide = document.createElement('div');
+                    slide.className = 'testimonial-slide bg-white p-6 rounded-lg shadow-md';
+                    slide.innerHTML = `
+                        <p class="text-gray-600 mb-4">"${feedback.description}"</p>
+                        <p class="text-teal-600 font-semibold">— ${feedback.name}, ${feedback.rating}★</p>
+                    `;
+                    testimonialSlider.appendChild(slide);
+                });
+            }
+
+            testimonials = document.querySelectorAll('.testimonial-slide');
+            showTestimonial(testimonialIndex);
+        }
         function showTestimonial(index) {
             testimonials.forEach((slide, i) => {
                 slide.classList.toggle('active', i === index);
@@ -707,81 +805,10 @@
             testimonialIndex = (testimonialIndex - 1 + testimonials.length) % testimonials.length;
             showTestimonial(testimonialIndex);
         }
-        showTestimonial(testimonialIndex);
         setInterval(nextTestimonial, 5000);
 
-        // Appointment Calendar
-        let currentMonth = new Date().getMonth();
-        let currentYear = new Date().getFullYear();
-        let selectedDate = null;
-
-        function generateCalendar(month, year) {
-            const calendar = document.getElementById('calendar');
-            const monthYear = document.getElementById('month-year');
-            const leaveDates = JSON.parse(localStorage.getItem('leaveDates') || '[]');
-
-            const firstDay = new Date(year, month).getDay();
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-            monthYear.textContent = `${new Date(year, month).toLocaleString('default', { month: 'long' })} ${year}`;
-            calendar.innerHTML = `
-                <div class="header">Sun</div>
-                <div class="header">Mon</div>
-                <div class="header">Tue</div>
-                <div class="header">Wed</div>
-                <div class="header">Thu</div>
-                <div class="header">Fri</div>
-                <div class="header">Sat</div>
-            `;
-
-            for (let i = 0; i < firstDay; i++) {
-                calendar.innerHTML += `<div></div>`;
-            }
-
-            for (let day = 1; day <= daysInMonth; day++) {
-                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                const isLeave = leaveDates.includes(dateStr);
-                calendar.innerHTML += `<div class="day ${isLeave ? 'leave' : ''}" data-date="${dateStr}">${day}</div>`;
-            }
-
-            document.querySelectorAll('.day').forEach(day => {
-                day.addEventListener('click', () => selectDate(day));
-            });
-        }
-
-        function prevMonth() {
-            currentMonth--;
-            if (currentMonth < 0) {
-                currentMonth = 11;
-                currentYear--;
-            }
-            generateCalendar(currentMonth, currentYear);
-        }
-
-        function nextMonth() {
-            currentMonth++;
-            if (currentMonth > 11) {
-                currentMonth = 0;
-                currentYear++;
-            }
-            generateCalendar(currentMonth, currentYear);
-        }
-
-        function selectDate(day) {
-            if (day.classList.contains('leave')) {
-                document.getElementById('error-message').style.display = 'block';
-                document.getElementById('appointment-date').value = '';
-                document.getElementById('time-slot').innerHTML = '<option value="" disabled selected>Select Time Slot</option>';
-                return;
-            }
-
-            document.getElementById('error-message').style.display = 'none';
-            document.querySelectorAll('.day').forEach(d => d.classList.remove('selected'));
-            day.classList.add('selected');
-            selectedDate = day.dataset.date;
-            document.getElementById('appointment-date').value = selectedDate;
-
-            // Populate time slots
+        // Appointment Handling
+        function populateTimeSlots() {
             const timeSlots = JSON.parse(localStorage.getItem('timeSlots') || '[]');
             const timeSlotSelect = document.getElementById('time-slot');
             timeSlotSelect.innerHTML = '<option value="" disabled selected>Select Time Slot</option>';
@@ -803,7 +830,8 @@
                 return;
             }
 
-            if (JSON.parse(localStorage.getItem('leaveDates') || '[]').includes(date)) {
+            const leaveDates = JSON.parse(localStorage.getItem('leaveDates') || '[]');
+            if (leaveDates.includes(date)) {
                 alert('Sorry, the doctor is on leave on this date. Please select another date.');
                 return;
             }
@@ -813,44 +841,14 @@
             document.getElementById('email').value = '';
             document.getElementById('phone').value = '';
             document.getElementById('appointment-date').value = '';
-            document.getElementById('time-slot').innerHTML = '<option value="" disabled selected>Select Time Slot</option>';
+            document.getElementById('time-slot').value = '';
             document.getElementById('message').value = '';
-            document.querySelectorAll('.day').forEach(d => d.classList.remove('selected'));
         }
 
-        // Load Treatments
-        function loadTreatments() {
-            const treatmentsGrid = document.getElementById('treatments-grid');
-            const treatments = JSON.parse(localStorage.getItem('treatments') || '[]');
-            treatmentsGrid.innerHTML = '';
-
-            if (treatments.length === 0) {
-                treatmentsGrid.innerHTML = '<p class="text-center text-gray-600">No treatments available at the moment.</p>';
-                return;
-            }
-
-            treatments.forEach(treatment => {
-                const treatmentCard = document.createElement('div');
-                treatmentCard.className = 'bg-white p-6 rounded-lg shadow-md text-center fade-in';
-                let mediaHTML = '';
-                if (treatment.video) {
-                    mediaHTML = `<video src="${treatment.video}" controls class="treatment-media"></video>`;
-                } else if (treatment.image) {
-                    mediaHTML = `<img src="${treatment.image}" alt="${treatment.title}" class="treatment-media" loading="lazy">`;
-                }
-                treatmentCard.innerHTML = `
-                    ${mediaHTML}
-                    <h3 class="text-xl font-semibold text-teal-600 mb-2">${treatment.title}</h3>
-                    <p class="text-gray-600 mb-2">${treatment.description}</p>
-                    <p class="text-gray-800 font-semibold">Price: ₹${treatment.price}</p>
-                `;
-                treatmentsGrid.appendChild(treatmentCard);
-            });
-        }
-
-        // Initialize Calendar and Treatments
-        generateCalendar(currentMonth, currentYear);
+        // Initialize Treatments, Testimonials, and Time Slots
         loadTreatments();
+        loadTestimonials();
+        populateTimeSlots();
     </script>
 </body>
 </html>
