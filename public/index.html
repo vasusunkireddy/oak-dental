@@ -90,7 +90,6 @@
             height: auto;
             object-fit: cover;
             border-radius: 8px;
-            loading: lazy;
         }
         @media (max-width: 768px) {
             img {
@@ -207,6 +206,8 @@
             min-height: 90vh;
             color: white;
             z-index: 0;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
         }
         #home::before {
             content: '';
@@ -586,24 +587,6 @@
             border-radius: 8px;
             border: 1px solid #d1d5db;
         }
-        .loading-spinner {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 50px;
-            height: 50px;
-            border: 5px solid #f3f4f6;
-            border-top: 5px solid #2563eb;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            z-index: 2000;
-        }
-        @keyframes spin {
-            0% { transform: translate(-50%, -50%) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotate(360deg); }
-        }
         #appointment-form {
             background: linear-gradient(135deg, #ffffff, #e6e6fa);
             border-radius: 12px;
@@ -628,6 +611,10 @@
             #appointment-form label {
                 font-size: 0.9rem;
             }
+            .payment-buttons {
+                flex-direction: column;
+                gap: 8px;
+            }
         }
         .alert-message {
             text-align: center;
@@ -642,6 +629,61 @@
             .alert-message {
                 font-size: 0.9rem;
                 padding: 0.75rem;
+            }
+        }
+        .newsletter-form-container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        #newsletter-form {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+        }
+        #newsletter-email {
+            width: 70%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px 0 0 8px;
+            font-size: 1rem;
+            color: #374151;
+            background-color: #fff;
+        }
+        #newsletter-form button {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0 8px 8px 0;
+            font-size: 1rem;
+        }
+        @media (max-width: 768px) {
+            .newsletter-form-container {
+                max-width: 100%;
+                padding: 0 1rem;
+            }
+            #newsletter-form {
+                flex-direction: row;
+                gap: 0;
+            }
+            #newsletter-email {
+                width: 65%;
+                padding: 0.5rem;
+                font-size: 0.9rem;
+            }
+            #newsletter-form button {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+        #appointment .chat-button {
+            display: none;
+        }
+        @media (max-width: 768px) {
+            #appointment .chat-button {
+                display: inline-flex;
+                position: fixed;
+                bottom: 10px;
+                right: 10px;
+                z-index: 1000;
             }
         }
     </style>
@@ -665,9 +707,6 @@
     </script>
 </head>
 <body class="bg-blue-50 antialiased">
-    <!-- Loading Spinner -->
-    <div id="loading-spinner" class="loading-spinner"></div>
-
     <!-- Navigation -->
     <nav class="bg-white text-gray-700 shadow-lg sticky top-0 z-50">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
@@ -690,7 +729,7 @@
                     <div class="dropdown-menu">
                         <a href="#testimonials" class="hover:text-blue-600" aria-label="Go to Testimonials section">Testimonials</a>
                         <a href="#virtual-tour" class="hover:text-blue-600" aria-label="Go to Virtual Tour section">Virtual Tour</a>
-                        <a href="#blog" class="hover:text-blue-600" aria-label="Go to Blog section">Blog</a>
+                        <a href="blogs.html" class="hover:text-blue-600" aria-label="Go to Blog section">Blog</a>
                         <a href="#faqs" class="hover:text-blue-600" aria-label="Go to FAQs section">FAQs</a>
                         <a href="#education" class="hover:text-blue-600" aria-label="Go to Patient Education section">Education</a>
                         <a href="#tips" class="hover:text-blue-600" aria-label="Go to Dental Care Tips section">Dental Care Tips</a>
@@ -896,7 +935,7 @@
                     <div class="p-6">
                         <h3 class="text-xl font-semibold mb-2 text-gray-800">Maintaining Oral Hygiene with Braces</h3>
                         <p class="text-gray-700 mb-4">Learn essential tips to keep your teeth clean while wearing braces, including brushing techniques and dietary advice.</p>
-                        <a href="blog.html#oral-hygiene-braces" class="btn inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" aria-label="Read more about maintaining oral hygiene with braces">Read More</a>
+                        <a href="blogs.html#oral-hygiene-braces" class="btn inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" aria-label="Read more about maintaining oral hygiene with braces">Read More</a>
                     </div>
                 </div>
                 <div class="blog-card bg-white rounded-lg shadow-md card">
@@ -904,7 +943,7 @@
                     <div class="p-6">
                         <h3 class="text-xl font-semibold mb-2 text-gray-800">Benefits of Dental Implants</h3>
                         <p class="text-gray-700 mb-4">Discover why dental implants are a long-lasting solution for missing teeth and how they can improve your quality of life.</p>
-                        <a href="blog.html#dental-implants-benefits" class="btn inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" aria-label="Read more about the benefits of dental implants">Read More</a>
+                        <a href="blogs.html#dental-implants-benefits" class="btn inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" aria-label="Read more about the benefits of dental implants">Read More</a>
                     </div>
                 </div>
                 <div class="blog-card bg-white rounded-lg shadow-md card">
@@ -912,12 +951,12 @@
                     <div class="p-6">
                         <h3 class="text-xl font-semibold mb-2 text-gray-800">Cosmetic Dentistry Trends in 2025</h3>
                         <p class="text-gray-700 mb-4">Explore the latest trends in cosmetic dentistry, from teeth whitening to veneers, and how they can enhance your smile.</p>
-                        <a href="blog.html#cosmetic-dentistry-trends" class="btn inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" aria-label="Read more about cosmetic dentistry trends in 2025">Read More</a>
+                        <a href="blogs.html#cosmetic-dentistry-trends" class="btn inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" aria-label="Read more about cosmetic dentistry trends in 2025">Read More</a>
                     </div>
                 </div>
             </div>
             <div class="text-center mt-8">
-                <a href="blog.html" class="btn inline-block bg-green-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-green-700 shadow-md" aria-label="Explore more dental health blogs">Know More</a>
+                <a href="blogs.html" class="btn inline-block bg-green-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-green-700 shadow-md" aria-label="Explore more dental health blogs">Know More</a>
             </div>
         </div>
     </section>
@@ -1027,6 +1066,9 @@
                     </div>
                 </div>
             </form>
+            <a href="https://wa.me/917569366767" target="_blank" class="chat-button" aria-label="Chat with OAK Dental Hospital on WhatsApp">
+                <i class="fab fa-whatsapp"></i>
+            </a>
         </div>
     </section>
 
@@ -1109,10 +1151,12 @@
             <p class="text-lg mb-4">© 2025 <span class="hospital-name">OAK Dental Hospital</span>. All rights reserved.</p>
             <div class="mb-4">
                 <h3 class="text-lg font-semibold mb-2">Stay Updated</h3>
-                <form id="newsletter-form" class="flex justify-center">
-                    <input type="email" id="newsletter-email" class="p-2 rounded-l-lg border-0 focus:outline-none shadow-sm" placeholder="Enter your email" required aria-required="true">
-                    <button type="button" onclick="subscribeNewsletter()" class="btn bg-blue-600 text-white p-2 rounded-r-lg hover:bg-blue-700" aria-label="Subscribe to newsletter">Subscribe</button>
-                </form>
+                <div class="newsletter-form-container">
+                    <form id="newsletter-form" class="flex justify-center">
+                        <input type="email" id="newsletter-email" class="p-2 rounded-l-lg border-0 focus:outline-none shadow-sm" placeholder="Enter your email" required aria-required="true">
+                        <button type="button" onclick="subscribeNewsletter()" class="btn bg-blue-600 text-white p-2 rounded-r-lg hover:bg-blue-700" aria-label="Subscribe to newsletter">Subscribe</button>
+                    </form>
+                </div>
             </div>
             <div class="flex justify-center space-x-4">
                 <a href="https://facebook.com" target="_blank" class="text-white hover:text-blue-300" aria-label="Visit OAK Dental Hospital on Facebook"><i class="fab fa-facebook-f text-2xl"></i></a>
@@ -1122,12 +1166,9 @@
         </div>
     </footer>
 
-    <!-- Sticky CTA and WhatsApp Buttons -->
+    <!-- Sticky CTA Button -->
     <div class="cta-container">
         <a href="#appointment" class="sticky-cta btn" aria-label="Book an appointment with OAK Dental Hospital">Book Appointment</a>
-        <a href="https://wa.me/917569366767" target="_blank" class="chat-button" aria-label="Chat with OAK Dental Hospital on WhatsApp">
-            <i class="fab fa-whatsapp"></i>
-        </a>
     </div>
 
     <!-- Tawk.to Live Chat with Pre-Chat Form -->
@@ -1174,7 +1215,13 @@
         });
 
         document.querySelectorAll('.nav-link, .dropdown-menu a').forEach(link => {
-            link.addEventListener('click', () => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href').substring(1);
+                const targetSection = document.getElementById(targetId);
+                if (targetSection) {
+                    targetSection.scrollIntoView({ behavior: 'smooth' });
+                }
                 menu.classList.remove('active');
                 menuOverlay.classList.remove('active');
                 document.body.style.overflow = '';
@@ -1191,15 +1238,6 @@
             });
         });
 
-        // Loading Spinner Control
-        function showSpinner() {
-            document.getElementById('loading-spinner').style.display = 'block';
-        }
-
-        function hideSpinner() {
-            document.getElementById('loading-spinner').style.display = 'none';
-        }
-
         // Carousel for Treatments
         let currentSlide = 0;
         let treatments = [];
@@ -1208,7 +1246,6 @@
 
         async function loadTreatments() {
             try {
-                showSpinner();
                 const response = await axios.get(`${API_URL}/treatments`, { timeout: 10000 });
                 treatments = response.data.slice(0, 6).filter(treatment => treatment.name && (treatment.image || treatment.video));
                 filteredTreatments = [...treatments];
@@ -1229,8 +1266,8 @@
                             ${treatment.offer ? `<p class="text-green-600 font-semibold">Offer: ${treatment.offer}</p>` : ''}
                         </div>
                         <div class="carousel-item-media">
-                            ${treatment.image ? `<img src="${API_URL}${treatment.image}" alt="${treatment.name} image" loading="lazy" onerror="this.src='https://via.placeholder.com/300x200?text=Image+Not+Found';">` : ''}
-                            ${treatment.video ? `<video controls><source src="${API_URL}${treatment.video}" type="video/mp4" onerror="this.parentElement.style.display='none';">Your browser does not support the video tag.</video>` : ''}
+                            ${treatment.image ? `<img src="${API_URL}${treatment.image}" alt="${treatment.name} image" style="width: 100%; height: auto; object-fit: cover; border-radius: 10px;" onerror="this.src='https://via.placeholder.com/300x200?text=Image+Not+Found';">` : ''}
+                            ${treatment.video ? `<video controls style="width: 100%; max-height: 250px; border-radius: 10px;"><source src="${API_URL}${treatment.video}" type="video/mp4" onerror="this.parentElement.style.display='none';">Your browser does not support the video tag.</video>` : ''}
                         </div>
                     `;
                     container.appendChild(div);
@@ -1250,8 +1287,6 @@
                 console.error('Error loading treatments:', error);
                 const container = document.getElementById('carousel-container');
                 container.innerHTML = '<p class="text-red-600 text-center alert-message">Failed to load treatments. Please try again later.</p>';
-            } finally {
-                hideSpinner();
             }
         }
 
@@ -1321,8 +1356,8 @@
                         ${treatment.offer ? `<p class="text-green-600 font-semibold">Offer: ${treatment.offer}</p>` : ''}
                     </div>
                     <div class="carousel-item-media">
-                        ${treatment.image ? `<img src="${API_URL}${treatment.image}" alt="${treatment.name} image" loading="lazy" onerror="this.src='https://via.placeholder.com/300x200?text=Image+Not+Found';">` : ''}
-                        ${treatment.video ? `<video controls><source src="${API_URL}${treatment.video}" type="video/mp4" onerror="this.parentElement.style.display='none';">Your browser does not support the video tag.</video>` : ''}
+                        ${treatment.image ? `<img src="${API_URL}${treatment.image}" alt="${treatment.name} image" style="width: 100%; height: auto; object-fit: cover; border-radius: 10px;" onerror="this.src='https://via.placeholder.com/300x200?text=Image+Not+Found';">` : ''}
+                        ${treatment.video ? `<video controls style="width: 100%; max-height: 250px; border-radius: 10px;"><source src="${API_URL}${treatment.video}" type="video/mp4" onerror="this.parentElement.style.display='none';">Your browser does not support the video tag.</video>` : ''}
                     </div>
                 `;
                 container.appendChild(div);
@@ -1333,7 +1368,6 @@
 
         async function loadAppointmentOptions() {
             try {
-                showSpinner();
                 const timesResponse = await axios.get(`${API_URL}/times`, { timeout: 10000 });
                 const times = timesResponse.data;
                 const timeSelect = document.getElementById('time');
@@ -1348,8 +1382,6 @@
                 console.error('Error loading appointment times:', error);
                 const timeSelect = document.getElementById('time');
                 timeSelect.innerHTML = '<option value="">Failed to load times</option>';
-            } finally {
-                hideSpinner();
             }
         }
 
@@ -1389,7 +1421,6 @@
 
         async function initiateGPayPayment(appointmentData) {
             try {
-                showSpinner();
                 const paymentDataRequest = { ...gpayButtonConfig };
                 paymentDataRequest.transactionInfo = {
                     totalPriceStatus: 'FINAL',
@@ -1407,8 +1438,6 @@
             } catch (error) {
                 console.error('Google Pay payment error:', error);
                 throw error;
-            } finally {
-                hideSpinner();
             }
         }
 
@@ -1428,7 +1457,6 @@
             const appointmentData = { name, email, phone, date, time, serviceId };
 
             try {
-                showSpinner();
                 let transactionResponse;
 
                 if (method === 'paypal') {
@@ -1468,536 +1496,229 @@
             } catch (error) {
                 console.error('Payment initiation error:', error);
                 alert('Payment failed. Please try again or contact support.', { class: 'alert-message bg-red-100 text-red-600' });
-            } finally {
-                hideSpinner();
             }
         }
 
-        async function handlePostPayment(transactionResponse, appointmentData) {
+                async function handlePostPayment(transactionResponse, appointmentData) {
             try {
-                showSpinner();
-                await sendNotifications(appointmentData, transactionResponse);
-
-                if (Notification.permission === 'granted') {
-                        new Notification('Appointment Confirmed', {
-                            body: `Thank you, ${appointmentData.name}! Your appointment is confirmed for ${appointmentData.date} at ${appointmentData.time}.`,
-                            icon: 'https://i.postimg.cc/50vXRG8K/ram.jpg'
-                        });
-                    } else if (Notification.permission !== 'denied') {
-                        Notification.requestPermission().then(permission => {
-                            if (permission === 'granted') {
-                                new Notification('Appointment Confirmed', {
-                                    body: `Thank you, ${appointmentData.name}! Your appointment is confirmed for ${appointmentData.date} at ${appointmentData.time}.`,
-                                    icon: 'https://i.postimg.cc/50vXRG8K/ram.jpg'
-                                });
-                            }
-                        });
-                    }
-
-                    alert(`Payment successful! Transaction ID: ${transactionResponse.transactionId}`, { class: 'alert-message bg-green-100 text-green-600' });
-                    document.getElementById('appointment-modal').style.display = 'flex';
-                    document.getElementById('appointment-form').reset();
-
-                    gtag('event', 'purchase', {
-                        'event_category': 'Payment',
-                        'event_label': 'Appointment Deposit',
-                        'value': 10
-                    });
-                } catch (error) {
-                    console.error('Error handling post-payment:', error);
-                    alert('Payment processed, but there was an issue with notifications. Please contact support.', { class: 'alert-message bg-red-100 text-red-600' });
-                } finally {
-                    hideSpinner();
-                }
+                await sendNotifications(appointmentData);
+                document.getElementById('appointment-modal').style.display = 'flex';
+                localStorage.setItem('appointment', JSON.stringify({ ...appointmentData, transactionId: transactionResponse.transactionId }));
+            } catch (error) {
+                console.error('Error post-payment:', error);
+                alert('Error confirming appointment. Please contact support.', { class: 'alert-message bg-red-100 text-red-600' });
             }
+        }
 
-            async function sendNotifications(appointmentData, transactionResponse) {
-                try {
-                    const emailResponse = await axios.post(`${API_URL}/send-email`, {
-                        to: appointmentData.email,
+        function closeModal() {
+            document.getElementById('appointment-modal').style.display = 'none';
+            document.getElementById('appointment-form').reset();
+        }
+
+        async function sendNotifications(appointmentData) {
+            try {
+                await Promise.all([
+                    axios.post(`${API_URL}/appointments`, appointmentData),
+                    axios.post(`${API_URL}/send-email`, {
+                        email: appointmentData.email,
                         subject: 'Appointment Confirmation - OAK Dental Hospital',
-                        body: `Dear ${appointmentData.name},\n\nYour appointment is confirmed for ${appointmentData.date} at ${appointmentData.time}.\nTransaction ID: ${transactionResponse.transactionId}\n\nThank you for choosing OAK Dental Hospital!\n\nBest regards,\nOAK Dental Team`
-                    });
+                        body: `Dear ${appointmentData.name},\n\nYour appointment has been confirmed for ${appointmentData.date} at ${appointmentData.time}.\n\nThank you for choosing OAK Dental Hospital!`
+                    }),
+                    axios.post(`${API_URL}/send-sms`, {
+                        phone: appointmentData.phone,
+                        message: `Dear ${appointmentData.name}, your appointment at OAK Dental Hospital is confirmed for ${appointmentData.date} at ${appointmentData.time}.`
+                    })
+                ]);
+            } catch (error) {
+                console.error('Error sending notifications:', error);
+                throw error;
+            }
+        }
 
-                    const smsResponse = await axios.post(`${API_URL}/send-sms`, {
-                        to: appointmentData.phone,
-                        message: `Dear ${appointmentData.name}, your appointment at OAK Dental Hospital is confirmed for ${appointmentData.date} at ${appointmentData.time}. Transaction ID: ${transactionResponse.transactionId}.`
-                    });
-
-                    if (emailResponse.status !== 200 || smsResponse.status !== 200) {
-                        throw new Error('Failed to send notifications');
-                    }
-                } catch (error) {
-                    console.error('Error sending notifications:', error);
-                    throw error;
+        async function checkStatus() {
+            const email = document.getElementById('status-email').value;
+            if (!email) {
+                document.getElementById('status-result').innerHTML = '<p class="text-red-600 alert-message">Please enter your email.</p>';
+                return;
+            }
+            try {
+                const response = await axios.get(`${API_URL}/appointments?email=${email}`, { timeout: 10000 });
+                const appointments = response.data;
+                const resultDiv = document.getElementById('status-result');
+                if (appointments.length === 0) {
+                    resultDiv.innerHTML = '<p class="text-gray-700 alert-message">No appointments found for this email.</p>';
+                } else {
+                    resultDiv.innerHTML = appointments.map(app => `
+                        <div class="bg-white p-4 rounded-lg shadow-md mb-4">
+                            <p><strong>Name:</strong> ${app.name}</p>
+                            <p><strong>Date:</strong> ${app.date}</p>
+                            <p><strong>Time:</strong> ${app.time}</p>
+                            <p><strong>Service:</strong> ${treatments.find(t => t.id === app.serviceId)?.name || 'Unknown'}</p>
+                        </div>
+                    `).join('');
                 }
+            } catch (error) {
+                console.error('Error checking status:', error);
+                document.getElementById('status-result').innerHTML = '<p class="text-red-600 alert-message">Failed to check status. Please try again later.</p>';
+            }
+        }
+
+        async function cancelAppointment() {
+            const email = document.getElementById('status-email').value;
+            if (!email) {
+                document.getElementById('status-result').innerHTML = '<p class="text-red-600 alert-message">Please enter your email.</p>';
+                return;
+            }
+            try {
+                const response = await axios.delete(`${API_URL}/appointments?email=${email}`, { timeout: 10000 });
+                document.getElementById('status-result').innerHTML = '<p class="text-green-600 alert-message">Appointment cancelled successfully.</p>';
+            } catch (error) {
+                console.error('Error cancelling appointment:', error);
+                document.getElementById('status-result').innerHTML = '<p class="text-red-600 alert-message">Failed to cancel appointment. Please try again later.</p>';
+            }
+        }
+
+        async function submitContact() {
+            const name = document.getElementById('contact-name').value;
+            const email = document.getElementById('contact-email').value;
+            const message = document.getElementById('message').value;
+
+            if (!name || !email || !message) {
+                alert('Please fill all fields in the contact form.', { class: 'alert-message bg-red-100 text-red-600' });
+                return;
             }
 
-            function closeModal() {
-                document.getElementById('appointment-modal').style.display = 'none';
+            try {
+                await axios.post(`${API_URL}/contact`, { name, email, message });
+                alert('Message sent successfully!', { class: 'alert-message bg-green-100 text-green-600' });
+                document.getElementById('contact-form').reset();
+            } catch (error) {
+                console.error('Error submitting contact form:', error);
+                alert('Failed to send message. Please try again later.', { class: 'alert-message bg-red-100 text-red-600' });
+            }
+        }
+
+        async function submitFeedback() {
+            const name = document.getElementById('feedback-name').value;
+            const rating = document.querySelector('input[name="rating"]:checked')?.value;
+            const description = document.getElementById('feedback-description').value;
+
+            if (!name || !rating || !description) {
+                alert('Please fill all fields in the feedback form.', { class: 'alert-message bg-red-100 text-red-600' });
+                return;
             }
 
-            async function checkStatus() {
-                const email = document.getElementById('status-email').value;
-                if (!email) {
-                    alert('Please enter your email to check appointment status.', { class: 'alert-message bg-red-100 text-red-600' });
-                    return;
-                }
-
-                try {
-                    showSpinner();
-                    const response = await axios.get(`${API_URL}/appointments?email=${email}`, { timeout: 10000 });
-                    const statusResult = document.getElementById('status-result');
-
-                    if (response.data.length === 0) {
-                        statusResult.innerHTML = '<p class="text-red-600 alert-message">No appointments found for this email.</p>';
-                        return;
-                    }
-
-                    statusResult.innerHTML = '';
-                    response.data.forEach(appointment => {
-                        const appointmentCard = document.createElement('div');
-                        appointmentCard.className = 'status-card mt-4';
-                        appointmentCard.innerHTML = `
-                            <p class="text-gray-700"><strong>Name:</strong> ${appointment.name}</p>
-                            <p class="text-gray-700"><strong>Date:</strong> ${appointment.date}</p>
-                            <p class="text-gray-700"><strong>Time:</strong> ${appointment.time}</p>
-                            <p class="text-gray-700"><strong>Service:</strong> ${appointment.service}</p>
-                            <p class="text-gray-700"><strong>Status:</strong> ${appointment.status || 'Confirmed'}</p>
-                        `;
-                        statusResult.appendChild(appointmentCard);
-                    });
-                } catch (error) {
-                    console.error('Error checking appointment status:', error);
-                    document.getElementById('status-result').innerHTML = '<p class="text-red-600 alert-message">Failed to check appointment status. Please try again later.</p>';
-                } finally {
-                    hideSpinner();
-                }
-            }
-
-            async function cancelAppointment() {
-                const email = document.getElementById('status-email').value;
-                if (!email) {
-                    alert('Please enter your email to cancel an appointment.', { class: 'alert-message bg-red-100 text-red-600' });
-                    return;
-                }
-
-                try {
-                    showSpinner();
-                    const response = await axios.delete(`${API_URL}/appointments?email=${email}`, { timeout: 10000 });
-                    const statusResult = document.getElementById('status-result');
-
-                    if (response.status === 200) {
-                        statusResult.innerHTML = '<p class="text-green-600 alert-message">Appointment cancelled successfully.</p>';
-                    } else {
-                        statusResult.innerHTML = '<p class="text-red-600 alert-message">No appointments found to cancel.</p>';
-                    }
-                } catch (error) {
-                    console.error('Error cancelling appointment:', error);
-                    document.getElementById('status-result').innerHTML = '<p class="text-red-600 alert-message">Failed to cancel appointment. Please try again later.</p>';
-                } finally {
-                    hideSpinner();
-                }
-            }
-
-            async function submitContact() {
-                const name = document.getElementById('contact-name').value;
-                const email = document.getElementById('contact-email').value;
-                const message = document.getElementById('message').value;
-
-                if (!name || !email || !message) {
-                    alert('Please fill all fields in the contact form.', { class: 'alert-message bg-red-100 text-red-600' });
-                    return;
-                }
-
-                try {
-                    showSpinner();
-                    const response = await axios.post(`${API_URL}/contact`, { name, email, message }, { timeout: 10000 });
-
-                    if (response.status === 200) {
-                        alert('Message sent successfully! We will get back to you soon.', { class: 'alert-message bg-green-100 text-green-600' });
-                        document.getElementById('contact-form').reset();
-                    }
-                } catch (error) {
-                    console.error('Error submitting contact form:', error);
-                    alert('Failed to send message. Please try again later.', { class: 'alert-message bg-red-100 text-red-600' });
-                } finally {
-                    hideSpinner();
-                }
-            }
-
-            async function subscribeNewsletter() {
-                const email = document.getElementById('newsletter-email').value;
-
-                if (!email) {
-                    alert('Please enter your email to subscribe.', { class: 'alert-message bg-red-100 text-red-600' });
-                    return;
-                }
-
-                try {
-                    showSpinner();
-                    const response = await axios.post(`${API_URL}/newsletter`, { email }, { timeout: 10000 });
-
-                    if (response.status === 200) {
-                        alert('Subscribed successfully! Stay tuned for updates.', { class: 'alert-message bg-green-100 text-green-600' });
-                        document.getElementById('newsletter-email').value = '';
-                    }
-                } catch (error) {
-                    console.error('Error subscribing to newsletter:', error);
-                    alert('Failed to subscribe. Please try again later.', { class: 'alert-message bg-red-100 text-red-600' });
-                } finally {
-                    hideSpinner();
-                }
-            }
-
-            function callClinic() {
-                window.location.href = 'tel:+917569366767';
-            }
-
-            function toggleFAQ(element) {
-                const faqItem = element.parentElement;
-                const isActive = faqItem.classList.contains('active');
-                document.querySelectorAll('.faq-item').forEach(item => {
-                    item.classList.remove('active');
-                    item.querySelector('h3').setAttribute('aria-expanded', 'false');
-                    item.querySelector('.faq-answer').style.display = 'none';
-                    item.querySelector('.fas').classList.remove('fa-chevron-up');
-                    item.querySelector('.fas').classList.add('fa-chevron-down');
+            try {
+                const response = await axios.post(`${API_URL}/feedback`, {
+                    name,
+                    rating,
+                    description,
+                    date: new Date().toISOString()
                 });
-
-                if (!isActive) {
-                    faqItem.classList.add('active');
-                    element.setAttribute('aria-expanded', 'true');
-                    faqItem.querySelector('.faq-answer').style.display = 'block';
-                    element.querySelector('.fas').classList.remove('fa-chevron-down');
-                    element.querySelector('.fas').classList.add('fa-chevron-up');
-                }
-            }
-
-            async function submitFeedback() {
-                const name = document.getElementById('feedback-name').value;
-                const rating = document.querySelector('input[name="rating"]:checked')?.value;
-                const description = document.getElementById('feedback-description').value;
-                const date = new Date().toISOString();
-
-                if (!name || !rating || !description) {
-                    alert('Please fill all fields to submit feedback.', { class: 'alert-message bg-red-100 text-red-600' });
-                    return;
-                }
-
-                try {
-                    showSpinner();
-                    const response = await axios.post(`${API_URL}/feedback`, { name, rating, description, date }, { timeout: 10000 });
-
-                    if (response.status === 200 || response.status === 201) {
-                        alert('Thank you for your valuable feedback!', { class: 'alert-message bg-green-100 text-green-600' });
-                        document.getElementById('feedback-name').value = '';
-                        document.getElementById('feedback-description').value = '';
-                        document.querySelector('input[name="rating"]:checked').checked = false;
-                        loadFeedback();
-                    }
-                } catch (error) {
-                    console.error('Error submitting feedback:', error);
-                    alert('Failed to submit feedback. Please try again later.', { class: 'alert-message bg-red-100 text-red-600' });
-                } finally {
-                    hideSpinner();
-                }
-            }
-
-            async function loadFeedback() {
-                try {
-                    showSpinner();
-                    const response = await axios.get(`${API_URL}/feedback`, { timeout: 10000 });
-                    const feedbackList = document.getElementById('feedback-list');
-                    feedbackList.innerHTML = '';
-
-                    if (response.data.length === 0) {
-                        feedbackList.innerHTML = '<p class="text-gray-700 text-center alert-message">No feedback available yet.</p>';
-                        return;
-                    }
-
-                    response.data.forEach(feedback => {
-                        const stars = '★'.repeat(feedback.rating) + '☆'.repeat(5 - feedback.rating);
-                        const feedbackCard = document.createElement('div');
-                        feedbackCard.className = 'feedback-card';
-                        feedbackCard.innerHTML = `
-                            <div class="feedback-stars">${stars}</div>
-                            <p class="text-gray-700 mb-2">"${feedback.description}"</p>
-                            <p class="text-gray-600 font-semibold">— ${feedback.name}</p>
-                            <p class="text-gray-500 text-sm">${new Date(feedback.date).toLocaleDateString()}</p>
-                        `;
-                        feedbackList.appendChild(feedbackCard);
-                    });
-                } catch (error) {
-                    console.error('Error loading feedback:', error);
-                    const feedbackList = document.getElementById('feedback-list');
-                    feedbackList.innerHTML = '<p class="text-red-600 text-center alert-message">Failed to load feedback. Please try again later.</p>';
-                } finally {
-                    hideSpinner();
-                }
-            }
-
-            async function downloadPDF(type) {
-                try {
-                    showSpinner();
-                    let content;
-                    if (type === 'braces-guide') {
-                        content = `
-                            \\documentclass{article}
-                            \\usepackage[utf8]{inputenc}
-                            \\usepackage{geometry}
-                            \\geometry{a4paper, margin=1in}
-                            \\title{Guide to Braces}
-                            \\author{OAK Dental Hospital}
-                            \\date{May 2025}
-
-                            \\begin{document}
-
-                            \\begin{center}
-                            \\textbf{\\Large OAK Dental Hospital}\\\\
-                            \\vspace{0.2cm}
-                            2nd Floor, Vision Apartments, Gandhi Nagar, Nizampet Road, Bachupally, Hyderabad - 500090\\\\
-                            Phone: +91 7569 366 767
-                            \\end{center}
-
-                            \\maketitle
-
-                            \\section*{Introduction}
-                            At OAK Dental Hospital, we understand that getting braces is a significant step towards a healthier, more confident smile. This guide provides essential tips to help you care for your braces and maintain excellent oral hygiene during your treatment.
-
-                            \\section*{Daily Care Tips}
-                            \\begin{itemize}
-                                \\item \\textbf{Brushing:} Brush your teeth at least twice a day using a soft-bristled toothbrush. Pay extra attention to the areas around brackets and wires.
-                                \\item \\textbf{Flossing:} Floss daily to remove food particles and plaque from between teeth and under the gumline. Use floss threaders or interdental brushes for easier access.
-                                \\item \\textbf{Mouthwash:} Rinse with an antimicrobial mouthwash to reduce bacteria and keep your mouth fresh.
-                            \\end{itemize}
-
-                            \\section*{Foods to Avoid}
-                            \\begin{itemize}
-                                \\item \\textbf{Sticky Foods:} Avoid chewing gum, caramel, and toffee, as they can get stuck in your braces and cause damage.
-                                \\item \\textbf{Hard Foods:} Nuts, hard candies, and popcorn can break brackets or wires. Opt for softer alternatives.
-                                \\item \\textbf{Sugary Foods:} Limit sugary snacks and drinks to prevent cavities, as braces can trap food particles.
-                            \\end{itemize}
-
-                            \\section*{Handling Discomfort}
-                            \\begin{itemize}
-                                \\item \\textbf{Wax:} Use orthodontic wax to cover any brackets or wires that irritate your cheeks or gums.
-                                \\item \\textbf{Pain Relief:} Over-the-counter pain relievers like ibuprofen can help with initial soreness. Consult your dentist if discomfort persists.
-                                \\item \\textbf{Emergencies:} If a bracket breaks or a wire pokes out, contact OAK Dental Hospital immediately at +91 7569 366 767.
-                            \\end{itemize}
-
-                            \\section*{Regular Check-ups}
-                            Schedule regular appointments with your orthodontist at OAK Dental Hospital to monitor your progress and make necessary adjustments. Typically, you’ll need to visit every 4-6 weeks.
-
-                            \\section*{Conclusion}
-                            Caring for your braces requires diligence, but the result—a beautiful, straight smile—is worth it! For any questions or concerns, feel free to reach out to us at OAK Dental Hospital. We’re here to support you every step of the way.
-
-                            \\end{document}
-                        `;
-                    } else if (type === 'implant-aftercare') {
-                        content = `
-                            \\documentclass{article}
-                            \\usepackage[utf8]{inputenc}
-                            \\usepackage{geometry}
-                            \\geometry{a4paper, margin=1in}
-                            \\title{Implant Aftercare}
-                            \\author{OAK Dental Hospital}
-                            \\date{May 2025}
-
-                            \\begin{document}
-
-                            \\begin{center}
-                            \\textbf{\\Large OAK Dental Hospital}\\\\
-                            \\vspace{0.2cm}
-                            2nd Floor, Vision Apartments, Gandhi Nagar, Nizampet Road, Bachupally, Hyderabad - 500090\\\\
-                            Phone: +91 7569 366 767
-                            \\end{center}
-
-                            \\maketitle
-
-                            \\section*{Introduction}
-                            Congratulations on your new dental implant from OAK Dental Hospital! Proper aftercare is crucial to ensure the longevity and success of your implant. This guide provides tips to help you recover and maintain your implant effectively.
-
-                            \\section*{Immediate Post-Surgery Care}
-                            \\begin{itemize}
-                                \\item \\textbf{Rest:} Avoid strenuous activities for at least 48 hours after surgery to promote healing.
-                                \\item \\textbf{Ice Packs:} Apply ice packs to the outside of your cheek for 15-minute intervals to reduce swelling.
-                                \\item \\textbf{Medication:} Take prescribed antibiotics and pain relievers as directed by your dentist to prevent infection and manage discomfort.
-                            \\end{itemize}
-
-                            \\section*{Oral Hygiene}
-                            \\begin{itemize}
-                                \\item \\textbf{Gentle Cleaning:} Brush gently around the implant site with a soft-bristled toothbrush. Avoid the surgical area for the first few days.
-                                \\item \\textbf{Rinsing:} Rinse your mouth with a saltwater solution (1 tsp salt in a glass of warm water) 2-3 times a day to keep the area clean.
-                                \\item \\textbf{Avoid Irritation:} Do not touch the implant site with your fingers or tongue to prevent infection.
-                            \\end{itemize}
-
-                            \\section*{Dietary Guidelines}
-                            \\begin{itemize}
-                                \\item \\textbf{Soft Foods:} Stick to soft foods like yogurt, mashed potatoes, and smoothies for the first week.
-                                \\item \\textbf{Avoid Hot Foods:} Avoid hot foods and drinks for the first 48 hours to prevent irritation.
-                                \\item \\textbf{Stay Hydrated:} Drink plenty of water, but avoid using a straw, as the suction can dislodge the blood clot.
-                            \\end{itemize}
-
-                            \\section*{Long-Term Maintenance}
-                            \\begin{itemize}
-                                \\item \\textbf{Regular Brushing:} Brush twice daily and floss around the implant to prevent plaque buildup.
-                                \\item \\textbf{Dental Visits:} Schedule regular check-ups with OAK Dental Hospital to monitor the health of your implant.
-                                \\item \\textbf{Avoid Hard Chewing:} Avoid chewing on hard objects like ice or pens, which can damage the implant.
-                            \\end{itemize}
-
-                            \\section*{When to Contact Us}
-                            If you experience severe pain, excessive bleeding, or signs of infection (redness, swelling, or pus), contact OAK Dental Hospital immediately at +91 7569 366 767.
-
-                            \\section*{Conclusion}
-                            With proper care, your dental implant can last a lifetime. The team at OAK Dental Hospital is here to support you throughout your recovery and beyond. Feel free to reach out with any questions!
-
-                            \\end{document}
-                        `;
-                    } else if (type === 'kids-dental-care') {
-                        content = `
-                            \\documentclass{article}
-                            \\usepackage[utf8]{inputenc}
-                            \\usepackage{geometry}
-                            \\geometry{a4paper, margin=1in}
-                            \\title{Kids' Dental Care}
-                            \\author{OAK Dental Hospital}
-                            \\date{May 2025}
-
-                            \\begin{document}
-
-                            \\begin{center}
-                            \\textbf{\\Large OAK Dental Hospital}\\\\
-                            \\vspace{0.2cm}
-                            2nd Floor, Vision Apartments, Gandhi Nagar, Nizampet Road, Bachupally, Hyderabad - 500090\\\\
-                            Phone: +91 7569 366 767
-                            \\end{center}
-
-                            \\maketitle
-
-                            \\section*{Introduction}
-                            At OAK Dental Hospital, we believe that establishing good dental habits early sets the foundation for a lifetime of healthy smiles. This guide offers tips to help parents ensure their children’s teeth remain strong and healthy from infancy to adolescence.
-
-                            \\section*{Infant Dental Care}
-                            \\begin{itemize}
-                                \\item \\textbf{Clean Gums:} Even before teeth emerge, clean your baby’s gums with a soft, damp cloth after feedings.
-                                \\item \\textbf{First Tooth:} Once the first tooth appears (usually between 6-12 months), start brushing with a small, soft-bristled toothbrush and a rice-grain-sized amount of fluoride toothpaste.
-                                \\item \\textbf{Avoid Bottle Decay:} Don’t let your baby sleep with a bottle of milk or juice, as it can lead to tooth decay.
-                            \\end{itemize}
-
-                            \\section*{Toddler and Preschooler Care}
-                            \\begin{itemize}
-                                \\item \\textbf{Brushing Routine:} Brush your child’s teeth twice daily with a pea-sized amount of fluoride toothpaste. Supervise until they can brush effectively on their own (around age 6).
-                                \\item \\textbf{Flossing:} Start flossing once your child’s teeth touch each other to remove food particles and plaque.
-                                \\item \\textbf{Dental Visits:} Schedule your child’s first dental visit by their first birthday or within 6 months of their first tooth erupting. Regular check-ups at OAK Dental Hospital help catch issues early.
-                            \\end{itemize}
-
-                            \\section*{School-Age Children}
-                            \\begin{itemize}
-                                \\item \\textbf{Healthy Snacks:} Encourage healthy snacks like fruits and vegetables instead of sugary treats to reduce the risk of cavities.
-                                \\item \\textbf{Mouthguards:} If your child plays sports, ensure they wear a mouthguard to protect their teeth from injury.
-                                \\item \\textbf{Sealants:} Ask your dentist at OAK Dental Hospital about dental sealants, which can protect molars from cavities.
-                            \\end{itemize}
-
-                            \\section*{Encouraging Good Habits}
-                            \\begin{itemize}
-                                \\item \\textbf{Make It Fun:} Use flavored toothpaste or a toothbrush with their favorite character to make brushing enjoyable.
-                                \\item \\textbf{Lead by Example:} Brush and floss alongside your child to model good habits.
-                                \\item \\textbf{Reward System:} Create a reward chart for consistent brushing and flossing to motivate your child.
-                            \\end{itemize}
-
-                            \\section*{When to Contact Us}
-                            If your child experiences tooth pain, sensitivity, or has a dental injury, contact OAK Dental Hospital at +91 7569 366 767 for prompt care.
-
-                            \\section*{Conclusion}
-                            Healthy dental habits start early, and OAK Dental Hospital is here to support your child’s oral health journey. Schedule a visit today to ensure your child’s smile stays bright and healthy!
-
-                            \\end{document}
-                        `;
-                    }
-
-                    const response = await axios.post(`${API_URL}/generate-pdf`, { content }, { responseType: 'blob', timeout: 15000 });
-                    const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
-                    const link = document.createElement('a');
-                    link.href = url;
-                    link.setAttribute('download', `${type}.pdf`);
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                } catch (error) {
-                    console.error('Error generating PDF:', error);
-                    alert('Failed to generate PDF. Please try again later.', { class: 'alert-message bg-red-100 text-red-600' });
-                } finally {
-                    hideSpinner();
-                }
-            }
-
-            // Admin Link Visibility (Assuming admin is logged in based on a token or session)
-            function checkAdminStatus() {
-                const adminToken = localStorage.getItem('adminToken'); // Replace with actual auth mechanism
-                const adminLink = document.getElementById('admin-link');
-                if (adminToken) {
-                    adminLink.classList.remove('hidden');
-                }
-            }
-
-            // Custom Alert Function for Consistent Styling
-            function alert(message, options = {}) {
-                const defaultClass = 'alert-message bg-blue-100 text-blue-600';
-                const alertClass = options.class || defaultClass;
-                const tempDiv = document.createElement('div');
-                tempDiv.className = alertClass;
-                tempDiv.textContent = message;
-                document.body.appendChild(tempDiv);
-                setTimeout(() => {
-                    tempDiv.remove();
-                }, 3000);
-            }
-
-            // Initialize on Page Load
-            window.onload = () => {
-                loadTreatments();
-                loadAppointmentOptions();
+                alert('Feedback submitted successfully!', { class: 'alert-message bg-green-100 text-green-600' });
+                document.querySelector('.feedback-form').reset();
                 loadFeedback();
-                checkAdminStatus();
-
-                // Google Pay Button Setup
-                const gpayButton = document.getElementById('gpay-button-container');
-                gpayButton.addEventListener('click', () => initiatePayment('gpay'));
-
-                // PayPal Button Setup
-                document.getElementById('paypal-button-container').addEventListener('click', () => initiatePayment('paypal'));
-
-                // Set minimum date for appointment to today
-                const today = new Date().toISOString().split('T')[0];
-                document.getElementById('date').setAttribute('min', today);
-
-                // Keyboard Accessibility for FAQs
-                document.querySelectorAll('.faq-item h3').forEach(faq => {
-                    faq.addEventListener('keydown', (e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                            e.preventDefault();
-                            toggleFAQ(faq);
-                        }
-                    });
-                });
-
-                // Lazy Loading for Images
-                document.querySelectorAll('img[loading="lazy"]').forEach(img => {
-                    img.onerror = () => {
-                        img.src = 'https://via.placeholder.com/300x200?text=Image+Not+Found';
-                    };
-                });
-            };
-
-            // Service Worker Registration
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('/sw.js').then(reg => {
-                    console.log('Service Worker registered:', reg);
-                }).catch(err => {
-                    console.error('Service Worker registration failed:', err);
-                });
+            } catch (error) {
+                console.error('Error submitting feedback:', error);
+                alert('Failed to submit feedback. Please try again later.', { class: 'alert-message bg-red-100 text-red-600' });
             }
-        </script>
-    </body>
+        }
+
+        async function loadFeedback() {
+            try {
+                const response = await axios.get(`${API_URL}/feedback`, { timeout: 10000 });
+                const feedbackList = response.data.slice(0, 4);
+                const feedbackDiv = document.getElementById('feedback-list');
+                feedbackDiv.innerHTML = '';
+                feedbackList.forEach(f => {
+                    const stars = '★'.repeat(f.rating) + '☆'.repeat(5 - f.rating);
+                    feedbackDiv.innerHTML += `
+                        <div class="feedback-card">
+                            <p class="feedback-stars">${stars}</p>
+                            <p class="text-gray-700 mb-2">"${f.description}"</p>
+                            <p class="text-gray-500 text-sm">- ${f.name}, ${new Date(f.date).toLocaleDateString()}</p>
+                        </div>
+                    `;
+                });
+            } catch (error) {
+                console.error('Error loading feedback:', error);
+                document.getElementById('feedback-list').innerHTML = '<p class="text-red-600 text-center alert-message">Failed to load feedback. Please try again later.</p>';
+            }
+        }
+
+        function toggleFAQ(element) {
+            const faqItem = element.parentElement;
+            const answer = faqItem.querySelector('.faq-answer');
+            const isActive = faqItem.classList.contains('active');
+            document.querySelectorAll('.faq-item').forEach(item => {
+                item.classList.remove('active');
+                item.querySelector('.faq-answer').style.display = 'none';
+                item.querySelector('h3').setAttribute('aria-expanded', 'false');
+            });
+            if (!isActive) {
+                faqItem.classList.add('active');
+                answer.style.display = 'block';
+                element.setAttribute('aria-expanded', 'true');
+            }
+        }
+
+        async function subscribeNewsletter() {
+            const email = document.getElementById('newsletter-email').value;
+            if (!email) {
+                alert('Please enter your email to subscribe.', { class: 'alert-message bg-red-100 text-red-600' });
+                return;
+            }
+            try {
+                await axios.post(`${API_URL}/newsletter`, { email });
+                alert('Subscribed successfully!', { class: 'alert-message bg-green-100 text-green-600' });
+                document.getElementById('newsletter-email').value = '';
+            } catch (error) {
+                console.error('Error subscribing to newsletter:', error);
+                alert('Failed to subscribe. Please try again later.', { class: 'alert-message bg-red-100 text-red-600' });
+            }
+        }
+
+        function callClinic() {
+            window.location.href = 'tel:+917569366767';
+        }
+
+        function downloadPDF(type) {
+            const pdfLinks = {
+                'braces-guide': 'https://example.com/pdfs/braces-guide.pdf',
+                'implant-aftercare': 'https://example.com/pdfs/implant-aftercare.pdf',
+                'kids-dental-care': 'https://example.com/pdfs/kids-dental-care.pdf'
+            };
+            const link = document.createElement('a');
+            link.href = pdfLinks[type];
+            link.download = `${type}.pdf`;
+            link.click();
+        }
+
+        function alert(message, options = {}) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `fixed top-4 left-1/2 transform -translate-x-1/2 p-4 rounded-lg shadow-lg ${options.class || 'bg-green-100 text-green-600'}`;
+            alertDiv.innerHTML = message;
+            document.body.appendChild(alertDiv);
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 3000);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTreatments();
+            loadAppointmentOptions();
+            loadFeedback();
+
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('date').setAttribute('min', today);
+
+            const userRole = localStorage.getItem('userRole');
+            if (userRole === 'admin') {
+                document.getElementById('admin-link').classList.remove('hidden');
+            }
+
+            document.getElementById('gpay-button-container').addEventListener('click', () => initiatePayment('gpay'));
+        });
+    </script>
+</body>
 </html>

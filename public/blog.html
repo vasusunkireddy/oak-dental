@@ -3,15 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Read the latest dental health tips and articles from OAK Dental Hospital. Learn about oral hygiene, root canals, dental implants, and more.">
-    <meta name="keywords" content="dental health blog, oral hygiene tips, root canal procedure, dental implants, OAK Dental Hospital">
+    <meta name="description" content="Read the latest dental health blogs from OAK Dental Hospital. Learn about oral hygiene, dental implants, cosmetic dentistry, and more.">
+    <meta name="keywords" content="dental health blogs, oral hygiene, dental implants, cosmetic dentistry, OAK Dental Hospital">
     <meta name="author" content="OAK Dental Hospital">
-    <title>Dental Health Blog - OAK Dental Hospital</title>
+    <!-- Open Graph Tags for Social Media Sharing -->
+    <meta property="og:title" content="Dental Health Blogs - OAK Dental Hospital">
+    <meta property="og:description" content="Explore expert dental health blogs on oral hygiene, dental implants, cosmetic dentistry trends, and more at OAK Dental Hospital.">
+    <meta property="og:image" content="https://i.postimg.cc/50vXRG8K/ram.jpg">
+    <meta property="og:url" content="https://oak-dental.onrender.com/blogs.html">
+    <meta property="og:type" content="website">
+    <title>Dental Health Blogs - OAK Dental Hospital</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YOUR_TRACKING_ID"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-YOUR_TRACKING_ID');
+    </script>
     <style>
         body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8fafc;
+        }
+        h1, h2, h3, .hospital-name {
             font-family: 'Poppins', sans-serif;
         }
         .logo-img {
@@ -19,6 +36,10 @@
             height: 60px;
             object-fit: contain;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .logo-img:hover {
+            transform: scale(1.1);
         }
         @media (max-width: 768px) {
             .logo-img {
@@ -30,24 +51,48 @@
             background: linear-gradient(90deg, #1e3a8a, #facc15);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            font-weight: 700;
+            font-weight: 800;
             transition: transform 0.3s ease;
+            color: #1e3a8a;
+        }
+        @media (max-width: 768px) {
+            .hospital-name {
+                font-size: 1.5rem;
+                background: none;
+                -webkit-text-fill-color: #1e3a8a;
+                color: #1e3a8a;
+                text-align: center;
+                display: block;
+                margin: 0 auto;
+            }
         }
         .hospital-name:hover {
             transform: scale(1.05);
         }
-        .nav-link, .btn {
-            transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+        .btn {
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
         }
-        .nav-link:hover, .btn:hover {
+        .btn:hover {
             transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .btn.bg-blue-600 {
+            background-color: #2563eb;
+        }
+        .btn.bg-blue-600:hover {
+            background-color: #1e40af;
         }
         img {
             max-width: 100%;
             height: auto;
             object-fit: cover;
             border-radius: 8px;
-            loading: lazy;
+        }
+        @media (max-width: 768px) {
+            img {
+                height: 150px;
+                object-fit: cover;
+            }
         }
         .section-animate {
             opacity: 0;
@@ -63,79 +108,214 @@
         html {
             scroll-behavior: smooth;
         }
+        .blog-post {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .blog-post img {
+            width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        .blog-post h2 {
+            color: #1e3a8a;
+            font-weight: 600;
+        }
+        .blog-post h3 {
+            color: #374151;
+            font-weight: 500;
+        }
+        @media (max-width: 768px) {
+            .blog-post {
+                padding: 1.5rem;
+            }
+            .blog-post img {
+                max-height: 200px;
+            }
+            .blog-post h2 {
+                font-size: 1.5rem;
+            }
+            .blog-post h3 {
+                font-size: 1.25rem;
+            }
+        }
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: #2563eb;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .back-button:hover {
+            background-color: #1e40af;
+            transform: scale(1.05);
+        }
+        .cta-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
+        }
+        .chat-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #25D366;
+            color: white;
+            padding: 12px;
+            font-size: 18px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .chat-button:hover {
+            background-color: #20b558;
+            transform: scale(1.05);
+        }
+        @media (max-width: 768px) {
+            .cta-container {
+                bottom: 10px;
+                right: 10px;
+            }
+            .chat-button {
+                width: 45px;
+                height: 45px;
+                font-size: 16px;
+            }
+        }
     </style>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Blog",
+        "name": "Dental Health Blogs - OAK Dental Hospital",
+        "description": "Explore expert dental health blogs on oral hygiene, dental implants, cosmetic dentistry trends, and more at OAK Dental Hospital.",
+        "publisher": {
+            "@type": "Organization",
+            "name": "OAK Dental Hospital",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://i.postimg.cc/50vXRG8K/ram.jpg"
+            }
+        },
+        "blogPost": [
+            {
+                "@type": "BlogPosting",
+                "headline": "Maintaining Oral Hygiene with Braces",
+                "description": "Learn essential tips to keep your teeth clean while wearing braces, including brushing techniques and dietary advice.",
+                "image": "https://i.postimg.cc/vTjKPVVn/BRACE.jpg",
+                "author": {
+                    "@type": "Person",
+                    "name": "Dr. A. Ram Koti Reddy"
+                },
+                "datePublished": "2025-05-17"
+            },
+            {
+                "@type": "BlogPosting",
+                "headline": "Benefits of Dental Implants",
+                "description": "Discover why dental implants are a long-lasting solution for missing teeth and how they can improve your quality of life.",
+                "image": "https://i.postimg.cc/T3fzBRDK/BLOG1.jpg",
+                "author": {
+                    "@type": "Person",
+                    "name": "Dr. A. Ram Koti Reddy"
+                },
+                "datePublished": "2025-05-17"
+            },
+            {
+                "@type": "BlogPosting",
+                "headline": "Cosmetic Dentistry Trends in 2025",
+                "description": "Explore the latest trends in cosmetic dentistry, from teeth whitening to veneers, and how they can enhance your smile.",
+                "image": "https://i.postimg.cc/vTjKPVVn/BRACE.jpg",
+                "author": {
+                    "@type": "Person",
+                    "name": "Dr. A. Ram Koti Reddy"
+                },
+                "datePublished": "2025-05-17"
+            }
+        ]
+    }
+    </script>
 </head>
 <body class="bg-blue-50 antialiased">
-    <!-- Navigation -->
-    <nav class="bg-white text-gray-700 shadow-lg sticky top-0 z-50">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+    <!-- Header -->
+    <header class="bg-white text-gray-700 shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center">
                 <img src="https://i.postimg.cc/50vXRG8K/ram.jpg?fit=500%2C500&quality=80" alt="OAK Dental Hospital Logo" class="mr-2 logo-img">
                 <a href="index.html" class="text-2xl hospital-name">OAK Dental Hospital</a>
             </div>
-            <div class="md:hidden">
-                <button id="menu-toggle" class="text-gray-700 focus:outline-none" aria-label="Toggle Menu">
-                    <i class="fas fa-bars text-2xl"></i>
-                </button>
-            </div>
-            <div id="menu" class="hidden md:flex md:space-x-6">
-                <a href="index.html" class="nav-link hover:text-blue-600">Home</a>
+            <div>
+                <a href="index.html" class="back-button" aria-label="Back to Home">
+                    <i class="fas fa-arrow-left"></i> Back to Home
+                </a>
             </div>
         </div>
-    </nav>
+    </header>
 
-    <!-- Blog Articles Section -->
-    <section class="py-16 bg-white section-animate">
+    <!-- Blog Posts Section -->
+    <section id="blog-posts" class="py-16 bg-gray-100">
         <div class="container mx-auto px-4">
-            <h1 class="text-4xl font-bold text-center mb-12 text-gray-800">Dental Health Blog</h1>
-            
-            <!-- Article 1 -->
-            <div id="oral-hygiene" class="mb-12">
-                <h2 class="text-2xl font-semibold mb-4 text-gray-800">5 Tips for Maintaining Oral Hygiene During Pregnancy</h2>
-                <img src="https://images.unsplash.com/photo-1588776813676-4e6e5de9c4e8?fit=crop&w=600&h=400&q=80" alt="Oral Hygiene Tips" class="mb-4">
-                <p class="text-gray-700 mb-4">Pregnancy is a time of significant change, and maintaining oral health is crucial for both mother and baby. Here are five expert tips to keep your smile healthy:</p>
-                <ul class="list-disc list-inside text-gray-700 mb-4">
-                    <li>Brush twice daily with a fluoride toothpaste to prevent cavities.</li>
-                    <li>Floss daily to remove plaque and prevent gum disease.</li>
-                    <li>Visit your dentist regularly for check-ups and cleanings.</li>
-                    <li>Eat a balanced diet rich in calcium and avoid sugary snacks.</li>
-                    <li>Stay hydrated to combat dry mouth, which can increase the risk of tooth decay.</li>
-                </ul>
-                <p class="text-gray-700">By following these tips, you can ensure your oral health remains a priority during this special time.</p>
-            </div>
+            <h1 class="text-4xl font-extrabold text-center mb-12 text-gray-800">Dental Health Blog</h1>
 
-            <!-- Article 2 -->
-            <div id="root-canal" class="mb-12">
-                <h2 class="text-2xl font-semibold mb-4 text-gray-800">What to Expect During a Root Canal Procedure</h2>
-                <img src="https://images.unsplash.com/photo-1598257006458-087169a1f08d?fit=crop&w=600&h=400&q=80" alt="Root Canal Procedure" class="mb-4">
-                <p class="text-gray-700 mb-4">A root canal treatment is a common procedure to save a damaged or infected tooth. Here’s what you can expect at OAK Dental Hospital:</p>
-                <ol class="list-decimal list-inside text-gray-700 mb-4">
-                    <li><strong>Diagnosis:</strong> We’ll take X-rays to assess the tooth’s condition.</li>
-                    <li><strong>Anesthesia:</strong> Local anesthesia ensures a pain-free experience.</li>
-                    <li><strong>Treatment:</strong> The infected pulp is removed, and the tooth is cleaned and sealed.</li>
-                    <li><strong>Restoration:</strong> A crown or filling is placed to protect the tooth.</li>
-                </ol>
-                <p class="text-gray-700">Our advanced techniques and caring approach make the process smooth and comfortable.</p>
-            </div>
+            <!-- Blog Post 1 -->
+            <article id="oral-hygiene-braces" class="blog-post mb-12 section-animate">
+                <h2 class="text-2xl font-semibold mb-4">Maintaining Oral Hygiene with Braces</h2>
+                <img src="https://i.postimg.cc/vTjKPVVn/BRACE.jpg" alt="Maintaining Oral Hygiene with Braces">
+                <p class="text-gray-700 mb-4">Wearing braces can make oral hygiene a bit challenging, but with the right techniques, you can keep your teeth and gums healthy throughout your orthodontic treatment. Here are some expert tips from OAK Dental Hospital:</p>
+                <h3 class="text-xl font-medium mb-2">Brushing Techniques</h3>
+                <p class="text-gray-700 mb-4">Use a soft-bristled toothbrush and fluoride toothpaste. Brush at a 45-degree angle to the gums, focusing on each tooth and bracket. Spend at least 2 minutes brushing, twice a day.</p>
+                <h3 class="text-xl font-medium mb-2">Flossing and Interdental Brushes</h3>
+                <p class="text-gray-700 mb-4">Flossing can be tricky with braces, so consider using floss threaders or interdental brushes to clean between teeth and under the wires. This helps remove plaque and food particles that a toothbrush can’t reach.</p>
+                <h3 class="text-xl font-medium mb-2">Dietary Advice</h3>
+                <p class="text-gray-700 mb-4">Avoid sticky, hard, or sugary foods like caramel, popcorn, and soda, as they can damage braces or cause cavities. Opt for braces-friendly foods like yogurt, steamed vegetables, and smoothies.</p>
+                <h3 class="text-xl font-medium mb-2">Regular Check-ups</h3>
+                <p class="text-gray-700 mb-4">Visit your dentist at OAK Dental Hospital every 6 months for cleanings and to ensure your braces are functioning properly.</p>
+                <p class="text-gray-500 text-sm">Posted on May 17, 2025 by Dr. A. Ram Koti Reddy</p>
+            </article>
 
-            <!-- Article 3 -->
-            <div id="dental-implants" class="mb-12">
-                <h2 class="text-2xl font-semibold mb-4 text-gray-800">How Dental Implants Can Transform Your Smile</h2>
-                <img src="https://images.unsplash.com/photo-1625493459592-2f1a96d5c20a?fit=crop&w=600&h=400&q=80" alt="Dental Implants" class="mb-4">
-                <p class="text-gray-700 mb-4">Dental implants are a permanent solution for missing teeth, offering both functional and aesthetic benefits:</p>
-                <ul class="list-disc list-inside text-gray-700 mb-4">
-                    <li><strong>Natural Look:</strong> Implants blend seamlessly with your natural teeth.</li>
-                    <li><strong>Durability:</strong> With proper care, they can last a lifetime.</li>
-                    <li><strong>Improved Function:</strong> Chew and speak with confidence.</li>
-                    <li><strong>Bone Health:</strong> Implants prevent bone loss in the jaw.</li>
-                </ul>
-                <p class="text-gray-700">At OAK Dental Hospital, our implant specialists ensure a personalized treatment plan for the best results.</p>
-            </div>
+            <!-- Blog Post 2 -->
+            <article id="dental-implants-benefits" class="blog-post mb-12 section-animate">
+                <h2 class="text-2xl font-semibold mb-4">Benefits of Dental Implants</h2>
+                <img src="https://i.postimg.cc/T3fzBRDK/BLOG1.jpg" alt="Benefits of Dental Implants">
+                <p class="text-gray-700 mb-4">Dental implants are a revolutionary solution for missing teeth, offering both functional and aesthetic benefits. At OAK Dental Hospital, we specialize in providing high-quality implants. Here’s why they’re a great choice:</p>
+                <h3 class="text-xl font-medium mb-2">Natural Look and Feel</h3>
+                <p class="text-gray-700 mb-4">Implants are designed to look, feel, and function like your natural teeth, giving you a confident smile without the worry of slippage.</p>
+                <h3 class="text-xl font-medium mb-2">Durability</h3>
+                <p class="text-gray-700 mb-4">With proper care, dental implants can last a lifetime, making them a cost-effective long-term solution compared to dentures or bridges.</p>
+                <h3 class="text-xl font-medium mb-2">Improved Oral Health</h3>
+                <p class="text-gray-700 mb-4">Unlike bridges, implants don’t require altering adjacent teeth, preserving your natural tooth structure. They also prevent bone loss by stimulating the jawbone.</p>
+                <h3 class="text-xl font-medium mb-2">Enhanced Comfort and Speech</h3>
+                <p class="text-gray-700 mb-4">Implants eliminate the discomfort of removable dentures and improve speech by providing a stable foundation for chewing and speaking.</p>
+                <p class="text-gray-500 text-sm">Posted on May 17, 2025 by Dr. A. Ram Koti Reddy</p>
+            </article>
 
-            <!-- Back to Home -->
-            <div class="text-center">
-                <a href="index.html" class="btn inline-block bg-blue-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-700 shadow-md">Back to Home</a>
-            </div>
+            <!-- Blog Post 3 -->
+            <article id="cosmetic-dentistry-trends" class="blog-post mb-12 section-animate">
+                <h2 class="text-2xl font-semibold mb-4">Cosmetic Dentistry Trends in 2025</h2>
+                <img src="https://i.postimg.cc/vTjKPVVn/BRACE.jpg" alt="Cosmetic Dentistry Trends">
+                <p class="text-gray-700 mb-4">Cosmetic dentistry continues to evolve, offering innovative ways to enhance your smile. At OAK Dental Hospital, we stay ahead of the trends to provide the best care. Here are the top trends for 2025:</p>
+                <h3 class="text-xl font-medium mb-2">Teeth Whitening Innovations</h3>
+                <p class="text-gray-700 mb-4">New laser whitening techniques provide faster, longer-lasting results with minimal sensitivity, making professional whitening more popular than ever.</p>
+                <h3 class="text-xl font-medium mb-2">Porcelain Veneers</h3>
+                <p class="text-gray-700 mb-4">Ultra-thin veneers are gaining traction for their ability to correct imperfections like chips, gaps, and discoloration with a natural look.</p>
+                <h3 class="text-xl font-medium mb-2">Digital Smile Design</h3>
+                <p class="text-gray-700 mb-4">Using advanced software, dentists can now design and preview your new smile before treatment begins, ensuring personalized and predictable results.</p>
+                <h3 class="text-xl font-medium mb-2">Minimally Invasive Procedures</h3>
+                <p class="text-gray-700 mb-4">Techniques like micro-abrasion and composite bonding offer quick, non-invasive ways to enhance your smile without extensive dental work.</p>
+                <p class="text-gray-500 text-sm">Posted on May 17, 2025 by Dr. A. Ram Koti Reddy</p>
+            </article>
         </div>
     </section>
 
@@ -143,58 +323,19 @@
     <footer class="bg-gradient-to-r from-blue-900 to-teal-400 text-white py-8">
         <div class="container mx-auto px-4 text-center">
             <p class="text-lg mb-4">© 2025 <span class="hospital-name">OAK Dental Hospital</span>. All rights reserved.</p>
-            <div class="mb-4">
-                <h3 class="text-lg font-semibold mb-2">Stay Updated</h3>
-                <form id="newsletter-form" class="flex justify-center">
-                    <input type="email" id="newsletter-email" class="p-2 rounded-l-lg border-0 focus:outline-none" placeholder="Enter your email" required aria-required="true">
-                    <button type="button" onclick="subscribeNewsletter()" class="btn bg-blue-600 text-white p-2 rounded-r-lg hover:bg-blue-700">Subscribe</button>
-                </form>
-            </div>
             <div class="flex justify-center space-x-4">
-                <a href="https://facebook.com" target="_blank" class="text-white hover:text-blue-300"><i class="fab fa-facebook-f text-2xl"></i></a>
-                <a href="https://instagram.com" target="_blank" class="text-white hover:text-blue-300"><i class="fab fa-instagram text-2xl"></i></a>
-                <a href="https://twitter.com" target="_blank" class="text-white hover:text-blue-300"><i class="fab fa-twitter text-2xl"></i></a>
+                <a href="https://facebook.com" target="_blank" class="text-white hover:text-blue-300" aria-label="Visit OAK Dental Hospital on Facebook"><i class="fab fa-facebook-f text-2xl"></i></a>
+                <a href="https://instagram.com" target="_blank" class="text-white hover:text-blue-300" aria-label="Visit OAK Dental Hospital on Instagram"><i class="fab fa-instagram text-2xl"></i></a>
+                <a href="https://twitter.com" target="_blank" class="text-white hover:text-blue-300" aria-label="Visit OAK Dental Hospital on Twitter"><i class="fab fa-twitter text-2xl"></i></a>
             </div>
         </div>
     </footer>
 
-    <script>
-        const menuToggle = document.getElementById('menu-toggle');
-        const menu = document.getElementById('menu');
-        menuToggle.addEventListener('click', () => {
-            menu.classList.toggle('hidden');
-            menu.classList.toggle('flex');
-            menu.classList.toggle('flex-col');
-            menu.classList.toggle('absolute');
-            menu.classList.toggle('top-16');
-            menu.classList.toggle('left-0');
-            menu.classList.toggle('w-full');
-            menu.classList.toggle('bg-white');
-            menu.classList.toggle('p-4');
-            menu.classList.toggle('shadow-lg');
-        });
-
-        function subscribeNewsletter() {
-            const email = document.getElementById('newsletter-email').value;
-            if (email) {
-                alert(`Thank you for subscribing with ${email}!`);
-                document.getElementById('newsletter-form').reset();
-            } else {
-                alert('Please enter your email.');
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const sections = document.querySelectorAll('.section-animate');
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.animationDelay = '0.2s';
-                    }
-                });
-            }, { threshold: 0.1 });
-            sections.forEach(section => observer.observe(section));
-        });
-    </script>
+    <!-- WhatsApp Chat Button -->
+    <div class="cta-container">
+        <a href="https://wa.me/917569366767" target="_blank" class="chat-button" aria-label="Chat with OAK Dental Hospital on WhatsApp">
+            <i class="fab fa-whatsapp"></i>
+        </a>
+    </div>
 </body>
 </html>
