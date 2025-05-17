@@ -8,8 +8,8 @@
     <title>Oak Dental Clinic - Multi-Speciality Dental Care in Hyderabad</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-YOUR-ID"></script>
-    <script src="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.js"></script>
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -128,6 +128,57 @@
         .testimonial-slide.active {
             display: block;
         }
+        .calendar-container {
+            max-width: 300px;
+            margin: 0 auto;
+        }
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+        .calendar div {
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .calendar .header {
+            background: #0d9488;
+            color: white;
+            font-weight: bold;
+        }
+        .calendar .day {
+            background: #f7fafc;
+        }
+        .calendar .day:hover {
+            background: #e6fffa;
+        }
+        .calendar .leave {
+            background: #ef4444;
+            color: white;
+            cursor: not-allowed;
+        }
+        .calendar .selected {
+            background: #0d9488;
+            color: white;
+        }
+        .error-message {
+            color: #ef4444;
+            margin-top: 10px;
+            display: none;
+        }
+        .treatment-media {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
         @media (max-width: 640px) {
             .text-4xl { font-size: 1.75rem; }
             .text-6xl { font-size: 2.25rem; }
@@ -152,14 +203,12 @@
             .slide img { width: 80%; height: 120px; object-fit: cover; }
             .doctor-img { width: 150px; height: 150px; }
             .h-48 { height: 180px; }
-            .w-full.h-64 { height: 200px; }
             .space-x-4 > :not([hidden]) ~ :not([hidden]) { margin-left: 0.5rem; }
             .flex.justify-center.fade-in { flex-direction: column; align-items: center; gap: 0.5rem; }
             .max-w-md { max-width: 100%; }
             input, textarea { font-size: 0.875rem; }
             .px-6.py-3 { padding: 0.5rem 1.5rem; }
-            .md\\:pl-8 { padding-left: 0; }
-            .md\\:w-1\\/2 { width: 100%; }
+            .calendar-container { max-width: 100%; }
         }
         @media (min-width: 641px) {
             .hamburger { display: none; }
@@ -189,13 +238,14 @@
     <div id="mySidenav" class="sidenav">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
         <a href="#home" onclick="closeNav()">Home</a>
+        <a href="#treatments" onclick="closeNav()">Treatments</a>
         <a href="#services" onclick="closeNav()">Services</a>
         <a href="#about" onclick="closeNav()">About</a>
         <a href="#doctors" onclick="closeNav()">Doctors</a>
         <a href="#gallery" onclick="closeNav()">Gallery</a>
         <a href="#testimonials" onclick="closeNav()">Testimonials</a>
         <a href="#blog" onclick="closeNav()">Blog</a>
-        <a href="#resources" onclick="closeNav()">Resources</a>
+        <a href="#appointment" onclick="closeNav()">Book Appointment</a>
         <a href="#faq" onclick="closeNav()">FAQ</a>
         <a href="#contact" onclick="closeNav()">Contact</a>
     </div>
@@ -211,12 +261,14 @@
                 </div>
                 <div class="desktop-nav flex items-center space-x-4 hidden md:flex">
                     <a href="#home" class="text-gray-700 hover:text-teal-600">Home</a>
+                    <a href="#treatments" class="text-gray-700 hover:text-teal-600">Treatments</a>
                     <a href="#services" class="text-gray-700 hover:text-teal-600">Services</a>
                     <a href="#about" class="text-gray-700 hover:text-teal-600">About</a>
                     <a href="#doctors" class="text-gray-700 hover:text-teal-600">Doctors</a>
                     <a href="#gallery" class="text-gray-700 hover:text-teal-600">Gallery</a>
                     <a href="#testimonials" class="text-gray-700 hover:text-teal-600">Testimonials</a>
                     <a href="#blog" class="text-gray-700 hover:text-teal-600">Blog</a>
+                    <a href="#appointment" class="text-gray-700 hover:text-teal-600">Book Appointment</a>
                     <a href="#faq" class="text-gray-700 hover:text-teal-600">FAQ</a>
                     <a href="#contact" class="text-gray-700 hover:text-teal-600">Contact</a>
                 </div>
@@ -230,48 +282,18 @@
             <h1 class="text-4xl md:text-6xl font-bold mb-4 fade-in">Welcome to Oak Dental Clinic</h1>
             <p class="text-lg md:text-xl mb-6 fade-in">Your trusted multi-speciality dental care in Bachupally, Hyderabad.</p>
             <div class="space-x-4">
-                <a href="#contact" class="bg-teal-600 text-white px-6 py-3 rounded-full hover:bg-teal-700 fade-in">Book Appointment</a>
+                <a href="#appointment" class="bg-teal-600 text-white px-6 py-3 rounded-full hover:bg-teal-700 fade-in">Book Appointment</a>
                 <a href="tel:+91756936767" class="bg-teal-600 text-white px-6 py-3 rounded-full hover:bg-teal-700 fade-in">Call Now</a>
             </div>
         </div>
     </section>
 
-    <!-- Welcome Video Section -->
-    <section class="py-16 bg-gray-100">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 class="text-3xl font-bold text-gray-800 mb-12 fade-in">Welcome to Our Clinic</h2>
-            <div class="fade-in">
-                <iframe width="100%" height="400" src="https://www.youtube.com/embed/your-video-id" title="Oak Dental Clinic Tour" frameborder="0" allowfullscreen loading="lazy"></iframe>
-            </div>
-        </div>
-    </section>
-
-    <!-- Inaugural Offer Section -->
-    <section class="py-16 bg-teal-600 text-white text-center">
+    <!-- Treatments Section -->
+    <section id="treatments" class="py-16 bg-gray-100">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold mb-6 fade-in">Inaugural Offer</h2>
-            <p class="text-xl mb-4 fade-in">OP + Cleaning & Polishing + X-Ray</p>
-            <p class="text-4xl font-bold mb-6 fade-in">@ ₹999/-</p>
-            <a href="#contact" class="bg-white text-teal-600 px-6 py-3 rounded-full hover:bg-gray-200 fade-in">Book Now</a>
-        </div>
-    </section>
-
-    <!-- Social Proof Counter -->
-    <section class="py-8 bg-teal-600 text-white text-center">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-               'affaires                <div class="fade-in">
-                    <h3 class="text-4xl font-bold">5000+</h3>
-                    <p>Happy Patients</p>
-                </div>
-                <div class="fade-in">
-                    <h3 class="text-4xl font-bold">10+</h3>
-                    <p>Years of Experience</p>
-                </div>
-                <div class="fade-in">
-                    <h3 class="text-4xl font-bold">8000+</h3>
-                    <p>Successful Treatments</p>
-                </div>
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">Our Treatments</h2>
+            <div id="treatments-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Treatments will be populated dynamically -->
             </div>
         </div>
     </section>
@@ -282,44 +304,44 @@
             <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">Our Dental Services in Hyderabad</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div class="bg-white p-6 rounded-lg shadow-md text-center fade-in">
-                    <img src="https://via.placeholder.com/48?text=General" alt="General Dentistry Icon" class="h-12 mx-auto mb-4" loading="lazy">
+                    <i class="fas fa-tooth text-teal-600 text-4xl mb-4"></i>
                     <h3 class="text-xl font-semibold text-teal-600 mb-4">General Dentistry</h3>
-                    <p class="text-gray-600">Routine check-ups, cleanings, and fillings to keep your smile bright.</p>
-                    <a href="general-dentistry.html" class="text-teal-600 hover:underline">Learn More</a>
+                    <p class="text-gray-600 mb-4">Routine check-ups, cleanings, and fillings to keep your smile bright.</p>
+                    <p class="text-gray-600">Learn More</p>
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-md text-center fade-in">
-                    <img src="https://via.placeholder.com/48?text=Cosmetic" alt="Cosmetic Dentistry Icon" class="h-12 mx-auto mb-4" loading="lazy">
+                    <i class="fas fa-smile text-teal-600 text-4xl mb-4"></i>
                     <h3 class="text-xl font-semibold text-teal-600 mb-4">Cosmetic Dentistry</h3>
-                    <p class="text-gray-600">Teeth whitening, veneers, and more to enhance your smile.</p>
-                    <a href="cosmetic-dentistry.html" class="text-teal-600 hover:underline">Learn More</a>
+                    <p class="text-gray-600 mb-4">Teeth whitening, veneers, and more to enhance your smile.</p>
+                    <p class="text-gray-600">Learn More</p>
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-md text-center fade-in">
-                    <img src="https://via.placeholder.com/48?text=Ortho" alt="Orthodontics Icon" class="h-12 mx-auto mb-4" loading="lazy">
+                    <i class="fas fa-align-center text-teal-600 text-4xl mb-4"></i>
                     <h3 class="text-xl font-semibold text-teal-600 mb-4">Orthodontics</h3>
-                    <p class="text-gray-600">Braces and aligners for perfectly aligned teeth.</p>
-                    <a href="orthodontics.html" class="text-teal-600 hover:underline">Learn More</a>
+                    <p class="text-gray-600 mb-4">Braces and aligners for perfectly aligned teeth.</p>
+                    <p class="text-gray-600">Learn More</p>
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-md text-center fade-in">
-                    <img src="https://via.placeholder.com/48?text=Implants" alt="Dental Implants Icon" class="h-12 mx-auto mb-4" loading="lazy">
+                    <i class="fas fa-tooth text-teal-600 text-4xl mb-4"></i>
                     <h3 class="text-xl font-semibold text-teal-600 mb-4">Dental Implants</h3>
-                    <p class="text-gray-600">Permanent solutions for missing teeth with advanced technology.</p>
-                    <a href="dental-implants.html" class="text-teal-600 hover:underline">Learn More</a>
+                    <p class="text-gray-600 mb-4">Permanent solutions for missing teeth with advanced technology.</p>
+                    <p class="text-gray-600">Learn More</p>
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-md text-center fade-in">
-                    <img src="https://via.placeholder.com/48?text=Root" alt="Root Canal Icon" class="h-12 mx-auto mb-4" loading="lazy">
+                    <i class="fas fa-tools text-teal-600 text-4xl mb-4"></i>
                     <h3 class="text-xl font-semibold text-teal-600 mb-4">Root Canal Therapy</h3>
-                    <p class="text-gray-600">Pain-free treatment to save damaged teeth.</p>
-                    <a href="root-canal.html" class="text-teal-600 hover:underline">Learn More</a>
+                    <p class="text-gray-600 mb-4">Pain-free treatment to save damaged teeth.</p>
+                    <p class="text-gray-600">Learn More</p>
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-md text-center fade-in">
-                    <img src="https://via.placeholder.com/48?text=Pediatric" alt="Pediatric Dentistry Icon" class="h-12 mx-auto mb-4" loading="lazy">
+                    <i class="fas fa-baby text-teal-600 text-4xl mb-4"></i>
                     <h3 class="text-xl font-semibold text-teal-600 mb-4">Pediatric Dentistry</h3>
-                    <p class="text-gray-600">Gentle dental care for children and teens.</p>
-                    <a href="pediatric-dentistry.html" class="text-teal-600 hover:underline">Learn More</a>
+                    <p class="text-gray-600 mb-4">Gentle dental care for children and teens.</p>
+                    <p class="text-gray-600">Learn More</p>
                 </div>
             </div>
             <div class="text-center mt-8 fade-in">
-                <a href="#contact" class="bg-teal-600 text-white px-6 py-3 rounded-full hover:bg-teal-700">Schedule a Visit</a>
+                <a href="#appointment" class="bg-teal-600 text-white px-6 py-3 rounded-full hover:bg-teal-700">Schedule a Visit</a>
             </div>
         </div>
     </section>
@@ -367,13 +389,13 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">About Oak Dental Clinic</h2>
             <div class="flex flex-col md:flex-row items-center">
-                <div class="md:w-1/2 mb-6 md:mb-0 fade-in">
+                <div class="w-full md:w-1/2 mb-6 md:mb-0 fade-in">
                     <picture>
                         <source srcset="https://images.unsplash.com/photo-1629904869113-1b4b56d87404?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80&fm=webp" type="image/webp">
                         <img src="https://images.unsplash.com/photo-1629904869113-1b4b56d87404?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" alt="Oak Dental Clinic Team" class="rounded-lg shadow-md" loading="lazy">
                     </picture>
                 </div>
-                <div class="md:w-1/2 md:pl-8 fade-in">
+                <div class="w-full md:w-1/2 md:pl-8 fade-in">
                     <p class="text-gray-600 mb-4">At Oak Dental Clinic in Bachupally, Hyderabad, we provide top-quality dental care in a comfortable environment. Led by Dr. A. Ram Koti Reddy, our team uses cutting-edge technology for effective treatments.</p>
                     <p class="text-gray-600 mb-4">From general dentistry to advanced prosthodontics and implants, we offer personalized care to keep your smile healthy and radiant.</p>
                     <a href="about.html" class="bg-teal-600 text-white px-6 py-3 rounded-full hover:bg-teal-700">Know More</a>
@@ -404,13 +426,6 @@
                         <source srcset="https://i.postimg.cc/qvnq7ycZ/Oak-dental-interior-5.jpg?fm=webp" type="image/webp">
                         <img src="https://i.postimg.cc/qvnq7ycZ/Oak-dental-interior-5.jpg" alt="Oak Dental Clinic Interior 3" class="rounded-lg shadow-md w-full h-48 object-cover" loading="lazy">
                     </picture>
-                </div>
-            </div>
-            <div class="text-center mt-8 fade-in">
-                <h3 class="text-xl font-semibold text-teal-600 mb-4">Follow Us on Instagram</h3>
-                <!-- Placeholder for Instagram feed widget -->
-                <div id="instagram-feed" class="bg-white p-4 rounded-lg shadow-md">
-                    <p>Instagram feed will be displayed here.</p>
                 </div>
             </div>
         </div>
@@ -491,25 +506,42 @@
         </div>
     </section>
 
-    <!-- Patient Resources Section -->
-    <section id="resources" class="py-16 bg-gray-100">
+    <!-- Book Appointment Section -->
+    <section id="appointment" class="py-16 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">Patient Resources</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="bg-white p-6 rounded-lg shadow-md text-center fade-in">
-                    <h3 class="text-xl font-semibold text-teal-600 mb-4">Post-Treatment Guide</h3>
-                    <p class="text-gray-600">Download our guide for aftercare instructions.</p>
-                    <a href="post-treatment-guide.pdf" class="bg-teal-600 text-white px-6 py-3 rounded-full hover:bg-teal-700">Download</a>
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">Book an Appointment</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="fade-in">
+                    <h3 class="text-xl font-semibold text-teal-600 mb-4">Select Date and Time</h3>
+                    <div class="calendar-container">
+                        <div class="calendar-header">
+                            <button onclick="prevMonth()" aria-label="Previous Month">❮</button>
+                            <h3 id="month-year" class="text-lg font-semibold"></h3>
+                            <button onclick="nextMonth()" aria-label="Next Month">❯</button>
+                        </div>
+                        <div class="calendar" id="calendar">
+                            <!-- Calendar days will be populated by JavaScript -->
+                        </div>
+                    </div>
+                    <p class="error-message" id="error-message">Sorry for the inconvenience, the doctor is on leave on this date. Thank you for your understanding.</p>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-md text-center fade-in">
-                    <h3 class="text-xl font-semibold text-teal-600 mb-4">First Visit Checklist</h3>
-                    <p class="text-gray-600">Prepare for your first appointment with our checklist.</p>
-                    <a href="first-visit-checklist.pdf" class="bg-teal-600 text-white px-6 py-3 rounded-full hover:bg-teal-700">Download</a>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-md text-center fade-in">
-                    <h3 class="text-xl font-semibold text-teal-600 mb-4">Dental Care Tips</h3>
-                    <p class="text-gray-600">Get our guide to maintaining oral health at home.</p>
-                    <a href="dental-care-tips.pdf" class="bg-teal-600 text-white px-6 py-3 rounded-full hover:bg-teal-700">Download</a>
+                <div class="fade-in">
+                    <h3 class="text-xl font-semibold text-teal-600 mb-4">Appointment Details</h3>
+                    <div>
+                        <input type="text" id="name" placeholder="Your Name" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Your Name">
+                        <input type="email" id="email" placeholder="Your Email" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Your Email">
+                        <input type="tel" id="phone" placeholder="Your Phone" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Your Phone">
+                        <input type="date" id="appointment-date" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Appointment Date" readonly>
+                        <select id="time-slot" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Time Slot">
+                            <option value="" disabled selected>Select Time Slot</option>
+                            <!-- Time slots populated by JavaScript -->
+                        </select>
+                        <textarea id="message" placeholder="Your Message" class="w-full p-3 mb-4 border rounded-lg" rows="4" required aria-label="Your Message"></textarea>
+                        <div class="space-x-4">
+                            <button onclick="submitAppointment()" class="bg-teal-600 text-white px-6 py-3 rounded-full hover:bg-teal-700" aria-label="Submit Appointment Request">Submit</button>
+                            <a href="https://wa.me/+91756936767?text=Hello%20Oak%20Dental%20Clinic,%20I%20would%20like%20to%20book%20an%20appointment." target="_blank" class="bg-green-500 text-white px-6 py-3 rounded-full hover:bg-green-600" aria-label="Contact via WhatsApp">WhatsApp Us</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -547,28 +579,14 @@
                     <p class="text-gray-600 mb-2"><strong>Phone:</strong> <a href="tel:+91756936767">756 936 767</a> / <a href="tel:+919502030637">9502 030 637</a></p>
                     <p class="text-gray-600 mb-2"><strong>Email:</strong> <a href="mailto:info@oakdental.com">info@oakdental.com</a></p>
                     <p class="text-gray-600 mb-4"><strong>Hours:</strong> Mon-Sat, 10:00 AM - 8:00 PM</p>
-                    <div class="w-full h-64">
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3805.609695664573!2d78.3993593!3d17.5292501!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb93f7b8e4a5b7%3A0x6f5d7f4e8e9d0a1b!2sOak%20Dental%20Clinic!5e0!3m2!1sen!2sin!4v1697712345678!5m2!1sen!2sin" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" title="Oak Dental Clinic Location"></iframe>
-                    </div>
                 </div>
                 <div class="fade-in">
-                    <h3 class="text-xl font-semibold text-teal-600 mb-4">Book an Appointment</h3>
+                    <h3 class="text-xl font-semibold text-teal-600 mb-4">Send Us a Message</h3>
                     <div>
                         <input type="text" placeholder="Your Name" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Your Name">
                         <input type="email" placeholder="Your Email" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Your Email">
-                        <input type="tel" placeholder="Your Phone" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Your Phone">
-                        <input type="date" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Appointment Date">
-                        <select class="w-full p-3 mb-4 border rounded-lg" required aria-label="Time Slot">
-                            <option value="" disabled selected>Select Time Slot</option>
-                            <option value="10am">10:00 AM</option>
-                            <option value="2pm">2:00 PM</option>
-                            <option value="4pm">4:00 PM</option>
-                        </select>
                         <textarea placeholder="Your Message" class="w-full p-3 mb-4 border rounded-lg" rows="4" required aria-label="Your Message"></textarea>
-                        <div class="space-x-4">
-                            <button class="bg-teal-600 text-white px-6 py-3 rounded-full hover:bg-teal-700" aria-label="Submit Appointment Request">Submit</button>
-                            <a href="https://wa.me/+91756936767?text=Hello%20Oak%20Dental%20Clinic,%20I%20would%20like%20to%20book%20an%20appointment." target="_blank" class="bg-green-500 text-white px-6 py-3 rounded-full hover:bg-green-600" aria-label="Contact via WhatsApp">WhatsApp Us</a>
-                        </div>
+                        <button class="bg-teal-600 text-white px-6 py-3 rounded-full hover:bg-teal-700" aria-label="Send Message">Send</button>
                     </div>
                 </div>
             </div>
@@ -615,20 +633,6 @@
         gtag('js', new Date());
         gtag('config', 'G-YOUR-ID');
 
-        // Cookie Consent
-        window.cookieconsent.initialise({
-            "palette": {
-                "popup": { "background": "#000" },
-                "button": { "background": "#0d9488" }
-            },
-            "content": {
-                "message": "We use cookies to enhance your experience.",
-                "dismiss": "Got it!",
-                "link": "Learn more",
-                "href": "privacy-policy.html"
-            }
-        });
-
         // Side Navigation
         function openNav() {
             document.getElementById("mySidenav").style.width = "250px";
@@ -647,9 +651,9 @@
             });
         });
 
-        // Form Submission
-        document.querySelector('button:not(#newsletter-submit)').addEventListener('click', () => {
-            alert('Appointment request submitted! We will contact you soon.');
+        // Form Submission (Contact Form)
+        document.querySelector('#contact button').addEventListener('click', () => {
+            alert('Message sent! We will get back to you soon.');
         });
 
         // Newsletter Signup
@@ -705,6 +709,148 @@
         }
         showTestimonial(testimonialIndex);
         setInterval(nextTestimonial, 5000);
+
+        // Appointment Calendar
+        let currentMonth = new Date().getMonth();
+        let currentYear = new Date().getFullYear();
+        let selectedDate = null;
+
+        function generateCalendar(month, year) {
+            const calendar = document.getElementById('calendar');
+            const monthYear = document.getElementById('month-year');
+            const leaveDates = JSON.parse(localStorage.getItem('leaveDates') || '[]');
+
+            const firstDay = new Date(year, month).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            monthYear.textContent = `${new Date(year, month).toLocaleString('default', { month: 'long' })} ${year}`;
+            calendar.innerHTML = `
+                <div class="header">Sun</div>
+                <div class="header">Mon</div>
+                <div class="header">Tue</div>
+                <div class="header">Wed</div>
+                <div class="header">Thu</div>
+                <div class="header">Fri</div>
+                <div class="header">Sat</div>
+            `;
+
+            for (let i = 0; i < firstDay; i++) {
+                calendar.innerHTML += `<div></div>`;
+            }
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const isLeave = leaveDates.includes(dateStr);
+                calendar.innerHTML += `<div class="day ${isLeave ? 'leave' : ''}" data-date="${dateStr}">${day}</div>`;
+            }
+
+            document.querySelectorAll('.day').forEach(day => {
+                day.addEventListener('click', () => selectDate(day));
+            });
+        }
+
+        function prevMonth() {
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            generateCalendar(currentMonth, currentYear);
+        }
+
+        function nextMonth() {
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            generateCalendar(currentMonth, currentYear);
+        }
+
+        function selectDate(day) {
+            if (day.classList.contains('leave')) {
+                document.getElementById('error-message').style.display = 'block';
+                document.getElementById('appointment-date').value = '';
+                document.getElementById('time-slot').innerHTML = '<option value="" disabled selected>Select Time Slot</option>';
+                return;
+            }
+
+            document.getElementById('error-message').style.display = 'none';
+            document.querySelectorAll('.day').forEach(d => d.classList.remove('selected'));
+            day.classList.add('selected');
+            selectedDate = day.dataset.date;
+            document.getElementById('appointment-date').value = selectedDate;
+
+            // Populate time slots
+            const timeSlots = JSON.parse(localStorage.getItem('timeSlots') || '[]');
+            const timeSlotSelect = document.getElementById('time-slot');
+            timeSlotSelect.innerHTML = '<option value="" disabled selected>Select Time Slot</option>';
+            timeSlots.forEach(slot => {
+                timeSlotSelect.innerHTML += `<option value="${slot}">${slot}</option>`;
+            });
+        }
+
+        function submitAppointment() {
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const date = document.getElementById('appointment-date').value;
+            const time = document.getElementById('time-slot').value;
+            const message = document.getElementById('message').value;
+
+            if (!name || !email || !phone || !date || !time || !message) {
+                alert('Please fill in all fields.');
+                return;
+            }
+
+            if (JSON.parse(localStorage.getItem('leaveDates') || '[]').includes(date)) {
+                alert('Sorry, the doctor is on leave on this date. Please select another date.');
+                return;
+            }
+
+            alert(`Appointment booked for ${name} on ${date} at ${time}. We will confirm your booking soon.`);
+            document.getElementById('name').value = '';
+            document.getElementById('email').value = '';
+            document.getElementById('phone').value = '';
+            document.getElementById('appointment-date').value = '';
+            document.getElementById('time-slot').innerHTML = '<option value="" disabled selected>Select Time Slot</option>';
+            document.getElementById('message').value = '';
+            document.querySelectorAll('.day').forEach(d => d.classList.remove('selected'));
+        }
+
+        // Load Treatments
+        function loadTreatments() {
+            const treatmentsGrid = document.getElementById('treatments-grid');
+            const treatments = JSON.parse(localStorage.getItem('treatments') || '[]');
+            treatmentsGrid.innerHTML = '';
+
+            if (treatments.length === 0) {
+                treatmentsGrid.innerHTML = '<p class="text-center text-gray-600">No treatments available at the moment.</p>';
+                return;
+            }
+
+            treatments.forEach(treatment => {
+                const treatmentCard = document.createElement('div');
+                treatmentCard.className = 'bg-white p-6 rounded-lg shadow-md text-center fade-in';
+                let mediaHTML = '';
+                if (treatment.video) {
+                    mediaHTML = `<video src="${treatment.video}" controls class="treatment-media"></video>`;
+                } else if (treatment.image) {
+                    mediaHTML = `<img src="${treatment.image}" alt="${treatment.title}" class="treatment-media" loading="lazy">`;
+                }
+                treatmentCard.innerHTML = `
+                    ${mediaHTML}
+                    <h3 class="text-xl font-semibold text-teal-600 mb-2">${treatment.title}</h3>
+                    <p class="text-gray-600 mb-2">${treatment.description}</p>
+                    <p class="text-gray-800 font-semibold">Price: ₹${treatment.price}</p>
+                `;
+                treatmentsGrid.appendChild(treatmentCard);
+            });
+        }
+
+        // Initialize Calendar and Treatments
+        generateCalendar(currentMonth, currentYear);
+        loadTreatments();
     </script>
 </body>
 </html>
