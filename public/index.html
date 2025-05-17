@@ -23,7 +23,6 @@
         gtag('js', new Date());
         gtag('config', 'G-YOUR_TRACKING_ID');
     </script>
-    <script defer src="https://www.paypal.com/sdk/js?client-id=AYarbhTihMwB0cn5LEA1FJyOnOfA7aok3BXfTT7rWdbIr2jHnzBSyt0Q3iDWi8mBVLQ1T94GT2dUVajJ&currency=INR"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://pay.google.com/gp/p/js/pay.js"></script>
     <style>
@@ -182,13 +181,16 @@
             }
         }
         #home {
-            background-image: url('https://i.postimg.cc/Fz5kq5dH/Premium-Photo-Dentist-examines-the-patients-teeth-at-the-dentist-1.jpg?fit=1920%2C1080&quality=90');
+            background-image: url('https://i.postimg.cc/Fz5kq5dH/Premium-Photo-Dentist-examines-the-patients-teeth-at-the-dentist-1.jpg');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
             position: relative;
-            min-height: 90vh;
+            min-height: 80vh;
             color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             z-index: 0;
             image-rendering: -webkit-optimize-contrast;
             image-rendering: crisp-edges;
@@ -200,7 +202,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.5);
             z-index: 1;
         }
         #home > * {
@@ -209,13 +211,20 @@
         }
         @media (max-width: 768px) {
             #home {
-                min-height: 70vh;
-                padding: 6rem 1rem;
+                min-height: 60vh;
+                padding: 4rem 1rem;
+                background-position: top center;
             }
             #home h1 {
-                font-size: 2rem;
+                font-size: 1.75rem;
+                line-height: 2rem;
             }
             #home p {
+                font-size: 0.9rem;
+                line-height: 1.4rem;
+            }
+            #home .btn {
+                padding: 0.75rem 1.5rem;
                 font-size: 0.9rem;
             }
         }
@@ -508,19 +517,13 @@
         .payment-button:hover {
             opacity: 0.9;
         }
-        .paypal-button {
-            background-color: #0070BA;
-        }
-        .paypal-button:hover {
-            background-color: #005EA6;
-        }
-        .gpay-button, .upi-button {
+        .gpay-button, .phonepe-button {
             background-color: #4285F4;
         }
-        .gpay-button:hover, .upi-button:hover {
+        .gpay-button:hover, .phonepe-button:hover {
             background-color: #3267D6;
         }
-        .gpay-button img, .paypal-button img, .upi-button img {
+        .gpay-button img, .phonepe-button img {
             width: 24px;
             height: 24px;
             margin-right: 8px;
@@ -707,6 +710,33 @@
         .bg-cyan-50 { background-color: #ecfeff; }
         .bg-gray-100 { background-color: #f3f4f6; }
         .bg-white { background-color: #ffffff; }
+        /* Calendar Date Styling */
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            cursor: pointer;
+            filter: invert(0.5);
+        }
+        .unavailable-date {
+            background-color: #fee2e2;
+            color: #dc2626;
+            cursor: not-allowed;
+        }
+        .unavailable-message {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1001;
+            text-align: center;
+            max-width: 90%;
+        }
+        .unavailable-message.show {
+            display: block;
+        }
     </style>
     <script type="application/ld+json">
     {
@@ -767,11 +797,12 @@
     <!-- Hero Section -->
     <section id="home" class="section-animate">
         <div class="container mx-auto px-4 text-center flex flex-col justify-center items-center h-full">
-            <h1 class="text-4xl md:text-6xl font-extrabold mb-4 hospital-name">Healthy Smiles with OAK Dental Hospital</h1>
-            <p class="text-xl mb-8 max-w-2xl mx-auto">Transform your smile with expert dental care in Hyderabad. Specializing in Orthodontics, Implants, and Cosmetic Dentistry for a confident, radiant you!</p>
-            <div class="flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-4 justify-center">
-                <a href="#appointment" class="btn bg-white text-blue-900 px-8 py-4 rounded-full font-semibold hover:bg-blue-100 shadow-md" aria-label="Book an appointment with OAK Dental Hospital">Book Appointment</a>
-                <a href="https://wa.me/917569366767" target="_blank" class="btn bg-green-500 text-white px-8 py-4 rounded-full font-semibold hover:bg-green-600 shadow-md" aria-label="Chat with OAK Dental Hospital on WhatsApp">Chat on WhatsApp</a>
+            <img src="https://i.postimg.cc/50vXRG8K/ram.jpg" alt="OAK Dental Hospital Logo" class="w-24 h-24 mb-4 rounded-full shadow-lg">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 hospital-name">Welcome to OAK Dental Hospital</h1>
+            <p class="text-lg md:text-xl mb-6 max-w-2xl mx-auto">Experience world-class dental care in Hyderabad. We specialize in Orthodontics, Implants, and Cosmetic Dentistry to help you achieve a confident, radiant smile.</p>
+            <div class="flex flex-col space-y-3 md:flex-row md:space-y-0 md:space-x-4 justify-center">
+                <a href="#appointment" class="btn bg-blue-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-700 shadow-md" aria-label="Book an appointment with OAK Dental Hospital">Book Appointment</a>
+                <a href="https://wa.me/917569366767" target="_blank" class="btn bg-green-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-green-600 shadow-md" aria-label="Chat with OAK Dental Hospital on WhatsApp">Chat with Us</a>
             </div>
         </div>
     </section>
@@ -1060,7 +1091,7 @@
                 <div class="mb-4">
                     <label class="block text-gray-700 mb-2" for="date">Preferred Date</label>
                     <input type="date" id="date" class="w-full p-3 border rounded-lg shadow-sm" required aria-required="true">
-                    <p class="text-gray-600 text-sm mt-2">Available slots: 9 AM - 5 PM (Mon-Sat)</p>
+                    <p class="text-gray-600 text-sm mt-2">Available slots: 9 AM - 5 PM (Mon-Sat). Unavailable dates are marked in red.</p>
                 </div>
                 <div class="mb-4">
                     <label class="block text-gray-700 mb-2" for="time">Preferred Time</label>
@@ -1074,18 +1105,18 @@
                         <option value="">Select Service</option>
                     </select>
                 </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Total Amount</label>
+                    <p id="total-amount" class="text-gray-700 font-semibold">₹0.00</p>
+                </div>
                 <div class="payment-buttons">
-                    <div id="paypal-button-container" class="payment-button paypal-button">
-                        <img src="https://i.postimg.cc/Vsngbp7g/paypal1.jpg" alt="PayPal Logo">
-                        Pay with PayPal
-                    </div>
                     <div id="gpay-button-container" class="payment-button gpay-button">
                         <img src="https://i.postimg.cc/tgKdsgyk/gpay.webp" alt="Google Pay Logo">
                         Pay with Google Pay
                     </div>
-                    <div id="upi-button-container" class="payment-button upi-button">
-                        <img src="https://i.postimg.cc/tgKdsgyk/gpay.webp" alt="UPI Logo">
-                        Pay with UPI
+                    <div id="phonepe-button-container" class="payment-button phonepe-button">
+                        <img src="https://i.postimg.cc/3xN7WqZx/phonepe.png" alt="PhonePe Logo">
+                        Pay with PhonePe
                     </div>
                 </div>
             </form>
@@ -1094,6 +1125,13 @@
             </a>
         </div>
     </section>
+
+    <!-- Unavailable Date Message -->
+    <div id="unavailable-message" class="unavailable-message">
+        <h3 class="text-xl font-semibold text-gray-800 mb-2">Date Unavailable</h3>
+        <p class="text-gray-700 mb-4">Sorry, this date is unavailable due to doctor unavailability. You can select another date. Thank you for your understanding.</p>
+        <button onclick="closeUnavailableMessage()" class="btn bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" aria-label="Close unavailability message">Close</button>
+    </div>
 
     <!-- Appointment Confirmation Modal -->
     <div id="appointment-modal">
@@ -1233,6 +1271,8 @@
             menu.classList.toggle('active');
             menuOverlay.classList.toggle('active');
             document.body.classList.toggle('nav-open', !isActive);
+            menuToggle.querySelector('i').classList.toggle('fa-bars');
+            menuToggle.querySelector('i').classList.toggle('fa-times');
         }
 
         menuToggle.addEventListener('click', toggleMenu);
@@ -1250,6 +1290,7 @@
                 if (menu.classList.contains('active')) {
                     toggleMenu();
                 }
+                document.querySelectorAll('.dropdown-menu').forEach(menu => menu.classList.remove('block'));
             });
         });
 
@@ -1258,7 +1299,11 @@
                 if (window.innerWidth <= 768) {
                     e.preventDefault();
                     const dropdownMenu = dropdown.nextElementSibling;
-                    dropdownMenu.classList.toggle('block');
+                    const isOpen = dropdownMenu.classList.contains('block');
+                    document.querySelectorAll('.dropdown-menu').forEach(menu => menu.classList.remove('block'));
+                    if (!isOpen) {
+                        dropdownMenu.classList.add('block');
+                    }
                 }
             });
         });
@@ -1268,6 +1313,7 @@
         let treatments = [];
         let filteredTreatments = [];
         let slideInterval;
+        let unavailableDates = [];
 
         async function loadTreatments() {
             try {
@@ -1292,7 +1338,7 @@
                         </div>
                         <div class="carousel-item-media">
                             ${treatment.image ? `<img src="${API_URL}${treatment.image}" alt="${treatment.name} image" style="width: 100%; height: auto; object-fit: cover; border-radius: 10px;" onerror="this.src='https://via.placeholder.com/300x200?text=Image+Not+Found';">` : ''}
-                            ${treatment.video ? `<video controls style="width: 100%; max-height: 250px; border-radius: 10px;"><source src="${API_URL}${treatment.video}" type="video/mp4" onerror="this.parentElement.style.display='none';">Your browser does not support the video tag.</video>` : ''}
+                            ${treatment.video ? `<video controls style="width: 100%; max-height: 250px; border-radius: 10px;"><source src="${API_URL}${treatment.video}" type="video/mp4">Your browser does not support the video tag.</video>` : ''}
                         </div>
                     `;
                     container.appendChild(div);
@@ -1304,8 +1350,11 @@
                     const option = document.createElement('option');
                     option.value = treatment.id;
                     option.textContent = `${treatment.name} (₹${treatment.cost || 'Contact for pricing'})`;
+                    option.dataset.cost = treatment.cost || '0';
                     serviceSelect.appendChild(option);
                 });
+
+                serviceSelect.addEventListener('change', updateTotalAmount);
 
                 startAutoSlide();
             } catch (error) {
@@ -1375,14 +1424,14 @@
                 div.className = 'carousel-item card bg-white p-4 rounded-lg shadow-md';
                 div.innerHTML = `
                     <div class="carousel-item-content">
-                        <h3 class="text-lg font-semibold mb-2">${treatment.name}</h3>
+                        <h3 class="text-lg font-semibold mb-2">${treatment.name || 'Unnamed Treatment'}</h3>
                         <p class="text-gray-700 text-sm mb-2">${treatment.description || 'No description available.'}</p>
                         <p class="text-gray-700 font-semibold mb-2">₹${treatment.cost || 'Contact for pricing'}</p>
                         ${treatment.offer ? `<p class="text-green-600 font-semibold">Offer: ${treatment.offer}</p>` : ''}
                     </div>
                     <div class="carousel-item-media">
-                        ${treatment.image ? `<img src="${API_URL}${treatment.image}" alt="${treatment.name} image" style="width: 100%; height: auto; object-fit: cover; border-radius: 10px;" onerror="this.src='https://via.placeholder.com/300x200?text=Image+Not+Found';">` : ''}
-                        ${treatment.video ? `<video controls style="width: 100%; max-height: 250px; border-radius: 10px;"><source src="${API_URL}${treatment.video}" type="video/mp4" onerror="this.parentElement.style.display='none';">Your browser does not support the video tag.</video>` : ''}
+                        ${treatment.image ? `<img src="${API_URL}${treatment.image}" alt="${treatment.name || 'Treatment'} image" style="width: 100%; height: auto; object-fit: cover; border-radius: 10px;" onerror="this.src='https://via.placeholder.com/300x200?text=Image+Not+Found';">` : ''}
+                        ${treatment.video ? `<video controls style="width: 100%; max-height: 250px; border-radius: 10px;"><source src="${API_URL}${treatment.video}" type="video/mp4">Your browser does not support the video tag.</video>` : ''}
                     </div>
                 `;
                 container.appendChild(div);
@@ -1391,84 +1440,73 @@
             startAutoSlide();
         }
 
-        async function loadAppointmentOptions() {
+        // Load Admin Pricing and Unavailable Dates
+        async function loadAdminSettings() {
             try {
-                const timesResponse = await axios.get(`${API_URL}/times`, { timeout: 10000 });
-                const times = timesResponse.data;
-                const timeSelect = document.getElementById('time');
-                timeSelect.innerHTML = '<option value="">Select Time</option>';
-                times.forEach(time => {
-                    const option = document.createElement('option');
-                    option.value = time.time;
-                    option.textContent = time.time;
-                    timeSelect.appendChild(option);
-                });
+                const response = await axios.get(`${API_URL}/admin-settings`, { timeout: 10000 });
+                const settings = response.data;
+
+                // Update UPI payment amount based on admin settings
+                adminAmount = settings.appointmentCost || '500.00';
+
+                // Load unavailable dates
+                unavailableDates = settings.unavailableDates || [];
+                checkDateAvailability();
             } catch (error) {
-                console.error('Error loading appointment times:', error);
-                const timeSelect = document.getElementById('time');
-                timeSelect.innerHTML = '<option value="">Failed to load times</option>';
+                console.error('Error loading admin settings:', error);
+                alert('Failed to load admin settings. Default pricing will be used.', { class: 'alert-message bg-red-100 text-red-600' });
             }
         }
 
-        // Google Pay and UPI Configuration
-        const paymentsClient = new google.payments.api.PaymentsClient({
-            environment: 'TEST'
-        });
+        // Appointment Time Slots
+        function loadAppointmentOptions() {
+            const timeSelect = document.getElementById('time');
+            const times = [
+                '09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM',
+                '01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM'
+            ];
+            timeSelect.innerHTML = '<option value="">Select Time</option>';
+            times.forEach(time => {
+                const option = document.createElement('option');
+                option.value = time;
+                option.textContent = time;
+                timeSelect.appendChild(option);
+            });
+        }
 
-        const gpayButtonConfig = {
-            apiVersion: 2,
-            apiVersionMinor: 0,
-            allowedPaymentMethods: [{
-                type: 'CARD',
-                parameters: {
-                    allowedAuthMethods: ['PAN_ONLY', 'CRYPTOGRAM_3DS'],
-                    allowedCardNetworks: ['AMEX', 'DISCOVER', 'MASTERCARD', 'VISA']
-                },
-                tokenizationSpecification: {
-                    type: 'PAYMENT_GATEWAY',
-                    parameters: {
-                        gateway: 'example',
-                        gatewayMerchantId: 'exampleMerchantId'
-                    }
+        // Check Date Availability
+        function checkDateAvailability() {
+            const dateInput = document.getElementById('date');
+            dateInput.addEventListener('change', () => {
+                const selectedDate = dateInput.value;
+                                if (unavailableDates.includes(selectedDate)) {
+                    dateInput.classList.add('unavailable-date');
+                    document.getElementById('unavailable-message').classList.add('show');
+                    dateInput.value = '';
+                } else {
+                    dateInput.classList.remove('unavailable-date');
+                    document.getElementById('unavailable-message').classList.remove('show');
                 }
-            }],
-            merchantInfo: {
-                merchantId: 'YOUR_MERCHANT_ID',
-                merchantName: 'OAK Dental Hospital'
-            },
-            transactionInfo: {
-                totalPriceStatus: 'FINAL',
-                totalPrice: '500.00',
-                currencyCode: 'INR',
-                countryCode: 'IN'
-            }
-        };
-
-        async function initiateGPayPayment(appointmentData) {
-            try {
-                const paymentDataRequest = { ...gpayButtonConfig };
-                paymentDataRequest.transactionInfo = {
-                    totalPriceStatus: 'FINAL',
-                    totalPrice: '500.00',
-                    currencyCode: 'INR',
-                    countryCode: 'IN'
-                };
-
-                const paymentData = await paymentsClient.loadPaymentData(paymentDataRequest);
-                const response = await axios.post(`${API_URL}/gpay/capture-payment`, {
-                    paymentData: paymentData,
-                    appointment: appointmentData
-                });
-                return response.data;
-            } catch (error) {
-                console.error('Google Pay payment error:', error);
-                throw error;
-            }
+            });
         }
 
-                function initiateUPIPayment(appointmentData) {
-            const upiId = 'svasudevareddy18604@oksbi'; // Replace with your UPI ID
-            const amount = '5.00';
+        function closeUnavailableMessage() {
+            document.getElementById('unavailable-message').classList.remove('show');
+        }
+
+        // Update Total Amount Based on Selected Service
+        let adminAmount = '500.00'; // Default amount, will be updated by admin settings
+        function updateTotalAmount() {
+            const serviceSelect = document.getElementById('service');
+            const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
+            const cost = selectedOption ? (selectedOption.dataset.cost || adminAmount) : adminAmount;
+            document.getElementById('total-amount').textContent = `₹${parseFloat(cost).toFixed(2)}`;
+        }
+
+        // Payment Integration
+        async function initiateGPayPayment(appointmentData) {
+            const upiId = 'oakdental@upi'; // Admin's UPI ID
+            const amount = document.getElementById('total-amount').textContent.replace('₹', '');
             const name = appointmentData.name;
             const upiLink = `upi://pay?pa=${upiId}&pn=OAK%20Dental%20Hospital&am=${amount}&cu=INR&tn=Appointment%20for%20${name}`;
             const upiWindow = window.open(upiLink, '_blank');
@@ -1476,12 +1514,34 @@
             return new Promise((resolve, reject) => {
                 setTimeout(async () => {
                     try {
-                        const response = await axios.post(`${API_URL}/upi/verify-payment`, {
+                        const response = await axios.post(`${API_URL}/gpay/verify-payment`, {
                             appointment: appointmentData
                         });
                         resolve(response.data);
                     } catch (error) {
-                        console.error('UPI payment verification error:', error);
+                        console.error('Google Pay payment verification error:', error);
+                        reject(error);
+                    }
+                }, 10000);
+            });
+        }
+
+        async function initiatePhonePePayment(appointmentData) {
+            const upiId = 'oakdental@upi'; // Admin's UPI ID
+            const amount = document.getElementById('total-amount').textContent.replace('₹', '');
+            const name = appointmentData.name;
+            const upiLink = `upi://pay?pa=${upiId}&pn=OAK%20Dental%20Hospital&am=${amount}&cu=INR&tn=Appointment%20for%20${name}`;
+            const upiWindow = window.open(upiLink, '_blank');
+
+            return new Promise((resolve, reject) => {
+                setTimeout(async () => {
+                    try {
+                        const response = await axios.post(`${API_URL}/phonepe/verify-payment`, {
+                            appointment: appointmentData
+                        });
+                        resolve(response.data);
+                    } catch (error) {
+                        console.error('PhonePe payment verification error:', error);
                         reject(error);
                     }
                 }, 10000);
@@ -1503,30 +1563,17 @@
                 return;
             }
 
+            if (unavailableDates.includes(appointmentData.date)) {
+                alert('Selected date is unavailable. Please choose another date.', { class: 'alert-message bg-red-100 text-red-600' });
+                return;
+            }
+
             try {
                 let transactionResponse;
-                if (method === 'paypal') {
-                    const response = await new Promise((resolve, reject) => {
-                        paypal.Buttons({
-                            createOrder: (data, actions) => {
-                                return actions.order.create({
-                                    purchase_units: [{
-                                        amount: { value: '500.00', currency_code: 'INR' }
-                                    }]
-                                });
-                            },
-                            onApprove: async (data, actions) => {
-                                const order = await actions.order.capture();
-                                resolve(order);
-                            },
-                            onError: (err) => reject(err)
-                        }).render('#paypal-button-container');
-                    });
-                    transactionResponse = { transactionId: response.id };
-                } else if (method === 'gpay') {
+                if (method === 'gpay') {
                     transactionResponse = await initiateGPayPayment(appointmentData);
-                } else if (method === 'upi') {
-                    transactionResponse = await initiateUPIPayment(appointmentData);
+                } else if (method === 'phonepe') {
+                    transactionResponse = await initiatePhonePePayment(appointmentData);
                 }
 
                 await handlePostPayment(transactionResponse, appointmentData);
@@ -1550,6 +1597,7 @@
         function closeModal() {
             document.getElementById('appointment-modal').style.display = 'none';
             document.getElementById('appointment-form').reset();
+            document.getElementById('total-amount').textContent = '₹0.00';
         }
 
         async function sendNotifications(appointmentData) {
@@ -1743,6 +1791,7 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             loadTreatments();
+            loadAdminSettings();
             loadAppointmentOptions();
             loadFeedback();
 
@@ -1755,7 +1804,7 @@
             }
 
             document.getElementById('gpay-button-container').addEventListener('click', () => initiatePayment('gpay'));
-            document.getElementById('upi-button-container').addEventListener('click', () => initiatePayment('upi'));
+            document.getElementById('phonepe-button-container').addEventListener('click', () => initiatePayment('phonepe'));
         });
     </script>
 </body>
