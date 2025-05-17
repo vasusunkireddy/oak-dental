@@ -320,7 +320,7 @@
     <nav class="bg-white shadow-lg sticky top-0 z-50">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center flex-wrap">
             <div class="flex items-center">
-                <img src="https://i.postimg.cc/50vXRG8K/ram.jpg?fit=500%2C500&quality=80" alt="OAK Dental Hospital Logo" class="mr-3 w-12 h-12 bg-white rounded-full shadow-sm nav-logo">
+                <img src="C:\Users\svasu\Downloads\OAK_LOGO_HD.png" alt="OAK Dental Hospital Logo" class="mr-3 w-12 h-12 bg-white rounded-full shadow-sm nav-logo">
                 <h1 class="text-3xl font-bold text-gray-800 nav-title">OAK Dental Hospital - Admin</h1>
             </div>
             <div class="flex mt-2 sm:mt-0">
@@ -765,6 +765,7 @@
                     },
                     timeout: 60000
                 });
+                console.log('Upload response:', response.data); // Debug log
                 return {
                     image: response.data.imageUrl ? response.data.imageUrl : null,
                     video: response.data.videoUrl ? response.data.videoUrl : null
@@ -799,7 +800,6 @@
                     axios.get(`${API_URL}/admin/payments`, config).catch(err => ({ data: [] })),
                     axios.get(`${API_URL}/admin/contacts`, config).catch(err => ({ data: [] })),
                     axios.get(`${API_URL}/admin/newsletter`, config).catch(err => ({ data: [] }))
-                    // Feedback API call removed due to 404 error
                 ]);
 
                 const timesList = document.getElementById('times-list');
@@ -819,15 +819,16 @@
                 treatments.data.forEach(treatment => {
                     const div = document.createElement('div');
                     div.className = 'treatment-card bg-white p-6 rounded-xl shadow-md card border border-gray-200';
+                    const imageUrl = treatment.image ? `${treatment.image}?t=${Date.now()}` : null;
                     div.innerHTML = `
                         <h3 class="text-lg font-semibold mb-2 text-gray-800">${treatment.name}</h3>
                         <p class="text-gray-600 mb-2">${treatment.description}</p>
                         <p class="text-gray-700 font-semibold mb-2">$${parseFloat(treatment.cost).toFixed(2)}</p>
                         ${treatment.offer ? `<p class="text-green-600 font-semibold mb-2">Offer: ${treatment.offer}</p>` : ''}
-                        ${treatment.image ? `<img src="${treatment.image}" alt="${treatment.name} image" class="mb-2 rounded-lg" loading="lazy" onerror="this.src='https://picsum.photos/300/200?random=${Math.random()}'; this.onerror=null;">` : ''}
-                        ${treatment.video ? `<video controls class="mb-2 rounded-lg"><source src="${treatment.video}" type="video/mp4"></video>` : ''}
+                        ${imageUrl ? `<img src="${imageUrl}" alt="${treatment.name} image" class="mb-2 rounded-lg" loading="lazy" onerror="handleImageError(this, '${treatment.name}');">` : ''}
+                        ${treatment.video ? `<video controls class="mb-2 rounded-lg"><source src="${treatment.video}?t=${Date.now()}" type="video/mp4"></video>` : ''}
                         <div class="flex space-x-2 mt-4">
-                            <button onclick="editTreatment('${treatment.id}', '${treatment.name.replace(/'/g, "\\'")}', '${treatment.description.replace(/'/g, "\\'")}', ${treatment.cost}, '${treatment.offer ? treatment.offer.replace(/'/g, "\\'") : ''}')" class="btn bg-blue-600 text-white rounded-lg hover:bg-blue-700" aria-label="Edit Treatment"><i class="fas fa-edit mr-1"></i> Edit</button>
+                            <button onclick="editTreatment('${treatment.id}', '${treatment.name.replace(/'/g, "\\'")}', '${treatment.description.replace(/'/g, "\\'")}', ${treatment.cost}, '${treatment.offer ? treatment.offer.replace(/'/g, "\\'") : ''}', '${treatment.image ? treatment.image.replace(/'/g, "\\'") : ''}', '${treatment.video ? treatment.video.replace(/'/g, "\\'") : ''}')" class="btn bg-blue-600 text-white rounded-lg hover:bg-blue-700" aria-label="Edit Treatment"><i class="fas fa-edit mr-1"></i> Edit</button>
                             <button onclick="deleteTreatment('${treatment.id}')" class="btn bg-red-600 text-white rounded-lg hover:bg-red-700" aria-label="Delete Treatment"><i class="fas fa-trash-alt mr-1"></i> Delete</button>
                         </div>
                     `;
@@ -1032,32 +1033,6 @@
                     headers: { Authorization: `Bearer ${token}` },
                     timeout: 10000
                 });
-
-                if (status === 'Cancelled') {
-                    const appointment = response.data;
-                    try {
-                        await axios.post(`${API_URL}/admin/send-email`, {
-                            to: appointment.email,
-                            subject: 'Appointment Cancellation - OAK Dental Hospital',
-                            body: `Dear ${appointment.name},\n\nYour appointment scheduled for ${appointment.date} at ${appointment.time} has been cancelled.\nIf you have any questions, please contact us at +91 7569 366 767.\n\nBest regards,\nOAK Dental Team`
-                        }, {
-                            headers: { Authorization: `Bearer ${token}` },
-                            timeout: 10000
-                        });
-
-                        await axios.post(`${API_URL}/admin/send-sms`, {
-                            to: appointment.phone,
-                            message: `Dear ${appointment.name}, your appointment at OAK Dental Hospital on ${appointment.date} at ${appointment.time} has been cancelled. Contact us at +91 7569 366 767 if needed.`
-                        }, {
-                            headers: { Authorization: `Bearer ${token}` },
-                            timeout: 10000
-                        });
-                    } catch (notificationError) {
-                        console.error('Error sending cancellation notifications:', notificationError);
-                        showAlert('Appointment cancelled, but failed to send notifications.', 'error');
-                    }
-                }
-
                 showAlert('Appointment status updated.');
                 await loadDashboard();
             } catch (error) {
@@ -1067,7 +1042,7 @@
             }
         }
 
-        function editTreatment(id, name, description, cost, offer) {
+        function editTreatment(id, name, description, cost, offer, image, video) {
             document.getElementById('edit-treatment-id').value = id;
             document.getElementById('edit-treatment-name').value = name;
             document.getElementById('edit-treatment-description').value = description;
@@ -1113,6 +1088,12 @@
             } finally {
                 hideSpinner('edit-treatment-spinner');
             }
+        }
+
+        function handleImageError(imgElement, treatmentName) {
+            console.error(`Failed to load image for treatment: ${treatmentName}, URL: ${imgElement.src}`);
+            imgElement.src = 'https://via.placeholder.com/300x200.png?text=Image+Not+Found';
+            imgElement.onerror = null;
         }
 
         function closeModal() {

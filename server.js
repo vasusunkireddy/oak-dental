@@ -24,8 +24,8 @@ const requiredEnvVars = [
     'PAYPAL_CLIENT_SECRET',
     'EMAIL_USER',
     'EMAIL_PASS',
-    'SMS_API_KEY', // Added for SMS service
-    'SMS_API_URL'  // Added for SMS service
+    'SMS_API_KEY',
+    'SMS_API_URL'
 ];
 for (const envVar of requiredEnvVars) {
     if (!process.env[envVar]) {
@@ -72,30 +72,45 @@ app.use(cors({
 app.use(express.json());
 
 // Serve static files from public folder
-app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
+const uploadsDir = path.join(__dirname, 'public/uploads');
+if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+    logger.info('Created uploads directory', { path: uploadsDir });
+}
+app.use('/uploads', express.static(uploadsDir, {
+    setHeaders: (res, path, stat) => {
+        res.set('Cache-Control', 'no-store'); // Prevent caching
+    }
+}));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Rate Limiting
-const limiter = rateLimit({
+// General Rate Limiting (more lenient)
+const generalLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100,
+    max: 500,
     message: 'Too many requests from this IP, please try again after 15 minutes.'
 });
-app.use(limiter);
+app.use(generalLimiter);
+
+// Specific Rate Limiter for Login Endpoint (stricter to prevent brute-force)
+const loginLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 10,
+    message: 'Too many login attempts from this IP, please try again after 15 minutes.'
+});
 
 // Multer setup for image and video uploads
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         const uploadPath = path.join(__dirname, 'public/uploads');
-        if (!fs.existsSync(uploadPath)) {
-            fs.mkdirSync(uploadPath, { recursive: true });
-        }
         cb(null, uploadPath);
     },
     filename: (req, file, cb) => {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const uniquePrefix = `${Date.now()}-${Math.random().toString(36).substring(2, 15)}`;
         const sanitizedName = file.originalname.replace(/[^a-zA-Z0-9.]/g, '_').toLowerCase();
-        cb(null, `${uniqueSuffix}-${sanitizedName}`);
+        const finalFilename = `${uniquePrefix}-${sanitizedName}`;
+        logger.debug('Generated filename for upload', { originalName: file.originalname, finalFilename });
+        cb(null, finalFilename);
     }
 });
 
@@ -108,6 +123,7 @@ const upload = multer({
         if (extname && mimetype) {
             cb(null, true);
         } else {
+            logger.warn('Invalid file type uploaded', { mimetype: file.mimetype, originalName: file.originalname });
             cb(new Error('Only PNG, JPEG, and MP4 files are allowed'));
         }
     },
@@ -120,7 +136,7 @@ const upload = multer({
     { name: 'video', maxCount: 1 }
 ]);
 
-// Database Connection
+// Database Connection with better error handling
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
     dialect: 'postgres',
     dialectOptions: {
@@ -131,6 +147,40 @@ const sequelize = new Sequelize(process.env.DATABASE_URL, {
     },
     logging: (msg) => logger.debug(msg)
 });
+
+// Test database connection before syncing
+const testDatabaseConnection = async () => {
+    try {
+        await sequelize.authenticate();
+        logger.info('Database connection successful', { databaseUrl: process.env.DATABASE_URL });
+    } catch (error) {
+        logger.error('Failed to connect to the database:', {
+            message: error.message,
+            stack: error.stack,
+            databaseUrl: process.env.DATABASE_URL
+        });
+        throw error;
+    }
+};
+
+// Sync Database with error handling
+const syncDatabase = async () => {
+    try {
+        await testDatabaseConnection();
+        await sequelize.sync({ alter: true });
+        logger.info('Database synced successfully');
+    } catch (error) {
+        logger.error('Database sync failed:', {
+            message: error.message,
+            stack: error.stack,
+            databaseUrl: process.env.DATABASE_URL
+        });
+        process.exit(1);
+    }
+};
+
+// Initialize the database
+syncDatabase();
 
 // Models
 const Admin = sequelize.define('Admin', {
@@ -177,11 +227,6 @@ const Newsletter = sequelize.define('Newsletter', {
 Treatment.hasMany(Appointment, { foreignKey: 'serviceId', as: 'Appointments' });
 Appointment.belongsTo(Treatment, { foreignKey: 'serviceId', as: 'Treatment' });
 
-// Sync Database
-sequelize.sync({ alter: true })
-    .then(() => logger.info('Database synced successfully'))
-    .catch(err => logger.error('Database sync failed:', { message: err.message, stack: err.stack }));
-
 // Nodemailer setup
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -199,7 +244,8 @@ const businessInfo = {
     contactPhone: "+91 7569 366 767",
     website: "https://oak-dental.onrender.com",
     adminName: "Dr. John Smith",
-    adminTitle: "Chief Dentist"
+    adminTitle: "Chief Dentist",
+    baseUrl: process.env.BASE_URL || 'https://oak-dental.onrender.com'
 };
 
 // Middleware to verify JWT
@@ -289,7 +335,6 @@ const sendAppointmentConfirmation = async (appointment, serviceName, transaction
     const smsMessage = `Dear ${appointment.name}, your appointment for ${serviceName} on ${appointment.date} at ${appointment.time} is confirmed. Payment ID: ${transactionId}. Location: ${businessInfo.address}. Arrive 10 mins early. Contact: ${businessInfo.contactPhone}`;
 
     try {
-        // Send Email
         await transporter.sendMail({
             from: `"${businessInfo.name}" <${process.env.EMAIL_USER}>`,
             to: appointment.email,
@@ -298,7 +343,6 @@ const sendAppointmentConfirmation = async (appointment, serviceName, transaction
         });
         logger.info('Appointment confirmation email sent', { email: appointment.email });
 
-        // Send SMS
         await sendSMS(appointment.phone, smsMessage);
     } catch (error) {
         logger.error('Failed to send appointment confirmation:', { message: error.message, stack: error.stack, email: appointment.email });
@@ -342,7 +386,6 @@ const sendAppointmentApproval = async (appointment, serviceName) => {
     const smsMessage = `Dear ${appointment.name}, your appointment for ${serviceName} with ${businessInfo.adminName} on ${appointment.date} at ${appointment.time} has been approved. Payment ID: ${appointment.transactionId}. Location: ${businessInfo.address}. Contact: ${businessInfo.contactPhone}`;
 
     try {
-        // Send Email
         await transporter.sendMail({
             from: `"${businessInfo.name}" <${process.env.EMAIL_USER}>`,
             to: appointment.email,
@@ -351,7 +394,6 @@ const sendAppointmentApproval = async (appointment, serviceName) => {
         });
         logger.info('Appointment approval email sent', { email: appointment.email });
 
-        // Send SMS
         await sendSMS(appointment.phone, smsMessage);
     } catch (error) {
         logger.error('Failed to send appointment approval:', { message: error.message, stack: error.stack, email: appointment.email });
@@ -393,7 +435,6 @@ const sendAppointmentCancellation = async (appointment, serviceName, reason = 'u
     const smsMessage = `Dear ${appointment.name}, your appointment for ${serviceName} with ${businessInfo.adminName} on ${appointment.date} at ${appointment.time} has been cancelled due to ${reason}. Payment ID: ${appointment.transactionId}. Contact: ${businessInfo.contactPhone}`;
 
     try {
-        // Send Email
         await transporter.sendMail({
             from: `"${businessInfo.name}" <${process.env.EMAIL_USER}>`,
             to: appointment.email,
@@ -402,7 +443,6 @@ const sendAppointmentCancellation = async (appointment, serviceName, reason = 'u
         });
         logger.info('Appointment cancellation email sent', { email: appointment.email });
 
-        // Send SMS
         await sendSMS(appointment.phone, smsMessage);
     } catch (error) {
         logger.error('Failed to send appointment cancellation:', { message: error.message, stack: error.stack, email: appointment.email });
@@ -447,8 +487,8 @@ app.post('/api/admin/register', async (req, res) => {
     }
 });
 
-// Admin Login
-app.post('/api/admin/login', async (req, res) => {
+// Admin Login with specific rate limiter
+app.post('/api/admin/login', loginLimiter, async (req, res) => {
     try {
         const { username, password } = sanitizeInput(req.body);
         if (!username || !password) {
@@ -478,13 +518,19 @@ app.post('/api/admin/upload', authenticateAdmin, upload, async (req, res) => {
     try {
         const files = req.files;
         if (!files || (!files.image && !files.video)) {
+            logger.warn('No files uploaded in request');
             return res.status(400).json({ message: 'At least one file (image or video) must be uploaded' });
         }
         const response = {
             imageUrl: files.image ? `/uploads/${files.image[0].filename}` : null,
             videoUrl: files.video ? `/uploads/${files.video[0].filename}` : null
         };
-        logger.info('Files uploaded successfully', { image: response.imageUrl, video: response.videoUrl });
+        logger.info('Files uploaded successfully', {
+            image: response.imageUrl,
+            video: response.videoUrl,
+            imagePath: files.image ? path.join(__dirname, 'public', response.imageUrl) : null,
+            videoPath: files.video ? path.join(__dirname, 'public', response.videoUrl) : null
+        });
         res.status(200).json(response);
     } catch (error) {
         logger.error('Upload error:', { message: error.message, stack: error.stack });
@@ -535,7 +581,17 @@ app.get('/api/treatments', async (req, res) => {
         const treatments = await Treatment.findAll({
             attributes: ['id', 'name', 'description', 'cost', 'offer', 'image', 'video']
         });
-        res.json(treatments);
+        const mappedTreatments = treatments.map(treatment => {
+            const imageUrl = treatment.image ? `${businessInfo.baseUrl}${treatment.image}` : null;
+            const videoUrl = treatment.video ? `${businessInfo.baseUrl}${treatment.video}` : null;
+            logger.debug('Serving treatment', { id: treatment.id, name: treatment.name, imageUrl, videoUrl });
+            return {
+                ...treatment.dataValues,
+                image: imageUrl,
+                video: videoUrl
+            };
+        });
+        res.json(mappedTreatments);
     } catch (error) {
         logger.error('Error fetching treatments (public):', { message: error.message, stack: error.stack });
         res.status(500).json({ message: 'Server error' });
@@ -699,11 +755,9 @@ app.post('/api/paypal/capture-order', async (req, res) => {
         };
         const createdAppointment = await Appointment.create(appointmentData);
 
-        // Fetch the service name for the email
         const treatment = await Treatment.findByPk(appointment.serviceId);
         const serviceName = treatment ? treatment.name : 'Dental Service';
 
-        // Send appointment confirmation email and SMS
         await sendAppointmentConfirmation(createdAppointment, serviceName, transaction.id);
 
         logger.info('PayPal order captured and appointment created', { orderId, appointmentId: createdAppointment.id });
@@ -749,6 +803,28 @@ app.post('/api/admin/times', authenticateAdmin, async (req, res) => {
     }
 });
 
+app.put('/api/admin/times/:id', authenticateAdmin, async (req, res) => {
+    try {
+        const { time } = sanitizeInput(req.body);
+        if (!time) {
+            return res.status(400).json({ message: 'Time is required' });
+        }
+        if (!/^(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$/.test(time)) {
+            return res.status(400).json({ message: 'Invalid time format (e.g., 09:00 AM)' });
+        }
+        const timeSlot = await Time.findByPk(req.params.id);
+        if (!timeSlot) {
+            return res.status(404).json({ message: 'Time slot not found' });
+        }
+        await Time.update({ time }, { where: { id: req.params.id } });
+        logger.info('Time slot updated', { id: req.params.id, time });
+        res.json({ message: 'Time slot updated' });
+    } catch (error) {
+        logger.error('Error updating time:', { message: error.message, stack: error.stack });
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
 app.delete('/api/admin/times/:id', authenticateAdmin, async (req, res) => {
     try {
         const time = await Time.findByPk(req.params.id);
@@ -770,7 +846,17 @@ app.get('/api/admin/treatments', authenticateAdmin, async (req, res) => {
             attributes: ['id', 'name', 'description', 'cost', 'offer', 'image', 'video', 'createdAt'],
             order: [['createdAt', 'DESC']]
         });
-        res.json(treatments);
+        const mappedTreatments = treatments.map(treatment => {
+            const imageUrl = treatment.image ? `${businessInfo.baseUrl}${treatment.image}` : null;
+            const videoUrl = treatment.video ? `${businessInfo.baseUrl}${treatment.video}` : null;
+            logger.debug('Serving admin treatment', { id: treatment.id, name: treatment.name, imageUrl, videoUrl });
+            return {
+                ...treatment.dataValues,
+                image: imageUrl,
+                video: videoUrl
+            };
+        });
+        res.json(mappedTreatments);
     } catch (error) {
         logger.error('Error fetching treatments (admin):', { message: error.message, stack: error.stack });
         res.status(500).json({ message: 'Server error' });
@@ -794,9 +880,9 @@ app.post('/api/admin/treatments', authenticateAdmin, async (req, res) => {
             image: image || null,
             video: video || null
         };
-        await Treatment.create(treatmentData);
-        logger.info('Treatment added', { name, cost });
-        res.status(201).json({ message: 'Treatment added' });
+        const newTreatment = await Treatment.create(treatmentData);
+        logger.info('Treatment added', { id: newTreatment.id, name, image: treatmentData.image });
+        res.status(201).json({ message: 'Treatment added', id: newTreatment.id });
     } catch (error) {
         logger.error('Error adding treatment:', { message: error.message, stack: error.stack });
         res.status(500).json({ message: 'Server error' });
@@ -821,11 +907,11 @@ app.put('/api/admin/treatments/:id', authenticateAdmin, async (req, res) => {
             description,
             cost: parseFloat(cost),
             offer: offer || null,
-            image: image || treatment.image, // Preserve existing image if not updated
-            video: video || treatment.video  // Preserve existing video if not updated
+            image: image || treatment.image,
+            video: video || treatment.video
         };
         await Treatment.update(updateData, { where: { id: req.params.id } });
-        logger.info('Treatment updated', { id: req.params.id, name });
+        logger.info('Treatment updated', { id: req.params.id, name, image: updateData.image });
         res.json({ message: 'Treatment updated' });
     } catch (error) {
         logger.error('Error updating treatment:', { message: error.message, stack: error.stack });
@@ -844,6 +930,8 @@ app.delete('/api/admin/treatments/:id', authenticateAdmin, async (req, res) => {
             if (fs.existsSync(imagePath)) {
                 fs.unlinkSync(imagePath);
                 logger.info('Deleted treatment image', { path: imagePath });
+            } else {
+                logger.warn('Image file not found during deletion', { path: imagePath });
             }
         }
         if (treatment.video) {
@@ -851,6 +939,8 @@ app.delete('/api/admin/treatments/:id', authenticateAdmin, async (req, res) => {
             if (fs.existsSync(videoPath)) {
                 fs.unlinkSync(videoPath);
                 logger.info('Deleted treatment video', { path: videoPath });
+            } else {
+                logger.warn('Video file not found during deletion', { path: videoPath });
             }
         }
         await Treatment.destroy({ where: { id: req.params.id } });
@@ -901,7 +991,6 @@ app.put('/api/admin/appointments/:id', authenticateAdmin, async (req, res) => {
         });
         const serviceName = updatedAppointment.Treatment ? updatedAppointment.Treatment.name : 'Dental Service';
 
-        // Send notifications based on status change
         if (status === 'Confirmed' && previousStatus !== 'Confirmed') {
             await sendAppointmentApproval(updatedAppointment, serviceName);
         } else if (status === 'Cancelled' && previousStatus !== 'Cancelled') {
