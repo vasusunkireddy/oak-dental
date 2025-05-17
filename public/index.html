@@ -7,7 +7,7 @@
     <meta name="keywords" content="dental clinic Hyderabad, dental implants Bachupally, cosmetic dentistry, orthodontics, Oak Dental Clinic">
     <title>Oak Dental Clinic - Multi-Speciality Dental Care in Hyderabad</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -47,6 +47,7 @@
         }
         .slider {
             display: flex;
+            transition: transform 0.5s ease;
         }
         .slide {
             min-width: 100%;
@@ -57,6 +58,7 @@
         .slide img {
             width: 48%;
             border-radius: 8px;
+            object-fit: cover;
         }
         .treatment-slide {
             min-width: 33.33%;
@@ -68,12 +70,13 @@
             box-sizing: border-box;
             padding: 0 10px;
         }
-        .offer-media {
-            max-width: 100%;
-            height: 240px;
+        .treatment-media, .offer-media {
+            width: 100%;
+            max-height: 240px;
             border-radius: 8px;
             margin-bottom: 1.25rem;
             object-fit: cover;
+            display: block;
         }
         .doctor-bg {
             background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url('https://images.unsplash.com/photo-1620778453907-a75627e31590?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
@@ -145,6 +148,13 @@
             color: #f0fdfa !important;
             transform: translateY(-2px);
         }
+        .header-title {
+            font-family: 'Playfair Display', serif;
+            transition: transform 0.3s ease;
+        }
+        .header-title:hover {
+            transform: scale(1.05);
+        }
         .testimonial-slider-container {
             position: relative;
             width: 100%;
@@ -154,16 +164,24 @@
         }
         .testimonial-slider {
             display: flex;
+            gap: 1rem;
+            transition: all 0.5s ease;
         }
         .testimonial-slide {
             min-width: 33.33%;
             box-sizing: border-box;
             padding: 0 10px;
+            opacity: 0;
+            transform: translateX(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
         }
-        .treatment-media {
-            max-width: 100%;
-            border-radius: 8px;
-            margin-bottom: 1.25rem;
+        .testimonial-slide.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .testimonial-slide:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         }
         .rating-stars .star {
             cursor: pointer;
@@ -210,7 +228,29 @@
             border-radius: 8px;
             background-color: #f7fafc;
         }
-        /* Toast Message Styling */
+        .slider-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #0d9488;
+            color: white;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            border-radius: 50%;
+            user-select: none;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        .slider-nav:hover {
+            background-color: #14b8a6;
+        }
+        .slider-nav.left {
+            left: 10px;
+        }
+        .slider-nav.right {
+            right: 10px;
+        }
         .toast {
             position: fixed;
             top: 20px;
@@ -232,7 +272,6 @@
             opacity: 1;
             transform: translateY(0);
         }
-        /* Flatpickr Custom Styling */
         .flatpickr-day.disabled,
         .flatpickr-day.disabled:hover {
             color: #ff0000 !important;
@@ -242,7 +281,7 @@
             font-weight: bold;
         }
         .flatpickr-day {
-            color: #000000 !important; /* Non-leave dates in black */
+            color: #000000 !important;
         }
         .flatpickr-day:hover {
             background: #e6e6e6 !important;
@@ -255,7 +294,6 @@
             padding: 0.75rem;
             width: 100%;
         }
-        /* Newsletter Input Fix */
         input[type="email"] {
             background-color: white;
             color: #1f2937;
@@ -288,8 +326,7 @@
             .slide img { width: 85%; height: 140px; object-fit: cover; }
             .treatment-slide { min-width: 100%; }
             .offer-slide { min-width: 100%; }
-            .treatment-media { height: 160px; }
-            .offer-media { height: 200px; }
+            .treatment-media, .offer-media { height: 200px; width: 100%; }
             .doctor-img { width: 200px; height: 200px; }
             .doctor-card { padding: 2rem; }
             .h-48 { height: 200px; }
@@ -320,6 +357,10 @@
                 max-width: 300px !important;
             }
             .testimonial-slide { min-width: 100%; }
+            .slider-nav {
+                padding: 8px 12px;
+                font-size: 16px;
+            }
         }
         @media (min-width: 641px) {
             .hamburger { display: none; }
@@ -327,6 +368,7 @@
             .gallery-slide { justify-content: center; }
             .gallery-item { max-width: 33.33%; }
             .gallery-img { height: 180px; }
+            .treatment-media, .offer-media { max-height: 240px; }
         }
     </style>
     <script type="application/ld+json">
@@ -366,10 +408,15 @@
     <nav class="nav-gradient shadow-lg fixed w-full z-10" aria-label="Main navigation">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
-                <div class="flex items-center space-x-3">
-                    <span class="hamburger text-3xl cursor-pointer md:hidden text-white" onclick="openNav()">☰</span>
-                    <img src="https://i.postimg.cc/bY0bwXgj/OAK-LOGO-HD.png" alt="Oak Dental Clinic Logo" class="h-12" loading="lazy">
-                    <h1 class="text-2xl font-semibold text-white tracking-tight">Oak Dental Clinic</h1>
+                <div class="flex flex-col items-start space-x-4">
+                    <div class="flex items-center space-x-4">
+                        <span class="hamburger text-3xl cursor-pointer md:hidden text-white" onclick="openNav()">☰</span>
+                        <img src="https://i.postimg.cc/bY0bwXgj/OAK-LOGO-HD.png" alt="Oak Dental Clinic Logo" class="h-12" loading="lazy">
+                        <div class="flex flex-col">
+                            <h1 class="header-title text-3xl font-bold text-white tracking-tight">Oak Dental Clinic</h1>
+                            <span class="text-sm text-white opacity-80">Multi-Speciality Dental Care</span>
+                        </div>
+                    </div>
                 </div>
                 <div class="desktop-nav flex items-center space-x-6 hidden md:flex">
                     <a href="#home" class="text-white nav-link">Home</a>
@@ -395,7 +442,7 @@
         </div>
     </section>
 
-    <!-- Treatments Section (Static) -->
+    <!-- Treatments Section (With Slider) -->
     <section id="treatments" class="py-16 bg-gray-100">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">Our Treatments</h2>
@@ -403,31 +450,22 @@
                 <div class="slider" id="treatments-slider">
                     <!-- Treatments will be populated dynamically -->
                 </div>
+                <div class="slider-nav left" onclick="slideLeft('treatments-slider', 3, 33.33)"><i class="fas fa-arrow-left"></i></div>
+                <div class="slider-nav right" onclick="toggleSlider('treatments-slider')"><i class="fas fa-compress-alt" id="treatments-toggle-icon"></i></div>
             </div>
         </div>
     </section>
 
-    <!-- Offers Section (Static, Two Offers, One Visible) -->
+    <!-- Offers Section (With Slider, Backend Connected) -->
     <section id="offers" class="py-16 bg-teal-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">Special Offers</h2>
             <div class="slider-container fade-in">
                 <div class="slider" id="offers-slider">
-                    <div class="offer-slide">
-                        <div class="bg-white p-6 rounded-lg shadow-md text-center">
-                            <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Offer 1" class="offer-media" loading="lazy">
-                            <h3 class="text-xl font-semibold text-teal-600 mb-2">50% Off Teeth Whitening</h3>
-                            <p class="text-gray-600 mb-2">Brighten your smile with our exclusive teeth whitening offer!</p>
-                        </div>
-                    </div>
-                    <div class="offer-slide hidden">
-                        <div class="bg-white p-6 rounded-lg shadow-md text-center">
-                            <img src="https://images.unsplash.com/photo-1618498082410-b4aa22193b38?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Offer 2" class="offer-media" loading="lazy">
-                            <h3 class="text-xl font-semibold text-teal-600 mb-2">Free Dental Check-Up</h3>
-                            <p class="text-gray-600 mb-2">Book a free dental check-up this month!</p>
-                        </div>
-                    </div>
+                    <!-- Offers will be populated dynamically -->
                 </div>
+                <div class="slider-nav left" onclick="slideLeft('offers-slider', 1, 100)"><i class="fas fa-arrow-left"></i></div>
+                <div class="slider-nav right" onclick="toggleSlider('offers-slider')"><i class="fas fa-compress-alt" id="offers-toggle-icon"></i></div>
             </div>
         </div>
     </section>
@@ -531,11 +569,11 @@
                         <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Before Treatment 1" loading="lazy">
                         <img src="https://images.unsplash.com/photo-1618498082410-b4aa22193b38?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="After Treatment 1" loading="lazy">
                     </div>
-                    <div class="slide hidden">
+                    <div class="slide">
                         <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Before Treatment 2" loading="lazy">
                         <img src="https://images.unsplash.com/photo-1618498082410-b4aa22193b38?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="After Treatment 2" loading="lazy">
                     </div>
-                    <div class="slide hidden">
+                    <div class="slide">
                         <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Before Treatment 3" loading="lazy">
                         <img src="https://images.unsplash.com/photo-1618498082410-b4aa22193b38?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="After Treatment 3" loading="lazy">
                     </div>
@@ -595,14 +633,16 @@
         </div>
     </section>
 
-    <!-- Testimonials Section (Static, Three Visible) -->
-    <section id="testimonials" class="py-16 bg-gray-100">
+    <!-- Testimonials Section (With Slider and Auto-Slide) -->
+    <section id="testimonials" class="py-16 bg-gradient-to-r from-gray-100 to-gray-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">What Our Hyderabad Patients Say</h2>
             <div class="testimonial-slider-container fade-in">
                 <div class="testimonial-slider" id="testimonial-slider">
                     <!-- Testimonials will be populated dynamically -->
                 </div>
+                <div class="slider-nav left" onclick="slideLeft('testimonial-slider', 3, 33.33)"><i class="fas fa-arrow-left"></i></div>
+                <div class="slider-nav right" onclick="toggleSlider('testimonial-slider')"><i class="fas fa-compress-alt" id="testimonial-toggle-icon"></i></div>
             </div>
         </div>
     </section>
@@ -853,10 +893,82 @@
         }, { threshold: 0.1 });
         fadeInElements.forEach(element => observer.observe(element));
 
-        // Treatments Loader (Static)
+        // Slider Logic
+        const sliders = {
+            'offers-slider': { index: 0, visibleSlides: 1, slideWidth: 100, isCollapsed: false },
+            'treatments-slider': { index: 0, visibleSlides: 3, slideWidth: 33.33, isCollapsed: false },
+            'testimonial-slider': { index: 0, visibleSlides: 3, slideWidth: 33.33, isCollapsed: false }
+        };
+
+        function updateSlider(sliderId) {
+            const slider = document.getElementById(sliderId);
+            const state = sliders[sliderId];
+            const totalSlides = slider.children.length;
+            state.index = Math.max(0, Math.min(state.index, totalSlides - state.visibleSlides));
+            const translateX = -state.index * state.slideWidth;
+            slider.style.transform = `translateX(${translateX}%)`;
+
+            // Handle testimonial fade and slide animations
+            if (sliderId === 'testimonial-slider') {
+                const slides = slider.children;
+                for (let i = 0; i < slides.length; i++) {
+                    if (i >= state.index && i < state.index + state.visibleSlides) {
+                        slides[i].classList.add('visible');
+                    } else {
+                        slides[i].classList.remove('visible');
+                    }
+                }
+            }
+        }
+
+        function slideLeft(sliderId, visibleSlides, slideWidth) {
+            sliders[sliderId].visibleSlides = visibleSlides;
+            sliders[sliderId].slideWidth = slideWidth;
+            sliders[sliderId].index--;
+            updateSlider(sliderId);
+        }
+
+        function slideRight(sliderId, visibleSlides, slideWidth) {
+            sliders[sliderId].visibleSlides = visibleSlides;
+            sliders[sliderId].slideWidth = slideWidth;
+            sliders[sliderId].index++;
+            updateSlider(sliderId);
+        }
+
+        function toggleSlider(sliderId) {
+            const state = sliders[sliderId];
+            const toggleIcon = document.getElementById(`${sliderId}-toggle-icon`);
+            state.isCollapsed = !state.isCollapsed;
+            toggleIcon.className = state.isCollapsed ? 'fas fa-expand-alt' : 'fas fa-compress-alt';
+            const slider = document.getElementById(sliderId);
+            slider.style.height = state.isCollapsed ? '0' : 'auto';
+            slider.style.overflow = state.isCollapsed ? 'hidden' : 'visible';
+        }
+
+        // Automatic Sliding for Testimonials
+        function autoSlideTestimonials() {
+            slideRight('testimonial-slider', 3, 33.33);
+        }
+
+        // Start auto-sliding for testimonials every 5 seconds
+        let testimonialInterval = setInterval(autoSlideTestimonials, 5000);
+
+        // Pause auto-sliding on hover
+        document.getElementById('testimonial-slider').addEventListener('mouseenter', () => {
+            clearInterval(testimonialInterval);
+        });
+
+        document.getElementById('testimonial-slider').addEventListener('mouseleave', () => {
+            testimonialInterval = setInterval(autoSlideTestimonials, 5000);
+        });
+
+        // Treatments Loader
         async function loadTreatments() {
             try {
                 const response = await fetch('http://localhost:3000/api/services');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
                 const treatments = await response.json();
                 const treatmentsSlider = document.getElementById('treatments-slider');
                 treatmentsSlider.innerHTML = '';
@@ -866,27 +978,69 @@
                     return;
                 }
 
-                treatments.slice(0, 3).forEach(treatment => {
+                treatments.forEach(treatment => {
                     const treatmentSlide = document.createElement('div');
                     treatmentSlide.className = 'treatment-slide';
+                    const mediaUrl = treatment.image || treatment.video || '/placeholder.png';
                     let mediaHTML = '';
-                    if (treatment.video) {
-                        mediaHTML = `<video src="${treatment.video}" controls class="treatment-media"></video>`;
-                    } else if (treatment.image) {
-                        mediaHTML = `<img src="${treatment.image}" alt="${treatment.title}" class="treatment-media" loading="lazy">`;
+                    if (treatment.video && !treatment.image) {
+                        mediaHTML = `<video src="${mediaUrl}" controls class="treatment-media" onerror="this.poster='/placeholder.png'"></video>`;
+                    } else {
+                        mediaHTML = `<img src="${mediaUrl}" alt="${treatment.title || 'Treatment Image'}" class="treatment-media" loading="lazy" onerror="this.src='/placeholder.png'">`;
                     }
                     treatmentSlide.innerHTML = `
                         <div class="bg-white p-6 rounded-lg shadow-md text-center">
                             ${mediaHTML}
-                            <h3 class="text-xl font-semibold text-teal-600 mb-2">${treatment.title}</h3>
-                            <p class="text-gray-600 mb-2">${treatment.description}</p>
-                            <p class="text-gray-800 font-semibold">Price: ₹${treatment.price}</p>
+                            <h3 class="text-xl font-semibold text-teal-600 mb-2">${treatment.title || 'Untitled'}</h3>
+                            <p class="text-gray-600 mb-2">${treatment.description || 'No description available'}</p>
+                            <p class="text-gray-800 font-semibold">Price: ₹${treatment.price || 'N/A'}</p>
                         </div>
                     `;
                     treatmentsSlider.appendChild(treatmentSlide);
                 });
+
+                updateSlider('treatments-slider');
             } catch (error) {
                 console.error('Error loading treatments:', error);
+                showToast('Error loading treatments. Please try again.', true);
+            }
+        }
+
+        // Offers Loader (Backend Connected)
+        async function loadOffers() {
+            try {
+                const response = await fetch('http://localhost:3000/api/offers');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const offers = await response.json();
+                const offersSlider = document.getElementById('offers-slider');
+                offersSlider.innerHTML = '';
+
+                if (offers.length === 0) {
+                    offersSlider.innerHTML = '<p class="text-center text-gray-600">No offers available at the moment.</p>';
+                    return;
+                }
+
+                offers.forEach(offer => {
+                    const offerSlide = document.createElement('div');
+                    offerSlide.className = 'offer-slide';
+                    const imageUrl = offer.image || '/placeholder.png';
+                    offerSlide.innerHTML = `
+                        <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                            <img src="${imageUrl}" alt="${offer.title || 'Offer Image'}" class="offer-media" loading="lazy" onerror="this.src='/placeholder.png'">
+                            <h3 class="text-xl font-semibold text-teal-600 mb-2">${offer.title || 'Untitled'}</h3>
+                            <p class="text-gray-600 mb-2">${offer.description || 'No description available'}</p>
+                            <p class="text-gray-800 font-semibold">Price: ₹${offer.price || 'N/A'}</p>
+                        </div>
+                    `;
+                    offersSlider.appendChild(offerSlide);
+                });
+
+                updateSlider('offers-slider');
+            } catch (error) {
+                console.error('Error loading offers:', error);
+                showToast('Error loading offers. Please try again.', true);
             }
         }
 
@@ -935,42 +1089,36 @@
             }
         }
 
-        // Testimonials Loader (Static)
+        // Testimonials Loader
         async function loadTestimonials() {
             try {
                 const response = await fetch('http://localhost:3000/api/feedback');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
                 const feedbacks = await response.json();
                 const testimonialSlider = document.getElementById('testimonial-slider');
                 testimonialSlider.innerHTML = '';
 
                 if (feedbacks.length === 0) {
-                    testimonialSlider.innerHTML = `
-                        <div class="testimonial-slide bg-white p-6 rounded-lg shadow-md">
-                            <p class="text-gray-600 mb-4">"The team at Oak Dental Clinic made my visit so comfortable! My smile has never looked better."</p>
-                            <p class="text-teal-600 font-semibold">— Priya S., Bachupally</p>
-                        </div>
-                        <div class="testimonial-slide bg-white p-6 rounded-lg shadow-md">
-                            <p class="text-gray-600 mb-4">"Professional staff and top-notch facilities. I highly recommend Oak Dental for any dental needs."</p>
-                            <p class="text-teal-600 font-semibold">— Rahul K., Hyderabad</p>
-                        </div>
-                        <div class="testimonial-slide bg-white p-6 rounded-lg shadow-md">
-                            <p class="text-gray-600 mb-4">"The best dental care in Hyderabad! My implants were done perfectly."</p>
-                            <p class="text-teal-600 font-semibold">— Anjali M., Bachupally</p>
-                        </div>
-                    `;
-                } else {
-                    feedbacks.slice(0, 3).forEach(feedback => {
-                        const slide = document.createElement('div');
-                        slide.className = 'testimonial-slide bg-white p-6 rounded-lg shadow-md';
-                        slide.innerHTML = `
-                            <p class="text-gray-600 mb-4">"${feedback.description}"</p>
-                            <p class="text-teal-600 font-semibold">— ${feedback.full_name}, ${feedback.rating}★</p>
-                        `;
-                        testimonialSlider.appendChild(slide);
-                    });
+                    testimonialSlider.innerHTML = '<p class="text-center text-gray-600">No testimonials available at the moment.</p>';
+                    return;
                 }
+
+                feedbacks.forEach(feedback => {
+                    const slide = document.createElement('div');
+                    slide.className = 'testimonial-slide bg-white p-6 rounded-lg shadow-md';
+                    slide.innerHTML = `
+                        <p class="text-gray-600 mb-4">"${feedback.description}"</p>
+                        <p class="text-teal-600 font-semibold">— ${feedback.full_name}, ${feedback.rating}★</p>
+                    `;
+                    testimonialSlider.appendChild(slide);
+                });
+
+                updateSlider('testimonial-slider');
             } catch (error) {
                 console.error('Error loading testimonials:', error);
+                showToast('Error loading testimonials. Please try again.', true);
             }
         }
 
@@ -979,6 +1127,9 @@
         async function fetchLeaveDates() {
             try {
                 const response = await fetch('http://localhost:3000/api/leave-dates');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
                 const rawDates = await response.json();
                 leaveDates = rawDates.map(date => {
                     const d = new Date(date);
@@ -1008,6 +1159,8 @@
                         dayElem.classList.add('disabled');
                         dayElem.style.color = '#ff0000';
                         dayElem.style.fontWeight = 'bold';
+                    } else {
+                        dayElem.style.color = '#000000';
                     }
                 }
             });
@@ -1022,6 +1175,8 @@
                         dayElem.classList.add('disabled');
                         dayElem.style.color = '#ff0000';
                         dayElem.style.fontWeight = 'bold';
+                    } else {
+                        dayElem.style.color = '#000000';
                     }
                 }
             });
@@ -1040,6 +1195,9 @@
         async function populateTimeSlots() {
             try {
                 const response = await fetch('http://localhost:3000/api/time-slots');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
                 const timeSlots = await response.json();
                 const timeSlotSelect = document.getElementById('time-slot');
                 timeSlotSelect.innerHTML = '<option value="" disabled selected>Select Time Slot</option>';
@@ -1048,6 +1206,7 @@
                 });
             } catch (error) {
                 console.error('Error fetching time slots:', error);
+                showToast('Error loading time slots. Please try again.', true);
             }
         }
 
@@ -1133,9 +1292,10 @@
             }
         }
 
+        // Check Appointment Status
         async function checkAppointmentStatus() {
             const identifier = document.getElementById('status-identifier').value;
-            const statusResult = document.getElementById('status-result');
+            const resultDiv = document.getElementById('status-result');
 
             if (!identifier) {
                 showToast('Please enter your mobile number or email.', true);
@@ -1144,38 +1304,35 @@
 
             try {
                 const response = await fetch(`http://localhost:3000/api/appointments?identifier=${encodeURIComponent(identifier)}`);
-                const appointments = await response.json();
+                const appointment = await response.json();
 
-                if (response.ok && appointments.length > 0) {
-                    statusResult.classList.remove('hidden');
-                    statusResult.innerHTML = `
-                        <h4 class="text-lg font-semibold text-teal-600 mb-2">Your Appointment Details:</h4>
-                        ${appointments.map(appointment => `
-                            <p class="text-gray-600">Name: ${appointment.full_name}</p>
-                            <p class="text-gray-600">Date: ${appointment.date}</p>
-                            <p class="text-gray-600">Time: ${appointment.time}</p>
-                            <hr class="my-2">
-                        `).join('')}
+                resultDiv.classList.remove('hidden');
+                if (response.ok && appointment) {
+                    resultDiv.innerHTML = `
+                        <p><strong>Status:</strong> ${appointment.status || 'Confirmed'}</p>
+                        <p><strong>Name:</strong> ${appointment.full_name}</p>
+                        <p><strong>Date:</strong> ${appointment.date}</p>
+                        <p><strong>Time:</strong> ${appointment.time}</p>
                     `;
                 } else {
-                    statusResult.classList.remove('hidden');
-                    statusResult.innerHTML = '<p class="text-red-600">No appointments found for this identifier.</p>';
+                    resultDiv.innerHTML = '<p>No appointment found with that mobile number or email.</p>';
                 }
             } catch (error) {
                 console.error('Error checking appointment status:', error);
                 showToast('Error checking appointment status. Please try again.', true);
-                statusResult.classList.remove('hidden');
-                statusResult.innerHTML = '<p class="text-red-600">Error checking status. Please try again later.</p>';
+                resultDiv.classList.remove('hidden');
+                resultDiv.innerHTML = '<p>Error checking status. Please try again later.</p>';
             }
         }
 
         // Initialize on Page Load
-        document.addEventListener('DOMContentLoaded', () => {
+        window.onload = () => {
             loadTreatments();
+            loadOffers();
             loadTestimonials();
             fetchLeaveDates();
             populateTimeSlots();
-        });
+        };
     </script>
 </body>
 </html>
