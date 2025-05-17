@@ -3,1152 +3,659 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Admin Dashboard for OAK Dental Hospital to manage treatments, appointments, payments, and contact messages.">
-    <meta name="keywords" content="admin, OAK Dental Hospital, dental treatments, appointments, payments, contact">
-    <meta name="author" content="OAK Dental Hospital">
-    <title>OAK Dental Hospital - Admin Dashboard</title>
+    <title>Oak Dental Clinic - Admin Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Open+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
         body {
-            font-family: 'Open Sans', sans-serif;
-            background: linear-gradient(145deg, #e6f0fa 0%, #f9fbfd 100%);
-            min-height: 100vh;
-            color: #1e293b;
-            margin: 0;
-            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background: #f1f5f9;
         }
-        h1, h2, h3, h4 {
-            font-family: 'Montserrat', sans-serif;
-            color: #0f2a44;
-        }
-        .btn {
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            border-radius: 8px;
-            padding: 0.75rem 1.5rem;
-            font-size: 1rem;
-        }
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            background: linear-gradient(145deg, #2563eb, #1e40af);
-        }
-        .btn::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.3);
-            transition: all 0.4s ease;
-        }
-        .btn:hover::after {
-            left: 100%;
-        }
-        .card {
-            background: white;
-            border-radius: 12px;
-            transition: all 0.3s ease;
-            border: 1px solid #e5e7eb;
-            overflow: hidden;
-        }
-        .card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-        }
-        input, select, textarea {
-            transition: all 0.3s ease;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            padding: 0.75rem;
-            background: #f9fafb;
-            font-size: 1rem;
-        }
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: #2563eb;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-            background: white;
-        }
-        .toggle-link {
-            cursor: pointer;
-            color: #2563eb;
-            transition: color 0.3s ease;
-        }
-        .toggle-link:hover {
-            color: #1e40af;
-            text-decoration: underline;
-        }
-        .form-container {
-            transition: transform 0.5s ease, opacity 0.5s ease;
-        }
-        .form-hidden {
-            transform: translateX(100%);
+        .fade-in {
             opacity: 0;
-            position: absolute;
-            width: 100%;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
         }
-        .form-visible {
-            transform: translateX(0);
+        .fade-in.visible {
             opacity: 1;
+            transform: translateY(0);
         }
-        .alert {
-            transition: opacity 0.3s ease;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        }
-        .section-panel {
-            transition: max-height 0.5s ease;
-            overflow: hidden;
-            background: #ffffff;
-            padding: 1.5rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-        }
-        .section-panel.collapsed {
-            max-height: 3.5rem;
-        }
-        .modal {
-            display: none;
+        .sidebar {
+            height: 100vh;
+            width: 250px;
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            animation: fadeInBackdrop 0.3s ease;
+            background: linear-gradient(180deg, #0d9488 0%, #14b8a6 100%);
+            color: white;
+            transition: width 0.3s ease;
         }
-        .modal-content {
-            background: white;
+        .sidebar a {
+            padding: 1rem;
+            display: block;
+            color: white;
+            text-decoration: none;
+            transition: background 0.3s ease;
+        }
+        .sidebar a:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .content {
+            margin-left: 250px;
             padding: 2rem;
-            border-radius: 12px;
-            max-width: 600px;
-            width: 90%;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-            animation: slideInModal 0.4s ease;
         }
-        .spinner {
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            border-left-color: #2563eb;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            animation: spin 1s linear infinite;
-            display: none;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        .fade-in {
-            animation: fadeIn 0.5s ease-in;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeInBackdrop {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        @keyframes slideInModal {
-            from { transform: translateY(-40px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        /* Treatments Section */
-        .treatment-form {
-            background: linear-gradient(135deg, #f9fafb, #e6e6fa);
-            border-radius: 12px;
-            padding: 2rem;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
-        }
-        .treatment-form label {
-            font-weight: 500;
-            color: #0f2a44;
-            font-size: 0.95rem;
-        }
-        .treatment-form input, .treatment-form textarea {
-            border: 1px solid #d1d5db;
-            transition: all 0.3s ease;
-        }
-        .treatment-form input:focus, .treatment-form textarea:focus {
-            border-color: #2563eb;
+        .navbar {
             background: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-        .treatment-card {
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            background: linear-gradient(135deg, #ffffff, #f0f7ff);
-        }
-        .treatment-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
-        }
-        .treatment-card img, .treatment-card video {
-            width: 100%;
-            max-height: 200px;
-            object-fit: cover;
+        .table-container {
+            background: white;
             border-radius: 8px;
-            transition: transform 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 1rem;
         }
-        .treatment-card:hover img, .treatment-card:hover video {
-            transform: scale(1.02);
+        .login-bg {
+            background: linear-gradient(135deg, #e6f3fa 0%, #d1e8e2 100%);
         }
-        .treatment-card .btn {
-            padding: 0.5rem 1rem;
-            font-size: 0.9rem;
-            min-width: 80px;
-        }
-        /* Contact Messages Section */
-        .contact-card {
-            background: linear-gradient(135deg, #ffffff, #e6e6fa);
-            padding: 1.5rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-        }
-        .contact-card textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-        .reply-form {
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px solid #e5e7eb;
-        }
-        /* Enhanced Mobile Responsiveness */
         @media (max-width: 768px) {
-            body {
-                padding: 0.5rem;
+            .sidebar {
+                width: 0;
+                overflow: hidden;
             }
-            .container {
-                padding-left: 0.5rem;
-                padding-right: 0.5rem;
+            .sidebar.open {
+                width: 200px;
             }
-            .btn {
-                padding: 0.5rem 1rem;
-                font-size: 0.9rem;
+            .content {
+                margin-left: 0;
             }
-            .form-container {
-                position: static;
-            }
-            .form-hidden {
-                display: none;
-            }
-            .form-visible {
-                display: block;
-            }
-            .treatment-card img, .treatment-card video {
-                max-height: 160px;
-            }
-            .section-panel {
+            .login-container {
                 padding: 1rem;
-            }
-            .modal-content {
-                padding: 1.5rem;
-                max-width: 95%;
-            }
-            .auth-section {
-                padding: 1rem 0;
-            }
-            .auth-section .card {
-                padding: 1.5rem;
-            }
-            .auth-section input {
-                padding: 0.5rem;
-            }
-            .auth-section button {
-                padding: 0.75rem;
-            }
-            .nav-logo {
-                width: 40px;
-                height: 40px;
-            }
-            .nav-title {
-                font-size: 1.5rem;
-            }
-            .grid-cols-2, .grid-cols-3 {
-                grid-template-columns: 1fr !important;
-            }
-            .treatment-form {
-                padding: 1rem;
-            }
-            .treatment-form input, .treatment-form textarea {
-                font-size: 0.9rem;
-            }
-        }
-        @media (max-width: 480px) {
-            h1 {
-                font-size: 1.75rem;
-            }
-            h2 {
-                font-size: 1.5rem;
-            }
-            h3 {
-                font-size: 1.25rem;
-            }
-            h4 {
-                font-size: 1.1rem;
-            }
-            .btn {
-                font-size: 0.85rem;
-            }
-            .card {
-                padding: 1rem;
-            }
-            input, select, textarea {
-                font-size: 0.85rem;
-            }
-            .modal-content {
-                padding: 1rem;
-            }
-            .treatment-card img, .treatment-card video {
-                max-height: 140px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="bg-white shadow-lg sticky top-0 z-50">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center flex-wrap">
-            <div class="flex items-center">
-                <img src="C:\Users\svasu\Downloads\OAK_LOGO_HD.png" alt="OAK Dental Hospital Logo" class="mr-3 w-12 h-12 bg-white rounded-full shadow-sm nav-logo">
-                <h1 class="text-3xl font-bold text-gray-800 nav-title">OAK Dental Hospital - Admin</h1>
+    <!-- Login/Register Container -->
+    <div id="auth-container" class="min-h-screen flex items-center justify-center login-bg">
+        <div class="max-w-md w-full bg-white rounded-lg shadow-lg p-8 fade-in">
+            <div class="flex justify-center mb-6">
+                <img src="https://i.postimg.cc/bY0bwXgj/OAK-LOGO-HD.png" alt="Oak Dental Clinic Logo" class="h-16">
             </div>
-            <div class="flex mt-2 sm:mt-0">
-                <a href="/index.html" class="btn bg-blue-600 text-white px-4 py-2 rounded-lg mr-2 hover:bg-blue-700" aria-label="Go to User Page">User Page</a>
-                <button onclick="logout()" class="btn bg-red-600 text-white px-4 py-2 rounded-lg hidden" id="logout-btn" aria-label="Logout">Logout</button>
+            <h2 class="text-2xl font-bold text-center text-teal-600 mb-6">Admin Portal</h2>
+            <div id="login-form">
+                <h3 class="text-xl font-semibold text-teal-600 mb-4">Login</h3>
+                <input type="email" id="login-email" placeholder="Email" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Email">
+                <input type="password" id="login-password" placeholder="Password" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Password">
+                <button onclick="adminLogin()" class="w-full bg-teal-600 text-white p-3 rounded-lg hover:bg-teal-700">Login</button>
+                <p class="text-center mt-4">Don't have an account? <a href="#" onclick="showRegisterForm()" class="text-teal-600 hover:underline">Register</a></p>
             </div>
-        </div>
-    </nav>
-
-    <!-- Auth Section -->
-    <section id="auth-section" class="py-16 auth-section">
-        <div class="container mx-auto px-4">
-            <div class="max-w-md mx-auto bg-white p-8 rounded-xl shadow-md card border border-gray-200 relative overflow-hidden">
-                <div id="alert" class="hidden alert bg-blue-100 text-blue-800 p-4 rounded-lg mb-4 flex justify-between items-center">
-                    <span id="alert-message"></span>
-                    <button onclick="closeAlert()" class="text-blue-800" aria-label="Close alert"><i class="fas fa-times"></i></button>
-                </div>
-                <!-- Login Form -->
-                <div id="login-form-container" class="form-container form-visible">
-                    <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Admin Login</h2>
-                    <form id="login-form" onsubmit="event.preventDefault(); login();">
-                        <div class="mb-4">
-                            <label class="block text-gray-700 mb-2 font-medium" for="login-username">Username</label>
-                            <input type="text" id="login-username" class="w-full p-4 border rounded-lg shadow-sm" placeholder="Enter username" required aria-required="true" pattern="[A-Za-z0-9]{3,}" title="Username must be at least 3 characters, letters and numbers only">
-                        </div>
-                        <div class="mb-4 relative">
-                            <label class="block text-gray-700 mb-2 font-medium" for="login-password">Password</label>
-                            <input type="password" id="login-password" class="w-full p-4 border rounded-lg shadow-sm" placeholder="Enter password" required aria-required="true" minlength="6">
-                            <button type="button" onclick="togglePassword('login-password')" class="absolute right-4 top-12 text-gray-500" aria-label="Toggle password visibility">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                        </div>
-                        <button type="submit" class="btn w-full bg-blue-600 text-white p-4 rounded-lg hover:bg-blue-700 flex items-center justify-center" aria-label="Login">
-                            <span>Login</span>
-                            <div class="spinner ml-2" id="login-spinner"></div>
-                        </button>
-                    </form>
-                    <p class="text-center mt-4 text-gray-700">Don't have an account? <span class="toggle-link" onclick="showRegister()">Register</span></p>
-                </div>
-                <!-- Register Form -->
-                <div id="register-form-container" class="form-container form-hidden">
-                    <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Admin Registration</h2>
-                    <form id="register-form" onsubmit="event.preventDefault(); register();">
-                        <div class="mb-4">
-                            <label class="block text-gray-700 mb-2 font-medium" for="register-username">Username</label>
-                            <input type="text" id="register-username" class="w-full p-4 border rounded-lg shadow-sm" placeholder="Enter username" required aria-required="true" pattern="[A-Za-z0-9]{3,}" title="Username must be at least 3 characters, letters and numbers only">
-                        </div>
-                        <div class="mb-4">
-                            <label class="block text-gray-700 mb-2 font-medium" for="register-email">Email</label>
-                            <input type="email" id="register-email" class="w-full p-4 border rounded-lg shadow-sm" placeholder="Enter email" required aria-required="true">
-                        </div>
-                        <div class="mb-4 relative">
-                            <label class="block text-gray-700 mb-2 font-medium" for="register-password">Password</label>
-                            <input type="password" id="register-password" class="w-full p-4 border rounded-lg shadow-sm" placeholder="Enter password" required aria-required="true" minlength="6">
-                            <button type="button" onclick="togglePassword('register-password')" class="absolute right-4 top-12 text-gray-500" aria-label="Toggle password visibility">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                        </div>
-                        <button type="submit" class="btn w-full bg-blue-600 text-white p-4 rounded-lg hover:bg-blue-700 flex items-center justify-center" aria-label="Register">
-                            <span>Register</span>
-                            <div class="spinner ml-2" id="register-spinner"></div>
-                        </button>
-                    </form>
-                    <p class="text-center mt-4 text-gray-700">Already have an account? <span class="toggle-link" onclick="showLogin()">Login</span></p>
-                </div>
+            <div id="register-form" class="hidden">
+                <h3 class="text-xl font-semibold text-teal-600 mb-4">Register</h3>
+                <input type="text" id="register-username" placeholder="Username" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Username">
+                <input type="email" id="register-email" placeholder="Email" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Email">
+                <input type="password" id="register-password" placeholder="Password" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Password">
+                <button onclick="adminRegister()" class="w-full bg-teal-600 text-white p-3 rounded-lg hover:bg-teal-700">Register</button>
+                <p class="text-center mt-4">Already have an account? <a href="#" onclick="showLoginForm()" class="text-teal-600 hover:underline">Login</a></p>
             </div>
-        </div>
-    </section>
-
-    <!-- Dashboard Section -->
-    <section id="dashboard" class="py-16 hidden">
-        <div class="container mx-auto px-4">
-            <h2 class="text-4xl font-bold text-center mb-4 text-gray-800 fade-in" id="welcome-message">Welcome!</h2>
-            <h3 class="text-3xl font-semibold text-center mb-12 text-gray-800 fade-in">Admin Dashboard</h3>
-
-            <!-- Manage Appointment Times -->
-            <div class="mb-12 section-panel fade-in" id="times-panel">
-                <h4 class="text-2xl font-semibold mb-4 text-gray-800 flex justify-between items-center cursor-pointer" onclick="toggleSection('times-panel')">
-                    Manage Appointment Times
-                    <i class="fas fa-chevron-down transition-transform duration-300"></i>
-                </h4>
-                <form id="time-form" class="max-w-md mb-6 bg-white p-6 rounded-xl shadow-md card border border-gray-200">
-                    <div class="mb-4">
-                        <label class="block text-gray-700 mb-2 font-medium" for="new-time">Add Time Slot (e.g., 09:00 AM)</label>
-                        <input type="time" id="new-time" class="w-full p-4 border rounded-lg shadow-sm" required aria-required="true">
-                    </div>
-                    <button type="button" onclick="addTime()" class="btn w-full bg-blue-600 text-white p-4 rounded-lg hover:bg-blue-700 flex items-center justify-center" aria-label="Add Time Slot">
-                        <span>Add Time</span>
-                        <div class="spinner ml-2" id="time-spinner"></div>
-                    </button>
-                </form>
-                <div id="times-list" class="grid grid-cols-1 sm:grid-cols-3 gap-4"></div>
-            </div>
-
-            <!-- Manage Treatments -->
-            <div class="mb-12 section-panel fade-in" id="treatments-panel">
-                <h4 class="text-2xl font-semibold mb-6 text-gray-800 flex justify-between items-center cursor-pointer" onclick="toggleSection('treatments-panel')">
-                    Manage Treatments
-                    <i class="fas fa-chevron-down transition-transform duration-300"></i>
-                </h4>
-                <form id="treatment-form" class="max-w-lg mb-8 treatment-form">
-                    <input type="hidden" id="treatment-id">
-                    <div class="mb-5">
-                        <label class="block text-gray-700 mb-2 font-medium" for="treatment-name">Treatment Name</label>
-                        <input type="text" id="treatment-name" class="w-full p-4 rounded-lg shadow-sm" placeholder="Enter treatment name" required aria-required="true">
-                    </div>
-                    <div class="mb-5">
-                        <label class="block text-gray-700 mb-2 font-medium" for="treatment-description">Description</label>
-                        <textarea id="treatment-description" class="w-full p-4 rounded-lg shadow-sm" rows="4" placeholder="Enter description" required aria-required="true"></textarea>
-                    </div>
-                    <div class="mb-5">
-                        <label class="block text-gray-700 mb-2 font-medium" for="treatment-cost">Cost ($)</label>
-                        <input type="number" id="treatment-cost" class="w-full p-4 rounded-lg shadow-sm" placeholder="Enter cost" required aria-required="true" min="0" step="0.01">
-                    </div>
-                    <div class="mb-5">
-                        <label class="block text-gray-700 mb-2 font-medium" for="treatment-offer">Offer (Optional)</label>
-                        <input type="text" id="treatment-offer" class="w-full p-4 rounded-lg shadow-sm" placeholder="e.g., 20% off">
-                    </div>
-                    <div class="mb-5">
-                        <label class="block text-gray-700 mb-2 font-medium" for="treatment-image">Image (Optional, max 5MB)</label>
-                        <input type="file" id="treatment-image" accept="image/*" class="w-full p-4 rounded-lg shadow-sm" onchange="validateFile(this, 5)">
-                    </div>
-                    <div class="mb-5">
-                        <label class="block text-gray-700 mb-2 font-medium" for="treatment-video">Video (Optional, max 10MB)</label>
-                        <input type="file" id="treatment-video" accept="video/*" class="w-full p-4 rounded-lg shadow-sm" onchange="validateFile(this, 10)">
-                    </div>
-                    <div class="flex space-x-4">
-                        <button type="button" onclick="addTreatment()" class="btn flex-1 bg-blue-600 text-white p-4 rounded-lg hover:bg-blue-700 flex items-center justify-center" id="treatment-submit" aria-label="Add Treatment">
-                            <span>Add Treatment</span>
-                            <div class="spinner ml-2" id="treatment-spinner"></div>
-                        </button>
-                        <button type="button" onclick="clearTreatmentForm()" class="btn flex-1 bg-gray-500 text-white p-4 rounded-lg hover:bg-gray-600" aria-label="Clear Form">Clear</button>
-                    </div>
-                </form>
-                <div id="treatments-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-            </div>
-
-            <!-- Manage Appointments -->
-            <div class="mb-12 section-panel fade-in" id="appointments-panel">
-                <h4 class="text-2xl font-semibold mb-4 text-gray-800 flex justify-between items-center cursor-pointer" onclick="toggleSection('appointments-panel')">
-                    Manage Appointments
-                    <i class="fas fa-chevron-down transition-transform duration-300"></i>
-                </h4>
-                <div id="appointments-list" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
-            </div>
-
-            <!-- Manage Payments -->
-            <div class="mb-12 section-panel fade-in" id="payments-panel">
-                <h4 class="text-2xl font-semibold mb-4 text-gray-800 flex justify-between items-center cursor-pointer" onclick="toggleSection('payments-panel')">
-                    Manage Payments
-                    <i class="fas fa-chevron-down transition-transform duration-300"></i>
-                </h4>
-                <div id="payments-list" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
-            </div>
-
-            <!-- Contact Messages -->
-            <div class="mb-12 section-panel fade-in" id="contacts-panel">
-                <h4 class="text-2xl font-semibold mb-4 text-gray-800 flex justify-between items-center cursor-pointer" onclick="toggleSection('contacts-panel')">
-                    Contact Messages
-                    <i class="fas fa-chevron-down transition-transform duration-300"></i>
-                </h4>
-                <div id="contacts-list" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
-            </div>
-
-            <!-- Newsletter Subscribers -->
-            <div class="section-panel fade-in" id="newsletter-panel">
-                <h4 class="text-2xl font-semibold mb-4 text-gray-800 flex justify-between items-center cursor-pointer" onclick="toggleSection('newsletter-panel')">
-                    Newsletter Subscribers
-                    <i class="fas fa-chevron-down transition-transform duration-300"></i>
-                </h4>
-                <div id="newsletter-list" class="grid grid-cols-1 sm:grid-cols-3 gap-4"></div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Edit Treatment Modal -->
-    <div id="edit-treatment-modal" class="modal">
-        <div class="modal-content">
-            <h3 class="text-2xl font-bold mb-6 text-gray-800">Edit Treatment</h3>
-            <form id="edit-treatment-form">
-                <input type="hidden" id="edit-treatment-id">
-                <div class="mb-5">
-                    <label class="block text-gray-700 mb-2 font-medium" for="edit-treatment-name">Treatment Name</label>
-                    <input type="text" id="edit-treatment-name" class="w-full p-4 rounded-lg shadow-sm" placeholder="Enter treatment name" required aria-required="true">
-                </div>
-                <div class="mb-5">
-                    <label class="block text-gray-700 mb-2 font-medium" for="edit-treatment-description">Description</label>
-                    <textarea id="edit-treatment-description" class="w-full p-4 rounded-lg shadow-sm" rows="4" placeholder="Enter description" required aria-required="true"></textarea>
-                </div>
-                <div class="mb-5">
-                    <label class="block text-gray-700 mb-2 font-medium" for="edit-treatment-cost">Cost ($)</label>
-                    <input type="number" id="edit-treatment-cost" class="w-full p-4 rounded-lg shadow-sm" placeholder="Enter cost" required aria-required="true" min="0" step="0.01">
-                </div>
-                <div class="mb-5">
-                    <label class="block text-gray-700 mb-2 font-medium" for="edit-treatment-offer">Offer (Optional)</label>
-                    <input type="text" id="edit-treatment-offer" class="w-full p-4 rounded-lg shadow-sm" placeholder="e.g., 20% off">
-                </div>
-                <div class="mb-5">
-                    <label class="block text-gray-700 mb-2 font-medium" for="edit-treatment-image">Image (Optional, max 5MB)</label>
-                    <input type="file" id="edit-treatment-image" accept="image/*" class="w-full p-4 rounded-lg shadow-sm" onchange="validateFile(this, 5)">
-                </div>
-                <div class="mb-5">
-                    <label class="block text-gray-700 mb-2 font-medium" for="edit-treatment-video">Video (Optional, max 10MB)</label>
-                    <input type="file" id="edit-treatment-video" accept="video/*" class="w-full p-4 rounded-lg shadow-sm" onchange="validateFile(this, 10)">
-                </div>
-                <div class="flex space-x-4">
-                    <button type="button" onclick="updateTreatment()" class="btn flex-1 bg-blue-600 text-white p-4 rounded-lg hover:bg-blue-700 flex items-center justify-center" aria-label="Update Treatment">
-                        <span>Update</span>
-                        <div class="spinner ml-2" id="edit-treatment-spinner"></div>
-                    </button>
-                    <button type="button" onclick="closeModal()" class="btn flex-1 bg-gray-500 text-white p-4 rounded-lg hover:bg-gray-600" aria-label="Cancel">Cancel</button>
-                </div>
-            </form>
         </div>
     </div>
 
-    <!-- Reply Contact Modal -->
-    <div id="reply-contact-modal" class="modal">
-        <div class="modal-content">
-            <h3 class="text-2xl font-bold mb-6 text-gray-800">Reply to Contact Message</h3>
-            <form id="reply-contact-form">
-                <input type="hidden" id="reply-contact-id">
-                <div class="mb-5">
-                    <label class="block text-gray-700 mb-2 font-medium" for="reply-contact-email">Recipient Email</label>
-                    <input type="email" id="reply-contact-email" class="w-full p-4 rounded-lg shadow-sm" readonly>
+    <!-- Dashboard Container (Hidden Initially) -->
+    <div id="dashboard-container" class="hidden">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="flex items-center justify-center py-4">
+                <img src="https://i.postimg.cc/bY0bwXgj/OAK-LOGO-HD.png" alt="Oak Dental Clinic Logo" class="h-12">
+            </div>
+            <a href="#appointments" onclick="showSection('appointments')"><i class="fas fa-calendar-check mr-2"></i> Appointments</a>
+            <a href="#waitlist" onclick="showSection('waitlist')"><i class="fas fa-list mr-2"></i> Waitlist</a>
+            <a href="#feedback" onclick="showSection('feedback')"><i class="fas fa-comment mr-2"></i> Feedback</a>
+            <a href="#services" onclick="showSection('services')"><i class="fas fa-tooth mr-2"></i> Services</a>
+            <a href="#leave-dates" onclick="showSection('leave-dates')"><i class="fas fa-calendar-times mr-2"></i> Leave Dates</a>
+            <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt mr-2"></i> Logout</a>
+        </div>
+
+        <!-- Navbar -->
+        <nav class="navbar p-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <button class="md:hidden text-teal-600 text-2xl" onclick="toggleSidebar()">☰</button>
+                <h1 class="text-xl font-semibold text-teal-600 ml-4">Oak Dental Clinic - Admin Dashboard</h1>
+            </div>
+            <div>
+                <span id="admin-username" class="text-gray-600"></span>
+            </div>
+        </nav>
+
+        <!-- Content -->
+        <div class="content">
+            <!-- Appointments Section -->
+            <div id="appointments" class="section">
+                <h2 class="text-2xl font-bold text-teal-600 mb-6">Manage Appointments</h2>
+                <div class="table-container">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="bg-teal-100">
+                                <th class="p-2">Name</th>
+                                <th class="p-2">Phone</th>
+                                <th class="p-2">Treatment</th>
+                                <th class="p-2">Date</th>
+                                <th class="p-2">Time</th>
+                                <th class="p-2">Status</th>
+                                <th class="p-2">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="appointments-table"></tbody>
+                    </table>
                 </div>
-                <div class="mb-5">
-                    <label class="block text-gray-700 mb-2 font-medium" for="reply-contact-message">Reply Message</label>
-                    <textarea id="reply-contact-message" class="w-full p-4 rounded-lg shadow-sm" rows="5" placeholder="Enter your reply" required aria-required="true"></textarea>
+            </div>
+
+            <!-- Waitlist Section -->
+            <div id="waitlist" class="section hidden">
+                <h2 class="text-2xl font-bold text-teal-600 mb-6">Manage Waitlist</h2>
+                <div class="table-container">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="bg-teal-100">
+                                <th class="p-2">Name</th>
+                                <th class="p-2">Email</th>
+                                <th class="p-2">Phone</th>
+                                <th class="p-2">Preferred Date</th>
+                                <th class="p-2">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="waitlist-table"></tbody>
+                    </table>
                 </div>
-                <div class="flex space-x-4">
-                    <button type="button" onclick="sendReply()" class="btn flex-1 bg-blue-600 text-white p-4 rounded-lg hover:bg-blue-700 flex items-center justify-center" aria-label="Send Reply">
-                        <span>Send Reply</span>
-                        <div class="spinner ml-2" id="reply-contact-spinner"></div>
-                    </button>
-                    <button type="button" onclick="closeReplyModal()" class="btn flex-1 bg-gray-500 text-white p-4 rounded-lg hover:bg-gray-600" aria-label="Cancel">Cancel</button>
+            </div>
+
+            <!-- Feedback Section -->
+            <div id="feedback" class="section hidden">
+                <h2 class="text-2xl font-bold text-teal-600 mb-6">Manage Feedback</h2>
+                <div class="table-container">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="bg-teal-100">
+                                <th class="p-2">Name</th>
+                                <th class="p-2">Email</th>
+                                <th class="p-2">Rating</th>
+                                <th class="p-2">Description</th>
+                                <th class="p-2">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="feedback-table"></tbody>
+                    </table>
                 </div>
-            </form>
+            </div>
+
+            <!-- Services Section -->
+            <div id="services" class="section hidden">
+                <h2 class="text-2xl font-bold text-teal-600 mb-6">Manage Services</h2>
+                <div class="mb-6">
+                    <h3 class="text-xl font-semibold text-teal-600 mb-4">Add Service</h3>
+                    <input type="text" id="service-title" placeholder="Title" class="w-full p-3 mb-4 border rounded-lg" aria-label="Service Title">
+                    <textarea id="service-description" placeholder="Description" class="w-full p-3 mb-4 border rounded-lg" rows="4" aria-label="Service Description"></textarea>
+                    <input type="number" id="service-price" placeholder="Price" class="w-full p-3 mb-4 border rounded-lg" aria-label="Service Price">
+                    <input type="text" id="service-image" placeholder="Image URL" class="w-full p-3 mb-4 border rounded-lg" aria-label="Service Image URL">
+                    <input type="text" id="service-video" placeholder="Video URL (optional)" class="w-full p-3 mb-4 border rounded-lg" aria-label="Service Video URL">
+                    <button onclick="addService()" class="bg-teal-600 text-white p-3 rounded-lg hover:bg-teal-700">Add Service</button>
+                </div>
+                <div class="table-container">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="bg-teal-100">
+                                <th class="p-2">Title</th>
+                                <th class="p-2">Description</th>
+                                <th class="p-2">Price</th>
+                                <th class="p-2">Image/Video</th>
+                                <th class="p-2">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="services-table"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Leave Dates Section -->
+            <div id="leave-dates" class="section hidden">
+                <h2 class="text-2xl font-bold text-teal-600 mb-6">Manage Leave Dates</h2>
+                <div class="mb-6">
+                    <h3 class="text-xl font-semibold text-teal-600 mb-4">Add Leave Date</h3>
+                    <input type="date" id="leave-date" class="w-full p-3 mb-4 border rounded-lg" aria-label="Leave Date">
+                    <button onclick="addLeaveDate()" class="bg-teal-600 text-white p-3 rounded-lg hover:bg-teal-700">Add Leave Date</button>
+                </div>
+                <div class="table-container">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="bg-teal-100">
+                                <th class="p-2">Date</th>
+                                <th class="p-2">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leave-dates-table"></tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        const API_URL = 'https://oak-dental.onrender.com/api';
-        let token = localStorage.getItem('adminToken');
+        // Determine API Base URL
+        const API_BASE_URL = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://oak-dental.onrender.com';
 
-        function decodeJWT(token) {
+        // Check Authentication
+        if (localStorage.getItem('adminToken')) {
+            showDashboard();
+            document.getElementById('admin-username').textContent = `Welcome, ${localStorage.getItem('adminUsername')}`;
+        } else {
+            showAuth();
+        }
+
+        function showAuth() {
+            document.getElementById('auth-container').classList.remove('hidden');
+            document.getElementById('dashboard-container').classList.add('hidden');
+            const fadeInElements = document.querySelectorAll('.fade-in');
+            fadeInElements.forEach(element => element.classList.add('visible'));
+        }
+
+        function showDashboard() {
+            document.getElementById('auth-container').classList.add('hidden');
+            document.getElementById('dashboard-container').classList.remove('hidden');
+            loadAppointments();
+            loadWaitlist();
+            loadFeedback();
+            loadServices();
+            loadLeaveDates();
+            showSection('appointments');
+        }
+
+        function showRegisterForm() {
+            document.getElementById('login-form').classList.add('hidden');
+            document.getElementById('register-form').classList.remove('hidden');
+        }
+
+        function showLoginForm() {
+            document.getElementById('register-form').classList.add('hidden');
+            document.getElementById('login-form').classList.remove('hidden');
+        }
+
+        async function adminLogin() {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            if (!email || !password) {
+                alert('Please fill in all fields.');
+                return;
+            }
+
             try {
-                const base64Url = token.split('.')[1];
-                const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-                const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => {
-                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-                }).join(''));
-                return JSON.parse(jsonPayload);
-            } catch (error) {
-                console.error('Error decoding JWT:', error);
-                return null;
-            }
-        }
-
-        axios.interceptors.response.use(
-            response => response,
-            error => {
-                const message = error.response?.data?.message || 'An unexpected error occurred. Please try again.';
-                console.error('API Error:', {
-                    message,
-                    status: error.response?.status,
-                    data: error.response?.data,
-                    url: error.config?.url
+                const response = await fetch(`${API_BASE_URL}/api/admin/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
                 });
-                showAlert(message, 'error');
-                return Promise.reject(error);
-            }
-        );
 
-        // Ensure login page is shown by default
-        document.addEventListener('DOMContentLoaded', () => {
-            const token = localStorage.getItem('adminToken');
-            if (token) {
-                document.getElementById('auth-section').classList.add('hidden');
-                document.getElementById('dashboard').classList.remove('hidden');
-                document.getElementById('logout-btn').classList.remove('hidden');
-                const decoded = decodeJWT(token);
-                if (decoded && decoded.username) {
-                    document.getElementById('welcome-message').textContent = `Welcome, ${decoded.username}!`;
+                const data = await response.json();
+                if (response.ok) {
+                    localStorage.setItem('adminToken', data.token);
+                    localStorage.setItem('adminUsername', data.admin.username);
+                    showDashboard();
+                    document.getElementById('admin-username').textContent = `Welcome, ${data.admin.username}`;
+                } else {
+                    alert(data.error || 'Error logging in');
                 }
-                loadDashboard();
-            } else {
-                document.getElementById('auth-section').classList.remove('hidden');
-                document.getElementById('dashboard').classList.add('hidden');
-                document.getElementById('logout-btn').classList.add('hidden');
-            }
-        });
-
-        function showRegister() {
-            const loginForm = document.getElementById('login-form-container');
-            const registerForm = document.getElementById('register-form-container');
-            loginForm.classList.remove('form-visible');
-            loginForm.classList.add('form-hidden');
-            registerForm.classList.remove('form-hidden');
-            registerForm.classList.add('form-visible');
-            closeAlert();
-        }
-
-        function showLogin() {
-            const loginForm = document.getElementById('login-form-container');
-            const registerForm = document.getElementById('register-form-container');
-            registerForm.classList.remove('form-visible');
-            registerForm.classList.add('form-hidden');
-            loginForm.classList.remove('form-hidden');
-            loginForm.classList.add('form-visible');
-            closeAlert();
-        }
-
-        function togglePassword(inputId) {
-            const input = document.getElementById(inputId);
-            const icon = input.nextElementSibling.querySelector('i');
-            if (input.type === 'password') {
-                input.type = 'text';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                input.type = 'password';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
+            } catch (error) {
+                console.error('Error logging in:', error);
+                alert('Error logging in. Please try again.');
             }
         }
 
-        function showAlert(message, type = 'success') {
-            const alert = document.getElementById('alert');
-            const alertMessage = document.getElementById('alert-message');
-            alertMessage.textContent = message;
-            alert.classList.remove('hidden', 'bg-blue-100', 'bg-red-100', 'text-blue-800', 'text-red-800');
-            alert.classList.add(type === 'success' ? 'bg-blue-100' : 'bg-red-100', type === 'success' ? 'text-blue-800' : 'text-red-800');
-            setTimeout(closeAlert, 5000);
-        }
-
-        function closeAlert() {
-            const alert = document.getElementById('alert');
-            alert.classList.add('hidden');
-        }
-
-        function showSpinner(id) {
-            document.getElementById(id).style.display = 'block';
-        }
-
-        function hideSpinner(id) {
-            document.getElementById(id).style.display = 'none';
-        }
-
-        function validateFile(input, maxSizeMB) {
-            const file = input.files[0];
-            if (file && file.size > maxSizeMB * 1024 * 1024) {
-                showAlert(`File size exceeds ${maxSizeMB}MB limit.`, 'error');
-                input.value = '';
-            }
-        }
-
-        async function register() {
+        async function adminRegister() {
             const username = document.getElementById('register-username').value;
             const email = document.getElementById('register-email').value;
             const password = document.getElementById('register-password').value;
 
             if (!username || !email || !password) {
-                showAlert('Please fill all fields.', 'error');
+                alert('Please fill in all fields.');
                 return;
             }
 
-            showSpinner('register-spinner');
             try {
-                await axios.post(`${API_URL}/admin/register`, { username, email, password }, { timeout: 10000 });
-                showAlert('Registration successful! Please log in.');
-                document.getElementById('register-form').reset();
-                showLogin();
+                const response = await fetch(`${API_BASE_URL}/api/admin/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: username, email, password })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    localStorage.setItem('adminToken', data.token);
+                    localStorage.setItem('adminUsername', data.admin.username);
+                    showDashboard();
+                    document.getElementById('admin-username').textContent = `Welcome, ${data.admin.username}`;
+                } else {
+                    alert(data.error || 'Error registering');
+                }
             } catch (error) {
-                // Error handled by Axios interceptor
-            } finally {
-                hideSpinner('register-spinner');
+                console.error('Error registering:', error);
+                alert('Error registering. Please try again.');
             }
         }
 
-        async function login() {
-            const username = document.getElementById('login-username').value;
-            const password = document.getElementById('login-password').value;
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
 
-            if (!username || !password) {
-                showAlert('Please fill all fields.', 'error');
-                return;
-            }
-
-            showSpinner('login-spinner');
-            try {
-                const response = await axios.post(`${API_URL}/admin/login`, { username, password }, { timeout: 10000 });
-                token = response.data.token;
-                localStorage.setItem('adminToken', token);
-                document.getElementById('auth-section').classList.add('hidden');
-                document.getElementById('dashboard').classList.remove('hidden');
-                document.getElementById('logout-btn').classList.remove('hidden');
-                const decoded = decodeJWT(token);
-                if (decoded && decoded.username) {
-                    document.getElementById('welcome-message').textContent = `Welcome, ${decoded.username}!`;
-                }
-                await loadDashboard();
-            } catch (error) {
-                // Error handled by Axios interceptor
-            } finally {
-                hideSpinner('login-spinner');
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            document.getElementById(sectionId).classList.remove('hidden');
+            if (window.innerWidth <= 768) {
+                document.getElementById('sidebar').classList.remove('open');
             }
         }
 
         function logout() {
             localStorage.removeItem('adminToken');
-            token = null;
-            document.getElementById('auth-section').classList.remove('hidden');
-            document.getElementById('dashboard').classList.add('hidden');
-            document.getElementById('logout-btn').classList.add('hidden');
-            document.getElementById('login-form').reset();
-            document.getElementById('register-form').reset();
-            document.getElementById('welcome-message').textContent = 'Welcome!';
-            showLogin();
+            localStorage.removeItem('adminUsername');
+            showAuth();
         }
 
-        function toggleSection(panelId) {
-            const panel = document.getElementById(panelId);
-            const icon = panel.querySelector('i');
-            panel.classList.toggle('collapsed');
-            icon.classList.toggle('fa-chevron-down');
-            icon.classList.toggle('fa-chevron-up');
+        async function fetchWithAuth(url, options = {}) {
+            const token = localStorage.getItem('adminToken');
+            options.headers = {
+                ...options.headers,
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            };
+            const response = await fetch(url, options);
+            if (response.status === 401) {
+                alert('Session expired. Please log in again.');
+                logout();
+            }
+            return response;
         }
 
-        async function uploadFiles(imageFile, videoFile, retries = 2) {
-            if (!imageFile && !videoFile) return { image: null, video: null };
-
+        // Appointments
+        async function loadAppointments() {
             try {
-                const formData = new FormData();
-                if (imageFile) formData.append('image', imageFile);
-                if (videoFile) formData.append('video', videoFile);
-
-                const response = await axios.post(`${API_URL}/admin/upload`, formData, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        'Content-Type': 'multipart/form-data'
-                    },
-                    timeout: 60000
+                const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/appointments`);
+                const appointments = await response.json();
+                const table = document.getElementById('appointments-table');
+                table.innerHTML = '';
+                appointments.forEach(apt => {
+                    table.innerHTML += `
+                        <tr>
+                            <td class="p-2">${apt.full_name}</td>
+                            <td class="p-2">${apt.phone}</td>
+                            <td class="p-2">${apt.treatment}</td>
+                            <td class="p-2">${apt.date}</td>
+                            <td class="p-2">${apt.time}</td>
+                            <td class="p-2">${apt.status}</td>
+                            <td class="p-2">
+                                ${apt.status !== 'CANCELLED' ? `
+                                    <button onclick="confirmAppointment('${apt.id}')" class="bg-green-600 text-white p-1 rounded hover:bg-green-700">Confirm</button>
+                                    <button onclick="cancelAppointment('${apt.id}')" class="bg-red-600 text-white p-1 rounded hover:bg-red-700">Cancel</button>
+                                ` : ''}
+                            </td>
+                        </tr>
+                    `;
                 });
-                console.log('Upload response:', response.data); // Debug log
-                return {
-                    image: response.data.imageUrl ? response.data.imageUrl : null,
-                    video: response.data.videoUrl ? response.data.videoUrl : null
-                };
             } catch (error) {
-                console.error('Upload attempt failed:', {
-                    attempt: 3 - retries,
-                    message: error.response?.data?.message || error.message,
-                    status: error.response?.status,
-                    url: error.config?.url
-                });
-                if (retries > 0) {
-                    console.log(`Retrying upload (${retries} attempts left)...`);
-                    return uploadFiles(imageFile, videoFile, retries - 1);
+                console.error('Error loading appointments:', error);
+            }
+        }
+
+        async function confirmAppointment(id) {
+            try {
+                const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/appointments/${id}/confirm`, { method: 'POST' });
+                if (response.ok) {
+                    alert('Appointment confirmed');
+                    loadAppointments();
+                } else {
+                    alert('Error confirming appointment');
                 }
-                const errorMessage = error.response?.status === 404
-                    ? 'Upload endpoint not found. Please check server configuration.'
-                    : error.response?.data?.message || 'Failed to upload files. Saving without media.';
-                showAlert(errorMessage, 'error');
-                return { image: null, video: null };
-            }
-        }
-
-        async function loadDashboard() {
-            showSpinner('dashboard-spinner');
-            try {
-                const config = { headers: { Authorization: `Bearer ${token}` }, timeout: 10000 };
-                const [times, treatments, appointments, payments, contacts, newsletter] = await Promise.all([
-                    axios.get(`${API_URL}/admin/times`, config).catch(err => ({ data: [] })),
-                    axios.get(`${API_URL}/admin/treatments`, config).catch(err => ({ data: [] })),
-                    axios.get(`${API_URL}/admin/appointments`, config).catch(err => ({ data: [] })),
-                    axios.get(`${API_URL}/admin/payments`, config).catch(err => ({ data: [] })),
-                    axios.get(`${API_URL}/admin/contacts`, config).catch(err => ({ data: [] })),
-                    axios.get(`${API_URL}/admin/newsletter`, config).catch(err => ({ data: [] }))
-                ]);
-
-                const timesList = document.getElementById('times-list');
-                timesList.innerHTML = times.data.length ? '' : '<p class="text-gray-700 text-center col-span-full">No time slots available.</p>';
-                times.data.forEach(time => {
-                    const div = document.createElement('div');
-                    div.className = 'bg-white p-6 rounded-xl shadow-md card border border-gray-200 flex justify-between items-center';
-                    div.innerHTML = `
-                        <p class="text-gray-700">${time.time}</p>
-                        <button onclick="deleteTime(${time.id})" class="btn bg-red-600 text-white px-3 py-2 rounded-lg hover:bg-red-700" aria-label="Delete Time Slot"><i class="fas fa-trash-alt"></i> Delete</button>
-                    `;
-                    timesList.appendChild(div);
-                });
-
-                const treatmentsList = document.getElementById('treatments-list');
-                treatmentsList.innerHTML = treatments.data.length ? '' : '<p class="text-gray-700 text-center col-span-full">No treatments available.</p>';
-                treatments.data.forEach(treatment => {
-                    const div = document.createElement('div');
-                    div.className = 'treatment-card bg-white p-6 rounded-xl shadow-md card border border-gray-200';
-                    const imageUrl = treatment.image ? `${treatment.image}?t=${Date.now()}` : null;
-                    div.innerHTML = `
-                        <h3 class="text-lg font-semibold mb-2 text-gray-800">${treatment.name}</h3>
-                        <p class="text-gray-600 mb-2">${treatment.description}</p>
-                        <p class="text-gray-700 font-semibold mb-2">$${parseFloat(treatment.cost).toFixed(2)}</p>
-                        ${treatment.offer ? `<p class="text-green-600 font-semibold mb-2">Offer: ${treatment.offer}</p>` : ''}
-                        ${imageUrl ? `<img src="${imageUrl}" alt="${treatment.name} image" class="mb-2 rounded-lg" loading="lazy" onerror="handleImageError(this, '${treatment.name}');">` : ''}
-                        ${treatment.video ? `<video controls class="mb-2 rounded-lg"><source src="${treatment.video}?t=${Date.now()}" type="video/mp4"></video>` : ''}
-                        <div class="flex space-x-2 mt-4">
-                            <button onclick="editTreatment('${treatment.id}', '${treatment.name.replace(/'/g, "\\'")}', '${treatment.description.replace(/'/g, "\\'")}', ${treatment.cost}, '${treatment.offer ? treatment.offer.replace(/'/g, "\\'") : ''}', '${treatment.image ? treatment.image.replace(/'/g, "\\'") : ''}', '${treatment.video ? treatment.video.replace(/'/g, "\\'") : ''}')" class="btn bg-blue-600 text-white rounded-lg hover:bg-blue-700" aria-label="Edit Treatment"><i class="fas fa-edit mr-1"></i> Edit</button>
-                            <button onclick="deleteTreatment('${treatment.id}')" class="btn bg-red-600 text-white rounded-lg hover:bg-red-700" aria-label="Delete Treatment"><i class="fas fa-trash-alt mr-1"></i> Delete</button>
-                        </div>
-                    `;
-                    treatmentsList.appendChild(div);
-                });
-
-                const appointmentsList = document.getElementById('appointments-list');
-                appointmentsList.innerHTML = appointments.data.length ? '' : '<p class="text-gray-700 text-center col-span-full">No appointments available.</p>';
-                appointments.data.forEach(appointment => {
-                    const div = document.createElement('div');
-                    div.className = 'bg-white p-6 rounded-xl shadow-md card border border-gray-200';
-                    div.innerHTML = `
-                        <p class="text-gray-700"><strong>Name:</strong> ${appointment.name}</p>
-                        <p class="text-gray-700"><strong>Email:</strong> ${appointment.email}</p>
-                        <p class="text-gray-700"><strong>Date:</strong> ${appointment.date}</p>
-                        <p class="text-gray-700"><strong>Time:</strong> ${appointment.time}</p>
-                        <p class="text-gray-700"><strong>Service:</strong> ${appointment.Treatment ? appointment.Treatment.name : 'Not specified'}</p>
-                        <p class="text-gray-700"><strong>Status:</strong> ${appointment.status}</p>
-                        <select onchange="updateAppointmentStatus('${appointment.id}', this.value)" class="mt-2 p-2 border rounded-lg w-full" aria-label="Update Appointment Status">
-                            <option value="Pending" ${appointment.status === 'Pending' ? 'selected' : ''}>Pending</option>
-                            <option value="Confirmed" ${appointment.status === 'Confirmed' ? 'selected' : ''}>Confirmed</option>
-                            <option value="Cancelled" ${appointment.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
-                        </select>
-                    `;
-                    appointmentsList.appendChild(div);
-                });
-
-                const paymentsList = document.getElementById('payments-list');
-                paymentsList.innerHTML = payments.data.length ? '' : '<p class="text-gray-700 text-center col-span-full">No payments available.</p>';
-                payments.data.forEach(payment => {
-                    const div = document.createElement('div');
-                    div.className = 'bg-white p-6 rounded-xl shadow-md card border border-gray-200';
-                    div.innerHTML = `
-                        <p class="text-gray-700"><strong>Transaction ID:</strong> ${payment.transactionId}</p>
-                        <p class="text-gray-700"><strong>Amount:</strong> $${payment.amount.toFixed(2)}</p>
-                        <p class="text-gray-700"><strong>Payer:</strong> ${payment.payer.name} (${payment.payer.email})</p>
-                        <p class="text-gray-700"><strong>Appointment ID:</strong> ${payment.appointmentId}</p>
-                        <p class="text-gray-700"><strong>Date:</strong> ${new Date(payment.date).toLocaleString()}</p>
-                    `;
-                    paymentsList.appendChild(div);
-                });
-
-                const contactsList = document.getElementById('contacts-list');
-                contactsList.innerHTML = contacts.data.length ? '' : '<p class="text-gray-700 text-center col-span-full">No contact messages available.</p>';
-                contacts.data.forEach(contact => {
-                    const div = document.createElement('div');
-                    div.className = 'contact-card';
-                    div.innerHTML = `
-                        <p class="text-gray-700 mb-2"><strong>Name:</strong> ${contact.name}</p>
-                        <p class="text-gray-700 mb-2"><strong>Email:</strong> ${contact.email}</p>
-                        <p class="text-gray-700 mb-2"><strong>Message:</strong> ${contact.message}</p>
-                        <p class="text-gray-700 mb-2"><strong>Received:</strong> ${new Date(contact.createdAt).toLocaleString()}</p>
-                        <button onclick="openReplyModal('${contact.id}', '${contact.email}')" class="btn bg-green-600 text-white px-4 py-2 rounded-lg mt-2 hover:bg-green-700" aria-label="Reply to ${contact.name}"><i class="fas fa-reply mr-1"></i> Reply</button>
-                    `;
-                    contactsList.appendChild(div);
-                });
-
-                const newsletterList = document.getElementById('newsletter-list');
-                newsletterList.innerHTML = newsletter.data.length ? '' : '<p class="text-gray-700 text-center col-span-full">No subscribers available.</p>';
-                newsletter.data.forEach(subscriber => {
-                    const div = document.createElement('div');
-                    div.className = 'bg-white p-6 rounded-xl shadow-md card border border-gray-200';
-                    div.innerHTML = `
-                        <p class="text-gray-700"><strong>Email:</strong> ${subscriber.email}</p>
-                    `;
-                    newsletterList.appendChild(div);
-                });
             } catch (error) {
-                console.error('Failed to load dashboard:', error);
-                showAlert('Failed to load dashboard data. Retrying...', 'error');
-                setTimeout(loadDashboard, 3000);
-            } finally {
-                hideSpinner('dashboard-spinner');
+                console.error('Error confirming appointment:', error);
             }
         }
 
-        async function addTime() {
-            const timeInput = document.getElementById('new-time').value;
-            if (!timeInput) {
-                showAlert('Please enter a time.', 'error');
-                return;
-            }
-
-            // Convert time to "HH:MM AM/PM" format
-            const [hours, minutes] = timeInput.split(':');
-            let hour = parseInt(hours, 10);
-            const period = hour >= 12 ? 'PM' : 'AM';
-            hour = hour % 12 || 12; // Convert to 12-hour format
-            const formattedTime = `${hour.toString().padStart(2, '0')}:${minutes} ${period}`;
-
-            showSpinner('time-spinner');
+        async function cancelAppointment(id) {
+            if (!confirm('Are you sure you want to cancel this appointment?')) return;
             try {
-                await axios.post(`${API_URL}/admin/times`, { time: formattedTime }, { headers: { Authorization: `Bearer ${token}` }, timeout: 10000 });
-                showAlert('Time slot added.');
-                document.getElementById('time-form').reset();
-                await loadDashboard();
-            } catch (error) {
-                // Error handled by Axios interceptor
-            } finally {
-                hideSpinner('time-spinner');
-            }
-        }
-
-        async function deleteTime(id) {
-            if (!confirm('Are you sure you want to delete this time slot?')) return;
-            showSpinner('time-spinner');
-            try {
-                await axios.delete(`${API_URL}/admin/times/${id}`, { headers: { Authorization: `Bearer ${token}` }, timeout: 10000 });
-                showAlert('Time slot deleted.');
-                await loadDashboard();
-            } catch (error) {
-                // Error handled by Axios interceptor
-            } finally {
-                hideSpinner('time-spinner');
-            }
-        }
-
-        async function addTreatment() {
-            const id = document.getElementById('treatment-id').value;
-            const name = document.getElementById('treatment-name').value;
-            const description = document.getElementById('treatment-description').value;
-            const cost = document.getElementById('treatment-cost').value;
-            const offer = document.getElementById('treatment-offer').value;
-            const imageFile = document.getElementById('treatment-image').files[0];
-            const videoFile = document.getElementById('treatment-video').files[0];
-
-            if (!name || !description || !cost) {
-                showAlert('Please fill all required fields.', 'error');
-                return;
-            }
-
-            showSpinner('treatment-spinner');
-            try {
-                const { image, video } = await uploadFiles(imageFile, videoFile);
-                const treatmentData = {
-                    name,
-                    description,
-                    cost: parseFloat(cost),
-                    offer: offer || null,
-                    image: image || null,
-                    video: video || null
-                };
-                const config = { headers: { Authorization: `Bearer ${token}` }, timeout: 10000 };
-
-                let retries = 2;
-                while (retries > 0) {
-                    try {
-                        if (id) {
-                            await axios.put(`${API_URL}/admin/treatments/${id}`, treatmentData, config);
-                            showAlert('Treatment updated. Changes will reflect on the user page.');
-                        } else {
-                            await axios.post(`${API_URL}/admin/treatments`, treatmentData, config);
-                            showAlert('Treatment added successfully. Changes will reflect on the user page.');
-                        }
-                        break;
-                    } catch (error) {
-                        console.error('Treatment save attempt failed:', {
-                            attempt: 3 - retries,
-                            message: error.response?.data?.message || error.message,
-                            status: error.response?.status
-                        });
-                        if (retries === 1) throw error;
-                        retries--;
-                        await new Promise(resolve => setTimeout(resolve, 1000));
-                    }
+                const response = await fetchWithAuth(`${API_BASE_URL}/api/appointments/${id}/cancel`, { method: 'POST' });
+                if (response.ok) {
+                    alert('Appointment cancelled');
+                    loadAppointments();
+                } else {
+                    alert('Error cancelling appointment');
                 }
-
-                clearTreatmentForm();
-                await loadDashboard();
             } catch (error) {
-                // Error handled by Axios interceptor
-            } finally {
-                hideSpinner('treatment-spinner');
+                console.error('Error cancelling appointment:', error);
             }
         }
 
-        function clearTreatmentForm() {
-            document.getElementById('treatment-form').reset();
-            document.getElementById('treatment-id').value = '';
-            document.getElementById('treatment-submit').textContent = 'Add Treatment';
-            document.getElementById('treatment-submit').setAttribute('aria-label', 'Add Treatment');
-        }
-
-        async function deleteTreatment(id) {
-            if (!confirm('Are you sure you want to delete this treatment? This will reflect on the user page.')) return;
-            showSpinner('treatment-spinner');
+        // Waitlist
+        async function loadWaitlist() {
             try {
-                await axios.delete(`${API_URL}/admin/treatments/${id}`, { headers: { Authorization: `Bearer ${token}` }, timeout: 10000 });
-                showAlert('Treatment deleted. Changes will reflect on the user page.');
-                await loadDashboard();
-            } catch (error) {
-                // Error handled by Axios interceptor
-            } finally {
-                hideSpinner('treatment-spinner');
-            }
-        }
-
-        async function updateAppointmentStatus(id, status) {
-            showSpinner('appointment-spinner');
-            try {
-                const response = await axios.put(`${API_URL}/admin/appointments/${id}`, { status }, {
-                    headers: { Authorization: `Bearer ${token}` },
-                    timeout: 10000
+                const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/waitlist`);
+                const waitlist = await response.json();
+                const table = document.getElementById('waitlist-table');
+                table.innerHTML = '';
+                waitlist.forEach(entry => {
+                    table.innerHTML += `
+                        <tr>
+                            <td class="p-2">${entry.full_name}</td>
+                            <td class="p-2">${entry.email}</td>
+                            <td class="p-2">${entry.phone}</td>
+                            <td class="p-2">${entry.preferred_date}</td>
+                            <td class="p-2">
+                                <button onclick="deleteWaitlist('${entry.id}')" class="bg-red-600 text-white p-1 rounded hover:bg-red-700">Delete</button>
+                            </td>
+                        </tr>
+                    `;
                 });
-                showAlert('Appointment status updated.');
-                await loadDashboard();
             } catch (error) {
-                // Error handled by Axios interceptor
-            } finally {
-                hideSpinner('appointment-spinner');
+                console.error('Error loading waitlist:', error);
             }
         }
 
-        function editTreatment(id, name, description, cost, offer, image, video) {
-            document.getElementById('edit-treatment-id').value = id;
-            document.getElementById('edit-treatment-name').value = name;
-            document.getElementById('edit-treatment-description').value = description;
-            document.getElementById('edit-treatment-cost').value = cost;
-            document.getElementById('edit-treatment-offer').value = offer;
-            document.getElementById('edit-treatment-modal').style.display = 'flex';
+        async function deleteWaitlist(id) {
+            if (!confirm('Are you sure you want to delete this waitlist entry?')) return;
+            try {
+                const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/waitlist/${id}`, { method: 'DELETE' });
+                if (response.ok) {
+                    alert('Waitlist entry deleted');
+                    loadWaitlist();
+                } else {
+                    alert('Error deleting waitlist entry');
+                }
+            } catch (error) {
+                console.error('Error deleting waitlist entry:', error);
+            }
         }
 
-        async function updateTreatment() {
-            const id = document.getElementById('edit-treatment-id').value;
-            const name = document.getElementById('edit-treatment-name').value;
-            const description = document.getElementById('edit-treatment-description').value;
-            const cost = document.getElementById('edit-treatment-cost').value;
-            const offer = document.getElementById('edit-treatment-offer').value;
-            const imageFile = document.getElementById('edit-treatment-image').files[0];
-            const videoFile = document.getElementById('edit-treatment-video').files[0];
+        // Feedback
+        async function loadFeedback() {
+            try {
+                const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/feedback`);
+                const feedbacks = await response.json();
+                const table = document.getElementById('feedback-table');
+                table.innerHTML = '';
+                feedbacks.forEach(fb => {
+                    table.innerHTML += `
+                        <tr>
+                            <td class="p-2">${fb.full_name}</td>
+                            <td class="p-2">${fb.email}</td>
+                            <td class="p-2">${fb.rating}★</td>
+                            <td class="p-2">${fb.description}</td>
+                            <td class="p-2">
+                                <button onclick="deleteFeedback('${fb.id}')" class="bg-red-600 text-white p-1 rounded hover:bg-red-700">Delete</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (error) {
+                console.error('Error loading feedback:', error);
+            }
+        }
 
-            if (!name || !description || !cost) {
-                showAlert('Please fill all required fields.', 'error');
+        async function deleteFeedback(id) {
+            if (!confirm('Are you sure you want to delete this feedback?')) return;
+            try {
+                const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/feedback/${id}`, { method: 'DELETE' });
+                if (response.ok) {
+                    alert('Feedback deleted');
+                    loadFeedback();
+                } else {
+                    alert('Error deleting feedback');
+                }
+            } catch (error) {
+                console.error('Error deleting feedback:', error);
+            }
+        }
+
+        // Services
+        async function loadServices() {
+            try {
+                const response = await fetchWithAuth(`${API_BASE_URL}/api/services`);
+                const services = await response.json();
+                const table = document.getElementById('services-table');
+                table.innerHTML = '';
+                services.forEach(svc => {
+                    table.innerHTML += `
+                        <tr>
+                            <td class="p-2">${svc.title}</td>
+                            <td class="p-2">${svc.description}</td>
+                            <td class="p-2">₹${svc.price}</td>
+                            <td class="p-2">${svc.image || svc.video || 'N/A'}</td>
+                            <td class="p-2">
+                                <button onclick="editService('${svc.id}')" class="bg-blue-600 text-white p-1 rounded hover:bg-blue-700">Edit</button>
+                                <button onclick="deleteService('${svc.id}')" class="bg-red-600 text-white p-1 rounded hover:bg-red-700">Delete</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (error) {
+                console.error('Error loading services:', error);
+            }
+        }
+
+        async function addService() {
+            const serviceData = {
+                title: document.getElementById('service-title').value,
+                description: document.getElementById('service-description').value,
+                price: parseFloat(document.getElementById('service-price').value),
+                image: document.getElementById('service-image').value || null,
+                video: document.getElementById('service-video').value || null
+            };
+
+            if (!serviceData.title || !serviceData.description || !serviceData.price) {
+                alert('Please fill in all required fields.');
                 return;
             }
 
-            showSpinner('edit-treatment-spinner');
             try {
-                const { image, video } = await uploadFiles(imageFile, videoFile);
-                const treatmentData = {
-                    name,
-                    description,
-                    cost: parseFloat(cost),
-                    offer: offer || null,
-                    image: image || null,
-                    video: video || null
-                };
-                await axios.put(`${API_URL}/admin/treatments/${id}`, treatmentData, {
-                    headers: { Authorization: `Bearer ${token}` },
-                    timeout: 10000
+                const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/services`, {
+                    method: 'POST',
+                    body: JSON.stringify(serviceData)
                 });
-                showAlert('Treatment updated. Changes will reflect on the user page.');
-                closeModal();
-                await loadDashboard();
+                if (response.ok) {
+                    alert('Service added');
+                    document.getElementById('service-title').value = '';
+                    document.getElementById('service-description').value = '';
+                    document.getElementById('service-price').value = '';
+                    document.getElementById('service-image').value = '';
+                    document.getElementById('service-video').value = '';
+                    loadServices();
+                } else {
+                    alert('Error adding service');
+                }
             } catch (error) {
-                // Error handled by Axios interceptor
-            } finally {
-                hideSpinner('edit-treatment-spinner');
+                console.error('Error adding service:', error);
             }
         }
 
-        function handleImageError(imgElement, treatmentName) {
-            console.error(`Failed to load image for treatment: ${treatmentName}, URL: ${imgElement.src}`);
-            imgElement.src = 'https://via.placeholder.com/300x200.png?text=Image+Not+Found';
-            imgElement.onerror = null;
+        async function editService(id) {
+            alert('Edit service functionality not fully implemented in this demo.');
         }
 
-        function closeModal() {
-            document.getElementById('edit-treatment-modal').style.display = 'none';
-            document.getElementById('edit-treatment-form').reset();
+        async function deleteService(id) {
+            if (!confirm('Are you sure you want to delete this service?')) return;
+            try {
+                const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/services/${id}`, { method: 'DELETE' });
+                if (response.ok) {
+                    alert('Service deleted');
+                    loadServices();
+                } else {
+                    alert('Error deleting service');
+                }
+            } catch (error) {
+                console.error('Error deleting service:', error);
+            }
         }
 
-        function openReplyModal(id, email) {
-            document.getElementById('reply-contact-id').value = id;
-            document.getElementById('reply-contact-email').value = email;
-            document.getElementById('reply-contact-message').value = '';
-            document.getElementById('reply-contact-modal').style.display = 'flex';
+        // Leave Dates
+        async function loadLeaveDates() {
+            try {
+                const response = await fetchWithAuth(`${API_BASE_URL}/api/leave-dates`);
+                const leaveDates = await response.json();
+                const table = document.getElementById('leave-dates-table');
+                table.innerHTML = '';
+                leaveDates.forEach(date => {
+                    table.innerHTML += `
+                        <tr>
+                            <td class="p-2">${date}</td>
+                            <td class="p-2">
+                                <button onclick="deleteLeaveDate('${date}')" class="bg-red-600 text-white p-1 rounded hover:bg-red-700">Delete</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (error) {
+                console.error('Error loading leave dates:', error);
+            }
         }
 
-        async function sendReply() {
-            const id = document.getElementById('reply-contact-id').value;
-            const email = document.getElementById('reply-contact-email').value;
-            const message = document.getElementById('reply-contact-message').value;
-
-            if (!message) {
-                showAlert('Please enter a reply message.', 'error');
+        async function addLeaveDate() {
+            const date = document.getElementById('leave-date').value;
+            if (!date) {
+                alert('Please select a date.');
                 return;
             }
 
-            showSpinner('reply-contact-spinner');
             try {
-                await axios.post(`${API_URL}/admin/contact/reply`, { contactId: id, email, message }, {
-                    headers: { Authorization: `Bearer ${token}` },
-                    timeout: 10000
+                const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/leave-dates`, {
+                    method: 'POST',
+                    body: JSON.stringify({ date })
                 });
-                showAlert('Reply sent successfully to ' + email);
-                closeReplyModal();
-                await loadDashboard();
+                if (response.ok) {
+                    alert('Leave date added');
+                    document.getElementById('leave-date').value = '';
+                    loadLeaveDates();
+                } else {
+                    alert('Error adding leave date');
+                }
             } catch (error) {
-                // Error handled by Axios interceptor
-            } finally {
-                hideSpinner('reply-contact-spinner');
+                console.error('Error adding leave date:', error);
             }
         }
 
-        function closeReplyModal() {
-            document.getElementById('reply-contact-modal').style.display = 'none';
-            document.getElementById('reply-contact-form').reset();
+        async function deleteLeaveDate(date) {
+            if (!confirm('Are you sure you want to remove this leave date?')) return;
+            try {
+                const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/leave-dates/${date}`, { method: 'DELETE' });
+                if (response.ok) {
+                    alert('Leave date removed');
+                    loadLeaveDates();
+                } else {
+                    alert('Error removing leave date');
+                }
+            } catch (error) {
+                console.error('Error removing leave date:', error);
+            }
         }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const spinner = document.createElement('div');
-            spinner.id = 'dashboard-spinner';
-            spinner.className = 'spinner';
-            spinner.style.position = 'fixed';
-            spinner.style.top = '50%';
-            spinner.style.left = '50%';
-            spinner.style.transform = 'translate(-50%, -50%)';
-            document.body.appendChild(spinner);
-        });
     </script>
 </body>
 </html>

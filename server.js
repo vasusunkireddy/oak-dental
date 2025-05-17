@@ -1,1099 +1,636 @@
 const express = require('express');
-const fs = require('fs');
-const path = require('path');
-const Sequelize = require('sequelize');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const cors = require('cors');
-const dotenv = require('dotenv');
-const axios = require('axios');
-const sanitizeHtml = require('sanitize-html');
-const multer = require('multer');
-const rateLimit = require('express-rate-limit');
+const { Pool } = require('pg');
 const nodemailer = require('nodemailer');
-const winston = require('winston');
-
-// Load environment variables
-dotenv.config();
-
-// Validate critical environment variables
-const requiredEnvVars = [
-    'DATABASE_URL',
-    'JWT_SECRET',
-    'PAYPAL_CLIENT_ID',
-    'PAYPAL_CLIENT_SECRET',
-    'EMAIL_USER',
-    'EMAIL_PASS',
-    'SMS_API_KEY',
-    'SMS_API_URL'
-];
-for (const envVar of requiredEnvVars) {
-    if (!process.env[envVar]) {
-        console.error(`Error: Missing required environment variable ${envVar}`);
-        process.exit(1);
-    }
-}
+const cors = require('cors');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const { v4: uuidv4 } = require('uuid');
+const path = require('path');
+const axios = require('axios');
 
 const app = express();
-
-// Logger setup
-const logger = winston.createLogger({
-    level: 'info',
-    format: winston.format.combine(
-        winston.format.timestamp(),
-        winston.format.json()
-    ),
-    transports: [
-        new winston.transports.File({ filename: 'error.log', level: 'error' }),
-        new winston.transports.File({ filename: 'combined.log' }),
-        new winston.transports.Console()
-    ]
-});
-
-// CORS Configuration
-const allowedOrigins = [
-    'https://oak-dental.onrender.com',
-    'http://localhost:3000',
-    'http://localhost:5000'
-];
-app.use(cors({
-    origin: (origin, callback) => {
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            logger.warn(`CORS blocked for origin: ${origin}`);
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization']
-}));
-
+app.use(cors());
 app.use(express.json());
 
-// Serve static files from public folder
-const uploadsDir = path.join(__dirname, 'public/uploads');
-if (!fs.existsSync(uploadsDir)) {
-    fs.mkdirSync(uploadsDir, { recursive: true });
-    logger.info('Created uploads directory', { path: uploadsDir });
-}
-app.use('/uploads', express.static(uploadsDir, {
-    setHeaders: (res, path, stat) => {
-        res.set('Cache-Control', 'no-store'); // Prevent caching
-    }
-}));
-app.use(express.static(path.join(__dirname, 'public')));
+// Environment Variables
+require('dotenv').config();
+const DATABASE_URL = process.env.DATABASE_URL;
+const PORT = process.env.PORT || 3000;
+const JWT_SECRET = process.env.JWT_SECRET || '8f9g0h1i2j3k4l5m6n7o8p9q0r1s2t3u4v5w6x7y8z9';
+const EMAIL_USER = process.env.EMAIL_USER;
+const EMAIL_PASS = process.env.EMAIL_PASS;
+const SMS_API_KEY = process.env.SMS_API_KEY;
+const SMS_API_URL = process.env.SMS_API_URL;
+const NODE_ENV = process.env.NODE_ENV || 'development';
 
-// General Rate Limiting (more lenient)
-const generalLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 500,
-    message: 'Too many requests from this IP, please try again after 15 minutes.'
-});
-app.use(generalLimiter);
-
-// Specific Rate Limiter for Login Endpoint (stricter to prevent brute-force)
-const loginLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 10,
-    message: 'Too many login attempts from this IP, please try again after 15 minutes.'
+// PostgreSQL Pool
+const pool = new Pool({
+    connectionString: DATABASE_URL,
+    ssl: NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
 });
 
-// Multer setup for image and video uploads
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        const uploadPath = path.join(__dirname, 'public/uploads');
-        cb(null, uploadPath);
-    },
-    filename: (req, file, cb) => {
-        const uniquePrefix = `${Date.now()}-${Math.random().toString(36).substring(2, 15)}`;
-        const sanitizedName = file.originalname.replace(/[^a-zA-Z0-9.]/g, '_').toLowerCase();
-        const finalFilename = `${uniquePrefix}-${sanitizedName}`;
-        logger.debug('Generated filename for upload', { originalName: file.originalname, finalFilename });
-        cb(null, finalFilename);
-    }
-});
-
-const upload = multer({
-    storage,
-    fileFilter: (req, file, cb) => {
-        const filetypes = /jpeg|jpg|png|mp4/;
-        const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-        const mimetype = filetypes.test(file.mimetype);
-        if (extname && mimetype) {
-            cb(null, true);
-        } else {
-            logger.warn('Invalid file type uploaded', { mimetype: file.mimetype, originalName: file.originalname });
-            cb(new Error('Only PNG, JPEG, and MP4 files are allowed'));
-        }
-    },
-    limits: {
-        fileSize: 10 * 1024 * 1024, // 10MB
-        files: 2 // Max 2 files (image + video)
-    }
-}).fields([
-    { name: 'image', maxCount: 1 },
-    { name: 'video', maxCount: 1 }
-]);
-
-// Database Connection with better error handling
-const sequelize = new Sequelize(process.env.DATABASE_URL, {
-    dialect: 'postgres',
-    dialectOptions: {
-        ssl: {
-            require: true,
-            rejectUnauthorized: false
-        }
-    },
-    logging: (msg) => logger.debug(msg)
-});
-
-// Test database connection before syncing
-const testDatabaseConnection = async () => {
+// Test Database Connection
+async function testDbConnection() {
     try {
-        await sequelize.authenticate();
-        logger.info('Database connection successful', { databaseUrl: process.env.DATABASE_URL });
+        await pool.query('SELECT NOW()');
+        console.log('Connected to PostgreSQL database');
     } catch (error) {
-        logger.error('Failed to connect to the database:', {
-            message: error.message,
-            stack: error.stack,
-            databaseUrl: process.env.DATABASE_URL
-        });
+        console.error('Failed to connect to PostgreSQL:', error.message);
         throw error;
     }
-};
+}
 
-// Sync Database with error handling
-const syncDatabase = async () => {
+// Database Initialization
+async function initDb() {
     try {
-        await testDatabaseConnection();
-        await sequelize.sync({ alter: true });
-        logger.info('Database synced successfully');
+        // Note: Not dropping tables to preserve existing schema
+        // If schema reset is needed, manually drop tables via psql
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS admins (
+                id SERIAL PRIMARY KEY,
+                username VARCHAR(50) UNIQUE NOT NULL,
+                password TEXT NOT NULL,
+                email VARCHAR(100) UNIQUE NOT NULL
+            );
+            CREATE TABLE IF NOT EXISTS appointments (
+                id INTEGER PRIMARY KEY,
+                full_name VARCHAR(100) NOT NULL,
+                phone VARCHAR(15) NOT NULL,
+                treatment VARCHAR(50) NOT NULL,
+                price NUMERIC(10,2) NOT NULL DEFAULT 0.00,
+                date DATE NOT NULL,
+                time TIME NOT NULL,
+                status VARCHAR(20) NOT NULL,
+                approved BOOLEAN DEFAULT false,
+                cancel_reason TEXT,
+                reschedule_reason TEXT,
+                admin_reason TEXT,
+                payment_id VARCHAR(100)
+            );
+            CREATE TABLE IF NOT EXISTS waitlist (
+                id SERIAL PRIMARY KEY,
+                full_name VARCHAR(255) NOT NULL,
+                email VARCHAR(255) NOT NULL,
+                phone VARCHAR(20) NOT NULL,
+                preferred_date VARCHAR(10) NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+            CREATE TABLE IF NOT EXISTS feedback (
+                id SERIAL PRIMARY KEY,
+                full_name VARCHAR(255) NOT NULL,
+                email VARCHAR(255) NOT NULL,
+                rating INTEGER NOT NULL,
+                description TEXT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+            CREATE TABLE IF NOT EXISTS services (
+                id SERIAL PRIMARY KEY,
+                title VARCHAR(255) NOT NULL,
+                description TEXT NOT NULL,
+                price DECIMAL(10,2) NOT NULL,
+                image VARCHAR(255),
+                video VARCHAR(255)
+            );
+            CREATE TABLE IF NOT EXISTS leave_dates (
+                date VARCHAR(10) PRIMARY KEY
+            );
+        `);
+        console.log('Database tables initialized successfully');
     } catch (error) {
-        logger.error('Database sync failed:', {
-            message: error.message,
-            stack: error.stack,
-            databaseUrl: process.env.DATABASE_URL
-        });
+        console.error('Error initializing database:', error.message);
+        throw error;
+    }
+}
+
+(async () => {
+    try {
+        await testDbConnection();
+        await initDb();
+    } catch (error) {
+        console.error('Failed to initialize application:', error.message);
         process.exit(1);
     }
-};
+})();
 
-// Initialize the database
-syncDatabase();
-
-// Models
-const Admin = sequelize.define('Admin', {
-    username: { type: Sequelize.STRING, allowNull: false, unique: true },
-    email: { type: Sequelize.STRING, allowNull: false, unique: true },
-    password: { type: Sequelize.STRING, allowNull: false }
-}, { timestamps: true });
-
-const Time = sequelize.define('Time', {
-    time: { type: Sequelize.STRING, allowNull: false }
-}, { timestamps: true });
-
-const Treatment = sequelize.define('Treatment', {
-    name: { type: Sequelize.STRING, allowNull: false },
-    description: { type: Sequelize.TEXT, allowNull: false },
-    cost: { type: Sequelize.FLOAT, allowNull: false },
-    offer: { type: Sequelize.STRING },
-    image: { type: Sequelize.STRING },
-    video: { type: Sequelize.STRING }
-}, { timestamps: true });
-
-const Appointment = sequelize.define('Appointment', {
-    name: { type: Sequelize.STRING, allowNull: false },
-    email: { type: Sequelize.STRING, allowNull: false },
-    phone: { type: Sequelize.STRING, allowNull: false },
-    date: { type: Sequelize.STRING, allowNull: false },
-    time: { type: Sequelize.STRING, allowNull: false },
-    status: { type: Sequelize.STRING, defaultValue: 'Pending' },
-    transactionId: { type: Sequelize.STRING },
-    serviceId: { type: Sequelize.INTEGER, allowNull: true }
-}, { timestamps: true });
-
-const Contact = sequelize.define('Contact', {
-    name: { type: Sequelize.STRING, allowNull: false },
-    email: { type: Sequelize.STRING, allowNull: false },
-    message: { type: Sequelize.TEXT, allowNull: false }
-}, { timestamps: true });
-
-const Newsletter = sequelize.define('Newsletter', {
-    email: { type: Sequelize.STRING, allowNull: false, unique: true }
-}, { timestamps: true });
-
-// Define Relationships
-Treatment.hasMany(Appointment, { foreignKey: 'serviceId', as: 'Appointments' });
-Appointment.belongsTo(Treatment, { foreignKey: 'serviceId', as: 'Treatment' });
-
-// Nodemailer setup
+// Nodemailer Transport
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
+        user: EMAIL_USER,
+        pass: EMAIL_PASS
     }
 });
 
-// Business Information
-const businessInfo = {
-    name: "OAK Dental Hospital",
-    address: "123 Dental Avenue, Smile City, SC 12345",
-    contactEmail: process.env.EMAIL_USER,
-    contactPhone: "+91 7569 366 767",
-    website: "https://oak-dental.onrender.com",
-    adminName: "Dr. John Smith",
-    adminTitle: "Chief Dentist",
-    baseUrl: process.env.BASE_URL || 'https://oak-dental.onrender.com'
-};
-
-// Middleware to verify JWT
+// Middleware to Verify JWT
 const authenticateAdmin = async (req, res, next) => {
-    const token = req.headers.authorization?.split('Bearer ')[1];
-    if (!token) {
-        logger.warn('No token provided in Authorization header', { ip: req.ip });
-        return res.status(401).json({ message: 'Unauthorized: No token provided' });
-    }
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) return res.status(401).json({ error: 'Unauthorized: No token provided' });
+
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const decoded = jwt.verify(token, JWT_SECRET);
         req.admin = decoded;
         next();
     } catch (error) {
-        logger.error('Authentication error:', { message: error.message, stack: error.stack, ip: req.ip });
-        res.status(401).json({ message: 'Invalid token' });
+        console.error('Token verification error:', error.message);
+        res.status(401).json({ error: 'Unauthorized: Invalid token' });
     }
 };
 
-// Sanitize input
-const sanitizeInput = (data) => {
-    if (typeof data === 'string') {
-        return sanitizeHtml(data, { allowedTags: [], allowedAttributes: {} });
-    }
-    if (typeof data === 'object' && data !== null) {
-        const sanitized = {};
-        for (const key in data) {
-            sanitized[key] = sanitizeInput(data[key]);
-        }
-        return sanitized;
-    }
-    return data;
-};
+// Serve Static Files
+app.use(express.static(path.join(__dirname, 'public')));
 
-// Function to send SMS (using a hypothetical SMS API)
-const sendSMS = async (to, message) => {
-    try {
-        await axios.post(process.env.SMS_API_URL, {
-            to,
-            message,
-            apiKey: process.env.SMS_API_KEY
-        }, {
-            timeout: 10000
-        });
-        logger.info('SMS sent successfully', { to });
-    } catch (error) {
-        logger.error('Failed to send SMS:', { message: error.message, stack: error.stack, to });
-        throw new Error('Failed to send SMS');
-    }
-};
-
-// Function to send Appointment Confirmation Email and SMS
-const sendAppointmentConfirmation = async (appointment, serviceName, transactionId) => {
-    const emailContent = `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9;">
-            <h2 style="color: #0f2a44;">Appointment Confirmation - ${serviceName}</h2>
-            <p style="color: #1e293b;">Dear ${appointment.name},</p>
-            <p style="color: #1e293b;">Thank you for booking an appointment with us. We are delighted to confirm the details of your appointment as follows:</p>
-            
-            <h3 style="color: #0f2a44;">Appointment Details</h3>
-            <p style="color: #1e293b;"><strong>Service Type:</strong> ${serviceName}</p>
-            <p style="color: #1e293b;"><strong>Date:</strong> ${appointment.date}</p>
-            <p style="color: #1e293b;"><strong>Time:</strong> ${appointment.time}</p>
-            <p style="color: #1e293b;"><strong>Payment ID:</strong> ${transactionId}</p>
-            
-            <h3 style="color: #0f2a44;">Location</h3>
-            <p style="color: #1e293b;">${businessInfo.address}</p>
-            
-            <h3 style="color: #0f2a44;">Additional Information</h3>
-            <p style="color: #1e293b;">Please ensure that you arrive 10 minutes before your scheduled time. If you have any questions or need to reschedule, feel free to contact us at ${businessInfo.contactEmail} or ${businessInfo.contactPhone}.</p>
-            
-            <p style="color: #1e293b;">Thank you for choosing ${businessInfo.name}. We look forward to serving you!</p>
-            
-            <p style="color: #1e293b;">Warm regards,<br>
-            ${businessInfo.adminName}<br>
-            ${businessInfo.adminTitle}<br>
-            ${businessInfo.name}<br>
-            ${businessInfo.contactEmail}<br>
-            ${businessInfo.contactPhone}<br>
-            <a href="${businessInfo.website}" style="color: #2563eb;">${businessInfo.website}</a></p>
-            
-            <hr style="border-top: 1px solid #e5e7eb; margin: 20px 0;">
-            <p style="color: #6b7280; font-size: 12px;">This is an automated email, please do not reply directly.</p>
-        </div>
-    `;
-
-    const smsMessage = `Dear ${appointment.name}, your appointment for ${serviceName} on ${appointment.date} at ${appointment.time} is confirmed. Payment ID: ${transactionId}. Location: ${businessInfo.address}. Arrive 10 mins early. Contact: ${businessInfo.contactPhone}`;
-
-    try {
-        await transporter.sendMail({
-            from: `"${businessInfo.name}" <${process.env.EMAIL_USER}>`,
-            to: appointment.email,
-            subject: `Appointment Confirmation - ${serviceName}`,
-            html: emailContent
-        });
-        logger.info('Appointment confirmation email sent', { email: appointment.email });
-
-        await sendSMS(appointment.phone, smsMessage);
-    } catch (error) {
-        logger.error('Failed to send appointment confirmation:', { message: error.message, stack: error.stack, email: appointment.email });
-    }
-};
-
-// Function to send Appointment Approval Email and SMS
-const sendAppointmentApproval = async (appointment, serviceName) => {
-    const emailContent = `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9;">
-            <h2 style="color: #0f2a44;">Your Appointment has been Approved</h2>
-            <p style="color: #1e293b;">Dear ${appointment.name},</p>
-            <p style="color: #1e293b;">We are pleased to inform you that your appointment has been approved by ${businessInfo.adminName}. Below are the details of your confirmed appointment:</p>
-            
-            <h3 style="color: #0f2a44;">Appointment Details</h3>
-            <p style="color: #1e293b;"><strong>Service Type:</strong> ${serviceName}</p>
-            <p style="color: #1e293b;"><strong>Doctor:</strong> ${businessInfo.adminName}</p>
-            <p style="color: #1e293b;"><strong>Date:</strong> ${appointment.date}</p>
-            <p style="color: #1e293b;"><strong>Time:</strong> ${appointment.time}</p>
-            <p style="color: #1e293b;"><strong>Payment ID:</strong> ${appointment.transactionId}</p>
-            
-            <h3 style="color: #0f2a44;">Location</h3>
-            <p style="color: #1e293b;">${businessInfo.address}</p>
-            
-            <h3 style="color: #0f2a44;">Additional Information</h3>
-            <p style="color: #1e293b;">Please arrive at least 10 minutes before your scheduled appointment time. If you have any questions, feel free to contact us at ${businessInfo.contactEmail} or ${businessInfo.contactPhone}.</p>
-            
-            <p style="color: #1e293b;">Thank you for trusting ${businessInfo.name}. We look forward to seeing you soon!</p>
-            
-            <p style="color: #1e293b;">Warm regards,<br>
-            ${businessInfo.name} Team<br>
-            ${businessInfo.contactEmail}<br>
-            ${businessInfo.contactPhone}<br>
-            <a href="${businessInfo.website}" style="color: #2563eb;">${businessInfo.website}</a></p>
-            
-            <hr style="border-top: 1px solid #e5e7eb; margin: 20px 0;">
-            <p style="color: #6b7280; font-size: 12px;">This is an automated email, please do not reply directly.</p>
-        </div>
-    `;
-
-    const smsMessage = `Dear ${appointment.name}, your appointment for ${serviceName} with ${businessInfo.adminName} on ${appointment.date} at ${appointment.time} has been approved. Payment ID: ${appointment.transactionId}. Location: ${businessInfo.address}. Contact: ${businessInfo.contactPhone}`;
-
-    try {
-        await transporter.sendMail({
-            from: `"${businessInfo.name}" <${process.env.EMAIL_USER}>`,
-            to: appointment.email,
-            subject: 'Your Appointment has been Approved',
-            html: emailContent
-        });
-        logger.info('Appointment approval email sent', { email: appointment.email });
-
-        await sendSMS(appointment.phone, smsMessage);
-    } catch (error) {
-        logger.error('Failed to send appointment approval:', { message: error.message, stack: error.stack, email: appointment.email });
-    }
-};
-
-// Function to send Appointment Cancellation Email and SMS
-const sendAppointmentCancellation = async (appointment, serviceName, reason = 'unforeseen circumstances') => {
-    const emailContent = `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9;">
-            <h2 style="color: #0f2a44;">Appointment Cancellation Notice</h2>
-            <p style="color: #1e293b;">Dear ${appointment.name},</p>
-            <p style="color: #1e293b;">We regret to inform you that your appointment scheduled with ${businessInfo.adminName} has been canceled due to ${reason}.</p>
-            
-            <h3 style="color: #0f2a44;">Appointment Details</h3>
-            <p style="color: #1e293b;"><strong>Service Type:</strong> ${serviceName}</p>
-            <p style="color: #1e293b;"><strong>Doctor:</strong> ${businessInfo.adminName}</p>
-            <p style="color: #1e293b;"><strong>Date:</strong> ${appointment.date}</p>
-            <p style="color: #1e293b;"><strong>Time:</strong> ${appointment.time}</p>
-            <p style="color: #1e293b;"><strong>Payment ID:</strong> ${appointment.transactionId}</p>
-            
-            <h3 style="color: #0f2a44;">Next Steps</h3>
-            <p style="color: #1e293b;">We sincerely apologize for any inconvenience this may cause. You may reschedule your appointment through our website or contact us directly for assistance.</p>
-            <p style="color: #1e293b;">Feel free to reach us at ${businessInfo.contactEmail} or ${businessInfo.contactPhone} if you have any questions or need further support.</p>
-            
-            <p style="color: #1e293b;">Thank you for your understanding. We hope to assist you soon.</p>
-            
-            <p style="color: #1e293b;">Best regards,<br>
-            ${businessInfo.name} Team<br>
-            ${businessInfo.contactEmail}<br>
-            ${businessInfo.contactPhone}<br>
-            <a href="${businessInfo.website}" style="color: #2563eb;">${businessInfo.website}</a></p>
-            
-            <hr style="border-top: 1px solid #e5e7eb; margin: 20px 0;">
-            <p style="color: #6b7280; font-size: 12px;">This is an automated email, please do not reply directly.</p>
-        </div>
-    `;
-
-    const smsMessage = `Dear ${appointment.name}, your appointment for ${serviceName} with ${businessInfo.adminName} on ${appointment.date} at ${appointment.time} has been cancelled due to ${reason}. Payment ID: ${appointment.transactionId}. Contact: ${businessInfo.contactPhone}`;
-
-    try {
-        await transporter.sendMail({
-            from: `"${businessInfo.name}" <${process.env.EMAIL_USER}>`,
-            to: appointment.email,
-            subject: 'Appointment Cancellation Notice',
-            html: emailContent
-        });
-        logger.info('Appointment cancellation email sent', { email: appointment.email });
-
-        await sendSMS(appointment.phone, smsMessage);
-    } catch (error) {
-        logger.error('Failed to send appointment cancellation:', { message: error.message, stack: error.stack, email: appointment.email });
-    }
-};
-
-// Health Check Endpoint
-app.get('/api/health', async (req, res) => {
-    try {
-        await sequelize.authenticate();
-        res.status(200).json({ message: 'Database connection successful', timestamp: new Date().toISOString() });
-    } catch (error) {
-        logger.error('Health check failed:', { message: error.message, stack: error.stack });
-        res.status(500).json({ message: 'Database connection failed' });
-    }
+// Serve index.html at /
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Admin Registration
+// Serve admin.html at /admin
+app.get('/admin', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'admin.html'));
+});
+
+// Email and SMS Notification Functions
+async function sendEmail(to, subject, html) {
+    try {
+        await transporter.sendMail({
+            from: `"Oak Dental Clinic" <${EMAIL_USER}>`,
+            to,
+            subject,
+            html
+        });
+        console.log(`Email sent to ${to}`);
+    } catch (error) {
+        console.error('Error sending email:', error.message);
+    }
+}
+
+async function sendSMS(to, body) {
+    try {
+        await axios.post(SMS_API_URL, {
+            api_key: SMS_API_KEY,
+            to,
+            message: body
+        });
+        console.log(`SMS sent to ${to}`);
+    } catch (error) {
+        console.error('Error sending SMS:', error.message);
+    }
+}
+
+async function getNextAvailableDate(currentDate) {
+    const date = new Date(currentDate);
+    let nextDate;
+    do {
+        date.setDate(date.getDate() + 1);
+        nextDate = date.toISOString().split('T')[0];
+        const result = await pool.query('SELECT 1 FROM leave_dates WHERE date = $1', [nextDate]);
+        if (result.rows.length === 0) return nextDate;
+    } while (true);
+}
+
+// Admin Authentication Endpoints
 app.post('/api/admin/register', async (req, res) => {
     try {
-        const { username, email, password } = sanitizeInput(req.body);
-        if (!username || !email || !password) {
-            return res.status(400).json({ message: 'All fields are required' });
+        const { name, email, password } = req.body;
+        console.log('Register request:', { name, email, password: '[REDACTED]' });
+        if (!name || !email || !password) {
+            console.log('Registration failed: Missing fields');
+            return res.status(400).json({ error: 'All fields (name, email, password) are required' });
         }
-        if (password.length < 6) {
-            return res.status(400).json({ message: 'Password must be at least 6 characters' });
+
+        const existingAdmin = await pool.query('SELECT 1 FROM admins WHERE email = $1', [email]);
+        if (existingAdmin.rows.length > 0) {
+            console.log(`Registration failed: Email already exists - ${email}`);
+            return res.status(400).json({ error: 'Email already registered' });
         }
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-            return res.status(400).json({ message: 'Invalid email format' });
-        }
-        const existingAdmin = await Admin.findOne({ where: { [Sequelize.Op.or]: [{ username }, { email }] } });
-        if (existingAdmin) {
-            return res.status(400).json({ message: 'Username or email already exists' });
-        }
-        const hashedPassword = await bcrypt.hash(password, 12);
-        await Admin.create({ username, email, password: hashedPassword });
-        logger.info('Admin registered successfully', { username, email });
-        res.status(201).json({ message: 'Admin registered successfully' });
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const result = await pool.query(
+            'INSERT INTO admins (username, email, password) VALUES ($1, $2, $3) RETURNING id, username, email',
+            [name, email, hashedPassword]
+        );
+        const admin = result.rows[0];
+
+        const token = jwt.sign({ id: admin.id, email: admin.email }, JWT_SECRET, { expiresIn: '1h' });
+        console.log(`Admin registered: ${email}`);
+        res.status(201).json({ token, admin: { username: admin.username, email: admin.email } });
     } catch (error) {
-        logger.error('Registration error:', { message: error.message, stack: error.stack });
-        res.status(500).json({ message: 'Server error' });
+        console.error('Error registering admin:', error.message, error.stack);
+        if (error.code === '23505') {
+            res.status(400).json({ error: 'Email or username already registered' });
+        } else {
+            res.status(500).json({ error: 'Internal server error during registration' });
+        }
     }
 });
 
-// Admin Login with specific rate limiter
-app.post('/api/admin/login', loginLimiter, async (req, res) => {
+app.post('/api/admin/login', async (req, res) => {
     try {
-        const { username, password } = sanitizeInput(req.body);
-        if (!username || !password) {
-            return res.status(400).json({ message: 'Username and password are required' });
+        const { email, password } = req.body;
+        console.log('Login request:', { email, password: '[REDACTED]' });
+        if (!email || !password) {
+            console.log('Login failed: Missing fields');
+            return res.status(400).json({ error: 'Email and password are required' });
         }
-        const admin = await Admin.findOne({ where: { username } });
-        if (!admin) {
-            logger.warn('Login attempt with invalid username', { username });
-            return res.status(401).json({ message: 'Invalid credentials' });
+
+        const result = await pool.query('SELECT * FROM admins WHERE email = $1', [email]);
+        const admin = result.rows[0];
+
+        if (!admin || !(await bcrypt.compare(password, admin.password))) {
+            console.log(`Login failed: Invalid credentials for ${email}`);
+            return res.status(401).json({ error: 'Invalid credentials' });
         }
-        const isMatch = await bcrypt.compare(password, admin.password);
-        if (!isMatch) {
-            logger.warn('Login attempt with incorrect password', { username });
-            return res.status(401).json({ message: 'Invalid credentials' });
-        }
-        const token = jwt.sign({ id: admin.id, username: admin.username }, process.env.JWT_SECRET, { expiresIn: '1h' });
-        logger.info('Admin logged in successfully', { username });
-        res.json({ token });
+
+        const token = jwt.sign({ id: admin.id, email: admin.email }, JWT_SECRET, { expiresIn: '1h' });
+        console.log(`Admin logged in: ${email}`);
+        res.json({ token, admin: { username: admin.username, email: admin.email } });
     } catch (error) {
-        logger.error('Login error:', { message: error.message, stack: error.stack });
-        res.status(500).json({ message: 'Server error' });
+        console.error('Error logging in:', error.message, error.stack);
+        res.status(500).json({ error: 'Internal server error during login' });
     }
 });
 
-// File Upload Endpoint
-app.post('/api/admin/upload', authenticateAdmin, upload, async (req, res) => {
+// Public Endpoints
+app.get('/api/services', async (req, res) => {
     try {
-        const files = req.files;
-        if (!files || (!files.image && !files.video)) {
-            logger.warn('No files uploaded in request');
-            return res.status(400).json({ message: 'At least one file (image or video) must be uploaded' });
-        }
-        const response = {
-            imageUrl: files.image ? `/uploads/${files.image[0].filename}` : null,
-            videoUrl: files.video ? `/uploads/${files.video[0].filename}` : null
-        };
-        logger.info('Files uploaded successfully', {
-            image: response.imageUrl,
-            video: response.videoUrl,
-            imagePath: files.image ? path.join(__dirname, 'public', response.imageUrl) : null,
-            videoPath: files.video ? path.join(__dirname, 'public', response.videoUrl) : null
-        });
-        res.status(200).json(response);
+        const result = await pool.query('SELECT * FROM services');
+        res.json(result.rows);
     } catch (error) {
-        logger.error('Upload error:', { message: error.message, stack: error.stack });
-        res.status(500).json({ message: `Failed to upload files: ${error.message}` });
+        console.error('Error fetching services:', error.message);
+        res.status(500).json({ error: 'Error fetching services' });
     }
 });
 
-// Contact Reply Endpoint
-app.post('/api/admin/contact/reply', authenticateAdmin, async (req, res) => {
+app.get('/api/time-slots', (req, res) => {
+    const timeSlots = ['10:00 AM', '11:00 AM', '2:00 PM', '3:00 PM'];
+    res.json(timeSlots);
+});
+
+app.get('/api/leave-dates', async (req, res) => {
     try {
-        const { contactId, email, message } = sanitizeInput(req.body);
-        if (!contactId || !email || !message) {
-            return res.status(400).json({ message: 'Contact ID, email, and message are required' });
-        }
-        const contact = await Contact.findByPk(contactId);
-        if (!contact) {
-            return res.status(404).json({ message: 'Contact message not found' });
-        }
-        await transporter.sendMail({
-            from: `"${businessInfo.name}" <${process.env.EMAIL_USER}>`,
-            to: email,
-            subject: 'Response to Your Inquiry',
-            text: message,
-            html: `
-                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9;">
-                    <h2 style="color: #0f2a44;">${businessInfo.name}</h2>
-                    <p style="color: #1e293b;">Dear ${contact.name},</p>
-                    <p style="color: #1e293b;">Thank you for reaching out to us. Below is our response to your inquiry:</p>
-                    <p style="color: #1e293b; background-color: #ffffff; padding: 15px; border-radius: 8px;">${message}</p>
-                    <p style="color: #1e293b;">If you have further questions, feel free to contact us.</p>
-                    <p style="color: #1e293b;">Best regards,<br>${businessInfo.name} Team</p>
-                    <hr style="border-top: 1px solid #e5e7eb; margin: 20px 0;">
-                    <p style="color: #6b7280; font-size: 12px;">This is an automated email, please do not reply directly.</p>
-                </div>
-            `
-        });
-        logger.info('Reply sent successfully', { contactId, email });
-        res.status(200).json({ message: 'Reply sent successfully' });
+        const result = await pool.query('SELECT date FROM leave_dates');
+        res.json(result.rows.map(row => row.date));
     } catch (error) {
-        logger.error('Error sending reply:', { message: error.message, stack: error.stack });
-        res.status(500).json({ message: 'Failed to send reply: ' + error.message });
+        console.error('Error fetching leave dates:', error.message);
+        res.status(500).json({ error: 'Error fetching leave dates' });
     }
 });
 
-// Public Routes for index.html
-app.get('/api/treatments', async (req, res) => {
+app.get('/api/feedback', async (req, res) => {
     try {
-        const treatments = await Treatment.findAll({
-            attributes: ['id', 'name', 'description', 'cost', 'offer', 'image', 'video']
-        });
-        const mappedTreatments = treatments.map(treatment => {
-            const imageUrl = treatment.image ? `${businessInfo.baseUrl}${treatment.image}` : null;
-            const videoUrl = treatment.video ? `${businessInfo.baseUrl}${treatment.video}` : null;
-            logger.debug('Serving treatment', { id: treatment.id, name: treatment.name, imageUrl, videoUrl });
-            return {
-                ...treatment.dataValues,
-                image: imageUrl,
-                video: videoUrl
-            };
-        });
-        res.json(mappedTreatments);
+        const result = await pool.query('SELECT * FROM feedback ORDER BY created_at DESC');
+        res.json(result.rows);
     } catch (error) {
-        logger.error('Error fetching treatments (public):', { message: error.message, stack: error.stack });
-        res.status(500).json({ message: 'Server error' });
+        console.error('Error fetching feedback:', error.message);
+        res.status(500).json({ error: 'Error fetching feedback' });
     }
 });
 
-app.get('/api/times', async (req, res) => {
+app.post('/api/feedback', async (req, res) => {
     try {
-        const times = await Time.findAll({
-            attributes: ['id', 'time']
-        });
-        res.json(times);
+        const { name, email, rating, description } = req.body;
+        if (!name || !email || !rating || !description) {
+            return res.status(400).json({ error: 'All fields are required' });
+        }
+        await pool.query(
+            'INSERT INTO feedback (full_name, email, rating, description) VALUES ($1, $2, $3, $4)',
+            [name, email, rating, description]
+        );
+        res.status(200).json({ message: 'Feedback submitted' });
     } catch (error) {
-        logger.error('Error fetching times (public):', { message: error.message, stack: error.stack });
-        res.status(500).json({ message: 'Server error' });
+        console.error('Error submitting feedback:', error.message);
+        res.status(500).json({ error: 'Error submitting feedback' });
     }
 });
 
-app.post('/api/contact', async (req, res) => {
+app.post('/api/appointments', async (req, res) => {
     try {
-        const { name, email, message } = sanitizeInput(req.body);
-        if (!name || !email || !message) {
-            return res.status(400).json({ message: 'Name, email, and message are required' });
+        const appointmentData = { ...req.body, id: Math.floor(Math.random() * 1000000) }; // Use random ID for integer
+        console.log('Booking appointment:', appointmentData);
+        if (!appointmentData.name || !appointmentData.phone || !appointmentData.treatment || !appointmentData.date || !appointmentData.time) {
+            console.log('Appointment failed: Missing fields');
+            return res.status(400).json({ error: 'All required fields (name, phone, treatment, date, time) must be provided' });
         }
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-            return res.status(400).json({ message: 'Invalid email format' });
+        await pool.query(
+            'INSERT INTO appointments (id, full_name, phone, treatment, date, time, status) VALUES ($1, $2, $3, $4, $5, $6, $7)',
+            [
+                appointmentData.id,
+                appointmentData.name,
+                appointmentData.phone,
+                appointmentData.treatment || 'General Checkup',
+                appointmentData.date,
+                appointmentData.time,
+                'CONFIRMED'
+            ]
+        );
+
+        const baseUrl = NODE_ENV === 'production' ? 'https://oak-dental.onrender.com' : 'http://localhost:3000';
+        const confirmationMessage = `
+            <h2>Appointment Confirmed</h2>
+            <p>Dear ${appointmentData.name},</p>
+            <p>Your appointment is confirmed for ${appointmentData.date} at ${appointmentData.time}.</p>
+            <p><a href="${baseUrl}/reschedule/${appointmentData.id}">Reschedule</a> | <a href="${baseUrl}/cancel/${appointmentData.id}">Cancel</a></p>
+        `;
+        await sendEmail(appointmentData.email || 'svasudevareddy18604@gmail.com', 'Appointment Confirmation - Oak Dental Clinic', confirmationMessage);
+        // Comment out SMS due to missing API key
+        // await sendSMS(appointmentData.phone, `Appointment confirmed for ${appointmentData.date} at ${appointmentData.time}. Reply RESCHEDULE or CANCEL to modify.`);
+
+        const waitlistResult = await pool.query('SELECT * FROM waitlist WHERE preferred_date = $1', [appointmentData.date]);
+        if (waitlistResult.rows.length > 0) {
+            const nextAvailableDate = await getNextAvailableDate(appointmentData.date);
+            for (const entry of waitlistResult.rows) {
+                await sendEmail(entry.email, 'Slot Available - Oak Dental Clinic', `
+                    <h2>Slot Available</h2>
+                    <p>Dear ${entry.full_name},</p>
+                    <p>A slot is available on ${nextAvailableDate}. Book now: <a href="${baseUrl}/#appointment">Book</a></p>
+                `);
+                // await sendSMS(entry.phone, `A slot is available on ${nextAvailableDate}. Book now at oakdental.com.`);
+                await pool.query('DELETE FROM waitlist WHERE id = $1', [entry.id]);
+            }
         }
-        await Contact.create({ name, email, message });
-        logger.info('Contact message saved', { name, email });
-        res.status(201).json({ message: 'Message sent successfully' });
+
+        console.log(`Appointment booked: ${appointmentData.id}`);
+        res.status(200).json({ message: 'Appointment booked' });
     } catch (error) {
-        logger.error('Error saving contact:', { message: error.message, stack: error.stack });
-        res.status(500).json({ message: 'Server error' });
+        console.error('Error booking appointment:', error.message, error.stack);
+        res.status(500).json({ error: 'Error booking appointment' });
     }
 });
 
-app.post('/api/newsletter', async (req, res) => {
+app.post('/api/waitlist', async (req, res) => {
     try {
-        const { email } = sanitizeInput(req.body);
-        if (!email) {
-            return res.status(400).json({ message: 'Email is required' });
+        const { name, email, phone, preferredDate } = req.body;
+        if (!name || !email || !phone || !preferredDate) {
+            return res.status(400).json({ error: 'All fields are required' });
         }
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-            return res.status(400).json({ message: 'Invalid email format' });
-        }
-        const existingSubscriber = await Newsletter.findOne({ where: { email } });
-        if (existingSubscriber) {
-            return res.status(400).json({ message: 'Email already subscribed' });
-        }
-        await Newsletter.create({ email });
-        logger.info('Newsletter subscription added', { email });
-        res.status(201).json({ message: 'Subscribed successfully' });
+        await pool.query(
+            'INSERT INTO waitlist (full_name, email, phone, preferred_date) VALUES ($1, $2, $3, $4)',
+            [name, email, phone, preferredDate]
+        );
+
+        const baseUrl = NODE_ENV === 'production' ? 'https://oak-dental.onrender.com' : 'http://localhost:3000';
+        await sendEmail(email, 'Waitlist Confirmation - Oak Dental Clinic', `
+            <h2>Waitlist Confirmation</h2>
+            <p>Dear ${name},</p>
+            <p>You have been added to the waitlist for ${preferredDate}. We will notify you when a slot becomes available.</p>
+        `);
+        // await sendSMS(phone, `Added to waitlist for ${preferredDate}. We'll notify you when a slot is available.`);
+
+        res.status(200).json({ message: 'Added to waitlist' });
     } catch (error) {
-        logger.error('Error subscribing:', { message: error.message, stack: error.stack });
-        res.status(500).json({ message: 'Server error' });
+        console.error('Error joining waitlist:', error.message);
+        res.status(500).json({ error: 'Error joining waitlist' });
     }
 });
 
 app.get('/api/appointments/status', async (req, res) => {
     try {
-        const { email } = sanitizeInput(req.query);
-        if (!email) {
-            return res.status(400).json({ message: 'Email is required' });
+        const { identifier } = req.query;
+        if (!identifier) {
+            return res.status(400).json({ error: 'Identifier is required' });
         }
-        const appointment = await Appointment.findOne({
-            where: { email },
-            include: [{ model: Treatment, as: 'Treatment', attributes: ['name'] }],
-            attributes: ['id', 'name', 'email', 'date', 'time', 'status', 'createdAt']
-        });
-        if (!appointment) {
-            return res.status(404).json({ message: 'Appointment not found' });
-        }
-        res.json(appointment);
+        const result = await pool.query(
+            'SELECT * FROM appointments WHERE phone = $1 AND status IN ($2, $3)',
+            [identifier, 'CONFIRMED', 'CANCELLED']
+        );
+        res.json({ appointment: result.rows[0] || null });
     } catch (error) {
-        logger.error('Error checking appointment status:', { message: error.message, stack: error.stack });
-        res.status(500).json({ message: 'Server error' });
+        console.error('Error checking appointment status:', error.message);
+        res.status(500).json({ error: 'Error checking appointment status' });
     }
 });
 
-// PayPal Routes
-app.post('/api/paypal/create-order', async (req, res) => {
+app.post('/api/appointments/:id/cancel', async (req, res) => {
     try {
-        const { amount, description } = sanitizeInput(req.body);
-        if (!amount || !description) {
-            return res.status(400).json({ message: 'Amount and description are required' });
-        }
-        const currencyCode = process.env.PAYPAL_CURRENCY || 'USD';
-        const returnUrl = process.env.PAYPAL_RETURN_URL || 'https://oak-dental.onrender.com/success';
-        const cancelUrl = process.env.PAYPAL_CANCEL_URL || 'https://oak-dental.onrender.com/cancel';
+        const { id } = req.params;
+        const result = await pool.query(
+            'UPDATE appointments SET status = $1, cancel_reason = $2 WHERE id = $3 AND status = $4 RETURNING *',
+            ['CANCELLED', 'Cancelled by user', id, 'CONFIRMED']
+        );
 
-        const response = await axios.post('https://api-m.sandbox.paypal.com/v2/checkout/orders', {
-            intent: 'CAPTURE',
-            purchase_units: [{
-                amount: {
-                    currency_code: currencyCode,
-                    value: parseFloat(amount).toFixed(2)
-                },
-                description
-            }],
-            application_context: {
-                return_url: returnUrl,
-                cancel_url: cancelUrl
-            }
-        }, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Basic ${Buffer.from(`${process.env.PAYPAL_CLIENT_ID}:${process.env.PAYPAL_CLIENT_SECRET}`).toString('base64')}`
-            },
-            timeout: 10000
-        });
-        logger.info('PayPal order created', { orderId: response.data.id });
-        res.json({ id: response.data.id });
-    } catch (error) {
-        logger.error('Error creating PayPal order:', {
-            message: error.message,
-            response: error.response ? {
-                status: error.response.status,
-                statusText: error.response.statusText,
-                data: error.response.data
-            } : 'No response data',
-            stack: error.stack
-        });
-        if (error.response && error.response.status === 422) {
-            const details = error.response.data.details || [];
-            return res.status(422).json({
-                message: 'PayPal order creation failed due to validation errors',
-                details: details.map(detail => detail.description || detail.issue).join('; ')
-            });
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Appointment not found or already cancelled' });
         }
-        res.status(500).json({ message: 'Failed to create PayPal order' });
+
+        const appointment = result.rows[0];
+        const baseUrl = NODE_ENV === 'production' ? 'https://oak-dental.onrender.com' : 'http://localhost:3000';
+        await sendEmail('svasudevareddy18604@gmail.com', 'Appointment Cancelled - Oak Dental Clinic', `
+            <h2>Appointment Cancelled</h2>
+            <p>Dear ${appointment.full_name},</p>
+            <p>Your appointment on ${appointment.date} at ${appointment.time} has been cancelled.</p>
+            <p>Book a new appointment: <a href="${baseUrl}/#appointment">Book</a></p>
+        `);
+        // await sendSMS(appointment.phone, `Your appointment on ${appointment.date} at ${appointment.time} has been cancelled. Book a new slot at oakdental.com.`);
+
+        res.status(200).json({ message: 'Appointment cancelled' });
+    } catch (error) {
+        console.error('Error cancelling appointment:', error.message);
+        res.status(500).json({ error: 'Error cancelling appointment' });
     }
 });
 
-app.post('/api/paypal/capture-order', async (req, res) => {
-    try {
-        const { orderId, appointment } = sanitizeInput(req.body);
-        if (!orderId || !appointment) {
-            return res.status(400).json({ message: 'Order ID and appointment data are required' });
-        }
-        if (!appointment.name || !appointment.email || !appointment.phone || !appointment.date || !appointment.time || !appointment.serviceId) {
-            return res.status(400).json({ message: 'Incomplete appointment data' });
-        }
-        const response = await axios.post(`https://api-m.sandbox.paypal.com/v2/checkout/orders/${orderId}/capture`, {}, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Basic ${Buffer.from(`${process.env.PAYPAL_CLIENT_ID}:${process.env.PAYPAL_CLIENT_SECRET}`).toString('base64')}`
-            },
-            timeout: 10000
-        });
-
-        const transaction = response.data.purchase_units[0].payments.captures[0];
-        const appointmentData = {
-            name: appointment.name,
-            email: appointment.email,
-            phone: appointment.phone,
-            date: appointment.date,
-            time: appointment.time,
-            serviceId: appointment.serviceId,
-            transactionId: transaction.id,
-            status: 'Confirmed'
-        };
-        const createdAppointment = await Appointment.create(appointmentData);
-
-        const treatment = await Treatment.findByPk(appointment.serviceId);
-        const serviceName = treatment ? treatment.name : 'Dental Service';
-
-        await sendAppointmentConfirmation(createdAppointment, serviceName, transaction.id);
-
-        logger.info('PayPal order captured and appointment created', { orderId, appointmentId: createdAppointment.id });
-        res.json({
-            transactionId: transaction.id,
-            appointmentId: createdAppointment.id
-        });
-    } catch (error) {
-        logger.error('Error capturing PayPal order:', { message: error.message, stack: error.stack });
-        res.status(500).json({ message: 'Failed to capture order' });
-    }
-});
-
-// Admin Routes for admin.html
-app.get('/api/admin/times', authenticateAdmin, async (req, res) => {
-    try {
-        const times = await Time.findAll({
-            attributes: ['id', 'time', 'createdAt'],
-            order: [['time', 'ASC']]
-        });
-        res.json(times);
-    } catch (error) {
-        logger.error('Error fetching times (admin):', { message: error.message, stack: error.stack });
-        res.status(500).json({ message: 'Server error' });
-    }
-});
-
-app.post('/api/admin/times', authenticateAdmin, async (req, res) => {
-    try {
-        const { time } = sanitizeInput(req.body);
-        if (!time) {
-            return res.status(400).json({ message: 'Time is required' });
-        }
-        if (!/^(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$/.test(time)) {
-            return res.status(400).json({ message: 'Invalid time format (e.g., 09:00 AM)' });
-        }
-        await Time.create({ time });
-        logger.info('Time slot added', { time });
-        res.status(201).json({ message: 'Time slot added' });
-    } catch (error) {
-        logger.error('Error adding time:', { message: error.message, stack: error.stack });
-        res.status(500).json({ message: 'Server error' });
-    }
-});
-
-app.put('/api/admin/times/:id', authenticateAdmin, async (req, res) => {
-    try {
-        const { time } = sanitizeInput(req.body);
-        if (!time) {
-            return res.status(400).json({ message: 'Time is required' });
-        }
-        if (!/^(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$/.test(time)) {
-            return res.status(400).json({ message: 'Invalid time format (e.g., 09:00 AM)' });
-        }
-        const timeSlot = await Time.findByPk(req.params.id);
-        if (!timeSlot) {
-            return res.status(404).json({ message: 'Time slot not found' });
-        }
-        await Time.update({ time }, { where: { id: req.params.id } });
-        logger.info('Time slot updated', { id: req.params.id, time });
-        res.json({ message: 'Time slot updated' });
-    } catch (error) {
-        logger.error('Error updating time:', { message: error.message, stack: error.stack });
-        res.status(500).json({ message: 'Server error' });
-    }
-});
-
-app.delete('/api/admin/times/:id', authenticateAdmin, async (req, res) => {
-    try {
-        const time = await Time.findByPk(req.params.id);
-        if (!time) {
-            return res.status(404).json({ message: 'Time slot not found' });
-        }
-        await Time.destroy({ where: { id: req.params.id } });
-        logger.info('Time slot deleted', { id: req.params.id });
-        res.json({ message: 'Time slot deleted' });
-    } catch (error) {
-        logger.error('Error deleting time:', { message: error.message, stack: error.stack });
-        res.status(500).json({ message: 'Server error' });
-    }
-});
-
-app.get('/api/admin/treatments', authenticateAdmin, async (req, res) => {
-    try {
-        const treatments = await Treatment.findAll({
-            attributes: ['id', 'name', 'description', 'cost', 'offer', 'image', 'video', 'createdAt'],
-            order: [['createdAt', 'DESC']]
-        });
-        const mappedTreatments = treatments.map(treatment => {
-            const imageUrl = treatment.image ? `${businessInfo.baseUrl}${treatment.image}` : null;
-            const videoUrl = treatment.video ? `${businessInfo.baseUrl}${treatment.video}` : null;
-            logger.debug('Serving admin treatment', { id: treatment.id, name: treatment.name, imageUrl, videoUrl });
-            return {
-                ...treatment.dataValues,
-                image: imageUrl,
-                video: videoUrl
-            };
-        });
-        res.json(mappedTreatments);
-    } catch (error) {
-        logger.error('Error fetching treatments (admin):', { message: error.message, stack: error.stack });
-        res.status(500).json({ message: 'Server error' });
-    }
-});
-
-app.post('/api/admin/treatments', authenticateAdmin, async (req, res) => {
-    try {
-        const { name, description, cost, offer, image, video } = sanitizeInput(req.body);
-        if (!name || !description || cost === undefined) {
-            return res.status(400).json({ message: 'Name, description, and cost are required' });
-        }
-        if (isNaN(cost) || cost < 0) {
-            return res.status(400).json({ message: 'Cost must be a valid positive number' });
-        }
-        const treatmentData = {
-            name,
-            description,
-            cost: parseFloat(cost),
-            offer: offer || null,
-            image: image || null,
-            video: video || null
-        };
-        const newTreatment = await Treatment.create(treatmentData);
-        logger.info('Treatment added', { id: newTreatment.id, name, image: treatmentData.image });
-        res.status(201).json({ message: 'Treatment added', id: newTreatment.id });
-    } catch (error) {
-        logger.error('Error adding treatment:', { message: error.message, stack: error.stack });
-        res.status(500).json({ message: 'Server error' });
-    }
-});
-
-app.put('/api/admin/treatments/:id', authenticateAdmin, async (req, res) => {
-    try {
-        const { name, description, cost, offer, image, video } = sanitizeInput(req.body);
-        if (!name || !description || cost === undefined) {
-            return res.status(400).json({ message: 'Name, description, and cost are required' });
-        }
-        if (isNaN(cost) || cost < 0) {
-            return res.status(400).json({ message: 'Cost must be a valid positive number' });
-        }
-        const treatment = await Treatment.findByPk(req.params.id);
-        if (!treatment) {
-            return res.status(404).json({ message: 'Treatment not found' });
-        }
-        const updateData = {
-            name,
-            description,
-            cost: parseFloat(cost),
-            offer: offer || null,
-            image: image || treatment.image,
-            video: video || treatment.video
-        };
-        await Treatment.update(updateData, { where: { id: req.params.id } });
-        logger.info('Treatment updated', { id: req.params.id, name, image: updateData.image });
-        res.json({ message: 'Treatment updated' });
-    } catch (error) {
-        logger.error('Error updating treatment:', { message: error.message, stack: error.stack });
-        res.status(500).json({ message: 'Server error' });
-    }
-});
-
-app.delete('/api/admin/treatments/:id', authenticateAdmin, async (req, res) => {
-    try {
-        const treatment = await Treatment.findByPk(req.params.id);
-        if (!treatment) {
-            return res.status(404).json({ message: 'Treatment not found' });
-        }
-        if (treatment.image) {
-            const imagePath = path.join(__dirname, 'public', treatment.image);
-            if (fs.existsSync(imagePath)) {
-                fs.unlinkSync(imagePath);
-                logger.info('Deleted treatment image', { path: imagePath });
-            } else {
-                logger.warn('Image file not found during deletion', { path: imagePath });
-            }
-        }
-        if (treatment.video) {
-            const videoPath = path.join(__dirname, 'public', treatment.video);
-            if (fs.existsSync(videoPath)) {
-                fs.unlinkSync(videoPath);
-                logger.info('Deleted treatment video', { path: videoPath });
-            } else {
-                logger.warn('Video file not found during deletion', { path: videoPath });
-            }
-        }
-        await Treatment.destroy({ where: { id: req.params.id } });
-        logger.info('Treatment deleted', { id: req.params.id });
-        res.json({ message: 'Treatment deleted' });
-    } catch (error) {
-        logger.error('Error deleting treatment:', { message: error.message, stack: error.stack });
-        res.status(500).json({ message: 'Server error' });
-    }
-});
-
+// Admin Endpoints (Protected)
 app.get('/api/admin/appointments', authenticateAdmin, async (req, res) => {
     try {
-        const appointments = await Appointment.findAll({
-            include: [{
-                model: Treatment,
-                as: 'Treatment',
-                attributes: ['id', 'name'],
-                required: false
-            }],
-            attributes: ['id', 'name', 'email', 'phone', 'date', 'time', 'status', 'transactionId', 'serviceId', 'createdAt'],
-            order: [['createdAt', 'DESC']]
-        });
-        res.json(appointments);
+        const result = await pool.query('SELECT * FROM appointments ORDER BY date, time');
+        res.json(result.rows);
     } catch (error) {
-        logger.error('Error fetching appointments (admin):', { message: error.message, stack: error.stack });
-        res.status(500).json({ message: 'Server error' });
+        console.error('Error fetching appointments:', error.message);
+        res.status(500).json({ error: 'Error fetching appointments' });
     }
 });
 
-app.put('/api/admin/appointments/:id', authenticateAdmin, async (req, res) => {
+app.post('/api/admin/appointments/:id/confirm', authenticateAdmin, async (req, res) => {
     try {
-        const { status } = sanitizeInput(req.body);
-        if (!status || !['Pending', 'Confirmed', 'Cancelled'].includes(status)) {
-            return res.status(400).json({ message: 'Valid status is required (Pending, Confirmed, Cancelled)' });
-        }
-        const appointment = await Appointment.findByPk(req.params.id, {
-            include: [{ model: Treatment, as: 'Treatment', attributes: ['name'] }]
-        });
-        if (!appointment) {
-            return res.status(404).json({ message: 'Appointment not found' });
-        }
-        const previousStatus = appointment.status;
-        await Appointment.update({ status }, { where: { id: req.params.id } });
+        const { id } = req.params;
+        const result = await pool.query(
+            'UPDATE appointments SET status = $1, approved = $2 WHERE id = $3 RETURNING *',
+            ['CONFIRMED', true, id]
+        );
 
-        const updatedAppointment = await Appointment.findByPk(req.params.id, {
-            include: [{ model: Treatment, as: 'Treatment', attributes: ['name'] }]
-        });
-        const serviceName = updatedAppointment.Treatment ? updatedAppointment.Treatment.name : 'Dental Service';
-
-        if (status === 'Confirmed' && previousStatus !== 'Confirmed') {
-            await sendAppointmentApproval(updatedAppointment, serviceName);
-        } else if (status === 'Cancelled' && previousStatus !== 'Cancelled') {
-            await sendAppointmentCancellation(updatedAppointment, serviceName, 'scheduling conflicts');
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Appointment not found' });
         }
 
-        logger.info('Appointment status updated', { id: req.params.id, status });
-        res.json(updatedAppointment);
+        const appointment = result.rows[0];
+        await sendEmail('svasudevareddy18604@gmail.com', 'Appointment Confirmed - Oak Dental Clinic', `
+            <h2>Appointment Confirmed</h2>
+            <p>Dear ${appointment.full_name},</p>
+            <p>Your appointment on ${appointment.date} at ${appointment.time} has been confirmed.</p>
+        `);
+        // await sendSMS(appointment.phone, `Your appointment on ${appointment.date} at ${appointment.time} is confirmed.`);
+
+        res.json({ message: 'Appointment confirmed' });
     } catch (error) {
-        logger.error('Error updating appointment:', { message: error.message, stack: error.stack });
-        res.status(500).json({ message: 'Server error' });
+        console.error('Error confirming appointment:', error.message);
+        res.status(500).json({ error: 'Error confirming appointment' });
     }
 });
 
-app.get('/api/admin/payments', authenticateAdmin, async (req, res) => {
+app.get('/api/admin/waitlist', authenticateAdmin, async (req, res) => {
     try {
-        const appointments = await Appointment.findAll({
-            where: { transactionId: { [Sequelize.Op.ne]: null } },
-            include: [{
-                model: Treatment,
-                as: 'Treatment',
-                attributes: ['id', 'name', 'cost'],
-                required: false
-            }],
-            attributes: ['id', 'name', 'email', 'transactionId', 'createdAt']
-        });
-
-        const payments = appointments.map(appointment => ({
-            transactionId: appointment.transactionId,
-            amount: appointment.Treatment ? appointment.Treatment.cost : 0,
-            payer: {
-                name: appointment.name,
-                email: appointment.email
-            },
-            appointmentId: appointment.id,
-            date: appointment.createdAt
-        }));
-        res.json(payments);
+        const result = await pool.query('SELECT * FROM waitlist ORDER BY created_at DESC');
+        res.json(result.rows);
     } catch (error) {
-        logger.error('Error fetching payments (admin):', { message: error.message, stack: error.stack });
-        res.status(500).json({ message: 'Server error' });
+        console.error('Error fetching waitlist:', error.message);
+        res.status(500).json({ error: 'Error fetching waitlist' });
     }
 });
 
-app.get('/api/admin/contacts', authenticateAdmin, async (req, res) => {
+app.delete('/api/admin/waitlist/:id', authenticateAdmin, async (req, res) => {
     try {
-        const contacts = await Contact.findAll({
-            attributes: ['id', 'name', 'email', 'message', 'createdAt'],
-            order: [['createdAt', 'DESC']]
-        });
-        res.json(contacts);
+        const { id } = req.params;
+        const result = await pool.query('DELETE FROM waitlist WHERE id = $1', [id]);
+        if (result.rowCount === 0) {
+            return res.status(404).json({ error: 'Waitlist entry not found' });
+        }
+        res.json({ message: 'Waitlist entry deleted' });
     } catch (error) {
-        logger.error('Error fetching contacts (admin):', { message: error.message, stack: error.stack });
-        res.status(500).json({ message: 'Server error' });
+        console.error('Error deleting waitlist entry:', error.message);
+        res.status(500).json({ error: 'Error deleting waitlist entry' });
     }
 });
 
-app.get('/api/admin/newsletter', authenticateAdmin, async (req, res) => {
+app.get('/api/admin/feedback', authenticateAdmin, async (req, res) => {
     try {
-        const subscribers = await Newsletter.findAll({
-            attributes: ['id', 'email', 'createdAt'],
-            order: [['createdAt', 'DESC']]
-        });
-        res.json(subscribers);
+        const result = await pool.query('SELECT * FROM feedback ORDER BY created_at DESC');
+        res.json(result.rows);
     } catch (error) {
-        logger.error('Error fetching subscribers (admin):', { message: error.message, stack: error.stack });
-        res.status(500).json({ message: 'Server error' });
+        console.error('Error fetching feedback:', error.message);
+        res.status(500).json({ error: 'Error fetching feedback' });
     }
 });
 
-// Serve Frontend Pages
-app.get('/admin', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'admin.html'));
-});
-
-app.get('*', (req, res) => {
-    if (!req.path.startsWith('/api') && req.path !== '/admin') {
-        res.sendFile(path.join(__dirname, 'public', 'index.html'));
-    } else {
-        res.status(404).json({ message: 'Resource not found' });
+app.delete('/api/admin/feedback/:id', authenticateAdmin, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const result = await pool.query('DELETE FROM feedback WHERE id = $1', [id]);
+        if (result.rowCount === 0) {
+            return res.status(404).json({ error: 'Feedback not found' });
+        }
+        res.json({ message: 'Feedback deleted' });
+    } catch (error) {
+        console.error('Error deleting feedback:', error.message);
+        res.status(500).json({ error: 'Error deleting feedback' });
     }
 });
 
-// Error Handling for Multer
-app.use((err, req, res, next) => {
-    if (err instanceof multer.MulterError) {
-        logger.error('Multer error:', { message: err.message, stack: err.stack });
-        return res.status(400).json({ message: `File upload error: ${err.message}` });
-    } else if (err) {
-        logger.error('File upload error:', { message: err.message, stack: err.stack });
-        return res.status(400).json({ message: err.message });
+app.post('/api/admin/services', authenticateAdmin, async (req, res) => {
+    try {
+        const { title, description, price, image, video } = req.body;
+        if (!title || !description || !price) {
+            return res.status(400).json({ error: 'Title, description, and price are required' });
+        }
+        await pool.query(
+            'INSERT INTO services (title, description, price, image, video) VALUES ($1, $2, $3, $4, $5)',
+            [title, description, price, image || null, video || null]
+        );
+        res.status(201).json({ message: 'Service added' });
+    } catch (error) {
+        console.error('Error adding service:', error.message);
+        res.status(500).json({ error: 'Error adding service' });
     }
-    next();
 });
 
-// Global Error Handling
-app.use((err, req, res, next) => {
-    logger.error('Global error:', { message: err.message, stack: err.stack, path: req.path, method: req.method });
-    res.status(500).json({ message: 'Something went wrong!' });
+app.put('/api/admin/services/:id', authenticateAdmin, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { title, description, price, image, video } = req.body;
+        if (!title || !description || !price) {
+            return res.status(400).json({ error: 'Title, description, and price are required' });
+        }
+        const result = await pool.query(
+            'UPDATE services SET title = $1, description = $2, price = $3, image = $4, video = $5 WHERE id = $6',
+            [title, description, price, image || null, video || null, id]
+        );
+        if (result.rowCount === 0) {
+            return res.status(404).json({ error: 'Service not found' });
+        }
+        res.json({ message: 'Service updated' });
+    } catch (error) {
+        console.error('Error updating service:', error.message);
+        res.status(500).json({ error: 'Error updating service' });
+    }
+});
+
+app.delete('/api/admin/services/:id', authenticateAdmin, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const result = await pool.query('DELETE FROM services WHERE id = $1', [id]);
+        if (result.rowCount === 0) {
+            return res.status(404).json({ error: 'Service not found' });
+        }
+        res.json({ message: 'Service deleted' });
+    } catch (error) {
+        console.error('Error deleting service:', error.message);
+        res.status(500).json({ error: 'Error deleting service' });
+    }
+});
+
+app.post('/api/admin/leave-dates', authenticateAdmin, async (req, res) => {
+    try {
+        const { date } = req.body;
+        if (!date) {
+            return res.status(400).json({ error: 'Date is required' });
+        }
+        await pool.query('INSERT INTO leave_dates (date) VALUES ($1) ON CONFLICT DO NOTHING', [date]);
+        res.status(201).json({ message: 'Leave date added' });
+    } catch (error) {
+        console.error('Error adding leave date:', error.message);
+        res.status(500).json({ error: 'Error adding leave date' });
+    }
+});
+
+app.delete('/api/admin/leave-dates/:date', authenticateAdmin, async (req, res) => {
+    try {
+        const { date } = req.params;
+        const result = await pool.query('DELETE FROM leave_dates WHERE date = $1', [date]);
+        if (result.rowCount === 0) {
+            return res.status(404).json({ error: 'Leave date not found' });
+        }
+        res.json({ message: 'Leave date removed' });
+    } catch (error) {
+        console.error('Error removing leave date:', error.message);
+        res.status(500).json({ error: 'Error removing leave date' });
+    }
+});
+
+// Placeholder for Reschedule
+app.get('/reschedule/:id', (req, res) => {
+    const baseUrl = NODE_ENV === 'production' ? 'https://oak-dental.onrender.com' : 'http://localhost:3000';
+    res.redirect(`${baseUrl}/#appointment`);
+});
+
+app.get('/cancel/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const result = await pool.query(
+            'UPDATE appointments SET status = $1, cancel_reason = $2 WHERE id = $3 AND status = $4 RETURNING *',
+            ['CANCELLED', 'Cancelled via link', id, 'CONFIRMED']
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).send('Appointment not found or already cancelled');
+        }
+
+        const appointment = result.rows[0];
+        const baseUrl = NODE_ENV === 'production' ? 'https://oak-dental.onrender.com' : 'http://localhost:3000';
+        await sendEmail('svasudevareddy18604@gmail.com', 'Appointment Cancelled - Oak Dental Clinic', `
+            <h2>Appointment Cancelled</h2>
+            <p>Dear ${appointment.full_name},</p>
+            <p>Your appointment on ${appointment.date} at ${appointment.time} has been cancelled.</p>
+            <p>Book a new appointment: <a href="${baseUrl}/#appointment">Book</a></p>
+        `);
+        // await sendSMS(appointment.phone, `Your appointment on ${appointment.date} at ${appointment.time} has been cancelled. Book a new slot at oakdental.com.`);
+
+        res.redirect(`${baseUrl}/#appointment`);
+    } catch (error) {
+        console.error('Error cancelling appointment:', error.message);
+        res.status(500).send('Error cancelling appointment');
+    }
 });
 
 // Start Server
-const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    logger.info(`Server running on http://localhost:${PORT}`);
+    console.log(`Server running on http://localhost:${PORT}`);
 });

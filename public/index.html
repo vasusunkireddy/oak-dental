@@ -77,7 +77,7 @@
             padding: 0 10px;
         }
         .doctor-bg {
-            background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url('https://images.unsplash.com/photo-1588776813678-3e56b86e8490?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url('https://images.unsplash.com/photo-1620778453907-a75627e31590?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
             background-size: cover;
             background-position: center;
         }
@@ -90,12 +90,14 @@
             margin: 0 auto;
         }
         .doctor-img {
-            border: 6px solid #0d9488;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-            width: 300px;
-            height: 300px;
-            object-fit: cover;
-            object-position: center;
+            border: 8px solid #0d9488;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            width: 260px;
+            height: 260px;
+            object-fit: contain;
+            border-radius: 50%;
+            margin: 0 auto;
+            background-color: #f7fafc;
         }
         .sidenav {
             height: 100%;
@@ -161,7 +163,6 @@
         .rating-stars .star.selected {
             color: #fbbf24;
         }
-        /* Gallery Slider Styles */
         .gallery-slider-container {
             position: relative;
             width: 100%;
@@ -189,14 +190,16 @@
             object-fit: cover;
             border-radius: 8px;
         }
-        /* Leave Date Styling */
-        input[type="date"]::-webkit-calendar-picker-indicator {
-            cursor: pointer;
-        }
         .leave-date-note {
             color: #e53e3e;
             font-size: 0.875rem;
             margin-top: 0.5rem;
+        }
+        .status-result {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            background-color: #f7fafc;
         }
         @media (max-width: 640px) {
             .text-4xl { font-size: 1.75rem; }
@@ -221,14 +224,12 @@
             .slide { flex-direction: column; align-items: center; gap: 0.5rem; }
             .slide img { width: 80%; height: 120px; object-fit: cover; }
             .treatment-slide { min-width: 100%; }
-            .doctor-img { width: 200px; height: 200px; }
+            .doctor-img { width: 180px; height: 180px; }
             .h-48 { height: 180px; }
             .space-x-4 > :not([hidden]) ~ :not([hidden]) { margin-left: 0.5rem; }
             .flex.justify-center.fade-in { flex-direction: column; align-items: center; gap: 0.5rem; }
             .max-w-md { max-width: 100%; }
-            input, textarea { font-size: 0.875rem; }
             .px-6.py-3 { padding: 0.5rem 1.5rem; }
-            /* Gallery Mobile Styles */
             .gallery-slide { flex-direction: row; }
             .gallery-item { max-width: 32%; }
             .gallery-img { height: 100px; }
@@ -268,6 +269,7 @@
         <a href="#about" onclick="closeNav()">About Us</a>
         <a href="#contact" onclick="closeNav()">Contact Us</a>
         <a href="#appointment" onclick="closeNav()">Book Appointments</a>
+        <a href="#status" onclick="closeNav()">Check Appointment Status</a>
     </div>
 
     <!-- Navbar -->
@@ -285,6 +287,7 @@
                     <a href="#about" class="text-white nav-link">About Us</a>
                     <a href="#contact" class="text-white nav-link">Contact Us</a>
                     <a href="#appointment" class="text-white nav-link">Book Appointments</a>
+                    <a href="#status" class="text-white nav-link">Check Status</a>
                 </div>
             </div>
         </div>
@@ -327,37 +330,37 @@
                     <i class="fas fa-tooth text-teal-600 text-4xl mb-4"></i>
                     <h3 class="text-xl font-semibold text-teal-600 mb-4">General Dentistry</h3>
                     <p class="text-gray-600 mb-4">Routine check-ups, cleanings, and fillings to keep your smile bright.</p>
-                    <a href="services.html#general-dentistry" class="text-teal-600 hover:underline">Learn More</a>
+                    <a href="/services.html#general-dentistry" class="text-teal-600 hover:underline">Learn More</a>
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-md text-center fade-in">
                     <i class="fas fa-smile text-teal-600 text-4xl mb-4"></i>
                     <h3 class="text-xl font-semibold text-teal-600 mb-4">Cosmetic Dentistry</h3>
                     <p class="text-gray-600 mb-4">Teeth whitening, veneers, and more to enhance your smile.</p>
-                    <a href="services.html#cosmetic-dentistry" class="text-teal-600 hover:underline">Learn More</a>
+                    <a href="/services.html#cosmetic-dentistry" class="text-teal-600 hover:underline">Learn More</a>
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-md text-center fade-in">
                     <i class="fas fa-align-center text-teal-600 text-4xl mb-4"></i>
                     <h3 class="text-xl font-semibold text-teal-600 mb-4">Orthodontics</h3>
                     <p class="text-gray-600 mb-4">Braces and aligners for perfectly aligned teeth.</p>
-                    <a href="services.html#orthodontics" class="text-teal-600 hover:underline">Learn More</a>
+                    <a href="/services.html#orthodontics" class="text-teal-600 hover:underline">Learn More</a>
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-md text-center fade-in">
                     <i class="fas fa-tooth text-teal-600 text-4xl mb-4"></i>
                     <h3 class="text-xl font-semibold text-teal-600 mb-4">Dental Implants</h3>
                     <p class="text-gray-600 mb-4">Permanent solutions for missing teeth with advanced technology.</p>
-                    <a href="services.html#dental-implants" class="text-teal-600 hover:underline">Learn More</a>
+                    <a href="/services.html#dental-implants" class="text-teal-600 hover:underline">Learn More</a>
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-md text-center fade-in">
                     <i class="fas fa-tools text-teal-600 text-4xl mb-4"></i>
                     <h3 class="text-xl font-semibold text-teal-600 mb-4">Root Canal Therapy</h3>
                     <p class="text-gray-600 mb-4">Pain-free treatment to save damaged teeth.</p>
-                    <a href="services.html#root-canal-therapy" class="text-teal-600 hover:underline">Learn More</a>
+                    <a href="/services.html#root-canal-therapy" class="text-teal-600 hover:underline">Learn More</a>
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-md text-center fade-in">
                     <i class="fas fa-baby text-teal-600 text-4xl mb-4"></i>
                     <h3 class="text-xl font-semibold text-teal-600 mb-4">Pediatric Dentistry</h3>
                     <p class="text-gray-600 mb-4">Gentle dental care for children and teens.</p>
-                    <a href="services.html#pediatric-dentistry" class="text-teal-600 hover:underline">Learn More</a>
+                    <a href="/services.html#pediatric-dentistry" class="text-teal-600 hover:underline">Learn More</a>
                 </div>
             </div>
             <div class="text-center mt-8 fade-in">
@@ -444,7 +447,7 @@
                 <div class="w-full md:w-1/2 md:pl-8 fade-in">
                     <p class="text-gray-600 mb-4">At Oak Dental Clinic in Bachupally, Hyderabad, we provide top-quality dental care in a comfortable environment. Led by Dr. A. Ram Koti Reddy, our team uses cutting-edge technology for effective treatments.</p>
                     <p class="text-gray-600 mb-4">From general dentistry to advanced prosthodontics and implants, we offer personalized care to keep your smile healthy and radiant.</p>
-                    <a href="about.html" class="bg-teal-600 text-white px-6 py-3 rounded-full hover:bg-teal-700">Know More</a>
+                    <a href="/about.html" class="bg-teal-600 text-white px-6 py-3 rounded-full hover:bg-teal-700">Know More</a>
                 </div>
             </div>
         </div>
@@ -456,7 +459,6 @@
             <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">Our Clinic in Bachupally</h2>
             <div class="gallery-slider-container fade-in">
                 <div class="gallery-slider" id="gallery-slider">
-                    <!-- Slide 1 -->
                     <div class="gallery-slide flex">
                         <div class="gallery-item">
                             <picture>
@@ -514,7 +516,7 @@
                     </picture>
                     <h3 class="text-xl font-semibold text-teal-600 mb-2">5 Tips for Healthy Teeth</h3>
                     <p class="text-gray-600 mb-4">Learn how to keep your smile bright with these simple habits.</p>
-                    <a href="dentaltips.html?post=healthy-teeth" class="text-teal-600 hover:underline">Read More</a>
+                    <a href="/dentaltips.html?post=healthy-teeth" class="text-teal-600 hover:underline">Read More</a>
                     <div class="flex space-x-4 mt-4">
                         <a href="https://www.facebook.com/sharer/sharer.php?u=your-blog-url" class="text-teal-600 hover:text-teal-800">Share on Facebook</a>
                         <a href="https://twitter.com/intent/tweet?url=your-blog-url" class="text-teal-600 hover:text-teal-800">Share on Twitter</a>
@@ -527,7 +529,7 @@
                     </picture>
                     <h3 class="text-xl font-semibold text-teal-600 mb-2">Guide to Dental Implants</h3>
                     <p class="text-gray-600 mb-4">Everything you need to know about dental implants.</p>
-                    <a href="dentaltips.html?post=dental-implants" class="text-teal-600 hover:underline">Read More</a>
+                    <a href="/dentaltips.html?post=dental-implants" class="text-teal-600 hover:underline">Read More</a>
                     <div class="flex space-x-4 mt-4">
                         <a href="https://www.facebook.com/sharer/sharer.php?u=your-blog-url" class="text-teal-600 hover:text-teal-800">Share on Facebook</a>
                         <a href="https://twitter.com/intent/tweet?url=your-blog-url" class="text-teal-600 hover:text-teal-800">Share on Twitter</a>
@@ -540,11 +542,26 @@
                     </picture>
                     <h3 class="text-xl font-semibold text-teal-600 mb-2">Top 5 Myths About Teeth Whitening</h3>
                     <p class="text-gray-600 mb-4">Debunking common misconceptions about whitening.</p>
-                    <a href="dentaltips.html?post=teeth-whitening" class="text-teal-600 hover:underline">Read More</a>
+                    <a href="/dentaltips.html?post=teeth-whitening" class="text-teal-600 hover:underline">Read More</a>
                     <div class="flex space-x-4 mt-4">
                         <a href="https://www.facebook.com/sharer/sharer.php?u=your-blog-url" class="text-teal-600 hover:text-teal-800">Share on Facebook</a>
                         <a href="https://twitter.com/intent/tweet?url=your-blog-url" class="text-teal-600 hover:text-teal-800">Share on Twitter</a>
                     </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Check Appointment Status Section -->
+    <section id="status" class="py-16 bg-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">Check Appointment Status</h2>
+            <div class="max-w-md mx-auto fade-in">
+                <h3 class="text-xl font-semibold text-teal-600 mb-4">Enter Your Details</h3>
+                <div>
+                    <input type="text" id="status-identifier" placeholder="Mobile Number or Email" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Mobile Number or Email">
+                    <button onclick="checkAppointmentStatus()" class="bg-teal-600 text-white px-6 py-3 rounded-full hover:bg-teal-700" aria-label="Check Appointment Status">Check Status</button>
+                    <div id="status-result" class="status-result hidden"></div>
                 </div>
             </div>
         </div>
@@ -567,9 +584,19 @@
                     </select>
                     <textarea id="message" placeholder="Your Message" class="w-full p-3 mb-4 border rounded-lg" rows="4" required aria-label="Your Message"></textarea>
                     <div class="space-x-4">
-                        <button onclick="submitAppointment()" class="bg-teal-600 text-white px-6 py-3 rounded-full hover:bg-teal-700" aria-label="Submit Appointment Request">Submit</button>
+                        <button onclick="submitAppointment()" class="bg-teal-600 text-white px-6 py-3 rounded-full hover:bg-teal-700" aria-label="Submit Appointment Request">Book Appointment</button>
                         <a href="https://wa.me/+91756936767?text=Hello%20Oak%20Dental%20Clinic,%20I%20would%20like%20to%20book%20an%20appointment." target="_blank" class="bg-green-500 text-white px-6 py-3 rounded-full hover:bg-green-600" aria-label="Contact via WhatsApp">WhatsApp Us</a>
                     </div>
+                </div>
+            </div>
+            <div class="max-w-md mx-auto mt-8 fade-in">
+                <h3 class="text-xl font-semibold text-teal-600 mb-4">Join Waitlist</h3>
+                <div>
+                    <input type="text" id="waitlist-name" placeholder="Your Name" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Your Name">
+                    <input type="email" id="waitlist-email" placeholder="Your Email" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Your Email">
+                    <input type="tel" id="waitlist-phone" placeholder="Your Phone" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Your Phone">
+                    <input type="date" id="waitlist-date" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Preferred Date">
+                    <button onclick="joinWaitlist()" class="bg-teal-600 text-white px-6 py-3 rounded-full hover:bg-teal-700" aria-label="Join Waitlist">Join Waitlist</button>
                 </div>
             </div>
         </div>
@@ -648,8 +675,8 @@
                 <a href="#" class="hover:text-gray-200" aria-label="Facebook">Facebook</a>
                 <a href="#" class="hover:text-gray-200" aria-label="Twitter">Twitter</a>
                 <a href="#" class="hover:text-gray-200" aria-label="Instagram">Instagram</a>
-                <a href="privacy-policy вложить документальный фильм о природе.html" class="hover:text-gray-200" aria-label="Privacy Policy">Privacy Policy</a>
-                <a href="terms.html" class="hover:text-gray-200" aria-label="Terms of Use">Terms of Use</a>
+                <a href="/privacy-policy.html" class="hover:text-gray-200" aria-label="Privacy Policy">Privacy Policy</a>
+                <a href="/terms.html" class="hover:text-gray-200" aria-label="Terms of Use">Terms of Use</a>
             </div>
         </div>
     </footer>
@@ -944,21 +971,27 @@
             }
         }
 
-        async function submitAppointment() {
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const phone = document.getElementById('phone').value;
-            const date = document.getElementById('appointment-date').value;
-            const time = document.getElementById('time-slot').value;
-            const message = document.getElementById('message').value;
+        function getAppointmentData() {
+            return {
+                id: Date.now().toString(),
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                date: document.getElementById('appointment-date').value,
+                time: document.getElementById('time-slot').value,
+                message: document.getElementById('message').value
+            };
+        }
 
-            if (!name || !email || !phone || !date || !time || !message) {
+        async function submitAppointment() {
+            const appointmentData = getAppointmentData();
+            if (!appointmentData.name || !appointmentData.email || !appointmentData.phone || !appointmentData.date || !appointmentData.time || !appointmentData.message) {
                 alert('Please fill in all fields.');
                 return;
             }
 
-            if (leaveDates.includes(date)) {
-                alert(`The doctor is on leave on ${date}. Please select another date, such as ${getNextAvailableDate(date)}.`);
+            if (leaveDates.includes(appointmentData.date)) {
+                alert(`The doctor is on leave on ${appointmentData.date}. Please select another date, such as ${getNextAvailableDate(appointmentData.date)}.`);
                 return;
             }
 
@@ -966,11 +999,12 @@
                 const response = await fetch('http://localhost:3000/api/appointments', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, email, phone, date, time, message })
+                    body: JSON.stringify(appointmentData)
                 });
 
                 if (response.ok) {
-                    alert(`Appointment booked for ${name} on ${date} at ${time}. We will confirm your booking soon.`);
+                    const result = await response.json();
+                    alert(`Appointment booked for ${appointmentData.name} on ${appointmentData.date} at ${appointmentData.time}. Confirmation sent to ${appointmentData.email} and ${appointmentData.phone}.`);
                     document.getElementById('name').value = '';
                     document.getElementById('email').value = '';
                     document.getElementById('phone').value = '';
@@ -983,6 +1017,93 @@
             } catch (error) {
                 console.error('Error booking appointment:', error);
                 alert('Error booking appointment. Please try again.');
+            }
+        }
+
+        async function joinWaitlist() {
+            const waitlistData = {
+                name: document.getElementById('waitlist-name').value,
+                email: document.getElementById('waitlist-email').value,
+                phone: document.getElementById('waitlist-phone').value,
+                preferredDate: document.getElementById('waitlist-date').value
+            };
+
+            if (!waitlistData.name || !waitlistData.email || !waitlistData.phone || !waitlistData.preferredDate) {
+                alert('Please fill in all waitlist fields.');
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:3000/api/waitlist', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(waitlistData)
+                });
+
+                if (response.ok) {
+                    alert(`You have been added to the waitlist for ${waitlistData.preferredDate}. We will notify you when a slot becomes available.`);
+                    document.getElementById('waitlist-name').value = '';
+                    document.getElementById('waitlist-email').value = '';
+                    document.getElementById('waitlist-phone').value = '';
+                    document.getElementById('waitlist-date').value = '';
+                } else {
+                    alert('Error joining waitlist. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error joining waitlist:', error);
+                alert('Error joining waitlist. Please try again.');
+            }
+        }
+
+        async function checkAppointmentStatus() {
+            const identifier = document.getElementById('status-identifier').value;
+            if (!identifier) {
+                alert('Please enter a mobile number or email.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:3000/api/appointments/status?identifier=${encodeURIComponent(identifier)}`);
+                const result = await response.json();
+                const statusResult = document.getElementById('status-result');
+                statusResult.classList.remove('hidden');
+
+                if (result.appointment) {
+                    const { name, date, time, status, id } = result.appointment;
+                    statusResult.innerHTML = `
+                        <p><strong>Name:</strong> ${name}</p>
+                        <p><strong>Date:</strong> ${date}</p>
+                        <p><strong>Time:</strong> ${time}</p>
+                        <p><strong>Status:</strong> ${status}</p>
+                        ${status !== 'CANCELLED' ? `<button onclick="cancelAppointment('${id}')" class="bg-red-600 text-white px-4 py-2 rounded-full hover:bg-red-700 mt-2">Cancel Appointment</button>` : ''}
+                    `;
+                } else {
+                    statusResult.innerHTML = '<p>No appointment found with this mobile number or email.</p>';
+                }
+            } catch (error) {
+                console.error('Error checking appointment status:', error);
+                alert('Error checking appointment status. Please try again.');
+            }
+        }
+
+        async function cancelAppointment(appointmentId) {
+            if (!confirm('Are you sure you want to cancel this appointment?')) return;
+
+            try {
+                const response = await fetch(`http://localhost:3000/api/appointments/${appointmentId}/cancel`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                if (response.ok) {
+                    alert('Appointment cancelled. You will receive a confirmation via email/SMS.');
+                    checkAppointmentStatus();
+                } else {
+                    alert('Error cancelling appointment. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error cancelling appointment:', error);
+                alert('Error cancelling appointment. Please try again.');
             }
         }
 

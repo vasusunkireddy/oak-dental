@@ -53,139 +53,143 @@
 </head>
 <body class="bg-gray-100">
     <!-- Navbar -->
-    <nav class="nav-gradient shadow-lg fixed w-full z gave me a great smile transformation!"</p>
-                            <p class="text-teal-600 font-semibold">— Anjali M., Bachupally, 5★</p>
-                        </div>
-                    </div>
-                    <div class="slider-nav">
-                        <button onclick="prevTestimonial()" aria-label="Previous Testimonial">❮</button>
-                        <button onclick="nextTestimonial()" aria-label="Next Testimonial">❯</button>
-                    </div>
+    <nav class="nav-gradient shadow-lg fixed w-full z-10" aria-label="Main navigation">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center space-x-3">
+                    <img src="https://i.postimg.cc/bY0bwXgj/OAK-LOGO-HD.png" alt="Oak Dental Clinic Logo" class="h-12" loading="lazy">
+                    <h1 class="text-2xl font-semibold text-white tracking-tight">Oak Dental Clinic</h1>
+                </div>
+                <div class="desktop-nav flex items-center space-x-6 hidden md:flex">
+                    <a href="/index.html#home" class="text-white nav-link">Home</a>
+                    <a href="/index.html#treatments" class="text-white nav-link">Our Treatments</a>
+                    <a href="/index.html#about" class="text-white nav-link">About Us</a>
+                    <a href="/index.html#contact" class="text-white nav-link">Contact Us</a>
+                    <a href="/index.html#appointment" class="text-white nav-link">Book Appointments</a>
                 </div>
             </div>
-        </section>
+        </div>
+    </nav>
 
-        <!-- Contact Section -->
-        <section id="contact" class="py-16 bg-white">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">Contact Our Hyderabad Clinic</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div class="fade-in">
-                        <h3 class="text-xl font-semibold text-teal-600 mb-4">Get in Touch</h3>
-                        <p class="text-gray-600 mb-2"><strong>Address:</strong> 2nd Floor, Vision Apartments, Saree Nagar, Nazampet Road, Bachupally, Hyderabad, 500090</p>
-                        <p class="text-gray-600 mb-2"><strong>Phone:</strong> <a href="tel:+91756936767">756 936 767</a> / <a href="tel:+919502030637">9502 030 637</a></p>
-                        <p class="text-gray-600 mb-2"><strong>Email:</strong> <a href="mailto:info@oakdental.com">info@oakdental.com</a></p>
-                        <p class="text-gray-600 mb-4"><strong>Hours:</strong> Mon-Sat, 10:00 AM - 8:00 PM</p>
-                    </div>
-                    <div class="fade-in">
-                        <h3 class="text-xl font-semibold text-teal-600 mb-4">Send Us a Message</h3>
+    <!-- Services Section -->
+    <section id="services" class="py-16 bg-gray-100 pt-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">Our Dental Services</h2>
+            <div class="space-y-12">
+                <div id="general-dentistry" class="fade-in">
+                    <h3 class="text-2xl font-semibold text-teal-600 mb-4">General Dentistry</h3>
+                    <div class="flex flex-col md:flex-row gap-8">
+                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="General Dentistry" class="service-img" loading="lazy">
                         <div>
-                            <input type="text" placeholder="Your Name" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Your Name">
-                            <input type="email" placeholder="Your Email" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Your Email">
-                            <textarea placeholder="Your Message" class="w-full p-3 mb-4 border rounded-lg" rows="4" required aria-label="Your Message"></textarea>
-                            <button class="bg-teal-600 text-white px-6 py-3 rounded-full hover:bg-teal-700" aria-label="Send Message">Send</button>
+                            <p class="text-gray-600 mb-4">Our general dentistry services include routine check-ups, professional cleanings, fillings, and preventive care to maintain your oral health. We use advanced diagnostic tools to detect issues early and provide personalized treatment plans.</p>
+                            <p class="text-gray-600 mb-4"><strong>Benefits:</strong> Prevents cavities, gum disease, and maintains overall oral hygiene.</p>
+                            <p class="text-gray-600 mb-4"><strong>Duration:</strong> Check-ups and cleanings typically take 30-60 minutes.</p>
+                            <a href="/index.html#appointment" class="bg-teal-600 text-white px-6 py-3 rounded-full hover:bg-teal-700">Book Now</a>
+                        </div>
+                    </div>
+                </div>
+                <div id="cosmetic-dentistry" class="fade-in">
+                    <h3 class="text-2xl font-semibold text-teal-600 mb-4">Cosmetic Dentistry</h3>
+                    <div class="flex flex-col md:flex-row gap-8">
+                        <img src="https://images.unsplash.com/photo-1618498082410-b4aa22193b38?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Cosmetic Dentistry" class="service-img" loading="lazy">
+                        <div>
+                            <p class="text-gray-600 mb-4">Transform your smile with our cosmetic dentistry services, including teeth whitening, veneers, bonding, and smile makeovers. We tailor treatments to enhance aesthetics and boost confidence.</p>
+                            <p class="text-gray-600 mb-4"><strong>Benefits:</strong> Improves smile aesthetics, corrects imperfections, and enhances self-esteem.</p>
+                            <p class="text-gray-600 mb-4"><strong>Duration:</strong> Varies; whitening takes 1-2 hours, veneers may require multiple visits.</p>
+                            <a href="/index.html#appointment" class="bg-teal-600 text-white px-6 py-3 rounded-full hover:bg-teal-700">Book Now</a>
+                        </div>
+                    </div>
+                </div>
+                <div id="orthodontics" class="fade-in">
+                    <h3 class="text-2xl font-semibold text-teal-600 mb-4">Orthodontics</h3>
+                    <div class="flex flex-col md:flex-row gap-8">
+                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Orthodontics" class="service-img" loading="lazy">
+                        <div>
+                            <p class="text-gray-600 mb-4">Our orthodontic treatments, including braces and clear aligners, correct misaligned teeth and bite issues. We offer options for both adults and children.</p>
+                            <p class="text-gray-600 mb-4"><strong>Benefits:</strong> Straighter teeth, improved bite, and enhanced oral function.</p>
+                            <p class="text-gray-600 mb-4"><strong>Duration:</strong> Treatment typically lasts 12-24 months.</p>
+                            <a href="/index.html#appointment" class="bg-teal-600 text-white px-6 py-3 rounded-full hover:bg-teal-700">Book Now</a>
+                        </div>
+                    </div>
+                </div>
+                <div id="dental-implants" class="fade-in">
+                    <h3 class="text-2xl font-semibold text-teal-600 mb-4">Dental Implants</h3>
+                    <div class="flex flex-col md:flex-row gap-8">
+                        <img src="https://images.unsplash.com/photo-1618498082410-b4aa22193b38?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Dental Implants" class="service-img" loading="lazy">
+                        <div>
+                            <p class="text-gray-600 mb-4">Dental implants provide a permanent solution for missing teeth. Our advanced implant procedures ensure durability and a natural look.</p>
+                            <p class="text-gray-600 mb-4"><strong>Benefits:</strong> Restores chewing function, prevents bone loss, and mimics natural teeth.</p>
+                            <p class="text-gray-600 mb-4"><strong>Duration:</strong> Procedure and healing may take 3-6 months.</p>
+                            <a href="/index.html#appointment" class="bg-teal-600 text-white px-6 py-3 rounded-full hover:bg-teal-700">Book Now</a>
+                        </div>
+                    </div>
+                </div>
+                <div id="root-canal-therapy" class="fade-in">
+                    <h3 class="text-2xl font-semibold text-teal-600 mb-4">Root Canal Therapy</h3>
+                    <div class="flex flex-col md:flex-row gap-8">
+                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Root Canal Therapy" class="service-img" loading="lazy">
+                        <div>
+                            <p class="text-gray-600 mb-4">Our pain-free root canal therapy saves damaged or infected teeth. We use modern techniques to ensure comfort and effective treatment.</p>
+                            <p class="text-gray-600 mb-4"><strong>Benefits:</strong> Eliminates pain, preserves natural teeth, and prevents infection spread.</p>
+                            <p class="text-gray-600 mb-4"><strong>Duration:</strong> Typically completed in 1-2 visits.</p>
+                            <a href="/index.html#appointment" class="bg-teal-600 text-white px-6 py-3 rounded-full hover:bg-teal-700">Book Now</a>
+                        </div>
+                    </div>
+                </div>
+                <div id="pediatric-dentistry" class="fade-in">
+                    <h3 class="text-2xl font-semibold text-teal-600 mb-4">Pediatric Dentistry</h3>
+                    <div class="flex flex-col md:flex-row gap-8">
+                        <img src="https://images.unsplash.com/photo-1618498082410-b4aa22193b38?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Pediatric Dentistry" class="service-img" loading="lazy">
+                        <div>
+                            <p class="text-gray-600 mb-4">We provide gentle dental care for children and teens, including cleanings, sealants, and education on oral hygiene to ensure healthy smiles.</p>
+                            <p class="text-gray-600 mb-4"><strong>Benefits:</strong> Builds positive dental habits, prevents cavities, and ensures healthy development.</p>
+                            <p class="text-gray-600 mb-4"><strong>Duration:</strong> Visits typically last 30-45 minutes.</p>
+                            <a href="/index.html#appointment" class="bg-teal-600 text-white px-6 py-3 rounded-full hover:bg-teal-700">Book Now</a>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
-
-        <!-- Footer -->
-        <footer class="bg-teal-600 text-white py-8">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                <p>© 2025 Oak Dental Clinic. All rights reserved.</p>
-                <div class="mt-4 flex justify-center space-x-4">
-                    <a href="#" class="hover:text-gray-200" aria-label="Facebook">Facebook</a>
-                    <a href="#" class="hover:text-gray-200" aria-label="Twitter">Twitter</a>
-                    <a href="#" class="hover:text-gray-200" aria-label="Instagram">Instagram</a>
-                    <a href="privacy-policy.html" class="hover:text-gray-200" aria-label="Privacy Policy">Privacy Policy</a>
-                    <a href="terms.html" class="hover:text-gray-200" aria-label="Terms of Use">Terms of Use</a>
-                </div>
+            <div class="text-center mt-8 fade-in">
+                <a href="/index.html#appointment" class="bg-teal-600 text-white px-6 py-3 rounded-full hover:bg-teal-700">Schedule a Visit</a>
             </div>
-        </footer>
+        </div>
+    </section>
 
-        <script>
-            // Smooth Scrolling
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    document.querySelector(this.getAttribute('href')).scrollIntoView({
-                        behavior: 'smooth'
-                    });
+    <!-- Footer -->
+    <footer class="bg-teal-600 text-white py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p>© 2025 Oak Dental Clinic. All rights reserved.</p>
+            <div class="mt-4 flex justify-center space-x-4">
+                <a href="#" class="hover:text-gray-200" aria-label="Facebook">Facebook</a>
+                <a href="#" class="hover:text-gray-200" aria-label="Twitter">Twitter</a>
+                <a href="#" class="hover:text-gray-200" aria-label="Instagram">Instagram</a>
+                <a href="/privacy-policy.html" class="hover:text-gray-200" aria-label="Privacy Policy">Privacy Policy</a>
+                <a href="/terms.html" class="hover:text-gray-200" aria-label="Terms of Use">Terms of Use</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth Scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
                 });
             });
+        });
 
-            // Fade-in Animation
-            const fadeInElements = document.querySelectorAll('.fade-in');
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                    }
-                });
-            }, { threshold: 0.1 });
-            fadeInElements.forEach(element => observer.observe(element));
-
-            // Testimonials Carousel
-            let testimonialIndex = 0;
-            let testimonials = [];
-            async function loadTestimonials() {
-                try {
-                    const response = await fetch('http://localhost:3000/api/feedback');
-                    const feedbacks = await response.json();
-                    const testimonialSlider = document.getElementById('testimonial-slider');
-                    testimonialSlider.innerHTML = '';
-
-                    if (feedbacks.length === 0) {
-                        testimonialSlider.innerHTML = `
-                            <div class="testimonial-slide bg-white p-6 rounded-lg shadow-md active">
-                                <p class="text-gray-600 mb-4">"The team at Oak Dental Clinic made my visit so comfortable! My smile has never looked better."</p>
-                                <p class="text-teal-600 font-semibold">— Priya S., Bachupally</p>
-                            </div>
-                            <div class="testimonial-slide bg-white p-6 rounded-lg shadow-md">
-                                <p class="text-gray-600 mb-4">"Professional staff and top-notch facilities. I highly recommend Oak Dental for any dental needs."</p>
-                                <p class="text-teal-600 font-semibold">— Rahul K., Hyderabad</p>
-                            </div>
-                            <div class="testimonial-slide bg-white p-6 rounded-lg shadow-md">
-                                <p class="text-gray-600 mb-4">"The best dental care in Hyderabad! My implants were done perfectly."</p>
-                                <p class="text-teal-600 font-semibold">— Anjali M., Bachupally</p>
-                            </div>
-                        `;
-                    } else {
-                        feedbacks.forEach(feedback => {
-                            const slide = document.createElement('div');
-                            slide.className = 'testimonial-slide bg-white p-6 rounded-lg shadow-md';
-                            slide.innerHTML = `
-                                <p class="text-gray-600 mb-4">"${feedback.description}"</p>
-                                <p class="text-teal-600 font-semibold">— ${feedback.name}, ${feedback.rating}★</p>
-                            `;
-                            testimonialSlider.appendChild(slide);
-                        });
-                    }
-
-                    testimonials = document.querySelectorAll('.testimonial-slide');
-                    showTestimonial(testimonialIndex);
-                } catch (error) {
-                    console.error('Error loading testimonials:', error);
+        // Fade-in Animation
+        const fadeInElements = document.querySelectorAll('.fade-in');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
                 }
-            }
-            function showTestimonial(index) {
-                testimonials.forEach((slide, i) => {
-                    slide.classList.toggle('active', i === index);
-                });
-            }
-            function nextTestimonial() {
-                testimonialIndex = (testimonialIndex + 1) % testimonials.length;
-                showTestimonial(testimonialIndex);
-            }
-            function prevTestimonial() {
-                testimonialIndex = (testimonialIndex - 1 + testimonials.length) % testimonials.length;
-                showTestimonial(testimonialIndex);
-            }
-            setInterval(nextTestimonial, 5000);
-
-            // Initialize
-            loadTestimonials();
-        </script>
-    </body>
+            });
+        }, { threshold: 0.1 });
+        fadeInElements.forEach(element => observer.observe(element));
+    </script>
+</body>
 </html>
