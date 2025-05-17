@@ -1307,4 +1307,8 @@ async function startServer() {
     app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
 }
 
+<<<<<<< HEAD
 startServer();
+=======
+startServer();
+>>>>>>> 404ae4b94bd6621365047aa3485dc6ebb1ac20b4
