@@ -10,10 +10,37 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background: #f1f5f9;
+            background: url('https://images.unsplash.com/photo-1598256989800-fe5f95da9787?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') no-repeat center center fixed;
+            background-size: cover;
             color: #1e293b;
             font-size: 15px;
             line-height: 1.5;
+            position: relative;
+            min-height: 100vh;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: -1;
+        }
+        #auth-container, #dashboard-container {
+            position: relative;
+            z-index: 1;
+        }
+        .auth-container {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 253, 250, 0.95) 100%);
+            backdrop-filter: blur(8px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 400px;
+            width: 90%;
+            margin: 1rem;
         }
         .animate-fade-in {
             animation: fadeIn 0.3s ease-out;
@@ -92,11 +119,34 @@
             border: 1px solid #d1d5db;
             width: 100%;
             box-sizing: border-box;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
         .form-input:focus {
             outline: none;
             border-color: #0d9488;
             box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.2);
+        }
+        .auth-container button {
+            background: #0d9488;
+            color: white;
+            font-weight: 500;
+            padding: 12px;
+            border-radius: 8px;
+            width: 100%;
+            transition: background 0.2s, transform 0.2s;
+        }
+        .auth-container button:hover {
+            background: #0b8276;
+            transform: translateY(-1px);
+        }
+        .auth-container a {
+            color: #0d9488;
+            font-size: 13px;
+            transition: color 0.2s;
+        }
+        .auth-container a:hover {
+            color: #0b8276;
+            text-decoration: underline;
         }
         .action-btn {
             margin-right: 8px;
@@ -132,60 +182,84 @@
         }
         @media (max-width: 640px) {
             body {
-                font-size: 14px;
-            }
-            .content {
-                padding: 14px;
-            }
-            .navbar {
-                padding: 14px;
-            }
-            h2 {
-                font-size: 20px;
-            }
-            th, td {
                 font-size: 13px;
-                padding: 8px 10px;
+                background-position: center;
             }
-            button {
-                font-size: 12px;
-                padding: 10px 12px;
+            .auth-container {
+                padding: 1.5rem;
+                margin: 1rem;
+                border-radius: 12px;
+            }
+            .auth-container h2 {
+                font-size: 1.25rem;
+            }
+            .auth-container h3 {
+                font-size: 1rem;
             }
             .form-input {
                 font-size: 13px;
                 padding: 10px;
             }
+            .auth-container button {
+                font-size: 13px;
+                padding: 10px;
+            }
+            .auth-container a {
+                font-size: 12px;
+            }
+            .content {
+                padding: 12px;
+            }
+            .navbar {
+                padding: 12px;
+            }
+            h2 {
+                font-size: 18px;
+            }
+            th, td {
+                font-size: 12px;
+                padding: 8px 10px;
+            }
+            button {
+                font-size: 12px;
+                padding: 8px 12px;
+            }
             .welcome-modal img {
-                height: 48px;
+                height: 40px;
             }
             .welcome-modal h2 {
-                font-size: 20px;
+                font-size: 18px;
             }
             .welcome-modal p {
-                font-size: 13px;
+                font-size: 12px;
             }
             .dropdown-menu a {
                 font-size: 13px;
                 padding: 12px 16px;
             }
             .table-container {
-                margin: 0 -14px;
-                border-radius: 0;
+                margin: 0;
+                border-radius: 8px;
             }
             .action-btn {
-                padding: 7px 10px;
+                padding: 6px 10px;
                 font-size: 11px;
             }
             .form-container {
-                padding: 14px;
+                padding: 12px;
             }
-            .auth-container {
-                padding: 18px;
+            .modal {
+                padding: 12px;
+            }
+            .modal > div {
+                max-width: 90%;
             }
             .toast {
                 right: 10px;
                 left: 10px;
                 bottom: 10px;
+                font-size: 12px;
+                padding: 10px 16px;
             }
         }
     </style>
@@ -209,8 +283,9 @@
             <textarea id="edit-offer-description" placeholder="Description" class="form-input mb-4" rows="4" aria-label="Offer Description"></textarea>
             <input type="number" id="edit-offer-price" placeholder="Price" class="form-input mb-4" step="0.01" aria-label="Offer Price">
             <div class="mb-4">
-                <label class="block text-sm text-gray-600 mb-1">Offer Image (Optional)</label",
-            "Offer Image URL" class="form-input" aria-label="Offer Image URL">
+                <label class="block text-sm text-gray-600 mb-1">Offer Image (Optional)</label>
+                <input type="file" id="edit-offer-image-file" accept="image/*" class="form-input mb-2">
+                <input type="text" id="edit-offer-image-url" placeholder="Image URL" class="form-input" aria-label="Offer Image URL">
             </div>
             <div class="flex justify-end space-x-2">
                 <button onclick="closeEditOfferModal()" class="bg-gray-500 text-white p-3 rounded-lg hover:bg-gray-600">Cancel</button>
@@ -240,6 +315,21 @@
             <div class="flex justify-end space-x-2">
                 <button onclick="closeEditServiceModal()" class="bg-gray-500 text-white p-3 rounded-lg hover:bg-gray-600">Cancel</button>
                 <button onclick="saveServiceChanges()" class="bg-teal-600 text-white p-3 rounded-lg hover:bg-teal-700">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reply to Message Modal -->
+    <div id="reply-message-modal" class="fixed inset-0 modal flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg p-6 max-w-md w-full animate-scale-in">
+            <h3 class="text-lg font-medium text-teal-600 mb-4">Reply to Message</h3>
+            <input type="hidden" id="reply-message-id">
+            <input type="email" id="reply-message-email" placeholder="Recipient Email" class="form-input mb-4" readonly aria-label="Recipient Email">
+            <input type="text" id="reply-message-subject" placeholder="Subject" class="form-input mb-4" aria-label="Subject">
+            <textarea id="reply-message-content" placeholder="Your reply" class="form-input mb-4" rows="5" aria-label="Reply Content"></textarea>
+            <div class="flex justify-end space-x-2">
+                <button onclick="closeReplyMessageModal()" class="bg-gray-500 text-white p-3 rounded-lg hover:bg-gray-600">Cancel</button>
+                <button onclick="sendReplyMessage()" class="bg-teal-600 text-white p-3 rounded-lg hover:bg-teal-700">Send Reply</button>
             </div>
         </div>
     </div>
@@ -282,22 +372,22 @@
     </div>
 
     <!-- Login/Register Container -->
-    <div id="auth-container" class="min-h-screen flex items-center justify-center gradient-bg">
-        <div class="auth-container max-w-md w-full bg-white rounded-lg shadow-lg p-8 animate-fade-in">
-            <div class="flex justify-center mb-5">
-                <img src="https://i.postimg.cc/bY0bwXgj/OAK-LOGO-HD.png" alt="Oak Dental Clinic Logo" class="h-12">
+    <div id="auth-container" class="min-h-screen flex items-center justify-center">
+        <div class="auth-container animate-fade-in">
+            <div class="flex justify-center mb-6">
+                <img src="https://i.postimg.cc/bY0bwXgj/OAK-LOGO-HD.png" alt="Oak Dental Clinic Logo" class="h-14">
             </div>
-            <h2 class="text-2xl font-semibold text-center text-teal-600 mb-5">Admin Portal</h2>
+            <h2 class="text-2xl font-semibold text-center text-teal-600 mb-6">Admin Portal</h2>
             <div id="login-form">
                 <h3 class="text-lg font-medium text-teal-600 mb-4">Login</h3>
                 <input type="email" id="login-email" placeholder="Email" class="form-input mb-4" required aria-label="Email">
                 <input type="password" id="login-password" placeholder="Password" class="form-input mb-4" required aria-label="Password">
-                <button onclick="adminLogin()" class="w-full bg-teal-600 text-white p-3 rounded-lg hover:bg-teal-700 shadow-sm">Login</button>
+                <button onclick="adminLogin()" class="mt-2">Login</button>
                 <p class="text-center mt-4 text-sm">
-                    Don't have an account? <a href="#" onclick="showRegisterForm()" class="text-teal-600 hover:underline">Register</a>
+                    Don't have an account? <a href="#" onclick="showRegisterForm()">Register</a>
                 </p>
                 <p class="text-center mt-2 text-sm">
-                    <a href="#" onclick="showForgotPasswordEmailModal()" class="text-teal-600 hover:underline">Forgot Password?</a>
+                    <a href="#" onclick="showForgotPasswordEmailModal()">Forgot Password?</a>
                 </p>
             </div>
             <div id="register-form" class="hidden">
@@ -305,8 +395,8 @@
                 <input type="text" id="register-username" placeholder="Username" class="form-input mb-4" required aria-label="Username">
                 <input type="email" id="register-email" placeholder="Email" class="form-input mb-4" required aria-label="Email">
                 <input type="password" id="register-password" placeholder="Password" class="form-input mb-4" required aria-label="Password">
-                <button onclick="adminRegister()" class="w-full bg-teal-600 text-white p-3 rounded-lg hover:bg-teal-700 shadow-sm">Register</button>
-                <p class="text-center mt-4 text-sm">Already have an account? <a href="#" onclick="showLoginForm()" class="text-teal-600 hover:underline">Login</a></p>
+                <button onclick="adminRegister()" class="mt-2">Register</button>
+                <p class="text-center mt-4 text-sm">Already have an account? <a href="#" onclick="showLoginForm()">Login</a></p>
             </div>
         </div>
     </div>
@@ -330,6 +420,9 @@
                 <a href="#services" onclick="showSection('services')" class="flex items-center"><i class="fas fa-tooth mr-2"></i> Services</a>
                 <a href="#offers" onclick="showSection('offers')" class="flex items-center"><i class="fas fa-tag mr-2"></i> Offers</a>
                 <a href="#leave-dates" onclick="showSection('leave-dates')" class="flex items-center"><i class="fas fa-calendar-times mr-2"></i> Leave Dates</a>
+                <a href="#time-slots" onclick="showSection('time-slots')" class="flex items-center"><i class="fas fa-clock mr-2"></i> Time Slots</a>
+                <a href="#newsletter" onclick="showSection('newsletter')" class="flex items-center"><i class="fas fa-envelope mr-2"></i> Newsletter</a>
+                <a href="#messages" onclick="showSection('messages')" class="flex items-center"><i class="fas fa-inbox mr-2"></i> Messages</a>
                 <a href="#" onclick="logout()" class="flex items-center"><i class="fas fa-sign-out-alt mr-2"></i> Logout</a>
             </div>
         </nav>
@@ -353,6 +446,7 @@
                                 <th>Name</th>
                                 <th>Treatment</th>
                                 <th>Date</th>
+                                <th>Time</th>
                                 <th>Status</th>
                                 <th>Actions</th>
                             </tr>
@@ -442,7 +536,8 @@
                     <input type="text" id="offer-title" placeholder="Title (e.g., OP + Cleaning & Polishing + X-Ray)" class="form-input mb-4" aria-label="Offer Title">
                     <textarea id="offer-description" placeholder="Description" class="form-input mb-4" rows="4" aria-label="Offer Description"></textarea>
                     <input type="number" id="offer-price" placeholder="Price (e.g., 999)" class="form-input mb-4" step="0.01" aria-label="Offer Price">
-                    <div class ral-label="Offer Image">
+                    <div class="mb-4">
+                        <label class="block text-sm text-gray-600 mb-1">Offer Image</label>
                         <input type="file" id="offer-image-file" accept="image/*" class="form-input mb-2" required>
                     </div>
                     <button onclick="addOffer()" class="w-full bg-teal-600 text-white p-3 rounded-lg hover:bg-teal-700 shadow-sm">Add Offer</button>
@@ -479,6 +574,69 @@
                             </tr>
                         </thead>
                         <tbody id="leave-dates-table"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Time Slots Section -->
+            <div id="time-slots" class="section hidden animate-fade-in">
+                <h2 class="text-xl font-semibold text-teal-600 mb-5">Time Slots</h2>
+                <div class="form-container mb-5 bg-white p-5 rounded-lg shadow-sm">
+                    <h3 class="text-lg font-medium text-teal-600 mb-4">Add Time Slot</h3>
+                    <div class="flex space-x-2 mb-4">
+                        <input type="time" id="time-slot" class="form-input" aria-label="Time Slot">
+                        <select id="time-slot-period" class="form-input" aria-label="Time Period">
+                            <option value="AM">AM</option>
+                            <option value="PM">PM</option>
+                        </select>
+                    </div>
+                    <button onclick="addTimeSlot()" class="w-full bg-teal-600 text-white p-3 rounded-lg hover:bg-teal-700 shadow-sm">Add Time Slot</button>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="time-slots-table"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Newsletter Subscribers Section -->
+            <div id="newsletter" class="section hidden animate-fade-in">
+                <h2 class="text-xl font-semibold text-teal-600 mb-5">Newsletter Subscribers</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Email</th>
+                                <th>Subscribed On</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="newsletter-table"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Messages Section -->
+            <div id="messages" class="section hidden animate-fade-in">
+                <h2 class="text-xl font-semibold text-teal-600 mb-5">Get in Touch Messages</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Message</th>
+                                <th>Received On</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="messages-table"></tbody>
                     </table>
                 </div>
             </div>
@@ -527,6 +685,9 @@
             loadServices();
             loadOffers();
             loadLeaveDates();
+            loadTimeSlots();
+            loadNewsletterSubscribers();
+            loadMessages();
             showSection('appointments');
         }
 
@@ -565,6 +726,10 @@
         function closeResetPasswordModal() {
             document.getElementById('reset-password-modal').classList.add('hidden');
             document.getElementById('login-form').classList.remove('hidden');
+        }
+
+        function closeReplyMessageModal() {
+            document.getElementById('reply-message-modal').classList.add('hidden');
         }
 
         async function adminLogin() {
@@ -776,14 +941,15 @@
                 const appointments = await response.json();
                 const table = document.getElementById('appointments-table');
                 table.innerHTML = '';
-                appointments.sort((a, b) => new Date(a.date) - new Date(b.date));
+                appointments.sort((a, b) => new Date(a.date + ' ' + a.time) - new Date(b.date + ' ' + b.time));
                 appointments.forEach(apt => {
                     table.innerHTML += `
                         <tr>
                             <td><input type="checkbox" class="appointment-checkbox" data-id="${apt.id}"></td>
-                            <td>${apt.full_name || 'Unknown'}</td>
+                            <td>${apt.full_name || 'Anonymous'}</td>
                             <td>${apt.treatment || '-'}</td>
                             <td>${apt.date}</td>
+                            <td>${apt.time || '-'}</td>
                             <td>${apt.status || 'PENDING'}</td>
                             <td>
                                 ${apt.status !== 'CANCELLED' ? `
@@ -893,9 +1059,10 @@
                 const table = document.getElementById('waitlist-table');
                 table.innerHTML = '';
                 waitlist.forEach(entry => {
+                    const fullName = entry.full_name && entry.full_name.trim() !== '' ? entry.full_name : 'Anonymous';
                     table.innerHTML += `
                         <tr>
-                            <td>${entry.full_name || 'Unknown'}</td>
+                            <td>${fullName}</td>
                             <td>${entry.email}</td>
                             <td>${entry.preferred_date}</td>
                             <td>${entry.status || 'PENDING'}</td>
@@ -956,7 +1123,7 @@
                 feedbacks.forEach(fb => {
                     table.innerHTML += `
                         <tr>
-                            <td>${fb.full_name || 'Unknown'}</td>
+                            <td>${fb.full_name || 'Anonymous'}</td>
                             <td>${fb.rating}★</td>
                             <td>${fb.description.slice(0, 50)}${fb.description.length > 50 ? '...' : ''}</td>
                             <td>
@@ -995,12 +1162,11 @@
                 table.innerHTML = '';
                 services.forEach(svc => {
                     const imageSrc = svc.image ? svc.image : '';
-                    console.log(`Service ${svc.id} - Image URL: ${imageSrc}`);
                     table.innerHTML += `
                         <tr>
                             <td>${svc.title}</td>
                             <td>₹${svc.price}</td>
-                            <td>${imageSrc ? `<img src="${imageSrc}" alt="${svc.title}" class="h-16" onerror="console.error('Failed to load image for service ${svc.id}: ${imageSrc}', event);this.parentElement.textContent='No Image'">` : 'No Image'}</td>
+                            <td>${imageSrc ? `<img src="${imageSrc}" alt="${svc.title}" class="h-16" onerror="this.parentElement.textContent='No Image'">` : 'No Image'}</td>
                             <td>
                                 <button onclick="editService('${svc.id}')" class="bg-blue-600 text-white action-btn hover:bg-blue-700">Edit</button>
                                 <button onclick="deleteService('${svc.id}')" class="bg-red-600 text-white action-btn hover:bg-red-700">Delete</button>
@@ -1353,6 +1519,212 @@
                 showToast('Failed to remove leave date', 'error');
             }
         }
+
+        async function loadTimeSlots() {
+            try {
+                const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/time-slots`);
+                const timeSlots = await response.json();
+                const table = document.getElementById('time-slots-table');
+                table.innerHTML = '';
+                timeSlots.sort((a, b) => {
+                    const timeA = new Date(`1970-01-01 ${a}`);
+                    const timeB = new Date(`1970-01-01 ${b}`);
+                    return timeA - timeB;
+                });
+                timeSlots.forEach(slot => {
+                    table.innerHTML += `
+                        <tr>
+                            <td>${slot}</td>
+                            <td>
+                                <button onclick="deleteTimeSlot('${slot}')" class="bg-red-600 text-white action-btn hover:bg-red-700">Delete</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (error) {
+                console.error('Error loading time slots:', error);
+                showToast('Failed to load time slots', 'error');
+            }
+        }
+
+        async function addTimeSlot() {
+            const time = document.getElementById('time-slot').value;
+            const period = document.getElementById('time-slot-period').value;
+            if (!time) {
+                showToast('Please select a time.', 'error');
+                return;
+            }
+            const timeSlot = `${time} ${period}`;
+            try {
+                const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/time-slots`, {
+                    method: 'POST',
+                    body: JSON.stringify({ time: timeSlot })
+                });
+                if (response.ok) {
+                    showToast('Time slot added');
+                    document.getElementById('time-slot').value = '';
+                    document.getElementById('time-slot-period').value = 'AM';
+                    loadTimeSlots();
+                } else {
+                    const errorData = await response.json();
+                    showToast(errorData.error || 'Error adding time slot', 'error');
+                }
+            } catch (error) {
+                console.error('Error adding time slot:', error);
+                showToast('Failed to add time slot', 'error');
+            }
+        }
+
+        async function deleteTimeSlot(time) {
+            if (!confirm('Delete this time slot?')) return;
+            try {
+                const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/time-slots/${encodeURIComponent(time)}`, {
+                    method: 'DELETE'
+                });
+                if (response.ok) {
+                    showToast('Time slot deleted');
+                    loadTimeSlots();
+                } else {
+                    const errorData = await response.json();
+                    showToast(errorData.error || 'Error deleting time slot', 'error');
+                }
+            } catch (error) {
+                console.error('Error deleting time slot:', error);
+                showToast('Failed to delete time slot', 'error');
+            }
+        }
+
+        async function loadNewsletterSubscribers() {
+            try {
+                const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/newsletter`);
+                const subscribers = await response.json();
+                const table = document.getElementById('newsletter-table');
+                table.innerHTML = '';
+                subscribers.forEach(sub => {
+                    table.innerHTML += `
+                        <tr>
+                            <td>${sub.email}</td>
+                            <td>${new Date(sub.created_at).toLocaleDateString()}</td>
+                            <td>
+                                <button onclick="deleteSubscriber('${sub.id}')" class="bg-red-600 text-white action-btn hover:bg-red-700">Delete</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (error) {
+                console.error('Error loading newsletter subscribers:', error);
+                showToast('Failed to load subscribers', 'error');
+            }
+        }
+
+        async function deleteSubscriber(id) {
+            if (!confirm('Delete this subscriber?')) return;
+            try {
+                const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/newsletter/${id}`, { method: 'DELETE' });
+                if (response.ok) {
+                    showToast('Subscriber deleted');
+                    loadNewsletterSubscribers();
+                } else {
+                    showToast('Error deleting subscriber', 'error');
+                }
+            } catch (error) {
+                console.error('Error deleting subscriber:', error);
+                showToast('Failed to delete subscriber', 'error');
+            }
+        }
+
+        async function loadMessages() {
+            try {
+                const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/messages`);
+                const messages = await response.json();
+                const table = document.getElementById('messages-table');
+                table.innerHTML = '';
+                messages.forEach(msg => {
+                    table.innerHTML += `
+                        <tr>
+                            <td>${msg.name || 'Anonymous'}</td>
+                            <td>${msg.email}</td>
+                            <td>${msg.message.slice(0, 50)}${msg.message.length > 50 ? '...' : ''}</td>
+                            <td>${new Date(msg.created_at).toLocaleDateString()}</td>
+                            <td>
+                                <button onclick="replyToMessage('${msg.id}', '${msg.email}')" class="bg-blue-600 text-white action-btn hover:bg-blue-700">Reply</button>
+                                <button onclick="deleteMessage('${msg.id}')" class="bg-red-600 text-white action-btn hover:bg-red-700">Delete</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (error) {
+                console.error('Error loading messages:', error);
+                showToast('Failed to load messages', 'error');
+            }
+        }
+
+        function replyToMessage(id, email) {
+            document.getElementById('reply-message-id').value = id;
+            document.getElementById('reply-message-email').value = email;
+            document.getElementById('reply-message-subject').value = 'Re: Your Message to Oak Dental Clinic';
+            document.getElementById('reply-message-content').value = '';
+            document.getElementById('reply-message-modal').classList.remove('hidden');
+        }
+
+        async function sendReplyMessage() {
+            const id = document.getElementById('reply-message-id').value;
+            const email = document.getElementById('reply-message-email').value;
+            const subject = document.getElementById('reply-message-subject').value;
+            const content = document.getElementById('reply-message-content').value;
+            if (!email || !subject || !content) {
+                showToast('Please fill in all fields.', 'error');
+                return;
+            }
+            try {
+                const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/messages/${id}/reply`, {
+                    method: 'POST',
+                    body: JSON.stringify({ email, subject, content })
+                });
+                if (response.ok) {
+                    showToast('Reply sent successfully');
+                    closeReplyMessageModal();
+                    loadMessages();
+                } else {
+                                        const errorData = await response.json();
+                    showToast(errorData.error || 'Error sending reply', 'error');
+                }
+            } catch (error) {
+                console.error('Error sending reply:', error);
+                showToast('Failed to send reply', 'error');
+            }
+        }
+
+        async function deleteMessage(id) {
+            if (!confirm('Delete this message?')) return;
+            try {
+                const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/messages/${id}`, { method: 'DELETE' });
+                if (response.ok) {
+                    showToast('Message deleted');
+                    loadMessages();
+                } else {
+                    const errorData = await response.json();
+                    showToast(errorData.error || 'Error deleting message', 'error');
+                }
+            } catch (error) {
+                console.error('Error deleting message:', error);
+                showToast('Failed to delete message', 'error');
+            }
+        }
+
+        // Initialize default section
+        if (localStorage.getItem('adminToken')) {
+            showSection('appointments');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            const dropdown = document.getElementById('dropdown-menu');
+            const menuButton = document.querySelector('nav button');
+            if (!dropdown.contains(e.target) && !menuButton.contains(e.target)) {
+                dropdown.classList.add('hidden');
+            }
+        });
     </script>
 </body>
 </html>
