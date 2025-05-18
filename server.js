@@ -197,7 +197,54 @@ async function initDb() {
                 email VARCHAR(255) UNIQUE NOT NULL,
                 subscribed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
+            CREATE TABLE IF NOT EXISTS otps (
+                id SERIAL PRIMARY KEY,
+                email VARCHAR(100) NOT NULL,
+                otp VARCHAR(6) NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                expires_at TIMESTAMP NOT NULL,
+                expires TIMESTAMP
+            );
         `);
+
+        // Migration: Ensure expires_at column exists and is NOT NULL
+        const expiresAtCheck = await pool.query(`
+            SELECT column_name 
+            FROM information_schema.columns 
+            WHERE table_name = 'otps' AND column_name = 'expires_at'
+        `);
+        if (expiresAtCheck.rows.length === 0) {
+            logger.info('Adding expires_at column to otps table');
+            await pool.query(`
+                ALTER TABLE otps
+                ADD COLUMN expires_at TIMESTAMP;
+                UPDATE otps
+                SET expires_at = created_at + INTERVAL '10 minutes'
+                WHERE expires_at IS NULL;
+                ALTER TABLE otps
+                ALTER COLUMN expires_at SET NOT NULL;
+            `);
+        }
+
+        // Migration: Ensure expires column exists and is nullable
+        const expiresCheck = await pool.query(`
+            SELECT column_name 
+            FROM information_schema.columns 
+            WHERE table_name = 'otps' AND column_name = 'expires'
+        `);
+        if (expiresCheck.rows.length === 0) {
+            logger.info('Adding expires column to otps table');
+            await pool.query(`
+                ALTER TABLE otps
+                ADD COLUMN expires TIMESTAMP;
+            `);
+        } else {
+            // Ensure expires is nullable to avoid future NOT NULL issues
+            await pool.query(`
+                ALTER TABLE otps
+                ALTER COLUMN expires DROP NOT NULL;
+            `);
+        }
 
         // Ensure full_name column exists in feedback table
         const fullNameCheck = await pool.query(`
@@ -361,7 +408,7 @@ async function initDb() {
 
         logger.info('Database tables initialized successfully');
     } catch (error) {
-        logger.error('Error initializing database:', { message: error.message });
+        logger.error('Error initializing database:', { message: error.message, stack: error.stack });
         throw error;
     }
 }
@@ -372,7 +419,7 @@ async function initializeDatabase() {
         await testDbConnection();
         await initDb();
     } catch (error) {
-        logger.error('Failed to initialize application:', { message: error.message });
+        logger.error('Failed to initialize application:', { message: error.message, stack: error.stack });
         process.exit(1);
     }
 }
@@ -399,7 +446,7 @@ const authenticateAdmin = async (req, res, next) => {
         req.admin = decoded;
         next();
     } catch (error) {
-        logger.error('Token verification error:', { message: error.message });
+        logger.error('Token verification error:', { message: error.message, stack: error.stack });
         res.status(401).json({ error: 'Unauthorized: Invalid token' });
     }
 };
@@ -428,7 +475,8 @@ async function sendEmail(to, subject, html) {
         });
         logger.info(`Email sent to ${to}`);
     } catch (error) {
-        logger.error('Error sending email:', { message: error.message });
+        logger.error('Error sending email:', { message: error.message, stack: error.stack });
+        throw error;
     }
 }
 
@@ -450,7 +498,7 @@ async function sendSMS(to, body) {
         });
         logger.info(`SMS sent to ${to}: ${response.status}`);
     } catch (error) {
-        logger.error('Error sending SMS:', { message: error.message });
+        logger.error('Error sending SMS:', { message: error.message, stack: error.stack });
     }
 }
 
@@ -469,10 +517,12 @@ async function getNextAvailableDate(currentDate) {
 function generateTimeSlots() {
     const slots = [];
     const startHour = 9; // 9:00 AM
-    const endHour = 17; // 5:00 PM
+    const endHour = 18; // 6:00 PM
     for (let hour = startHour; hour < endHour; hour++) {
-        slots.push(`${hour.toString().padStart(2, '0')}:00:00`);
-        slots.push(`${hour.toString().padStart(2, '0')}:30:00`);
+        const hour12 = hour % 12 || 12;
+        const period = hour < 12 ? 'AM' : 'PM';
+        slots.push(`${hour12.toString().padStart(2, '0')}:00 ${period}`);
+        slots.push(`${hour12.toString().padStart(2, '0')}:30 ${period}`);
     }
     return slots;
 }
@@ -488,7 +538,7 @@ app.post('/api/upload/media', authenticateAdmin, upload.single('media'), async (
 
         res.status(200).json({ url: req.file.path, mimetype: req.file.mimetype });
     } catch (error) {
-        logger.error('Error uploading media to Cloudinary:', { message: error.message });
+        logger.error('Error uploading media to Cloudinary:', { message: error.message, stack: error.stack });
         res.status(500).json({ error: 'Failed to upload media to Cloudinary' });
     }
 });
@@ -497,40 +547,54 @@ app.post('/api/upload/media', authenticateAdmin, upload.single('media'), async (
 app.get('/api/time-slots', async (req, res) => {
     try {
         const { date } = req.query;
+        logger.info('Time slots request received', { date });
+
         if (!date) {
             logger.warn('Time slots request failed: Date parameter missing');
             return res.status(400).json({ error: 'Date parameter is required' });
         }
 
-        // Validate date format (YYYY-MM-DD)
         const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
         if (!dateRegex.test(date)) {
-            logger.warn('Time slots request failed: Invalid date format');
-            return res.status(400).json({ error: 'Invalid date format. Use YYYY-MM-DD' });
+            logger.warn('Time slots request failed: Invalid date format', { date });
+            return res.status(400).json({ error: 'Invalid date format. Use YYYY-MM-DD (e.g., 2025-05-19)' });
         }
 
-        // Check if the date is a leave date
+        const selectedDate = new Date(date);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        if (selectedDate < today) {
+            logger.warn('Time slots request failed: Date is in the past', { date });
+            return res.status(400).json({ error: 'Selected date cannot be in the past' });
+        }
+
         const leaveDateResult = await pool.query('SELECT 1 FROM leave_dates WHERE date = $1', [date]);
         if (leaveDateResult.rows.length > 0) {
             logger.info(`No time slots available: ${date} is a leave date`);
             return res.json([]);
         }
 
-        // Check existing appointments for the date
         const appointmentsResult = await pool.query(
             'SELECT time FROM appointments WHERE date = $1 AND status != $2',
             [date, 'CANCELLED']
         );
-        const bookedSlots = appointmentsResult.rows.map(row => row.time);
+        const bookedSlots = appointmentsResult.rows.map(row => {
+            const time = row.time;
+            const [hour, minute] = time.split(':');
+            const hourInt = parseInt(hour, 10);
+            const hour12 = hourInt % 12 || 12;
+            const period = hourInt < 12 ? 'AM' : 'PM';
+            return `${hour12.toString().padStart(2, '0')}:${minute} ${period}`;
+        });
+        logger.info('Booked slots', { date, bookedSlots });
 
-        // Generate available time slots
         const allSlots = generateTimeSlots();
         const availableSlots = allSlots.filter(slot => !bookedSlots.includes(slot));
 
         logger.info(`Fetched available time slots for ${date}`, { availableSlots });
         res.json(availableSlots);
     } catch (error) {
-        logger.error('Error fetching time slots:', { message: error.message });
+        logger.error('Error fetching time slots:', { message: error.message, stack: error.stack });
         res.status(500).json({ error: 'Server error while fetching time slots' });
     }
 });
@@ -561,8 +625,8 @@ app.post('/api/admin/register', async (req, res) => {
         logger.info(`Admin registered: ${admin.username}`);
         res.status(201).json({ token, admin: { username: admin.username, email: admin.email } });
     } catch (error) {
-        logger.error('Error registering admin:', { message: error.message });
-        if (error.code === '23505') { // Unique violation (duplicate email or username)
+        logger.error('Error registering admin:', { message: error.message, stack: error.stack });
+        if (error.code === '23505') {
             return res.status(400).json({ error: 'Email or username already exists' });
         }
         res.status(500).json({ error: 'Server error during registration' });
@@ -595,8 +659,119 @@ app.post('/api/admin/login', async (req, res) => {
         logger.info(`Admin logged in: ${admin.username}`);
         res.json({ token, admin: { username: admin.username, email: admin.email } });
     } catch (error) {
-        logger.error('Error logging in admin:', { message: error.message });
+        logger.error('Error logging in admin:', { message: error.message, stack: error.stack });
         res.status(500).json({ error: 'Server error during login' });
+    }
+});
+
+// Forgot Password Endpoints
+app.post('/api/admin/forgot-password', async (req, res) => {
+    try {
+        const { email } = req.body;
+        logger.info('Forgot password request:', { email });
+        if (!email) {
+            logger.warn('Forgot password failed: Email required');
+            return res.status(400).json({ error: 'Email is required' });
+        }
+
+        const result = await pool.query('SELECT * FROM admins WHERE email = $1', [email]);
+        const admin = result.rows[0];
+        if (!admin) {
+            logger.warn('Forgot password failed: Admin not found');
+            return res.status(404).json({ error: 'Admin not found' });
+        }
+
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+
+        try {
+            await pool.query(
+                'INSERT INTO otps (email, otp, expires, expires_at) VALUES ($1, $2, $3, $4)',
+                [email, otp, expiresAt, expiresAt]
+            );
+        } catch (dbError) {
+            logger.error('Database error storing OTP:', { message: dbError.message, stack: dbError.stack });
+            if (dbError.message.includes('violates not-null constraint')) {
+                return res.status(500).json({ error: 'Database schema error: OTP table has unexpected constraints. Please contact the administrator.' });
+            }
+            throw dbError;
+        }
+
+        const emailBody = `
+            <h2>Password Reset OTP</h2>
+            <p>Dear ${admin.username},</p>
+            <p>Your OTP for password reset is: <strong>${otp}</strong></p>
+            <p>This OTP is valid for 10 minutes.</p>
+            <p>If you did not request a password reset, please ignore this email.</p>
+            <p>Best regards,<br>Oak Dental Clinic</p>
+        `;
+        await sendEmail(email, 'Password Reset OTP - Oak Dental Clinic', emailBody);
+
+        logger.info(`OTP sent to ${email}`);
+        res.json({ message: 'OTP sent to your email' });
+    } catch (error) {
+        logger.error('Error in forgot-password:', { message: error.message, stack: error.stack });
+        res.status(500).json({ error: 'Server error while sending OTP' });
+    }
+});
+
+app.post('/api/admin/verify-otp', async (req, res) => {
+    try {
+        const { email, otp } = req.body;
+        logger.info('OTP verification request:', { email, otp });
+        if (!email || !otp) {
+            logger.warn('OTP verification failed: Missing fields');
+            return res.status(400).json({ error: 'Email and OTP are required' });
+        }
+
+        const result = await pool.query(
+            'SELECT * FROM otps WHERE email = $1 AND otp = $2 AND expires_at > NOW()',
+            [email, otp]
+        );
+        const otpRecord = result.rows[0];
+        if (!otpRecord) {
+            logger.warn('OTP verification failed: Invalid or expired OTP');
+            return res.status(400).json({ error: 'Invalid or expired OTP' });
+        }
+
+        await pool.query('DELETE FROM otps WHERE id = $1', [otpRecord.id]);
+
+        logger.info(`OTP verified for ${email}`);
+        res.json({ message: 'OTP verified' });
+    } catch (error) {
+        logger.error('Error verifying OTP:', { message: error.message, stack: error.stack });
+        res.status(500).json({ error: 'Server error while verifying OTP' });
+    }
+});
+
+app.post('/api/admin/reset-password', async (req, res) => {
+    try {
+        const { email, newPassword } = req.body;
+        logger.info('Reset password request:', { email, newPassword: '[REDACTED]' });
+        if (!email || !newPassword) {
+            logger.warn('Reset password failed: Missing fields');
+            return res.status(400).json({ error: 'Email and new password are required' });
+        }
+
+        const result = await pool.query('SELECT * FROM admins WHERE email = $1', [email]);
+        const admin = result.rows[0];
+        if (!admin) {
+            logger.warn('Reset password failed: Admin not found');
+            return res.status(404).json({ error: 'Admin not found' });
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        await pool.query(
+            'UPDATE admins SET password = $1 WHERE email = $2',
+            [hashedPassword, email]
+        );
+
+        logger.info(`Password reset for ${email}`);
+        res.json({ message: 'Password reset successfully' });
+    } catch (error) {
+        logger.error('Error resetting password:', { message: error.message, stack: error.stack });
+        res.status(500).json({ error: 'Server error while resetting password' });
     }
 });
 
@@ -639,7 +814,7 @@ app.post('/api/appointments', async (req, res) => {
         logger.info(`Appointment created: ID ${id}`);
         res.status(201).json({ message: 'Appointment created', id });
     } catch (error) {
-        logger.error('Error creating appointment:', { message: error.message });
+        logger.error('Error creating appointment:', { message: error.message, stack: error.stack });
         res.status(500).json({ error: 'Server error while creating appointment' });
     }
 });
@@ -649,7 +824,7 @@ app.get('/api/appointments', async (req, res) => {
         const result = await pool.query('SELECT * FROM appointments ORDER BY date, time');
         res.json(result.rows);
     } catch (error) {
-        logger.error('Error fetching appointments:', { message: error.message });
+        logger.error('Error fetching appointments:', { message: error.message, stack: error.stack });
         res.status(500).json({ error: 'Server error while fetching appointments' });
     }
 });
@@ -659,7 +834,7 @@ app.get('/api/admin/appointments', authenticateAdmin, async (req, res) => {
         const result = await pool.query('SELECT * FROM appointments ORDER BY date, time');
         res.json(result.rows);
     } catch (error) {
-        logger.error('Error fetching admin appointments:', { message: error.message });
+        logger.error('Error fetching admin appointments:', { message: error.message, stack: error.stack });
         res.status(500).json({ error: 'Server error while fetching appointments' });
     }
 });
@@ -701,7 +876,7 @@ app.post('/api/admin/appointments/:id/approve', authenticateAdmin, async (req, r
         logger.info(`Appointment approved: ID ${id}`);
         res.json({ message: 'Appointment approved' });
     } catch (error) {
-        logger.error('Error approving appointment:', { message: error.message });
+        logger.error('Error approving appointment:', { message: error.message, stack: error.stack });
         res.status(500).json({ error: 'Server error while approving appointment' });
     }
 });
@@ -749,7 +924,7 @@ app.post('/api/admin/appointments/:id/cancel', authenticateAdmin, async (req, re
         logger.info(`Appointment cancelled: ID ${id}`);
         res.json({ message: 'Appointment cancelled' });
     } catch (error) {
-        logger.error('Error cancelling appointment:', { message: error.message });
+        logger.error('Error cancelling appointment:', { message: error.message, stack: error.stack });
         res.status(500).json({ error: 'Server error while cancelling appointment' });
     }
 });
@@ -767,7 +942,7 @@ app.post('/api/admin/appointments/clear-selected', authenticateAdmin, async (req
         logger.info(`Cleared ${ids.length} appointments`);
         res.json({ message: 'Selected appointments cleared' });
     } catch (error) {
-        logger.error('Error clearing selected appointments:', { message: error.message });
+        logger.error('Error clearing selected appointments:', { message: error.message, stack: error.stack });
         res.status(500).json({ error: 'Server error while clearing appointments' });
     }
 });
@@ -781,7 +956,7 @@ app.delete('/api/admin/appointments/clear-old', authenticateAdmin, async (req, r
         logger.info(`Cleared ${result.rowCount} old appointments`);
         res.json({ message: 'Old appointments cleared' });
     } catch (error) {
-        logger.error('Error clearing old appointments:', { message: error.message });
+        logger.error('Error clearing old appointments:', { message: error.message, stack: error.stack });
         res.status(500).json({ error: 'Server error while clearing old appointments' });
     }
 });
@@ -820,7 +995,7 @@ app.post('/api/waitlist', async (req, res) => {
         logger.info(`Waitlist entry created: ID ${waitlistEntry.id}`);
         res.status(201).json({ message: 'Added to waitlist', id: waitlistEntry.id });
     } catch (error) {
-        logger.error('Error creating waitlist entry:', { message: error.message });
+        logger.error('Error creating waitlist entry:', { message: error.message, stack: error.stack });
         res.status(500).json({ error: 'Server error while creating waitlist entry' });
     }
 });
@@ -830,7 +1005,7 @@ app.get('/api/admin/waitlist', authenticateAdmin, async (req, res) => {
         const result = await pool.query('SELECT * FROM waitlist ORDER BY created_at');
         res.json(result.rows);
     } catch (error) {
-        logger.error('Error fetching waitlist:', { message: error.message });
+        logger.error('Error fetching waitlist:', { message: error.message, stack: error.stack });
         res.status(500).json({ error: 'Server error while fetching waitlist' });
     }
 });
@@ -850,7 +1025,7 @@ app.post('/api/admin/waitlist/:id/accept', authenticateAdmin, async (req, res) =
         const waitlistEntry = waitlistResult.rows[0];
 
         const nextAvailableDate = await getNextAvailableDate(new Date());
-        const time = '10:00:00'; // Default time
+        const time = '10:00:00';
         const appointmentId = Date.now();
         await pool.query(
             'INSERT INTO appointments (id, full_name, email, phone, date, time, status) VALUES ($1, $2, $3, $4, $5, $6, $7)',
@@ -879,7 +1054,7 @@ app.post('/api/admin/waitlist/:id/accept', authenticateAdmin, async (req, res) =
         logger.info(`Waitlist entry accepted: ID ${id}, Appointment ID ${appointmentId}`);
         res.json({ message: 'Waitlist entry accepted and appointment scheduled' });
     } catch (error) {
-        logger.error('Error accepting waitlist entry:', { message: error.message });
+        logger.error('Error accepting waitlist entry:', { message: error.message, stack: error.stack });
         res.status(500).json({ error: 'Server error while accepting waitlist entry' });
     }
 });
@@ -896,7 +1071,7 @@ app.delete('/api/admin/waitlist/:id', authenticateAdmin, async (req, res) => {
         logger.info(`Waitlist entry deleted: ID ${id}`);
         res.json({ message: 'Waitlist entry deleted' });
     } catch (error) {
-        logger.error('Error deleting waitlist entry:', { message: error.message });
+        logger.error('Error deleting waitlist entry:', { message: error.message, stack: error.stack });
         res.status(500).json({ error: 'Server error while deleting waitlist entry' });
     }
 });
@@ -922,7 +1097,7 @@ app.post('/api/feedback', async (req, res) => {
         logger.info('Feedback submitted');
         res.status(201).json({ message: 'Feedback submitted' });
     } catch (error) {
-        logger.error('Error submitting feedback:', { message: error.message });
+        logger.error('Error submitting feedback:', { message: error.message, stack: error.stack });
         res.status(500).json({ error: 'Server error while submitting feedback' });
     }
 });
@@ -932,7 +1107,7 @@ app.get('/api/feedback', async (req, res) => {
         const result = await pool.query('SELECT * FROM feedback ORDER BY created_at DESC');
         res.json(result.rows);
     } catch (error) {
-        logger.error('Error fetching feedback:', { message: error.message });
+        logger.error('Error fetching feedback:', { message: error.message, stack: error.stack });
         res.status(500).json({ error: 'Server error while fetching feedback' });
     }
 });
@@ -942,25 +1117,8 @@ app.get('/api/admin/feedback', authenticateAdmin, async (req, res) => {
         const result = await pool.query('SELECT * FROM feedback ORDER BY created_at DESC');
         res.json(result.rows);
     } catch (error) {
-        logger.error('Error fetching admin feedback:', { message: error.message });
+        logger.error('Error fetching admin feedback:', { message: error.message, stack: error.stack });
         res.status(500).json({ error: 'Server error while fetching feedback' });
-    }
-});
-
-app.delete('/api/admin/feedback/:id', authenticateAdmin, async (req, res) => {
-    try {
-        const { id } = req.params;
-        logger.info(`Deleting feedback: ID ${id}`);
-        const result = await pool.query('DELETE FROM feedback WHERE id = $1', [id]);
-        if (result.rowCount === 0) {
-            logger.warn(`Feedback not found: ID ${id}`);
-            return res.status(404).json({ error: 'Feedback not found' });
-        }
-        logger.info(`Feedback deleted: ID ${id}`);
-        res.json({ message: 'Feedback deleted' });
-    } catch (error) {
-        logger.error('Error deleting feedback:', { message: error.message });
-        res.status(500).json({ error: 'Server error while deleting feedback' });
     }
 });
 
@@ -970,7 +1128,7 @@ app.get('/api/services', async (req, res) => {
         const result = await pool.query('SELECT * FROM services ORDER BY id');
         res.json(result.rows);
     } catch (error) {
-        logger.error('Error fetching services:', { message: error.message });
+        logger.error('Error fetching services:', { message: error.message, stack: error.stack });
         res.status(500).json({ error: 'Server error while fetching services' });
     }
 });
@@ -985,7 +1143,7 @@ app.get('/api/services/:id', async (req, res) => {
         }
         res.json(result.rows[0]);
     } catch (error) {
-        logger.error('Error fetching service:', { message: error.message });
+        logger.error('Error fetching service:', { message: error.message, stack: error.stack });
         res.status(500).json({ error: 'Server error while fetching service' });
     }
 });
@@ -1005,11 +1163,9 @@ app.post('/api/admin/services', authenticateAdmin, upload.fields([
         let finalImageUrl = imageUrl || null;
         let finalVideoUrl = videoUrl || null;
 
-        // If an image file is uploaded, override the image URL
         if (req.files && req.files.image) {
             finalImageUrl = req.files.image[0].path;
         }
-        // If a video file is uploaded, override the video URL
         if (req.files && req.files.video) {
             finalVideoUrl = req.files.video[0].path;
         }
@@ -1021,7 +1177,7 @@ app.post('/api/admin/services', authenticateAdmin, upload.fields([
         logger.info(`Service created: ID ${result.rows[0].id}`);
         res.status(201).json(result.rows[0]);
     } catch (error) {
-        logger.error('Error creating service:', { message: error.message });
+        logger.error('Error creating service:', { message: error.message, stack: error.stack });
         res.status(500).json({ error: 'Server error while creating service' });
     }
 });
@@ -1039,7 +1195,6 @@ app.put('/api/admin/services/:id', authenticateAdmin, upload.fields([
             return res.status(400).json({ error: 'Title, description, and price are required' });
         }
 
-        // Fetch the existing service to get the current image and video URLs
         const existingServiceResult = await pool.query('SELECT image, video FROM services WHERE id = $1', [id]);
         if (existingServiceResult.rows.length === 0) {
             logger.warn(`Service not found: ID ${id}`);
@@ -1050,11 +1205,9 @@ app.put('/api/admin/services/:id', authenticateAdmin, upload.fields([
         let finalImageUrl = imageUrl !== undefined ? imageUrl : existingService.image;
         let finalVideoUrl = videoUrl !== undefined ? videoUrl : existingService.video;
 
-        // If an image file is uploaded, override the image URL
         if (req.files && req.files.image) {
             finalImageUrl = req.files.image[0].path;
         }
-        // If a video file is uploaded, override the video URL
         if (req.files && req.files.video) {
             finalVideoUrl = req.files.video[0].path;
         }
@@ -1070,7 +1223,7 @@ app.put('/api/admin/services/:id', authenticateAdmin, upload.fields([
         logger.info(`Service updated: ID ${id}`);
         res.json(result.rows[0]);
     } catch (error) {
-        logger.error('Error updating service:', { message: error.message });
+        logger.error('Error updating service:', { message: error.message, stack: error.stack });
         res.status(500).json({ error: 'Server error while updating service' });
     }
 });
@@ -1087,7 +1240,7 @@ app.delete('/api/admin/services/:id', authenticateAdmin, async (req, res) => {
         logger.info(`Service deleted: ID ${id}`);
         res.json({ message: 'Service deleted' });
     } catch (error) {
-        logger.error('Error deleting service:', { message: error.message });
+        logger.error('Error deleting service:', { message: error.message, stack: error.stack });
         res.status(500).json({ error: 'Server error while deleting service' });
     }
 });
@@ -1098,7 +1251,7 @@ app.get('/api/offers', async (req, res) => {
         const result = await pool.query('SELECT * FROM offers ORDER BY created_at DESC');
         res.json(result.rows);
     } catch (error) {
-        logger.error('Error fetching offers:', { message: error.message });
+        logger.error('Error fetching offers:', { message: error.message, stack: error.stack });
         res.status(500).json({ error: 'Server error while fetching offers' });
     }
 });
@@ -1113,7 +1266,7 @@ app.get('/api/offers/:id', async (req, res) => {
         }
         res.json(result.rows[0]);
     } catch (error) {
-        logger.error('Error fetching offer:', { message: error.message });
+        logger.error('Error fetching offer:', { message: error.message, stack: error.stack });
         res.status(500).json({ error: 'Server error while fetching offer' });
     }
 });
@@ -1127,13 +1280,11 @@ app.post('/api/admin/offers', authenticateAdmin, upload.single('image'), async (
             return res.status(400).json({ error: 'Title, description, and price are required' });
         }
 
-        // Check if either a file is uploaded or an image URL is provided
         if (!req.file && !imageUrl) {
             logger.warn('Offer creation failed: Image required');
             return res.status(400).json({ error: 'An image file or image URL is required' });
         }
 
-        // Use the uploaded file's URL if available; otherwise, use the provided image URL
         const finalImageUrl = req.file ? req.file.path : imageUrl;
 
         const result = await pool.query(
@@ -1143,7 +1294,7 @@ app.post('/api/admin/offers', authenticateAdmin, upload.single('image'), async (
         logger.info(`Offer created: ID ${result.rows[0].id}`);
         res.status(201).json(result.rows[0]);
     } catch (error) {
-        logger.error('Error creating offer:', { message: error.message });
+        logger.error('Error creating offer:', { message: error.message, stack: error.stack });
         res.status(500).json({ error: 'Server error while creating offer' });
     }
 });
@@ -1177,7 +1328,7 @@ app.put('/api/admin/offers/:id', authenticateAdmin, upload.single('image'), asyn
         logger.info(`Offer updated: ID ${id}`);
         res.json(result.rows[0]);
     } catch (error) {
-        logger.error('Error updating offer:', { message: error.message });
+        logger.error('Error updating offer:', { message: error.message, stack: error.stack });
         res.status(500).json({ error: 'Server error while updating offer' });
     }
 });
@@ -1194,7 +1345,7 @@ app.delete('/api/admin/offers/:id', authenticateAdmin, async (req, res) => {
         logger.info(`Offer deleted: ID ${id}`);
         res.json({ message: 'Offer deleted' });
     } catch (error) {
-        logger.error('Error deleting offer:', { message: error.message });
+        logger.error('Error deleting offer:', { message: error.message, stack: error.stack });
         res.status(500).json({ error: 'Server error while deleting offer' });
     }
 });
@@ -1205,7 +1356,7 @@ app.get('/api/leave-dates', async (req, res) => {
         const result = await pool.query('SELECT date FROM leave_dates ORDER BY date');
         res.json(result.rows.map(row => row.date));
     } catch (error) {
-        logger.error('Error fetching leave dates:', { message: error.message });
+        logger.error('Error fetching leave dates:', { message: error.message, stack: error.stack });
         res.status(500).json({ error: 'Server error while fetching leave dates' });
     }
 });
@@ -1227,7 +1378,7 @@ app.post('/api/admin/leave-dates', authenticateAdmin, async (req, res) => {
         logger.info(`Leave date added: ${date}`);
         res.status(201).json({ message: 'Leave date added' });
     } catch (error) {
-        logger.error('Error adding leave date:', { message: error.message });
+        logger.error('Error adding leave date:', { message: error.message, stack: error.stack });
         res.status(500).json({ error: 'Server error while adding leave date' });
     }
 });
@@ -1244,7 +1395,7 @@ app.delete('/api/admin/leave-dates/:date', authenticateAdmin, async (req, res) =
         logger.info(`Leave date deleted: ${date}`);
         res.json({ message: 'Leave date deleted' });
     } catch (error) {
-        logger.error('Error deleting leave date:', { message: error.message });
+        logger.error('Error deleting leave date:', { message: error.message, stack: error.stack });
         res.status(500).json({ error: 'Server error while deleting leave date' });
     }
 });
@@ -1285,7 +1436,7 @@ app.post('/api/newsletter', async (req, res) => {
         logger.info(`Newsletter subscription successful: ${email}`);
         res.status(201).json({ message: 'Subscribed to newsletter successfully' });
     } catch (error) {
-        logger.error('Error subscribing to newsletter:', { message: error.message });
+        logger.error('Error subscribing to newsletter:', { message: error.message, stack: error.stack });
         res.status(500).json({ error: 'Server error while subscribing to newsletter' });
     }
 });

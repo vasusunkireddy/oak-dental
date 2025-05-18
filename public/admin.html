@@ -209,9 +209,8 @@
             <textarea id="edit-offer-description" placeholder="Description" class="form-input mb-4" rows="4" aria-label="Offer Description"></textarea>
             <input type="number" id="edit-offer-price" placeholder="Price" class="form-input mb-4" step="0.01" aria-label="Offer Price">
             <div class="mb-4">
-                <label class="block text-sm text-gray-600 mb-1">Offer Image (Optional)</label>
-                <input type="file" id="edit-offer-image-file" accept="image/*" class="form-input mb-2">
-                <input type="text" id="edit-offer-image-url" placeholder="Image URL" class="form-input" aria-label="Offer Image URL">
+                <label class="block text-sm text-gray-600 mb-1">Offer Image (Optional)</label",
+            "Offer Image URL" class="form-input" aria-label="Offer Image URL">
             </div>
             <div class="flex justify-end space-x-2">
                 <button onclick="closeEditOfferModal()" class="bg-gray-500 text-white p-3 rounded-lg hover:bg-gray-600">Cancel</button>
@@ -245,6 +244,43 @@
         </div>
     </div>
 
+    <!-- Forgot Password Email Modal -->
+    <div id="forgot-password-email-modal" class="fixed inset-0 modal flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg p-6 max-w-md w-full animate-scale-in">
+            <h3 class="text-lg font-medium text-teal-600 mb-4">Forgot Password</h3>
+            <input type="email" id="forgot-password-email" placeholder="Enter your email" class="form-input mb-4" aria-label="Email">
+            <div class="flex justify-end space-x-2">
+                <button onclick="closeForgotPasswordEmailModal()" class="bg-gray-500 text-white p-3 rounded-lg hover:bg-gray-600">Cancel</button>
+                <button onclick="sendOTP()" class="bg-teal-600 text-white p-3 rounded-lg hover:bg-teal-700">Send OTP</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- OTP Verification Modal -->
+    <div id="otp-verification-modal" class="fixed inset-0 modal flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg p-6 max-w-md w-full animate-scale-in">
+            <h3 class="text-lg font-medium text-teal-600 mb-4">Verify OTP</h3>
+            <input type="text" id="otp-input" placeholder="Enter OTP" class="form-input mb-4" aria-label="OTP">
+            <div class="flex justify-end space-x-2">
+                <button onclick="closeOTPVerificationModal()" class="bg-gray-500 text-white p-3 rounded-lg hover:bg-gray-600">Cancel</button>
+                <button onclick="verifyOTP()" class="bg-teal-600 text-white p-3 rounded-lg hover:bg-teal-700">Verify</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reset Password Modal -->
+    <div id="reset-password-modal" class="fixed inset-0 modal flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg p-6 max-w-md w-full animate-scale-in">
+            <h3 class="text-lg font-medium text-teal-600 mb-4">Reset Password</h3>
+            <input type="password" id="new-password" placeholder="New Password" class="form-input mb-4" aria-label="New Password">
+            <input type="password" id="confirm-password" placeholder="Confirm Password" class="form-input mb-4" aria-label="Confirm Password">
+            <div class="flex justify-end space-x-2">
+                <button onclick="closeResetPasswordModal()" class="bg-gray-500 text-white p-3 rounded-lg hover:bg-gray-600">Cancel</button>
+                <button onclick="resetPassword()" class="bg-teal-600 text-white p-3 rounded-lg hover:bg-teal-700">Reset Password</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Login/Register Container -->
     <div id="auth-container" class="min-h-screen flex items-center justify-center gradient-bg">
         <div class="auth-container max-w-md w-full bg-white rounded-lg shadow-lg p-8 animate-fade-in">
@@ -257,7 +293,12 @@
                 <input type="email" id="login-email" placeholder="Email" class="form-input mb-4" required aria-label="Email">
                 <input type="password" id="login-password" placeholder="Password" class="form-input mb-4" required aria-label="Password">
                 <button onclick="adminLogin()" class="w-full bg-teal-600 text-white p-3 rounded-lg hover:bg-teal-700 shadow-sm">Login</button>
-                <p class="text-center mt-4 text-sm">Don't have an account? <a href="#" onclick="showRegisterForm()" class="text-teal-600 hover:underline">Register</a></p>
+                <p class="text-center mt-4 text-sm">
+                    Don't have an account? <a href="#" onclick="showRegisterForm()" class="text-teal-600 hover:underline">Register</a>
+                </p>
+                <p class="text-center mt-2 text-sm">
+                    <a href="#" onclick="showForgotPasswordEmailModal()" class="text-teal-600 hover:underline">Forgot Password?</a>
+                </p>
             </div>
             <div id="register-form" class="hidden">
                 <h3 class="text-lg font-medium text-teal-600 mb-4">Register</h3>
@@ -401,8 +442,7 @@
                     <input type="text" id="offer-title" placeholder="Title (e.g., OP + Cleaning & Polishing + X-Ray)" class="form-input mb-4" aria-label="Offer Title">
                     <textarea id="offer-description" placeholder="Description" class="form-input mb-4" rows="4" aria-label="Offer Description"></textarea>
                     <input type="number" id="offer-price" placeholder="Price (e.g., 999)" class="form-input mb-4" step="0.01" aria-label="Offer Price">
-                    <div class="mb-4">
-                        <label class="block text-sm text-gray-600 mb-1">Offer Image</label>
+                    <div class ral-label="Offer Image">
                         <input type="file" id="offer-image-file" accept="image/*" class="form-input mb-2" required>
                     </div>
                     <button onclick="addOffer()" class="w-full bg-teal-600 text-white p-3 rounded-lg hover:bg-teal-700 shadow-sm">Add Offer</button>
@@ -507,6 +547,26 @@
             document.getElementById('login-form').classList.remove('hidden');
         }
 
+        function showForgotPasswordEmailModal() {
+            document.getElementById('login-form').classList.add('hidden');
+            document.getElementById('forgot-password-email-modal').classList.remove('hidden');
+        }
+
+        function closeForgotPasswordEmailModal() {
+            document.getElementById('forgot-password-email-modal').classList.add('hidden');
+            document.getElementById('login-form').classList.remove('hidden');
+        }
+
+        function closeOTPVerificationModal() {
+            document.getElementById('otp-verification-modal').classList.add('hidden');
+            document.getElementById('login-form').classList.remove('hidden');
+        }
+
+        function closeResetPasswordModal() {
+            document.getElementById('reset-password-modal').classList.add('hidden');
+            document.getElementById('login-form').classList.remove('hidden');
+        }
+
         async function adminLogin() {
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
@@ -566,6 +626,91 @@
             }
         }
 
+        async function sendOTP() {
+            const email = document.getElementById('forgot-password-email').value;
+            if (!email) {
+                showToast('Please enter an email.', 'error');
+                return;
+            }
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/admin/forgot-password`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    showToast('OTP sent to your email');
+                    document.getElementById('forgot-password-email-modal').classList.add('hidden');
+                    document.getElementById('otp-verification-modal').classList.remove('hidden');
+                } else {
+                    showToast(data.error || 'Error sending OTP', 'error');
+                }
+            } catch (error) {
+                console.error('Error sending OTP:', error);
+                showToast('Error sending OTP', 'error');
+            }
+        }
+
+        async function verifyOTP() {
+            const otp = document.getElementById('otp-input').value;
+            const email = document.getElementById('forgot-password-email').value;
+            if (!otp) {
+                showToast('Please enter the OTP.', 'error');
+                return;
+            }
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/admin/verify-otp`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, otp })
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    showToast('OTP verified');
+                    document.getElementById('otp-verification-modal').classList.add('hidden');
+                    document.getElementById('reset-password-modal').classList.remove('hidden');
+                } else {
+                    showToast(data.error || 'Invalid OTP', 'error');
+                }
+            } catch (error) {
+                console.error('Error verifying OTP:', error);
+                showToast('Error verifying OTP', 'error');
+            }
+        }
+
+        async function resetPassword() {
+            const newPassword = document.getElementById('new-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            const email = document.getElementById('forgot-password-email').value;
+            if (!newPassword || !confirmPassword) {
+                showToast('Please fill in all fields.', 'error');
+                return;
+            }
+            if (newPassword !== confirmPassword) {
+                showToast('Passwords do not match.', 'error');
+                return;
+            }
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/admin/reset-password`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, newPassword })
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    showToast('Password reset successfully');
+                    document.getElementById('reset-password-modal').classList.add('hidden');
+                    document.getElementById('login-form').classList.remove('hidden');
+                } else {
+                    showToast(data.error || 'Error resetting password', 'error');
+                }
+            } catch (error) {
+                console.error('Error resetting password:', error);
+                showToast('Error resetting password', 'error');
+            }
+        }
+
         function toggleDropdown() {
             document.getElementById('dropdown-menu').classList.toggle('hidden');
         }
@@ -618,7 +763,7 @@
                     throw new Error(errorData.error || 'Upload failed');
                 }
                 const data = await response.json();
-                return data.url; // Changed to return the URL directly
+                return data.url;
             } catch (error) {
                 console.error('Error uploading media:', error);
                 throw error;

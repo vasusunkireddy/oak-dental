@@ -31,12 +31,28 @@
         }
         .fade-in {
             opacity: 0;
-            transform: translateY(20px);
+            transform: translateY(20px) scale(0.95);
             transition: opacity 0.6s ease-out, transform 0.6s ease-out;
         }
         .fade-in.visible {
             opacity: 1;
-            transform: translateY(0);
+            transform: translateY(0) scale(1);
+        }
+        .staggered-fade-in {
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .staggered-fade-in.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        .service-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .service-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         }
         .slider-container {
             position: relative;
@@ -90,6 +106,10 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             max-width: 480px;
             margin: 0 auto;
+            transition: transform 0.3s ease;
+        }
+        .doctor-card:hover {
+            transform: scale(1.02);
         }
         .doctor-img {
             border: 8px solid #0d9488;
@@ -173,7 +193,7 @@
             padding: 0 10px;
             opacity: 0;
             transform: translateX(20px);
-            transition: opacity 0.5s ease, transform 0.5s ease;
+            transition: opacity 0.5s ease, transform 0.5s ease, scale 0.3s ease;
         }
         .testimonial-slide.visible {
             opacity: 1;
@@ -189,12 +209,12 @@
         }
         .rating-stars .star {
             cursor: pointer;
-            color: #6b7280; /* Darker gray for visibility */
+            color: #6b7280;
             font-size: 1.5rem;
             transition: color 0.2s ease;
         }
         .rating-stars .star.selected {
-            color: #f59e0b; /* Brighter yellow for selected */
+            color: #f59e0b;
         }
         .gallery-slider-container {
             position: relative;
@@ -215,6 +235,10 @@
         .gallery-item {
             flex: 1;
             max-width: 33%;
+            transition: transform 0.3s ease;
+        }
+        .gallery-item:hover {
+            transform: scale(1.03);
         }
         .gallery-img {
             width: 100%;
@@ -244,11 +268,11 @@
             font-size: 18px;
             border-radius: 50%;
             user-select: none;
-            transition: background-color 0.3s ease;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, transform 0.3s ease;
         }
         .slider-nav:hover {
             background-color: #14b8a6;
+            transform: scale(1.1);
         }
         .slider-nav.left {
             left: 10px;
@@ -304,10 +328,51 @@
             color: #1f2937;
             border: 1px solid #d1d5db;
         }
+        select#time-slot {
+            transition: all 0.3s ease;
+        }
+        select#time-slot.slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-10px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .no-slots-message {
+            color: #e53e3e;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+        .no-slots-message.visible {
+            display: block;
+        }
+        .captcha-container {
+            margin-bottom: 1rem;
+        }
+        .captcha-question {
+            font-size: 1rem;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+        .captcha-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+        .refresh-captcha {
+            color: #0d9488;
+            cursor: pointer;
+            font-size: 0.875rem;
+            text-decoration: underline;
+        }
+        .refresh-captcha:hover {
+            color: #14b8a6;
+        }
         @media (max-width: 640px) {
-            body {
-                font-size: 1rem;
-            }
+            body { font-size: 1rem; }
             .text-4xl { font-size: 2rem; }
             .text-6xl { font-size: 2.5rem; }
             .text-3xl { font-size: 1.75rem; }
@@ -405,7 +470,7 @@
         <a href="#treatments" onclick="closeNav()">Our Treatments</a>
         <a href="#about" onclick="closeNav()">About Us</a>
         <a href="#contact" onclick="closeNav()">Contact Us</a>
-        <a href="#appointment" onclick="closeNav()">Book Appointments</a>
+        <a href="#appointment" onclick="closeNav()">Book Appointment</a>
         <a href="#status" onclick="closeNav()">Check Appointment Status</a>
     </div>
 
@@ -469,42 +534,42 @@
         </div>
     </section>
 
-    <!-- Services Section (Static, Side-by-Side) -->
+    <!-- Services Section (Static, Side-by-Side with Animations) -->
     <section id="services" class="py-16 bg-blue-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">Our Dental Services in Hyderabad</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="bg-white p-6 rounded-lg shadow-md text-center fade-in">
+                <div class="bg-white p-6 rounded-lg shadow-md text-center staggered-fade-in service-card">
                     <i class="fas fa-tooth text-teal-600 text-4xl mb-4"></i>
                     <h3 class="text-xl font-semibold text-teal-600 mb-4">General Dentistry</h3>
                     <p class="text-gray-600 mb-4">Routine check-ups, cleanings, and fillings to keep your smile bright.</p>
                     <a href="/services.html#general-dentistry" class="text-teal-600 hover:underline">Learn More</a>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-md text-center fade-in">
+                <div class="bg-white p-6 rounded-lg shadow-md text-center staggered-fade-in service-card">
                     <i class="fas fa-smile text-teal-600 text-4xl mb-4"></i>
                     <h3 class="text-xl font-semibold text-teal-600 mb-4">Cosmetic Dentistry</h3>
                     <p class="text-gray-600 mb-4">Teeth whitening, veneers, and more to enhance your smile.</p>
                     <a href="/services.html#cosmetic-dentistry" class="text-teal-600 hover:underline">Learn More</a>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-md text-center fade-in">
+                <div class="bg-white p-6 rounded-lg shadow-md text-center staggered-fade-in service-card">
                     <i class="fas fa-align-center text-teal-600 text-4xl mb-4"></i>
                     <h3 class="text-xl font-semibold text-teal-600 mb-4">Orthodontics</h3>
                     <p class="text-gray-600 mb-4">Braces and aligners for perfectly aligned teeth.</p>
                     <a href="/services.html#orthodontics" class="text-teal-600 hover:underline">Learn More</a>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-md text-center fade-in">
+                <div class="bg-white p-6 rounded-lg shadow-md text-center staggered-fade-in service-card">
                     <i class="fas fa-tooth text-teal-600 text-4xl mb-4"></i>
                     <h3 class="text-xl font-semibold text-teal-600 mb-4">Dental Implants</h3>
                     <p class="text-gray-600 mb-4">Permanent solutions for missing teeth with advanced technology.</p>
                     <a href="/services.html#dental-implants" class="text-teal-600 hover:underline">Learn More</a>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-md text-center fade-in">
+                <div class="bg-white p-6 rounded-lg shadow-md text-center staggered-fade-in service-card">
                     <i class="fas fa-tools text-teal-600 text-4xl mb-4"></i>
                     <h3 class="text-xl font-semibold text-teal-600 mb-4">Root Canal Therapy</h3>
                     <p class="text-gray-600 mb-4">Pain-free treatment to save damaged teeth.</p>
                     <a href="/services.html#root-canal-therapy" class="text-teal-600 hover:underline">Learn More</a>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-md text-center fade-in">
+                <div class="bg-white p-6 rounded-lg shadow-md text-center staggered-fade-in service-card">
                     <i class="fas fa-baby text-teal-600 text-4xl mb-4"></i>
                     <h3 class="text-xl font-semibold text-teal-600 mb-4">Pediatric Dentistry</h3>
                     <p class="text-gray-600 mb-4">Gentle dental care for children and teens.</p>
@@ -534,7 +599,7 @@
 
     <!-- Feedback Section -->
     <section id="feedback" class="py-16 bg-gray-100">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">Share Your Feedback</h2>
             <div class="max-w-md mx-auto fade-in">
                 <h3 class="text-xl font-semibold text-teal-600 mb-4">Submit Your Feedback</h3>
@@ -744,22 +809,18 @@
                     <input type="tel" id="phone" placeholder="Your Phone" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Your Phone">
                     <input type="text" id="appointment-date" placeholder="Select Appointment Date" class="w-full p-3 mb-4 border rounded-lg flatpickr-input" required aria-label="Appointment Date">
                     <select id="time-slot" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Time Slot">
-                        <option value="" disabled selected>Select Time Slot</option>
+                        <option value="" disabled selected>Select a valid date first</option>
                     </select>
+                    <p id="no-slots-message" class="no-slots-message">No time slots available for this date. Please try another date or contact us.</p>
+                    <div class="captcha-container">
+                        <p id="captcha-question" class="captcha-question"></p>
+                        <input type="text" id="captcha-answer" placeholder="Enter the code" class="captcha-input" aria-label="CAPTCHA Answer">
+                        <p class="refresh-captcha" onclick="generateCaptcha()">Refresh CAPTCHA</p>
+                    </div>
                     <div class="space-x-4">
                         <button onclick="submitAppointment()" class="bg-teal-600 text-white px-6 py-3 rounded-full hover:bg-teal-700" aria-label="Submit Appointment Request">Book Appointment</button>
                         <a href="https://wa.me/+91756936767?text=Hello%20Oak%20Dental%20Clinic,%20I%20would%20like%20to%20book%20an%20appointment." target="_blank" class="bg-green-500 text-white px-6 py-3 rounded-full hover:bg-green-600" aria-label="Contact via WhatsApp">WhatsApp Us</a>
                     </div>
-                </div>
-            </div>
-            <div class="max-w-md mx-auto mt-8 fade-in">
-                <h3 class="text-xl font-semibold text-teal-600 mb-4">Join Waitlist</h3>
-                <div>
-                    <input type="text" id="waitlist-name" placeholder="Your Name" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Your Name">
-                    <input type="email" id="waitlist-email" placeholder="Your Email" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Your Email">
-                    <input type="tel" id="waitlist-phone" placeholder="Your Phone" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Your Phone">
-                    <input type="text" id="waitlist-date" placeholder="Select Preferred Date" class="w-full p-3 mb-4 border rounded-lg flatpickr-input" required aria-label="Preferred Date">
-                    <button onclick="joinWaitlist()" class="bg-teal-600 text-white px-6 py-3 rounded-full hover:bg-teal-700" aria-label="Join Waitlist">Join Waitlist</button>
                 </div>
             </div>
         </div>
@@ -845,6 +906,10 @@
     </footer>
 
     <script>
+        // Backend API Configuration
+        const API_BASE_URL = 'http://localhost:3000/api'; // Update to your deployed backend URL if not local
+        const API_KEY = 'your-api-key-here'; // Replace with your actual API key
+
         // Google Analytics
         window.dataLayer = window.dataLayer || [];
         function gtag() { dataLayer.push(arguments); }
@@ -899,8 +964,9 @@
             document.getElementById('newsletter-email').value = '';
         });
 
-        // Fade-in Animation
+        // Fade-in and Staggered Animations
         const fadeInElements = document.querySelectorAll('.fade-in');
+        const staggeredElements = document.querySelectorAll('.staggered-fade-in');
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -909,6 +975,10 @@
             });
         }, { threshold: 0.1 });
         fadeInElements.forEach(element => observer.observe(element));
+        staggeredElements.forEach((element, index) => {
+            element.style.transitionDelay = `${index * 0.1}s`;
+            observer.observe(element);
+        });
 
         // Slider Logic
         const sliders = {
@@ -960,10 +1030,29 @@
             testimonialInterval = setInterval(autoSlideTestimonials, 5000);
         });
 
+        // CAPTCHA Logic (Letter-based)
+        let captchaAnswer = '';
+        function generateCaptcha() {
+            const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            captchaAnswer = '';
+            for (let i = 0; i < 5; i++) {
+                captchaAnswer += letters.charAt(Math.floor(Math.random() * letters.length));
+            }
+            document.getElementById('captcha-question').textContent = `Enter this code: ${captchaAnswer}`;
+            document.getElementById('captcha-answer').value = '';
+        }
+
+        function validateCaptcha() {
+            const userAnswer = document.getElementById('captcha-answer').value.toUpperCase();
+            return userAnswer === captchaAnswer;
+        }
+
         // Treatments Loader
         async function loadTreatments() {
             try {
-                const response = await fetch('https://oak-dental.onrender.com/api/services');
+                const response = await fetch(`${API_BASE_URL}/services`, {
+                    headers: { 'Authorization': `Bearer ${API_KEY}` }
+                });
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 const treatments = await response.json();
                 const treatmentsSlider = document.getElementById('treatments-slider');
@@ -995,7 +1084,9 @@
         // Offers Loader
         async function loadOffers() {
             try {
-                const response = await fetch('https://oak-dental.onrender.com/api/offers');
+                const response = await fetch(`${API_BASE_URL}/offers`, {
+                    headers: { 'Authorization': `Bearer ${API_KEY}` }
+                });
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 const offers = await response.json();
                 const offersSlider = document.getElementById('offers-slider');
@@ -1038,9 +1129,12 @@
                 return;
             }
             try {
-                const response = await fetch('https://oak-dental.onrender.com/api/feedback', {
+                const response = await fetch(`${API_BASE_URL}/feedback`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${API_KEY}`
+                    },
                     body: JSON.stringify({ full_name, email, rating: currentRating, description })
                 });
                 if (response.ok) {
@@ -1063,7 +1157,9 @@
         // Testimonials Loader
         async function loadTestimonials() {
             try {
-                const response = await fetch('https://oak-dental.onrender.com/api/feedback');
+                const response = await fetch(`${API_BASE_URL}/feedback`, {
+                    headers: { 'Authorization': `Bearer ${API_KEY}` }
+                });
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 const feedbacks = await response.json();
                 const testimonialSlider = document.getElementById('testimonial-slider');
@@ -1086,17 +1182,19 @@
         let leaveDates = [];
         async function fetchLeaveDates() {
             try {
-                const response = await fetch('https://oak-dental.onrender.com/api/leave-dates');
+                const response = await fetch(`${API_BASE_URL}/leave-dates`, {
+                    headers: { 'Authorization': `Bearer ${API_KEY}` }
+                });
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 leaveDates = (await response.json()).map(date => new Date(date).toISOString().split('T')[0]);
-                initializeCalendars();
+                initializeAppointmentCalendar();
             } catch (error) {
                 console.error('Error fetching leave dates:', error);
                 showToast('Error loading calendar. Please try again.', true);
             }
         }
 
-        function initializeCalendars() {
+        function initializeAppointmentCalendar() {
             flatpickr('#appointment-date', {
                 dateFormat: 'Y-m-d',
                 minDate: 'today',
@@ -1105,23 +1203,19 @@
                     if (leaveDates.includes(dateStr)) {
                         showToast(`The doctor is on leave on ${dateStr}. Please select another date, such as ${getNextAvailableDate(dateStr)}.`, true);
                         document.getElementById('appointment-date').value = '';
+                        document.getElementById('time-slot').innerHTML = '<option value="" disabled selected>Select a valid date first</option>';
+                        document.getElementById('no-slots-message').classList.remove('visible');
+                    } else {
+                        populateTimeSlots(dateStr);
                     }
                 },
                 onDayCreate: (dObj, dStr, fp, dayElem) => {
                     const dayDate = dayElem.dateObj.toISOString().split('T')[0];
                     if (leaveDates.includes(dayDate)) {
                         dayElem.classList.add('disabled');
-                    }
-                }
-            });
-            flatpickr('#waitlist-date', {
-                dateFormat: 'Y-m-d',
-                minDate: 'today',
-                disable: leaveDates,
-                onDayCreate: (dObj, dStr, fp, dayElem) => {
-                    const dayDate = dayElem.dateObj.toISOString().split('T')[0];
-                    if (leaveDates.includes(dayDate)) {
-                        dayElem.classList.add('disabled');
+                        dayElem.style.color = '#ff0000'; // Leave dates in red
+                    } else {
+                        dayElem.style.color = '#000000'; // Non-leave dates in black
                     }
                 }
             });
@@ -1137,22 +1231,43 @@
             return nextDate;
         }
 
-        async function populateTimeSlots() {
+        async function populateTimeSlots(date) {
+            const timeSlotSelect = document.getElementById('time-slot');
+            const noSlotsMessage = document.getElementById('no-slots-message');
+            timeSlotSelect.innerHTML = '<option value="" disabled selected>Loading time slots...</option>';
+            noSlotsMessage.classList.remove('visible');
             try {
-                const response = await fetch('https://oak-dental.onrender.com/api/time-slots');
+                const response = await fetch(`${API_BASE_URL}/time-slots?date=${encodeURIComponent(date)}`, {
+                    headers: { 'Authorization': `Bearer ${API_KEY}` }
+                });
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                const timeSlots = await response.json();
-                const timeSlotSelect = document.getElementById('time-slot');
-                timeSlotSelect.innerHTML = '<option value="" disabled selected>Select Time Slot</option>' +
-                    timeSlots.map(slot => `<option value="${slot}">${slot}</option>`).join('');
+                const timeSlots = [
+                    "9:00 AM", "9:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM",
+                    "1:00 PM", "1:30 PM", "2:00 PM", "2:30 PM", "3:00 PM", "3:30 PM",
+                    "4:00 PM", "4:30 PM", "5:00 PM"
+                ];
+                const bookedSlots = await response.json();
+                const availableSlots = timeSlots.filter(slot => !bookedSlots.includes(slot));
+
+                if (!Array.isArray(availableSlots) || availableSlots.length === 0) {
+                    timeSlotSelect.innerHTML = '<option value="" disabled selected>No time slots available</option>';
+                    noSlotsMessage.classList.add('visible');
+                } else {
+                    timeSlotSelect.innerHTML = '<option value="" disabled selected>Select Time Slot</option>' +
+                        availableSlots.map(slot => `<option value="${slot}">${slot}</option>`).join('');
+                    timeSlotSelect.classList.add('slide-in');
+                    setTimeout(() => timeSlotSelect.classList.remove('slide-in'), 300);
+                }
             } catch (error) {
                 console.error('Error fetching time slots:', error);
-                showToast('Error loading time slots. Please try again.', true);
+                timeSlotSelect.innerHTML = '<option value="" disabled selected>Error loading slots</option>';
+                noSlotsMessage.classList.add('visible');
+                showToast('Unable to load time slots. Please try another date or contact us.', true);
             }
         }
 
-        function getAppointmentData() {
-            return {
+        async function submitAppointment() {
+            const data = {
                 id: Date.now().toString(),
                 full_name: document.getElementById('full-name').value,
                 email: document.getElementById('email').value,
@@ -1160,110 +1275,92 @@
                 date: document.getElementById('appointment-date').value,
                 time: document.getElementById('time-slot').value
             };
-        }
 
-        async function submitAppointment() {
-            const appointmentData = getAppointmentData();
-            if (!appointmentData.full_name || !appointmentData.email || !appointmentData.phone || !appointmentData.date || !appointmentData.time) {
+            if (!data.full_name || !data.email || !data.phone || !data.date || !data.time) {
                 showToast('Please fill in all fields.', true);
                 return;
             }
-            if (leaveDates.includes(appointmentData.date)) {
-                showToast(`The doctor is on leave on ${appointmentData.date}. Please select another date, such as ${getNextAvailableDate(appointmentData.date)}.`, true);
+
+            if (leaveDates.includes(data.date)) {
+                showToast(`The doctor is on leave on ${data.date}. Please select another date, such as ${getNextAvailableDate(data.date)}.`, true);
                 return;
             }
+
+            if (!validateCaptcha()) {
+                showToast('Incorrect CAPTCHA code. Please try again.', true);
+                generateCaptcha();
+                return;
+            }
+
             try {
-                const response = await fetch('https://oak-dental.onrender.com/api/appointments', {
+                const response = await fetch(`${API_BASE_URL}/appointments`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(appointmentData)
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${API_KEY}`
+                    },
+                    body: JSON.stringify(data)
                 });
                 if (response.ok) {
-                    const result = await response.json();
-                    showToast(`Appointment booked for ${appointmentData.full_name} on ${appointmentData.date} at ${appointmentData.time}. Confirmation sent to ${appointmentData.email} and ${appointmentData.phone}.`);
+                    showToast('Appointment booked successfully!');
                     document.getElementById('full-name').value = '';
                     document.getElementById('email').value = '';
                     document.getElementById('phone').value = '';
-                    document.getElementById('appointment-date').value = '';
-                    document.getElementById('time-slot').value = '';
+                                        document.getElementById('appointment-date').value = '';
+                    document.getElementById('time-slot').innerHTML = '<option value="" disabled selected>Select a valid date first</option>';
+                    document.getElementById('no-slots-message').classList.remove('visible');
+                    document.getElementById('captcha-answer').value = '';
+                    generateCaptcha();
                 } else {
-                    showToast('Error booking appointment. Please try again.', true);
+                    const errorText = await response.text();
+                    showToast(`Error booking appointment: ${errorText}`, true);
                 }
             } catch (error) {
-                console.error('Error booking appointment:', error);
+                console.error('Error submitting appointment:', error);
                 showToast('Error booking appointment. Please try again.', true);
             }
         }
 
-        async function joinWaitlist() {
-            const waitlistData = {
-                name: document.getElementById('waitlist-name').value,
-                email: document.getElementById('waitlist-email').value,
-                phone: document.getElementById('waitlist-phone').value,
-                preferredDate: document.getElementById('waitlist-date').value
-            };
-            if (!waitlistData.name || !waitlistData.email || !waitlistData.phone || !waitlistData.preferredDate) {
-                showToast('Please fill in all fields.', true);
-                return;
-            }
-            try {
-                const response = await fetch('https://oak-dental.onrender.com/api/waitlist', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(waitlistData)
-                });
-                if (response.ok) {
-                    showToast('Successfully joined the waitlist! We will notify you if a slot opens up.');
-                    document.getElementById('waitlist-name').value = '';
-                    document.getElementById('waitlist-email').value = '';
-                    document.getElementById('waitlist-phone').value = '';
-                    document.getElementById('waitlist-date').value = '';
-                } else {
-                    showToast('Error joining waitlist. Please try again.', true);
-                }
-            } catch (error) {
-                console.error('Error joining waitlist:', error);
-                showToast('Error joining waitlist. Please try again.', true);
-            }
-        }
-
+        // Check Appointment Status
         async function checkAppointmentStatus() {
             const identifier = document.getElementById('status-identifier').value;
-            const resultDiv = document.getElementById('status-result');
             if (!identifier) {
                 showToast('Please enter your mobile number or email.', true);
                 return;
             }
             try {
-                const response = await fetch(`https://oak-dental.onrender.com/api/appointments?identifier=${encodeURIComponent(identifier)}`);
+                const response = await fetch(`${API_BASE_URL}/appointments?identifier=${encodeURIComponent(identifier)}`, {
+                    headers: { 'Authorization': `Bearer ${API_KEY}` }
+                });
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 const appointment = await response.json();
-                resultDiv.classList.remove('hidden');
-                if (response.ok && appointment) {
-                    resultDiv.innerHTML = `
-                        <p><strong>Status:</strong> ${appointment.status || 'Confirmed'}</p>
+                const statusResult = document.getElementById('status-result');
+                if (!appointment || Object.keys(appointment).length === 0) {
+                    statusResult.innerHTML = '<p class="text-red-600">No appointment found with the provided details.</p>';
+                } else {
+                    statusResult.innerHTML = `
                         <p><strong>Name:</strong> ${appointment.full_name}</p>
                         <p><strong>Date:</strong> ${appointment.date}</p>
                         <p><strong>Time:</strong> ${appointment.time}</p>
+                        <p><strong>Status:</strong> ${appointment.status || 'Confirmed'}</p>
                     `;
-                } else {
-                    resultDiv.innerHTML = '<p>No appointment found with that mobile number or email.</p>';
                 }
+                statusResult.classList.remove('hidden');
             } catch (error) {
                 console.error('Error checking appointment status:', error);
                 showToast('Error checking appointment status. Please try again.', true);
-                resultDiv.classList.remove('hidden');
-                resultDiv.innerHTML = '<p>Error checking status. Please try again later.</p>';
             }
         }
 
         // Initialize on Page Load
-        window.onload = () => {
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchLeaveDates();
             loadTreatments();
             loadOffers();
             loadTestimonials();
-            fetchLeaveDates();
-            populateTimeSlots();
-        };
+            generateCaptcha();
+        });
     </script>
 </body>
 </html>
+                   
