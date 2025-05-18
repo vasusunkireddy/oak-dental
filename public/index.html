@@ -8,7 +8,7 @@
     <title>Oak Dental Clinic - Multi-Speciality Dental Care in Hyderabad</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWixZZ6A2qr9P8p9mB9W7+1p3eS7p2Jp3UO5O3Z+kO5W5cP5y6uP5mP8Z9k5vD9z9k5z9k5==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-YOUR-ID"></script>
@@ -19,7 +19,7 @@
             font-size: 1rem;
         }
         .hero-bg {
-            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1598256989800-fe5f95da9787?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1598256989800-fe5f95da9787?q=80&w=2070&auto=format&fit=crop');
             background-size: cover;
             background-position: center;
         }
@@ -183,13 +183,18 @@
             transform: scale(1.02);
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         }
+        .rating-stars {
+            display: flex;
+            gap: 0.25rem;
+        }
         .rating-stars .star {
             cursor: pointer;
-            color: #d1d5db;
-            font-size: 1.25rem;
+            color: #6b7280; /* Darker gray for visibility */
+            font-size: 1.5rem;
+            transition: color 0.2s ease;
         }
         .rating-stars .star.selected {
-            color: #fbbf24;
+            color: #f59e0b; /* Brighter yellow for selected */
         }
         .gallery-slider-container {
             position: relative;
@@ -301,7 +306,7 @@
         }
         @media (max-width: 640px) {
             body {
-                font-size: 1.125rem;
+                font-size: 1rem;
             }
             .text-4xl { font-size: 2rem; }
             .text-6xl { font-size: 2.5rem; }
@@ -344,7 +349,7 @@
             }
             .sidenav a { font-size: 1.125rem; padding: 14px 16px 14px 32px; }
             .sidenav .closebtn { font-size: 1.75rem; }
-            .rating-stars .star { font-size: 1.125rem; }
+            .rating-stars .star { font-size: 1.25rem; }
             .whatsapp-float img { height: 48px; width: 48px; }
             .toast {
                 top: 10px;
@@ -445,11 +450,9 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">Our Treatments</h2>
             <div class="slider-container fade-in">
-                <div class="slider" id="treatments-slider">
-                    <!-- Treatments will be populated dynamically -->
-                </div>
+                <div class="slider" id="treatments-slider"></div>
                 <div class="slider-nav left" onclick="slideLeft('treatments-slider', 3, 33.33)"><i class="fas fa-arrow-left"></i></div>
-                <div class="slider-nav right" onclick="toggleSlider('treatments-slider')"><i class="fas fa-compress-alt" id="treatments-toggle-icon"></i></div>
+                <div class="slider-nav right" onclick="slideRight('treatments-slider', 3, 33.33)"><i class="fas fa-arrow-right"></i></div>
             </div>
         </div>
     </section>
@@ -459,11 +462,9 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">Special Offers</h2>
             <div class="slider-container fade-in">
-                <div class="slider" id="offers-slider">
-                    <!-- Offers will be populated dynamically -->
-                </div>
+                <div class="slider" id="offers-slider"></div>
                 <div class="slider-nav left" onclick="slideLeft('offers-slider', 1, 100)"><i class="fas fa-arrow-left"></i></div>
-                <div class="slider-nav right" onclick="toggleSlider('offers-slider')"><i class="fas fa-compress-alt" id="offers-toggle-icon"></i></div>
+                <div class="slider-nav right" onclick="slideRight('offers-slider', 1, 100)"><i class="fas fa-arrow-right"></i></div>
             </div>
         </div>
     </section>
@@ -499,7 +500,7 @@
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-md text-center fade-in">
                     <i class="fas fa-tools text-teal-600 text-4xl mb-4"></i>
-                    <h3 class="text-xl font-semibold text-teal-600MOR mb-4">Root Canal Therapy</h3>
+                    <h3 class="text-xl font-semibold text-teal-600 mb-4">Root Canal Therapy</h3>
                     <p class="text-gray-600 mb-4">Pain-free treatment to save damaged teeth.</p>
                     <a href="/services.html#root-canal-therapy" class="text-teal-600 hover:underline">Learn More</a>
                 </div>
@@ -533,7 +534,7 @@
 
     <!-- Feedback Section -->
     <section id="feedback" class="py-16 bg-gray-100">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">Share Your Feedback</h2>
             <div class="max-w-md mx-auto fade-in">
                 <h3 class="text-xl font-semibold text-teal-600 mb-4">Submit Your Feedback</h3>
@@ -557,8 +558,8 @@
         </div>
     </section>
 
-    <!-- Before-and-After Section (Static, Three Slides) -->
-    <section class="py-16 bg-green-50">
+    <!-- Before-and-After Section (With Slider) -->
+    <section id="before-after" class="py-16 bg-green-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">Before & After Transformations</h2>
             <div class="slider-container fade-in">
@@ -576,6 +577,8 @@
                         <img src="https://images.unsplash.com/photo-1618498082410-b4aa22193b38?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="After Treatment 3" loading="lazy">
                     </div>
                 </div>
+                <div class="slider-nav left" onclick="slideLeft('before-after-slider', 1, 100)"><i class="fas fa-arrow-left"></i></div>
+                <div class="slider-nav right" onclick="slideRight('before-after-slider', 1, 100)"><i class="fas fa-arrow-right"></i></div>
             </div>
         </div>
     </section>
@@ -600,7 +603,7 @@
         </div>
     </section>
 
-    <!-- Gallery Section (Static) -->
+    <!-- Gallery Section (With Slider) -->
     <section id="gallery" class="py-16 bg-yellow-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">Our Clinic in Bachupally</h2>
@@ -626,7 +629,29 @@
                             </picture>
                         </div>
                     </div>
+                    <div class="gallery-slide flex">
+                        <div class="gallery-item">
+                            <picture>
+                                <source srcset="https://i.postimg.cc/Xvfrsdpy/Oak-dental-interior-3.jpg?fm=webp" type="image/webp">
+                                <img src="https://i.postimg.cc/Xvfrsdpy/Oak-dental-interior-3.jpg" alt="Oak Dental Clinic Interior 4" class="gallery-img" loading="lazy">
+                            </picture>
+                        </div>
+                        <div class="gallery-item">
+                            <picture>
+                                <source srcset="https://i.postimg.cc/tTDYjbdq/Oak-dental-interior-4.jpg?fm=webp" type="image/webp">
+                                <img src="https://i.postimg.cc/tTDYjbdq/Oak-dental-interior-4.jpg" alt="Oak Dental Clinic Interior 5" class="gallery-img" loading="lazy">
+                            </picture>
+                        </div>
+                        <div class="gallery-item">
+                            <picture>
+                                <source srcset="https://i.postimg.cc/qvnq7ycZ/Oak-dental-interior-5.jpg?fm=webp" type="image/webp">
+                                <img src="https://i.postimg.cc/qvnq7ycZ/Oak-dental-interior-5.jpg" alt="Oak Dental Clinic Interior 6" class="gallery-img" loading="lazy">
+                            </picture>
+                        </div>
+                    </div>
                 </div>
+                <div class="slider-nav left" onclick="slideLeft('gallery-slider', 1, 100)"><i class="fas fa-arrow-left"></i></div>
+                <div class="slider-nav right" onclick="slideRight('gallery-slider', 1, 100)"><i class="fas fa-arrow-right"></i></div>
             </div>
         </div>
     </section>
@@ -636,11 +661,9 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">What Our Hyderabad Patients Say</h2>
             <div class="testimonial-slider-container fade-in">
-                <div class="testimonial-slider" id="testimonial-slider">
-                    <!-- Testimonials will be populated dynamically -->
-                </div>
+                <div class="testimonial-slider" id="testimonial-slider"></div>
                 <div class="slider-nav left" onclick="slideLeft('testimonial-slider', 3, 33.33)"><i class="fas fa-arrow-left"></i></div>
-                <div class="slider-nav right" onclick="toggleSlider('testimonial-slider')"><i class="fas fa-compress-alt" id="testimonial-toggle-icon"></i></div>
+                <div class="slider-nav right" onclick="slideRight('testimonial-slider', 3, 33.33)"><i class="fas fa-arrow-right"></i></div>
             </div>
         </div>
     </section>
@@ -663,7 +686,7 @@
                         <a href="https://twitter.com/intent/tweet?url=your-blog-url" class="text-teal-600 hover:text-teal-800">Share on Twitter</a>
                     </div>
                 </div>
-                <div class="bg-white p-.mvc6 rounded-lg shadow-md fade-in">
+                <div class="bg-white p-6 rounded-lg shadow-md fade-in">
                     <picture>
                         <source srcset="https://images.unsplash.com/photo-1618498082410-b4aa22193b38?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80&fm=webp" type="image/webp">
                         <img src="https://images.unsplash.com/photo-1618498082410-b4aa22193b38?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Dental Implants Guide" class="rounded-lg mb-4" loading="lazy">
@@ -835,11 +858,7 @@
             toast.className = `toast ${isError ? 'error' : ''}`;
             toast.textContent = message;
             toastContainer.appendChild(toast);
-
-            setTimeout(() => {
-                toast.classList.add('show');
-            }, 100);
-
+            setTimeout(() => toast.classList.add('show'), 100);
             setTimeout(() => {
                 toast.classList.remove('show');
                 setTimeout(() => toast.remove(), 500);
@@ -893,9 +912,11 @@
 
         // Slider Logic
         const sliders = {
-            'offers-slider': { index: 0, visibleSlides: 1, slideWidth: 100, isCollapsed: false },
-            'treatments-slider': { index: 0, visibleSlides: 3, slideWidth: 33.33, isCollapsed: false },
-            'testimonial-slider': { index: 0, visibleSlides: 3, slideWidth: 33.33, isCollapsed: false }
+            'offers-slider': { index: 0, visibleSlides: 1, slideWidth: 100 },
+            'treatments-slider': { index: 0, visibleSlides: 3, slideWidth: 33.33 },
+            'testimonial-slider': { index: 0, visibleSlides: 3, slideWidth: 33.33 },
+            'before-after-slider': { index: 0, visibleSlides: 1, slideWidth: 100 },
+            'gallery-slider': { index: 0, visibleSlides: 1, slideWidth: 100 }
         };
 
         function updateSlider(sliderId) {
@@ -906,15 +927,10 @@
             const translateX = -state.index * state.slideWidth;
             slider.style.transform = `translateX(${translateX}%)`;
 
-            // Handle testimonial fade and slide animations
             if (sliderId === 'testimonial-slider') {
                 const slides = slider.children;
                 for (let i = 0; i < slides.length; i++) {
-                    if (i >= state.index && i < state.index + state.visibleSlides) {
-                        slides[i].classList.add('visible');
-                    } else {
-                        slides[i].classList.remove('visible');
-                    }
+                    slides[i].classList.toggle('visible', i >= state.index && i < state.index + state.visibleSlides);
                 }
             }
         }
@@ -933,29 +949,13 @@
             updateSlider(sliderId);
         }
 
-        function toggleSlider(sliderId) {
-            const state = sliders[sliderId];
-            const toggleIcon = document.getElementById(`${sliderId}-toggle-icon`);
-            state.isCollapsed = !state.isCollapsed;
-            toggleIcon.className = state.isCollapsed ? 'fas fa-expand-alt' : 'fas fa-compress-alt';
-            const slider = document.getElementById(sliderId);
-            slider.style.height = state.isCollapsed ? '0' : 'auto';
-            slider.style.overflow = state.isCollapsed ? 'hidden' : 'visible';
-        }
-
         // Automatic Sliding for Testimonials
         function autoSlideTestimonials() {
             slideRight('testimonial-slider', 3, 33.33);
         }
 
-        // Start auto-sliding for testimonials every 5 seconds
         let testimonialInterval = setInterval(autoSlideTestimonials, 5000);
-
-        // Pause auto-sliding on hover
-        document.getElementById('testimonial-slider').addEventListener('mouseenter', () => {
-            clearInterval(testimonialInterval);
-        });
-
+        document.getElementById('testimonial-slider').addEventListener('mouseenter', () => clearInterval(testimonialInterval));
         document.getElementById('testimonial-slider').addEventListener('mouseleave', () => {
             testimonialInterval = setInterval(autoSlideTestimonials, 5000);
         });
@@ -964,39 +964,27 @@
         async function loadTreatments() {
             try {
                 const response = await fetch('https://oak-dental.onrender.com/api/services');
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 const treatments = await response.json();
                 const treatmentsSlider = document.getElementById('treatments-slider');
-                treatmentsSlider.innerHTML = '';
-
-                if (treatments.length === 0) {
-                    treatmentsSlider.innerHTML = '<p class="text-center text-gray-600">No treatments available at the moment.</p>';
-                    return;
-                }
-
-                treatments.forEach(treatment => {
-                    const treatmentSlide = document.createElement('div');
-                    treatmentSlide.className = 'treatment-slide';
-                    const mediaUrl = treatment.image || treatment.video || '/placeholder.png';
-                    let mediaHTML = '';
-                    if (treatment.video && !treatment.image) {
-                        mediaHTML = `<video src="${mediaUrl}" controls class="treatment-media" onerror="this.poster='/placeholder.png'"></video>`;
-                    } else {
-                        mediaHTML = `<img src="${mediaUrl}" alt="${treatment.title || 'Treatment Image'}" class="treatment-media" loading="lazy" onerror="this.src='/placeholder.png'">`;
-                    }
-                    treatmentSlide.innerHTML = `
-                        <div class="bg-white p-6 rounded-lg shadow-md text-center">
-                            ${mediaHTML}
-                            <h3 class="text-xl font-semibold text-teal-600 mb-2">${treatment.title || 'Untitled'}</h3>
-                            <p class="text-gray-600 mb-2">${treatment.description || 'No description available'}</p>
-                            <p class="text-gray-800 font-semibold">Price: ₹${treatment.price || 'N/A'}</p>
-                        </div>
-                    `;
-                    treatmentsSlider.appendChild(treatmentSlide);
-                });
-
+                treatmentsSlider.innerHTML = treatments.length === 0
+                    ? '<p class="text-center text-gray-600">No treatments available at the moment.</p>'
+                    : treatments.map(treatment => {
+                        const mediaUrl = treatment.image || treatment.video || '/placeholder.png';
+                        const mediaHTML = treatment.video && !treatment.image
+                            ? `<video src="${mediaUrl}" controls class="treatment-media" onerror="this.poster='/placeholder.png'"></video>`
+                            : `<img src="${mediaUrl}" alt="${treatment.title || 'Treatment Image'}" class="treatment-media" loading="lazy" onerror="this.src='/placeholder.png'">`;
+                        return `
+                            <div class="treatment-slide">
+                                <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                                    ${mediaHTML}
+                                    <h3 class="text-xl font-semibold text-teal-600 mb-2">${treatment.title || 'Untitled'}</h3>
+                                    <p class="text-gray-600 mb-2">${treatment.description || 'No description available'}</p>
+                                    <p class="text-gray-800 font-semibold">Price: ₹${treatment.price || 'N/A'}</p>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
                 updateSlider('treatments-slider');
             } catch (error) {
                 console.error('Error loading treatments:', error);
@@ -1004,37 +992,25 @@
             }
         }
 
-        // Offers Loader (Backend Connected)
+        // Offers Loader
         async function loadOffers() {
             try {
                 const response = await fetch('https://oak-dental.onrender.com/api/offers');
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 const offers = await response.json();
                 const offersSlider = document.getElementById('offers-slider');
-                offersSlider.innerHTML = '';
-
-                if (offers.length === 0) {
-                    offersSlider.innerHTML = '<p class="text-center text-gray-600">No offers available at the moment.</p>';
-                    return;
-                }
-
-                offers.forEach(offer => {
-                    const offerSlide = document.createElement('div');
-                    offerSlide.className = 'offer-slide';
-                    const imageUrl = offer.image || '/placeholder.png';
-                    offerSlide.innerHTML = `
-                        <div class="bg-white p-6 rounded-lg shadow-md text-center">
-                            <img src="${imageUrl}" alt="${offer.title || 'Offer Image'}" class="offer-media" loading="lazy" onerror="this.src='/placeholder.png'">
-                            <h3 class="text-xl font-semibold text-teal-600 mb-2">${offer.title || 'Untitled'}</h3>
-                            <p class="text-gray-600 mb-2">${offer.description || 'No description available'}</p>
-                            <p class="text-gray-800 font-semibold">Price: ₹${offer.price || 'N/A'}</p>
+                offersSlider.innerHTML = offers.length === 0
+                    ? '<p class="text-center text-gray-600">No offers available at the moment.</p>'
+                    : offers.map(offer => `
+                        <div class="offer-slide">
+                            <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                                <img src="${offer.image || '/placeholder.png'}" alt="${offer.title || 'Offer Image'}" class="offer-media" loading="lazy" onerror="this.src='/placeholder.png'">
+                                <h3 class="text-xl font-semibold text-teal-600 mb-2">${offer.title || 'Untitled'}</h3>
+                                <p class="text-gray-600 mb-2">${offer.description || 'No description available'}</p>
+                                <p class="text-gray-800 font-semibold">Price: ₹${offer.price || 'N/A'}</p>
+                            </div>
                         </div>
-                    `;
-                    offersSlider.appendChild(offerSlide);
-                });
-
+                    `).join('');
                 updateSlider('offers-slider');
             } catch (error) {
                 console.error('Error loading offers:', error);
@@ -1057,19 +1033,16 @@
             const full_name = document.getElementById('feedback-full-name').value;
             const email = document.getElementById('feedback-email').value;
             const description = document.getElementById('feedback-description').value;
-
             if (!full_name || !email || !currentRating || !description) {
                 showToast('Please fill in all fields and select a rating.', true);
                 return;
             }
-
             try {
                 const response = await fetch('https://oak-dental.onrender.com/api/feedback', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ full_name, email, rating: currentRating, description })
                 });
-
                 if (response.ok) {
                     loadTestimonials();
                     document.getElementById('feedback-full-name').value = '';
@@ -1091,27 +1064,17 @@
         async function loadTestimonials() {
             try {
                 const response = await fetch('https://oak-dental.onrender.com/api/feedback');
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 const feedbacks = await response.json();
-               
-
-                if (feedbacks.length === 0) {
-                    testimonialSlider.innerHTML = '<p class="text-center text-gray-600">No testimonials available at the moment.</p>';
-                    return;
-                }
-
-                feedbacks.forEach(feedback => {
-                    const slide = document.createElement('div');
-                    slide.className = 'testimonial-slide bg-white p-6 rounded-lg shadow-md';
-                    slide.innerHTML = `
-                        <p class="text-gray-600 mb-4">"${feedback.description}"</p>
-                        <p class="text-teal-600 font-semibold">— ${feedback.full_name}, ${feedback.rating}★</p>
-                    `;
-                    testimonialSlider.appendChild(slide);
-                });
-
+                const testimonialSlider = document.getElementById('testimonial-slider');
+                testimonialSlider.innerHTML = feedbacks.length === 0
+                    ? '<p class="text-center text-gray-600">No testimonials available at the moment.</p>'
+                    : feedbacks.map(feedback => `
+                        <div class="testimonial-slide bg-white p-6 rounded-lg shadow-md">
+                            <p class="text-gray-600 mb-4">"${feedback.description}"</p>
+                            <p class="text-teal-600 font-semibold">— ${feedback.full_name}, ${feedback.rating}★</p>
+                        </div>
+                    `).join('');
                 updateSlider('testimonial-slider');
             } catch (error) {
                 console.error('Error loading testimonials:', error);
@@ -1124,14 +1087,8 @@
         async function fetchLeaveDates() {
             try {
                 const response = await fetch('https://oak-dental.onrender.com/api/leave-dates');
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const rawDates = await response.json();
-                leaveDates = rawDates.map(date => {
-                    const d = new Date(date);
-                    return d.toISOString().split('T')[0];
-                });
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                leaveDates = (await response.json()).map(date => new Date(date).toISOString().split('T')[0]);
                 initializeCalendars();
             } catch (error) {
                 console.error('Error fetching leave dates:', error);
@@ -1150,30 +1107,21 @@
                         document.getElementById('appointment-date').value = '';
                     }
                 },
-                onDayCreate: function(dObj, dStr, fp, dayElem) {
+                onDayCreate: (dObj, dStr, fp, dayElem) => {
                     const dayDate = dayElem.dateObj.toISOString().split('T')[0];
                     if (leaveDates.includes(dayDate)) {
                         dayElem.classList.add('disabled');
-                        dayElem.style.color = '#ff0000';
-                        dayElem.style.fontWeight = 'bold';
-                    } else {
-                        dayElem.style.color = '#000000';
                     }
                 }
             });
-
             flatpickr('#waitlist-date', {
                 dateFormat: 'Y-m-d',
                 minDate: 'today',
                 disable: leaveDates,
-                onDayCreate: function(dObj, dStr, fp, dayElem) {
+                onDayCreate: (dObj, dStr, fp, dayElem) => {
                     const dayDate = dayElem.dateObj.toISOString().split('T')[0];
                     if (leaveDates.includes(dayDate)) {
                         dayElem.classList.add('disabled');
-                        dayElem.style.color = '#ff0000';
-                        dayElem.style.fontWeight = 'bold';
-                    } else {
-                        dayElem.style.color = '#000000';
                     }
                 }
             });
@@ -1192,15 +1140,11 @@
         async function populateTimeSlots() {
             try {
                 const response = await fetch('https://oak-dental.onrender.com/api/time-slots');
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 const timeSlots = await response.json();
                 const timeSlotSelect = document.getElementById('time-slot');
-                timeSlotSelect.innerHTML = '<option value="" disabled selected>Select Time Slot</option>';
-                timeSlots.forEach(slot => {
-                    timeSlotSelect.innerHTML += `<option value="${slot}">${slot}</option>`;
-                });
+                timeSlotSelect.innerHTML = '<option value="" disabled selected>Select Time Slot</option>' +
+                    timeSlots.map(slot => `<option value="${slot}">${slot}</option>`).join('');
             } catch (error) {
                 console.error('Error fetching time slots:', error);
                 showToast('Error loading time slots. Please try again.', true);
@@ -1224,22 +1168,19 @@
                 showToast('Please fill in all fields.', true);
                 return;
             }
-
             if (leaveDates.includes(appointmentData.date)) {
                 showToast(`The doctor is on leave on ${appointmentData.date}. Please select another date, such as ${getNextAvailableDate(appointmentData.date)}.`, true);
                 return;
             }
-
             try {
                 const response = await fetch('https://oak-dental.onrender.com/api/appointments', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(appointmentData)
                 });
-
                 if (response.ok) {
                     const result = await response.json();
-                    showToast(`Appointment booked successfully for ${appointmentData.full_name} on ${appointmentData.date} at ${appointmentData.time}. Confirmation sent to ${appointmentData.email} and ${appointmentData.phone}.`);
+                    showToast(`Appointment booked for ${appointmentData.full_name} on ${appointmentData.date} at ${appointmentData.time}. Confirmation sent to ${appointmentData.email} and ${appointmentData.phone}.`);
                     document.getElementById('full-name').value = '';
                     document.getElementById('email').value = '';
                     document.getElementById('phone').value = '';
@@ -1261,19 +1202,16 @@
                 phone: document.getElementById('waitlist-phone').value,
                 preferredDate: document.getElementById('waitlist-date').value
             };
-
             if (!waitlistData.name || !waitlistData.email || !waitlistData.phone || !waitlistData.preferredDate) {
                 showToast('Please fill in all fields.', true);
                 return;
             }
-
             try {
                 const response = await fetch('https://oak-dental.onrender.com/api/waitlist', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(waitlistData)
                 });
-
                 if (response.ok) {
                     showToast('Successfully joined the waitlist! We will notify you if a slot opens up.');
                     document.getElementById('waitlist-name').value = '';
@@ -1289,20 +1227,16 @@
             }
         }
 
-        // Check Appointment Status
         async function checkAppointmentStatus() {
             const identifier = document.getElementById('status-identifier').value;
             const resultDiv = document.getElementById('status-result');
-
             if (!identifier) {
                 showToast('Please enter your mobile number or email.', true);
                 return;
             }
-
             try {
                 const response = await fetch(`https://oak-dental.onrender.com/api/appointments?identifier=${encodeURIComponent(identifier)}`);
                 const appointment = await response.json();
-
                 resultDiv.classList.remove('hidden');
                 if (response.ok && appointment) {
                     resultDiv.innerHTML = `
