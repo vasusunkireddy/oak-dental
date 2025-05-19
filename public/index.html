@@ -25,6 +25,8 @@
             --magenta: #c026d3;
             --magenta-dark: #86198f;
             --footer-teal: #0f766e;
+            --book-bg: #6b21a8; /* Updated booking section background */
+            --book-bg-dark: #4c1d95;
         }
 
         *, *::before, *::after {
@@ -200,10 +202,17 @@
             text-decoration: none;
             display: inline-block;
             min-width: 120px;
+            margin: 0 8px;
+        }
+        .cta-button.call-now {
+            background: var(--lime);
         }
         .cta-button:hover {
             background: #e11d48;
             transform: scale(1.05);
+        }
+        .cta-button.call-now:hover {
+            background: #65a30d;
         }
         .hero-dots {
             position: absolute;
@@ -229,32 +238,49 @@
             transform: scale(1.3);
         }
 
-        /* Sticky Booking CTA */
+        /* Sticky CTA */
         .sticky-cta {
             position: fixed;
             bottom: 20px;
             right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 40;
+        }
+        .cta-icon {
             background: var(--magenta);
             color: var(--white);
-            padding: 12px 20px;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            text-decoration: none;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            z-index: 40;
             transition: all 0.3s ease;
-            display: none;
         }
-        .sticky-cta:hover {
+        .cta-icon:hover {
             background: var(--magenta-dark);
             transform: scale(1.1);
+        }
+        .cta-icon.whatsapp {
+            background: #25D366;
+        }
+        .cta-icon.whatsapp:hover {
+            background: #1DA851;
+        }
+        .cta-icon.call {
+            background: var(--lime);
+        }
+        .cta-icon.call:hover {
+            background: #65a30d;
         }
 
         /* Scroll-to-Top Button */
         .scroll-top {
             position: fixed;
-            bottom: 80px;
+            bottom: 140px;
             right: 20px;
             background: var(--teal);
             color: var(--white);
@@ -274,27 +300,50 @@
             transform: scale(1.1);
         }
 
-        /* Live Chat Placeholder */
-        .chat-icon {
+        /* Modal */
+        .modal {
+            display: none;
             position: fixed;
-            bottom: 140px;
-            right: 20px;
-            background: var(--lime);
-            color: var(--white);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            z-index: 40;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            z-index: 100;
         }
-        .chat-icon:hover {
-            background: #65a30d;
-            transform: scale(1.1);
+        .modal-content {
+            background: var(--white);
+            padding: 24px;
+            border-radius: 12px;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.3s ease;
+        }
+        .modal-content h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        .modal-content p {
+            font-size: 1rem;
+            color: #374151;
+            margin-bottom: 1.5rem;
+        }
+        .modal-content button {
+            background: var(--secondary);
+            color: var(--white);
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: personally;
+            transition: background 0.3s ease;
+        }
+        .modal-content button:hover {
+            background: #0d9488;
         }
 
         /* Sections */
@@ -342,13 +391,86 @@
             }
         }
 
+        /* Service Cards */
+        .services-slideshow {
+            position: relative;
+            max-width: 1100px;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+        .services-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            justify-content: center;
+        }
+        .service-slide {
+            flex: 1 1 calc(50% - 12px);
+            max-width: calc(50% - 12px);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+            display: flex;
+            align-items: stretch;
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 12px;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
+        }
+        .service-slide.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .service-content {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            width: 100%;
+        }
+        .service-image {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-right: 16px;
+        }
+        .service-text {
+            flex: 1;
+        }
+        .service-text h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--lime);
+            margin-bottom: 0.5rem;
+        }
+        .service-text p {
+            font-size: 0.9rem;
+            color: #374151;
+        }
+        @media (max-width: 768px) {
+            .service-slide {
+                flex: 1 1 100%;
+                max-width: 100%;
+            }
+            .service-image {
+                width: 100px;
+                height: 100px;
+            }
+            .service-text h3 {
+                font-size: 1.1rem;
+            }
+            .service-text p {
+                font-size: 0.85rem;
+            }
+        }
+
         /* Forms */
         .form-input {
             width: 100%;
             padding: 10px;
             border: 1px solid #d1d5db;
             border-radius: 6px;
-            background: #f9fafb;
+            background: #ffffff; /* Fixed for better text visibility */
+            color: #1f2937;
             transition: border-color 0.3s ease;
             font-size: 0.9rem;
         }
@@ -356,6 +478,9 @@
             border-color: var(--secondary);
             outline: none;
             box-shadow: 0 0 6px rgba(20, 184, 166, 0.3);
+        }
+        .form-input::placeholder {
+            color: #9ca3af;
         }
         .form-button {
             background: var(--primary);
@@ -367,9 +492,108 @@
             transition: background 0.3s ease;
             font-size: 0.9rem;
             min-width: 100px;
+            position: relative;
         }
         .form-button:hover {
             background: #1e3a8a;
+        }
+        .form-button.loading::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--white);
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        @keyframes spin {
+            0% { transform: translateY(-50%) rotate(0deg); }
+            100% { transform: translateY(-50%) rotate(360deg); }
+        }
+
+        /* Doctor Section */
+        .doctor-section {
+            background: var(--pale-blue);
+        }
+        .doctor-section h2 {
+            color: var(--navy);
+        }
+        .doctor-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 300px;
+            margin: 2rem auto;
+            padding: 1.5rem;
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .doctor-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
+            border: 2px solid var(--lime);
+        }
+        .doctor-image {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-bottom: 1rem;
+            border: 3px solid var(--secondary);
+            transition: transform 0.3s ease;
+        }
+        .doctor-image:hover {
+            transform: scale(1.1);
+        }
+        .doctor-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--orange);
+            margin: 0 0 0.25rem;
+        }
+        .doctor-card .title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--secondary);
+            margin-bottom: 0.25rem;
+        }
+        .doctor-card .qualifications {
+            font-size: 0.95rem;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+        .doctor-card .experience {
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-style: italic;
+        }
+        @media (max-width: 768px) {
+            .doctor-card {
+                max-width: 250px;
+                padding: 1rem;
+            }
+            .doctor-image {
+                width: 120px;
+                height: 120px;
+            }
+            .doctor-card h3 {
+                font-size: 1.25rem;
+            }
+            .doctor-card .title {
+                font-size: 1rem;
+            }
+            .doctor-card .qualifications {
+                font-size: 0.85rem;
+            }
+            .doctor-card .experience {
+                font-size: 0.8rem;
+            }
         }
 
         /* Testimonial Carousel */
@@ -428,6 +652,12 @@
         #about h2 {
             color: var(--orange);
         }
+        #doctors {
+            background: var(--pale-blue);
+        }
+        #doctors h2 {
+            color: var(--navy);
+        }
         #testimonials {
             background: var(--cyan);
         }
@@ -441,7 +671,7 @@
             color: var(--navy);
         }
         #book {
-            background: linear-gradient(135deg, var(--magenta), var(--magenta-dark));
+            background: linear-gradient(135deg, var(--book-bg), var(--book-bg-dark));
         }
         #book h2 {
             color: var(--white);
@@ -502,8 +732,16 @@
             .form-input, .form-button {
                 font-size: 0.85rem;
             }
-            .sticky-cta, .scroll-top {
-                display: flex;
+            .sticky-cta {
+                bottom: 10px;
+                right: 10px;
+            }
+            .cta-icon {
+                width: 40px;
+                height: 40px;
+            }
+            .scroll-top {
+                bottom: 120px;
             }
         }
         @media (max-width: 480px) {
@@ -523,10 +761,6 @@
             }
             .cta-button {
                 padding: 8px 20px;
-                font-size: 0.85rem;
-            }
-            .sticky-cta {
-                padding: 10px 16px;
                 font-size: 0.85rem;
             }
         }
@@ -549,6 +783,7 @@
                 <a href="#home" class="nav-link active">Home</a>
                 <a href="#services" class="nav-link">Services</a>
                 <a href="#about" class="nav-link">About</a>
+                <a href="#doctors" class="nav-link">Doctors</a>
                 <a href="#testimonials" class="nav-link">Testimonials</a>
                 <a href="#contact" class="nav-link">Contact</a>
                 <a href="#book" class="cta-button">Book Now</a>
@@ -556,8 +791,24 @@
         </div>
     </nav>
 
-    <!-- Sticky Booking CTA -->
-    <a href="#book" class="sticky-cta">Book Now</a>
+    <!-- Sticky CTA -->
+    <div class="sticky-cta">
+        <a href="#book" class="cta-icon" aria-label="Book Appointment">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+            </svg>
+        </a>
+        <a href="https://wa.me/+1234567890" class="cta-icon whatsapp" aria-label="WhatsApp Us">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M16.75 13.96c.25.13.41.2.46.3.06.11.04.61-.21 1.18-.2.56-1.24 1.1-1.7 1.12-.46.02-.47.36-.6.58-.23.4-.82.65-1.22.65-.44 0-.88-.15-1.31-.44-.86-.58-1.6-1.56-2.1-2.48-.26-.46-.48-.95-.66-1.45-.17-.5-.31-1-.44-1.5-.25-.99.03-1.94.77-2.62.38-.34.86-.54 1.36-.54h.47c.31 0 .61.15.78.44.18.3.56.94.91 1.36.18.21.34.44.34.68 0 .24-.16.47-.41.59zm4.52-7.16A9.973 9.973 0 0012 2C6.48 2 2 6.48 2 12c0 1.86.51 3.65 1.47 5.22l-1.41 5.22 5.45-1.41A9.973 9.973 0 0012 22c5.52 0 10-4.48 10-10 0-2.21-.72-4.24-1.93-5.9z"/>
+            </svg>
+        </a>
+        <a href="tel:+1234567890" class="cta-icon call" aria-label="Call Us">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.24 1.02l-2.2 2.2z"/>
+            </svg>
+        </a>
+    </div>
 
     <!-- Scroll-to-Top Button -->
     <div class="scroll-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
@@ -566,11 +817,13 @@
         </svg>
     </div>
 
-    <!-- Live Chat Placeholder -->
-    <div class="chat-icon" onclick="alert('Live chat coming soon!')">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/>
-        </svg>
+    <!-- Modal -->
+    <div class="modal" id="confirmationModal">
+        <div class="modal-content">
+            <h3>Appointment Confirmed</h3>
+            <p id="modalMessage"></p>
+            <button onclick="closeModal()">Close</button>
+        </div>
     </div>
 
     <!-- Hero Section -->
@@ -580,28 +833,40 @@
                 <div class="slide-content">
                     <h2>Shine with OAK Dental</h2>
                     <p>Premier dental care in Hyderabad for a confident smile.</p>
-                    <a href="#book" class="cta-button">Book Now</a>
+                    <div>
+                        <a href="#book" class="cta-button">Book Now</a>
+                        <a href="tel:+1234567890" class="cta-button call-now">Call Now</a>
+                    </div>
                 </div>
             </div>
             <div class="hero-slide">
                 <div class="slide-content">
                     <h2>Trusted Since 2010</h2>
                     <p>Expert care with advanced technology for all your dental needs.</p>
-                    <a href="#about" class="cta-button">Learn More</a>
+                    <div>
+                        <a href="#about" class="cta-button">Learn More</a>
+                        <a href="tel:+1234567890" class="cta-button call-now">Call Now</a>
+                    </div>
                 </div>
             </div>
             <div class="hero-slide">
                 <div class="slide-content">
                     <h2>Painless Root Canals</h2>
                     <p>Quick, comfortable treatments to save your teeth.</p>
-                    <a href="#services" class="cta-button">Explore Services</a>
+                    <div>
+                        <a href="#services" class="cta-button">Explore Services</a>
+                        <a href="tel:+1234567890" class="cta-button call-now">Call Now</a>
+                    </div>
                 </div>
             </div>
             <div class="hero-slide">
                 <div class="slide-content">
                     <h2>Stunning Smile Design</h2>
                     <p>Transform your smile with veneers and aligners.</p>
-                    <a href="#services" class="cta-button">Discover More</a>
+                    <div>
+                        <a href="#services" class="cta-button">Discover More</a>
+                        <a href="tel:+1234567890" class="cta-button call-now">Call Now</a>
+                    </div>
                 </div>
             </div>
             <div class="hero-dots">
@@ -618,22 +883,9 @@
         <div class="max-w-7xl mx-auto px-4">
             <h2>Our Services</h2>
             <p class="subtitle">Comprehensive dental care for all your needs.</p>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="card">
-                    <h3 class="text-lg font-semibold mb-2 text-gray-800">General Dentistry</h3>
-                    <p class="text-gray-600">Check-ups, cleanings, and fillings for oral health.</p>
-                </div>
-                <div class="card">
-                    <h3 class="text-lg font-semibold mb-2 text-gray-800">Root Canal</h3>
-                    <p class="text-gray-600">Painless treatments to save damaged teeth.</p>
-                </div>
-                <div class="card">
-                    <h3 class="text-lg font-semibold mb-2 text-gray-800">Smile Designing</h3>
-                    <p class="text-gray-600">Custom veneers and whitening for a perfect smile.</p>
-                </div>
-                <div class="card">
-                    <h3 class="text-lg font-semibold mb-2 text-gray-800">Orthodontics</h3>
-                    <p class="text-gray-600">Braces and aligners for perfect alignment.</p>
+            <div class="services-slideshow" id="servicesSlideshow">
+                <div class="services-container">
+                    <!-- Service cards will be populated dynamically -->
                 </div>
             </div>
             <div class="before-after mt-8">
@@ -651,43 +903,51 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                 <div class="card">
                     <h3 class="text-lg font-semibold mb-2 text-orange">Our History</h3>
-                    <p class="text-gray-600 mb-4">Established in 2010, OAK Dental Clinic has become a cornerstone of dental care in Hyderabad. From our humble beginnings, we’ve grown into a state-of-the-art facility, upgrading our equipment in 2018 and expanding our team to serve over 5,000 patients. We’ve also launched community outreach programs to promote oral health across Telangana.</p>
+                    <p class="text-gray-600 mb-4">Established in 2010, OAK Dental Clinic has become a cornerstone of dental care in Hyderabad. From our humble beginnings, we’ve grown into a state-of-the-art facility, upgrading our equipment in 2018 and expanding our team to serve over 5,000 patients.</p>
                 </div>
                 <div class="card">
                     <h3 class="text-lg font-semibold mb-2 text-orange">Our Mission & Vision</h3>
-                    <p class="text-gray-600 mb-4"><strong>Mission:</strong> To provide world-class dental care that’s affordable and personalized, using advanced technology to enhance patient outcomes.<br><strong>Vision:</strong> To be Hyderabad’s most trusted dental clinic, transforming smiles and lives through innovation and compassion.</p>
-                </div>
-                <div class="card">
-                    <h3 class="text-lg font-semibold mb-2 text-orange">Our Team</h3>
-                    <p class="text-gray-600 mb-2"><strong>Dr. Priya Sharma, MDS</strong> - Lead Dentist, 15+ years in orthodontics and implants.</p>
-                    <p class="text-gray-600 mb-2"><strong>Dr. Anil Reddy, BDS</strong> - Expert in root canals and cosmetic dentistry.</p>
-                    <p class="text-gray-600 mb-2"><strong>Dr. Neha Gupta, DDS</strong> - Specialist in pediatric dentistry.</p>
-                    <p class="text-gray-600">Our 15+ member team, including hygienists and support staff, ensures top-tier care.</p>
+                    <p class="text-gray-600 mb-4"><strong>Mission:</strong> To provide world-class dental care that’s affordable and personalized.<br><strong>Vision:</strong> To be Hyderabad’s most trusted dental clinic, transforming smiles and lives.</p>
                 </div>
                 <div class="card">
                     <h3 class="text-lg font-semibold mb-2 text-orange">Certifications & Achievements</h3>
-                    <p class="text-gray-600 mb-2">• ISO 9001:2015 Certified for quality management.</p>
+                    <p class="text-gray-600 mb-2">• ISO 9001:2015 Certified.</p>
                     <p class="text-gray-600 mb-2">• Dental Council of India registered.</p>
-                    <p class="text-gray-600 mb-2">• Awarded "Best Dental Clinic" by Health Excellence Awards 2023 & 2024.</p>
-                    <p class="text-gray-600">• 98% patient satisfaction rate across 10,000+ procedures.</p>
-                </div>
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                <div class="text-center">
-                    <p class="text-3xl font-bold text-orange">5,000+</p>
-                    <p class="text-gray-600">Patients Served</p>
-                </div>
-                <div class="text-center">
-                    <p class="text-3xl font-bold text-orange">15+</p>
-                    <p class="text-gray-600">Years of Excellence</p>
-                </div>
-                <div class="text-center">
-                    <p class="text-3xl font-bold text-orange">10,000+</p>
-                    <p class="text-gray-600">Procedures Performed</p>
+                    <p class="text-gray-600 mb-2">• Awarded "Best Dental Clinic" 2023 & 2024.</p>
+                    <p class="text-gray-600">• 98% patient satisfaction rate.</p>
                 </div>
             </div>
             <div class="text-center mt-6">
                 <a href="about-details.html" class="text-secondary font-semibold hover:underline text-base">Know More</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Doctors Section -->
+    <section id="doctors" class="doctor-section">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2>Our Doctors</h2>
+            <p class="subtitle">Meet our expert dental professionals.</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                <div class="doctor-card">
+                    <a href="doctor-details.html" aria-label="Learn more about Dr. A. Ram Koti Reddy">
+                        <img src="https://imagizer.imageshack.com/img922/7886/tTvXQn.jpg" alt="Dr. A. Ram Koti Reddy" class="doctor-image">
+                    </a>
+                    <h3>Dr. A. Ram Koti Reddy</h3>
+                    <p class="title">Lead Orthodontist & Implantologist</p>
+                    <p class="qualifications">MDS (Orthodontics), BDS</p>
+                    <p class="experience">Over 15 years of expertise</p>
+                </div>
+                <!-- Add more doctors as needed -->
+                <div class="doctor-card">
+                    <a href="doctor-details.html" aria-label="Learn more about Dr. Priya Sharma">
+                        <img src="https://via.placeholder.com/150?text=Dr.+Priya" alt="Dr. Priya Sharma" class="doctor-image">
+                    </a>
+                    <h3>Dr. Priya Sharma</h3>
+                    <p class="title">Cosmetic Dentist</p>
+                    <p class="qualifications">BDS, Diploma in Cosmetic Dentistry</p>
+                    <p class="experience">10 years of expertise</p>
+                </div>
             </div>
         </div>
     </section>
@@ -743,15 +1003,15 @@
                 <form id="contact-form" class="card">
                     <div class="mb-4">
                         <label for="contact-name" class="block text-gray-700 mb-1">Name</label>
-                        <input type="text" id="contact-name" class="form-input" required>
+                        <input type="text" id="contact-name" class="form-input" required aria-label="Your name">
                     </div>
                     <div class="mb-4">
                         <label for="contact-email" class="block text-gray-700 mb-1">Email</label>
-                        <input type="email" id="contact-email" class="form-input" required>
+                        <input type="email" id="contact-email" class="form-input" required aria-label="Your email">
                     </div>
                     <div class="mb-4">
                         <label for="contact-message" class="block text-gray-700 mb-1">Message</label>
-                        <textarea id="contact-message" class="form-input" rows="4" required></textarea>
+                        <textarea id="contact-message" class="form-input" rows="4" required aria-label="Your message"></textarea>
                     </div>
                     <button type="submit" class="form-button">Send</button>
                 </form>
@@ -770,23 +1030,23 @@
                     <form id="booking-form" class="card">
                         <div class="mb-4">
                             <label for="name" class="block text-gray-700 mb-1">Name</label>
-                            <input type="text" id="name" class="form-input" required>
+                            <input type="text" id="name" class="form-input" required aria-label="Your name">
                         </div>
                         <div class="mb-4">
                             <label for="email" class="block text-gray-700 mb-1">Email</label>
-                            <input type="email" id="email" class="form-input" required>
+                            <input type="email" id="email" class="form-input" required aria-label="Your email">
                         </div>
                         <div class="mb-4">
                             <label for="mobile" class="block text-gray-700 mb-1">Mobile</label>
-                            <input type="tel" id="mobile" class="form-input" pattern="[0-9]{10}" required>
+                            <input type="tel" id="mobile" class="form-input" pattern="[0-9]{10}" required aria-label="Your mobile number">
                         </div>
                         <div class="mb-4">
                             <label for="date" class="block text-gray-700 mb-1">Date</label>
-                            <input type="date" id="date" class="form-input" min="2025-05-20" required>
+                            <input type="date" id="date" class="form-input" min="2025-05-20" required aria-label="Appointment date">
                         </div>
                         <div class="mb-4">
                             <label for="captcha" class="block text-gray-700 mb-1">CAPTCHA: <span id="captcha-question"></span></label>
-                            <input type="text" id="captcha" class="form-input" required>
+                            <input type="text" id="captcha" class="form-input" required aria-label="CAPTCHA input">
                         </div>
                         <button type="submit" class="form-button">Book</button>
                     </form>
@@ -796,11 +1056,11 @@
                     <form id="status-form" class="card">
                         <div class="mb-4">
                             <label for="status-email" class="block text-gray-700 mb-1">Email</label>
-                            <input type="email" id="status-email" class="form-input" required>
+                            <input type="email" id="status-email" class="form-input" required aria-label="Your email for status check">
                         </div>
                         <div class="mb-4">
                             <label for="status-id" class="block text-gray-700 mb-1">Appointment ID</label>
-                            <input type="text" id="status-id" class="form-input" required>
+                            <input type="text" id="status-id" class="form-input" required aria-label="Appointment ID">
                         </div>
                         <button type="submit" class="form-button">Check Status</button>
                     </form>
@@ -826,7 +1086,7 @@
                 <h3 class="text-lg font-semibold mb-2">Subscribe to Our Newsletter</h3>
                 <form id="newsletter-form">
                     <div class="flex gap-2">
-                        <input type="email" id="newsletter-email" class="form-input" placeholder="Enter your email" required>
+                        <input type="email" id="newsletter-email" class="form-input" placeholder="Enter your email" required aria-label="Newsletter email">
                         <button type="submit" class="form-button">Subscribe</button>
                     </div>
                 </form>
@@ -837,6 +1097,16 @@
 
     <!-- Scripts -->
     <script>
+        // Backend API Endpoints
+        const API_BASE_URL = 'https://api.oakdental.com/v1';
+        const ENDPOINTS = {
+            services: `${API_BASE_URL}/services`,
+            bookAppointment: `${API_BASE_URL}/appointments/book`,
+            checkStatus: `${API_BASE_URL}/appointments/status`,
+            contact: `${API_BASE_URL}/contact`,
+            newsletter: `${API_BASE_URL}/newsletter/subscribe`
+        };
+
         // Hamburger Menu
         const hamburger = document.getElementById('hamburger');
         const navMenu = document.getElementById('navMenu');
@@ -876,17 +1146,14 @@
         let currentSlide = 0;
 
         function showSlide(index) {
-            // Reset all slides
             slides.forEach(slide => {
                 slide.classList.remove('active', 'exiting');
                 slide.style.opacity = '0';
                 slide.style.transform = 'translateX(100%)';
             });
-            // Set active slide
             slides[index].classList.add('active');
             slides[index].style.opacity = '1';
             slides[index].style.transform = 'translateX(0)';
-            // Update dots
             dots.forEach((dot, i) => dot.classList.toggle('active', i === index));
             currentSlide = index;
         }
@@ -897,11 +1164,9 @@
             setTimeout(() => showSlide(nextIndex), 700);
         }
 
-        // Initialize first slide
         showSlide(0);
         let slideInterval = setInterval(nextSlide, 5000);
 
-        // Dot navigation
         dots.forEach((dot, i) => {
             dot.addEventListener('click', () => {
                 if (i !== currentSlide) {
@@ -914,6 +1179,65 @@
                 }
             });
         });
+
+        // Services Section (Dynamic)
+        const servicesContainer = document.getElementById('servicesSlideshow').querySelector('.services-container');
+        const servicesData = [
+            {
+                title: "General Dentistry",
+                description: "Check-ups, cleanings, and fillings for oral health.",
+                image: "https://via.placeholder.com/120?text=General+Dentistry"
+            },
+            {
+                title: "Root Canal",
+                description: "Painless treatments to save damaged teeth.",
+                image: "https://via.placeholder.com/120?text=Root+Canal"
+            },
+            {
+                title: "Smile Designing",
+                description: "Custom veneers and whitening for a perfect smile.",
+                image: "https://via.placeholder.com/120?text=Smile+Designing"
+            },
+            {
+                title: "Orthodontics",
+                description: "Braces and aligners for perfect alignment.",
+                image: "https://via.placeholder.com/120?text=Orthodontics"
+            }
+        ];
+
+        async function fetchServices() {
+            try {
+                const response = await fetch(ENDPOINTS.services);
+                if (!response.ok) throw new Error('Network error');
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('Error fetching services:', error);
+                return servicesData; // Fallback to static data
+            }
+        }
+
+        async function displayServices() {
+            const services = await fetchServices();
+            servicesContainer.innerHTML = '';
+            services.forEach((service, index) => {
+                const serviceSlide = document.createElement('div');
+                serviceSlide.classList.add('service-slide');
+                serviceSlide.innerHTML = `
+                    <div class="service-content">
+                        <img src="${service.image}" alt="${service.title}" class="service-image">
+                        <div class="service-text">
+                            <h3>${service.title}</h3>
+                            <p>${service.description}</p>
+                        </div>
+                    </div>
+                `;
+                servicesContainer.appendChild(serviceSlide);
+                setTimeout(() => serviceSlide.classList.add('visible'), 100 * index);
+            });
+        }
+
+        displayServices();
 
         // Testimonial Carousel
         const testimonialSlides = document.querySelectorAll('.testimonial-slide');
@@ -969,8 +1293,42 @@
         }
         let captchaAnswer = generateCaptcha();
 
+        // Modal Functions
+        function showModal(message) {
+            document.getElementById('modalMessage').textContent = message;
+            document.getElementById('confirmationModal').style.display = 'flex';
+        }
+        function closeModal() {
+            document.getElementById('confirmationModal').style.display = 'none';
+        }
+
+        // Form Submission with Backend
+        async function submitForm(formId, endpoint, successMessage, data) {
+            const form = document.getElementById(formId);
+            const submitButton = form.querySelector('.form-button');
+            submitButton.classList.add('loading');
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                if (!response.ok) throw new Error('Network error');
+                const result = await response.json();
+                showModal(successMessage);
+                form.reset();
+                if (formId === 'booking-form') captchaAnswer = generateCaptcha();
+                return result;
+            } catch (error) {
+                console.error(`Error submitting ${formId}:`, error);
+                alert('An error occurred. Please try again.');
+            } finally {
+                submitButton.classList.remove('loading');
+            }
+        }
+
         // Booking Form
-        document.getElementById('booking-form').addEventListener('submit', (e) => {
+        document.getElementById('booking-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const captchaInput = document.getElementById('captcha').value.toUpperCase();
             if (captchaInput !== captchaAnswer) {
@@ -979,30 +1337,43 @@
                 captchaAnswer = generateCaptcha();
                 return;
             }
-            alert('Appointment booked successfully!');
-            e.target.reset();
-            captchaAnswer = generateCaptcha();
+            const data = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                mobile: document.getElementById('mobile').value,
+                date: document.getElementById('date').value
+            };
+            const result = await submitForm('booking-form', ENDPOINTS.bookAppointment, `Appointment booked! Your ID is ${result.appointmentId || 'N/A'}.`, data);
         });
 
         // Status Form
-        document.getElementById('status-form').addEventListener('submit', (e) => {
+        document.getElementById('status-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            alert('Appointment status: Confirmed (Placeholder)');
-            e.target.reset();
+            const data = {
+                email: document.getElementById('status-email').value,
+                appointmentId: document.getElementById('status-id').value
+            };
+            await submitForm('status-form', ENDPOINTS.checkStatus, `Appointment status: ${result.status || 'Confirmed'}`, data);
         });
 
         // Contact Form
-        document.getElementById('contact-form').addEventListener('submit', (e) => {
+        document.getElementById('contact-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            alert('Message sent successfully!');
-            e.target.reset();
+            const data = {
+                name: document.getElementById('contact-name').value,
+                email: document.getElementById('contact-email').value,
+                message: document.getElementById('contact-message').value
+            };
+            await submitForm('contact-form', ENDPOINTS.contact, 'Message sent successfully!', data);
         });
 
         // Newsletter Form
-        document.getElementById('newsletter-form').addEventListener('submit', (e) => {
+        document.getElementById('newsletter-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            alert('Subscribed successfully!');
-            e.target.reset();
+            const data = {
+                email: document.getElementById('newsletter-email').value
+            };
+            await submitForm('newsletter-form', ENDPOINTS.newsletter, 'Subscribed successfully!', data);
         });
     </script>
 </body>
