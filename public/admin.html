@@ -419,7 +419,6 @@
                 <a href="#feedback" onclick="showSection('feedback')" class="flex items-center"><i class="fas fa-comment mr-2"></i> Feedback</a>
                 <a href="#services" onclick="showSection('services')" class="flex items-center"><i class="fas fa-tooth mr-2"></i> Services</a>
                 <a href="#offers" onclick="showSection('offers')" class="flex items-center"><i class="fas fa-tag mr-2"></i> Offers</a>
-                <a href="#leave-dates" onclick="showSection('leave-dates')" class="flex items-center"><i class="fas fa-calendar-times mr-2"></i> Leave Dates</a>
                 <a href="#time-slots" onclick="showSection('time-slots')" class="flex items-center"><i class="fas fa-clock mr-2"></i> Time Slots</a>
                 <a href="#newsletter" onclick="showSection('newsletter')" class="flex items-center"><i class="fas fa-envelope mr-2"></i> Newsletter</a>
                 <a href="#messages" onclick="showSection('messages')" class="flex items-center"><i class="fas fa-inbox mr-2"></i> Messages</a>
@@ -557,27 +556,6 @@
                 </div>
             </div>
 
-            <!-- Leave Dates Section -->
-            <div id="leave-dates" class="section hidden animate-fade-in">
-                <h2 class="text-xl font-semibold text-teal-600 mb-5">Leave Dates</h2>
-                <div class="form-container mb-5 bg-white p-5 rounded-lg shadow-sm">
-                    <h3 class="text-lg font-medium text-teal-600 mb-4">Add Leave Date</h3>
-                    <input type="date" id="leave-date" class="form-input mb-4" aria-label="Leave Date">
-                    <button onclick="addLeaveDate()" class="w-full bg-teal-600 text-white p-3 rounded-lg hover:bg-teal-700 shadow-sm">Add Leave Date</button>
-                </div>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="leave-dates-table"></tbody>
-                    </table>
-                </div>
-            </div>
-
             <!-- Time Slots Section -->
             <div id="time-slots" class="section hidden animate-fade-in">
                 <h2 class="text-xl font-semibold text-teal-600 mb-5">Time Slots</h2>
@@ -684,7 +662,6 @@
             loadFeedback();
             loadServices();
             loadOffers();
-            loadLeaveDates();
             loadTimeSlots();
             loadNewsletterSubscribers();
             loadMessages();
@@ -905,13 +882,33 @@
                 options.headers['Content-Type'] = 'application/json';
             }
             options.headers['Authorization'] = `Bearer ${token}`;
-            const response = await fetch(url, options);
-            if (response.status === 401) {
-                showToast('Session expired. Please log in again.', 'error');
-                logout();
-                throw new Error('Unauthorized');
+            
+            // Add timeout to prevent hanging requests
+            const controller = new AbortController();
+            options.signal = controller.signal;
+            const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+
+            try {
+                const response = await fetch(url, options);
+                clearTimeout(timeoutId);
+                if (response.status === 401) {
+                    showToast('Session expired. Please log in again.', 'error');
+                    logout();
+                    throw new Error('Unauthorized');
+                }
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.error || `HTTP error! Status: ${response.status}`);
+                }
+                return response;
+            } catch (error) {
+                clearTimeout(timeoutId);
+                if (error.name === 'AbortError') {
+                    showToast('Request timed out', 'error');
+                    throw new Error('Request timed out');
+                }
+                throw error;
             }
-            return response;
         }
 
         async function uploadFile(file) {
@@ -923,14 +920,11 @@
                     method: 'POST',
                     body: formData
                 });
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.error || 'Upload failed');
-                }
                 const data = await response.json();
                 return data.url;
             } catch (error) {
                 console.error('Error uploading media:', error);
+                showToast(`Failed to upload media: ${error.message}`, 'error');
                 throw error;
             }
         }
@@ -939,6 +933,12 @@
             try {
                 const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/appointments`);
                 const appointments = await response.json();
+                console.log('Appointments response:', appointments); // Debug log
+                if (!Array.isArray(appointments)) {
+                    console.error('Expected an array, received:', appointments);
+                    showToast('Invalid appointments data', 'error');
+                    return;
+                }
                 const table = document.getElementById('appointments-table');
                 table.innerHTML = '';
                 appointments.sort((a, b) => new Date(a.date + ' ' + a.time) - new Date(b.date + ' ' + b.time));
@@ -983,13 +983,9 @@
                     method: 'POST',
                     body: JSON.stringify({ ids: selectedIds })
                 });
-                if (response.ok) {
-                    showToast('Selected appointments cleared');
-                    loadAppointments();
-                    document.getElementById('select-all-appointments').checked = false;
-                } else {
-                    showToast('Error clearing appointments', 'error');
-                }
+                showToast('Selected appointments cleared');
+                loadAppointments();
+                document.getElementById('select-all-appointments').checked = false;
             } catch (error) {
                 console.error('Error clearing appointments:', error);
                 showToast('Failed to clear appointments', 'error');
@@ -999,13 +995,8 @@
         async function confirmAppointment(id) {
             try {
                 const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/appointments/${id}/approve`, { method: 'POST' });
-                if (response.ok) {
-                    showToast('Appointment confirmed');
-                    loadAppointments();
-                } else {
-                    const errorData = await response.json();
-                    showToast(errorData.error || 'Error confirming appointment', 'error');
-                }
+                showToast('Appointment confirmed');
+                loadAppointments();
             } catch (error) {
                 console.error('Error confirming appointment:', error);
                 showToast('Failed to confirm appointment', 'error');
@@ -1023,13 +1014,8 @@
                     method: 'POST',
                     body: JSON.stringify({ reason })
                 });
-                if (response.ok) {
-                    showToast('Appointment cancelled');
-                    loadAppointments();
-                } else {
-                    const errorData = await response.json();
-                    showToast(errorData.error || 'Error cancelling appointment', 'error');
-                }
+                showToast('Appointment cancelled');
+                loadAppointments();
             } catch (error) {
                 console.error('Error cancelling appointment:', error);
                 showToast('Failed to cancel appointment', 'error');
@@ -1040,12 +1026,8 @@
             if (!confirm('Clear appointments older than 30 days?')) return;
             try {
                 const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/appointments/clear-old`, { method: 'DELETE' });
-                if (response.ok) {
-                    showToast('Old appointments cleared');
-                    loadAppointments();
-                } else {
-                    showToast('Error clearing appointments', 'error');
-                }
+                showToast('Old appointments cleared');
+                loadAppointments();
             } catch (error) {
                 console.error('Error clearing appointments:', error);
                 showToast('Failed to clear appointments', 'error');
@@ -1056,6 +1038,12 @@
             try {
                 const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/waitlist`);
                 const waitlist = await response.json();
+                console.log('Waitlist response:', waitlist); // Debug log
+                if (!Array.isArray(waitlist)) {
+                    console.error('Expected an array, received:', waitlist);
+                    showToast('Invalid waitlist data', 'error');
+                    return;
+                }
                 const table = document.getElementById('waitlist-table');
                 table.innerHTML = '';
                 waitlist.forEach(entry => {
@@ -1084,14 +1072,9 @@
         async function acceptWaitlist(id) {
             try {
                 const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/waitlist/${id}/accept`, { method: 'POST' });
-                if (response.ok) {
-                    showToast('Waitlist entry accepted');
-                    loadWaitlist();
-                    loadAppointments();
-                } else {
-                    const errorData = await response.json();
-                    showToast(errorData.error || 'Error accepting waitlist entry', 'error');
-                }
+                showToast('Waitlist entry accepted');
+                loadWaitlist();
+                loadAppointments();
             } catch (error) {
                 console.error('Error accepting waitlist entry:', error);
                 showToast('Failed to accept waitlist entry', 'error');
@@ -1102,12 +1085,8 @@
             if (!confirm('Delete this waitlist entry?')) return;
             try {
                 const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/waitlist/${id}`, { method: 'DELETE' });
-                if (response.ok) {
-                    showToast('Waitlist entry deleted');
-                    loadWaitlist();
-                } else {
-                    showToast('Error deleting waitlist entry', 'error');
-                }
+                showToast('Waitlist entry deleted');
+                loadWaitlist();
             } catch (error) {
                 console.error('Error deleting waitlist entry:', error);
                 showToast('Failed to delete waitlist entry', 'error');
@@ -1118,6 +1097,12 @@
             try {
                 const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/feedback`);
                 const feedbacks = await response.json();
+                console.log('Feedback response:', feedbacks); // Debug log
+                if (!Array.isArray(feedbacks)) {
+                    console.error('Expected an array, received:', feedbacks);
+                    showToast('Invalid feedback data', 'error');
+                    return;
+                }
                 const table = document.getElementById('feedback-table');
                 table.innerHTML = '';
                 feedbacks.forEach(fb => {
@@ -1142,12 +1127,8 @@
             if (!confirm('Delete this feedback?')) return;
             try {
                 const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/feedback/${id}`, { method: 'DELETE' });
-                if (response.ok) {
-                    showToast('Feedback deleted');
-                    loadFeedback();
-                } else {
-                    showToast('Error deleting feedback', 'error');
-                }
+                showToast('Feedback deleted');
+                loadFeedback();
             } catch (error) {
                 console.error('Error deleting feedback:', error);
                 showToast('Failed to delete feedback', 'error');
@@ -1158,6 +1139,12 @@
             try {
                 const response = await fetchWithAuth(`${API_BASE_URL}/api/services`);
                 const services = await response.json();
+                console.log('Services response:', services); // Debug log
+                if (!Array.isArray(services)) {
+                    console.error('Expected an array, received:', services);
+                    showToast('Invalid services data', 'error');
+                    return;
+                }
                 const table = document.getElementById('services-table');
                 table.innerHTML = '';
                 services.forEach(svc => {
@@ -1208,20 +1195,15 @@
                     method: 'POST',
                     body: JSON.stringify(serviceData)
                 });
-                if (response.ok) {
-                    showToast('Service added');
-                    document.getElementById('service-title').value = '';
-                    document.getElementById('service-description').value = '';
-                    document.getElementById('service-price').value = '';
-                    document.getElementById('service-image-file').value = '';
-                    document.getElementById('service-image-url').value = '';
-                    document.getElementById('service-video-file').value = '';
-                    document.getElementById('service-video-url').value = '';
-                    loadServices();
-                } else {
-                    const errorData = await response.json();
-                    showToast(errorData.error || 'Error adding service', 'error');
-                }
+                showToast('Service added');
+                document.getElementById('service-title').value = '';
+                document.getElementById('service-description').value = '';
+                document.getElementById('service-price').value = '';
+                document.getElementById('service-image-file').value = '';
+                document.getElementById('service-image-url').value = '';
+                document.getElementById('service-video-file').value = '';
+                document.getElementById('service-video-url').value = '';
+                loadServices();
             } catch (error) {
                 console.error('Error adding service:', error);
                 showToast(`Failed to add service: ${error.message}`, 'error');
@@ -1279,14 +1261,9 @@
                     method: 'PUT',
                     body: JSON.stringify(serviceData)
                 });
-                if (response.ok) {
-                    showToast('Service updated');
-                    closeEditServiceModal();
-                    loadServices();
-                } else {
-                    const errorData = await response.json();
-                    showToast(errorData.error || 'Error updating service', 'error');
-                }
+                showToast('Service updated');
+                closeEditServiceModal();
+                loadServices();
             } catch (error) {
                 console.error('Error updating service:', error);
                 showToast('Failed to update service', 'error');
@@ -1297,13 +1274,8 @@
             if (!confirm('Delete this service?')) return;
             try {
                 const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/services/${id}`, { method: 'DELETE' });
-                if (response.ok) {
-                    showToast('Service deleted');
-                    loadServices();
-                } else {
-                    const errorData = await response.json();
-                    showToast(errorData.error || 'Error deleting service', 'error');
-                }
+                showToast('Service deleted');
+                loadServices();
             } catch (error) {
                 console.error('Error deleting service:', error);
                 showToast('Failed to delete service', 'error');
@@ -1314,6 +1286,12 @@
             try {
                 const response = await fetchWithAuth(`${API_BASE_URL}/api/offers`);
                 const offers = await response.json();
+                console.log('Offers response:', offers); // Debug log
+                if (!Array.isArray(offers)) {
+                    console.error('Expected an array, received:', offers);
+                    showToast('Invalid offers data', 'error');
+                    return;
+                }
                 const table = document.getElementById('offers-table');
                 table.innerHTML = '';
                 offers.forEach(offer => {
@@ -1364,17 +1342,12 @@
                     method: 'POST',
                     body: JSON.stringify(offerData)
                 });
-                if (response.ok) {
-                    showToast('Offer added');
-                    document.getElementById('offer-title').value = '';
-                    document.getElementById('offer-description').value = '';
-                    document.getElementById('offer-price').value = '';
-                    document.getElementById('offer-image-file').value = '';
-                    loadOffers();
-                } else {
-                    const errorData = await response.json();
-                    showToast(errorData.error || 'Error adding offer', 'error');
-                }
+                showToast('Offer added');
+                document.getElementById('offer-title').value = '';
+                document.getElementById('offer-description').value = '';
+                document.getElementById('offer-price').value = '';
+                document.getElementById('offer-image-file').value = '';
+                loadOffers();
             } catch (error) {
                 console.error('Error adding offer:', error);
                 showToast(`Failed to add offer: ${error.message}`, 'error');
@@ -1425,14 +1398,9 @@
                     method: 'PUT',
                     body: JSON.stringify(offerData)
                 });
-                if (response.ok) {
-                    showToast('Offer updated');
-                    closeEditOfferModal();
-                    loadOffers();
-                } else {
-                    const errorData = await response.json();
-                    showToast(errorData.error || 'Error updating offer', 'error');
-                }
+                showToast('Offer updated');
+                closeEditOfferModal();
+                loadOffers();
             } catch (error) {
                 console.error('Error updating offer:', error);
                 showToast('Failed to update offer', 'error');
@@ -1443,80 +1411,11 @@
             if (!confirm('Delete this offer?')) return;
             try {
                 const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/offers/${id}`, { method: 'DELETE' });
-                if (response.ok) {
-                    showToast('Offer deleted');
-                    loadOffers();
-                } else {
-                    const errorData = await response.json();
-                    showToast(errorData.error || 'Error deleting offer', 'error');
-                }
+                showToast('Offer deleted');
+                loadOffers();
             } catch (error) {
                 console.error('Error deleting offer:', error);
                 showToast('Failed to delete offer', 'error');
-            }
-        }
-
-        async function loadLeaveDates() {
-            try {
-                const response = await fetchWithAuth(`${API_BASE_URL}/api/leave-dates`);
-                const leaveDates = await response.json();
-                const table = document.getElementById('leave-dates-table');
-                table.innerHTML = '';
-                leaveDates.forEach(date => {
-                    table.innerHTML += `
-                        <tr>
-                            <td>${date}</td>
-                            <td>
-                                <button onclick="deleteLeaveDate('${date}')" class="bg-red-600 text-white action-btn hover:bg-red-700">Delete</button>
-                            </td>
-                        </tr>
-                    `;
-                });
-            } catch (error) {
-                console.error('Error loading leave dates:', error);
-                showToast('Failed to load leave dates', 'error');
-            }
-        }
-
-        async function addLeaveDate() {
-            const date = document.getElementById('leave-date').value;
-            if (!date) {
-                showToast('Please select a date.', 'error');
-                return;
-            }
-            try {
-                const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/leave-dates`, {
-                    method: 'POST',
-                    body: JSON.stringify({ date })
-                });
-                if (response.ok) {
-                    showToast('Leave date added');
-                    document.getElementById('leave-date').value = '';
-                    loadLeaveDates();
-                } else {
-                    const errorData = await response.json();
-                    showToast(errorData.error || 'Error adding leave date', 'error');
-                }
-            } catch (error) {
-                console.error('Error adding leave date:', error);
-                showToast('Failed to add leave date', 'error');
-            }
-        }
-
-        async function deleteLeaveDate(date) {
-            if (!confirm('Remove this leave date?')) return;
-            try {
-                const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/leave-dates/${date}`, { method: 'DELETE' });
-                if (response.ok) {
-                    showToast('Leave date removed');
-                    loadLeaveDates();
-                } else {
-                    const errorData = await response.json();
-                    showToast(errorData.error || 'Error removing leave date', 'error');
-                }
-            } catch (error) {
-                console.error('Error removing leave date:', error);
-                showToast('Failed to remove leave date', 'error');
             }
         }
 
@@ -1524,6 +1423,12 @@
             try {
                 const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/time-slots`);
                 const timeSlots = await response.json();
+                console.log('Time slots response:', timeSlots); // Debug log
+                if (!Array.isArray(timeSlots)) {
+                    console.error('Expected an array, received:', timeSlots);
+                    showToast('Invalid time slots data', 'error');
+                    return;
+                }
                 const table = document.getElementById('time-slots-table');
                 table.innerHTML = '';
                 timeSlots.sort((a, b) => {
@@ -1560,15 +1465,10 @@
                     method: 'POST',
                     body: JSON.stringify({ time: timeSlot })
                 });
-                if (response.ok) {
-                    showToast('Time slot added');
-                    document.getElementById('time-slot').value = '';
-                    document.getElementById('time-slot-period').value = 'AM';
-                    loadTimeSlots();
-                } else {
-                    const errorData = await response.json();
-                    showToast(errorData.error || 'Error adding time slot', 'error');
-                }
+                showToast('Time slot added');
+                document.getElementById('time-slot').value = '';
+                document.getElementById('time-slot-period').value = 'AM';
+                loadTimeSlots();
             } catch (error) {
                 console.error('Error adding time slot:', error);
                 showToast('Failed to add time slot', 'error');
@@ -1581,13 +1481,8 @@
                 const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/time-slots/${encodeURIComponent(time)}`, {
                     method: 'DELETE'
                 });
-                if (response.ok) {
-                    showToast('Time slot deleted');
-                    loadTimeSlots();
-                } else {
-                    const errorData = await response.json();
-                    showToast(errorData.error || 'Error deleting time slot', 'error');
-                }
+                showToast('Time slot deleted');
+                loadTimeSlots();
             } catch (error) {
                 console.error('Error deleting time slot:', error);
                 showToast('Failed to delete time slot', 'error');
@@ -1598,6 +1493,12 @@
             try {
                 const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/newsletter`);
                 const subscribers = await response.json();
+                console.log('Newsletter subscribers response:', subscribers); // Debug log
+                if (!Array.isArray(subscribers)) {
+                    console.error('Expected an array, received:', subscribers);
+                    showToast('Invalid subscribers data', 'error');
+                    return;
+                }
                 const table = document.getElementById('newsletter-table');
                 table.innerHTML = '';
                 subscribers.forEach(sub => {
@@ -1621,12 +1522,8 @@
             if (!confirm('Delete this subscriber?')) return;
             try {
                 const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/newsletter/${id}`, { method: 'DELETE' });
-                if (response.ok) {
-                    showToast('Subscriber deleted');
-                    loadNewsletterSubscribers();
-                } else {
-                    showToast('Error deleting subscriber', 'error');
-                }
+                showToast('Subscriber deleted');
+                loadNewsletterSubscribers();
             } catch (error) {
                 console.error('Error deleting subscriber:', error);
                 showToast('Failed to delete subscriber', 'error');
@@ -1637,6 +1534,12 @@
             try {
                 const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/messages`);
                 const messages = await response.json();
+                console.log('Messages response:', messages); // Debug log
+                if (!Array.isArray(messages)) {
+                    console.error('Expected an array, received:', messages);
+                    showToast('Invalid messages data', 'error');
+                    return;
+                }
                 const table = document.getElementById('messages-table');
                 table.innerHTML = '';
                 messages.forEach(msg => {
@@ -1662,7 +1565,7 @@
         function replyToMessage(id, email) {
             document.getElementById('reply-message-id').value = id;
             document.getElementById('reply-message-email').value = email;
-            document.getElementById('reply-message-subject').value = 'Re: Your Message to Oak Dental Clinic';
+            document.getElementById('reply-message-subject').value = '';
             document.getElementById('reply-message-content').value = '';
             document.getElementById('reply-message-modal').classList.remove('hidden');
         }
@@ -1672,8 +1575,8 @@
             const email = document.getElementById('reply-message-email').value;
             const subject = document.getElementById('reply-message-subject').value;
             const content = document.getElementById('reply-message-content').value;
-            if (!email || !subject || !content) {
-                showToast('Please fill in all fields.', 'error');
+            if (!subject || !content) {
+                showToast('Please fill in subject and content.', 'error');
                 return;
             }
             try {
@@ -1681,14 +1584,9 @@
                     method: 'POST',
                     body: JSON.stringify({ email, subject, content })
                 });
-                if (response.ok) {
-                    showToast('Reply sent successfully');
-                    closeReplyMessageModal();
-                    loadMessages();
-                } else {
-                                        const errorData = await response.json();
-                    showToast(errorData.error || 'Error sending reply', 'error');
-                }
+                showToast('Reply sent successfully');
+                closeReplyMessageModal();
+                loadMessages();
             } catch (error) {
                 console.error('Error sending reply:', error);
                 showToast('Failed to send reply', 'error');
@@ -1699,30 +1597,29 @@
             if (!confirm('Delete this message?')) return;
             try {
                 const response = await fetchWithAuth(`${API_BASE_URL}/api/admin/messages/${id}`, { method: 'DELETE' });
-                if (response.ok) {
-                    showToast('Message deleted');
-                    loadMessages();
-                } else {
-                    const errorData = await response.json();
-                    showToast(errorData.error || 'Error deleting message', 'error');
-                }
+                showToast('Message deleted');
+                loadMessages();
             } catch (error) {
                 console.error('Error deleting message:', error);
                 showToast('Failed to delete message', 'error');
             }
         }
 
-        // Initialize default section
-        if (localStorage.getItem('adminToken')) {
-            showSection('appointments');
-        }
+        // Initialize page
+        window.addEventListener('load', () => {
+            if (localStorage.getItem('adminToken')) {
+                showDashboard();
+            } else {
+                showAuth();
+            }
+        });
 
-        // Close dropdown when clicking outside
-        document.addEventListener('click', (e) => {
-            const dropdown = document.getElementById('dropdown-menu');
-            const menuButton = document.querySelector('nav button');
-            if (!dropdown.contains(e.target) && !menuButton.contains(e.target)) {
-                dropdown.classList.add('hidden');
+        // Prevent navigation away without confirmation
+        window.addEventListener('beforeunload', (event) => {
+            const activeModal = document.querySelector('.modal:not(.hidden)');
+            if (activeModal) {
+                event.preventDefault();
+                event.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
             }
         });
     </script>
