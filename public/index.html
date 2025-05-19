@@ -3,1364 +3,676 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Oak Dental Clinic in Bachupally, Hyderabad offers multi-speciality dental care, including implants, orthodontics, and cosmetic dentistry. Book your appointment today!">
-    <meta name="keywords" content="dental clinic Hyderabad, dental implants Bachupally, cosmetic dentistry, orthodontics, Oak Dental Clinic">
-    <title>Oak Dental Clinic - Multi-Speciality Dental Care in Hyderabad</title>
+    <meta name="description" content="OAK Dental Clinic - Premier dental care in Hyderabad for implants, orthodontics, root canal treatments, and smile designing. Book your appointment today!">
+    <meta name="keywords" content="dental clinic, Hyderabad, dental implants, orthodontics, root canal, smile designing, OAK Dental">
+    <meta name="author" content="OAK Dental Clinic">
+    <title>OAK Dental Clinic</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YOUR-ID"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #14b8a6;
+            --white: #ffffff;
+            --gray: #f9fafb;
+            --dark: #1f2937;
+            --hero-blue: #1e40af;
+            --hero-light: #3b82f6;
+            --teal-light: #ccfbf1;
+            --teal-dark: #115e59;
+            --purple-light: #f3e8ff;
+            --purple-dark: #6b7280;
+            --footer-dark: #1e3a8a;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Inter', sans-serif;
             margin: 0;
-            font-size: 1rem;
-        }
-        .hero-bg {
-            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1598256989800-fe5f95da9787?q=80&w=2070&auto=format&fit=crop');
-            background-size: cover;
-            background-position: center;
-        }
-        .whatsapp-float {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            z-index: 100;
-        }
-        .fade-in {
-            opacity: 0;
-            transform: translateY(20px) scale(0.95);
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-        }
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
-        .staggered-fade-in {
-            opacity: 0;
-            transform: translateY(20px) scale(0.95);
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-        }
-        .staggered-fade-in.visible {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
-        .service-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .service-card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-        }
-        .slider-container {
-            position: relative;
-            width: 100%;
-            max-width: 900px;
-            margin: 0 auto;
-            overflow: hidden;
-        }
-        .slider {
-            display: flex;
-            transition: transform 0.5s ease;
-        }
-        .slide {
-            min-width: 100%;
-            display: flex;
-            justify-content: space-between;
-            gap: 1rem;
-        }
-        .slide img {
-            width: 48%;
-            border-radius: 8px;
-            object-fit: cover;
-        }
-        .treatment-slide {
-            min-width: 33.33%;
-            box-sizing: border-box;
-            padding: 0 10px;
-        }
-        .offer-slide {
-            min-width: 100%;
-            box-sizing: border-box;
-            padding: 0 10px;
-        }
-        .treatment-media, .offer-media {
-            width: 100%;
-            max-height: 240px;
-            border-radius: 8px;
-            margin-bottom: 1.25rem;
-            object-fit: cover;
-            display: block;
-        }
-        .doctor-bg {
-            background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url('https://images.unsplash.com/photo-1620778453907-a75627e31590?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
-            background-size: cover;
-            background-position: center;
-        }
-        .doctor-card {
-            background: white;
-            border-radius: 12px;
-            padding: 2.5rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            max-width: 480px;
-            margin: 0 auto;
-            transition: transform 0.3s ease;
-        }
-        .doctor-card:hover {
-            transform: scale(1.02);
-        }
-        .doctor-img {
-            border: 8px solid #0d9488;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-            width: 280px;
-            height: 280px;
-            object-fit: contain;
-            border-radius: 50%;
-            margin: 0 auto;
-            background-color: #f7fafc;
-        }
-        .sidenav {
-            height: 100%;
-            width: 0;
-            position: fixed;
-            z-index: 1000;
-            top: 0;
-            left: 0;
-            background-color: #ffffff;
+            background: var(--gray);
+            color: var(--dark);
             overflow-x: hidden;
-            transition: width 0.5s ease-in-out;
-            padding-top: 64px;
-            box-shadow: 4px 0 15px rgba(0, 0, 0, 0.15);
+            font-size: 16px;
+            line-height: 1.5;
         }
-        .sidenav a {
-            padding: 16px 18px 16px 36px;
-            text-decoration: none;
-            font-size: 1.25rem;
-            color: #1f2937;
-            display: block;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-        .sidenav a:hover {
-            background-color: #f0fdfa;
-            color: #0d9488;
-        }
-        .sidenav .closebtn {
-            position: absolute;
-            top: 12px;
-            right: 28px;
-            font-size: 2rem;
-            margin-left: 50px;
-            color: #1f2937;
-        }
-        .nav-gradient {
-            background: linear-gradient(90deg, #0d9488 0%, #14b8a6 100%);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+        /* Header */
+        .navbar {
+            background: var(--white);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 50;
         }
         .nav-link {
-            font-weight: 500;
-            transition: color 0.3s ease, transform 0.3s ease;
-            padding: 0.75rem 1.25rem;
-            font-size: 1rem;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            font-weight: 600;
+            color: var(--dark);
         }
         .nav-link:hover {
-            color: #f0fdfa !important;
-            transform: translateY(-2px);
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--primary);
         }
-        .header-title {
-            font-family: 'Playfair Display', serif;
-            transition: transform 0.3s ease;
+        .nav-link.active {
+            color: var(--primary);
+            background: rgba(37, 99, 235, 0.1);
         }
-        .header-title:hover {
-            transform: scale(1.05);
-        }
-        .testimonial-slider-container {
-            position: relative;
-            width: 100%;
-            max-width: 900px;
-            margin: 0 auto;
-            overflow: hidden;
-        }
-        .testimonial-slider {
-            display: flex;
-            gap: 1rem;
-            transition: all 0.5s ease;
-        }
-        .testimonial-slide {
-            min-width: 33.33%;
-            box-sizing: border-box;
-            padding: 0 10px;
-            opacity: 0;
-            transform: translateX(20px);
-            transition: opacity 0.5s ease, transform 0.5s ease, scale 0.3s ease;
-        }
-        .testimonial-slide.visible {
-            opacity: 1;
-            transform: translateX(0);
-        }
-        .testimonial-slide:hover {
-            transform: scale(1.02);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-        }
-        .rating-stars {
-            display: flex;
-            gap: 0.25rem;
-        }
-        .rating-stars .star {
+        .hamburger {
+            display: none;
+            flex-direction: column;
             cursor: pointer;
-            color: #6b7280;
-            font-size: 1.5rem;
-            transition: color 0.2s ease;
+            padding: 8px;
         }
-        .rating-stars .star.selected {
-            color: #f59e0b;
-        }
-        .gallery-slider-container {
-            position: relative;
-            width: 100%;
-            max-width: 100%;
-            margin: 0 auto;
-            overflow: hidden;
-        }
-        .gallery-slider {
-            display: flex;
-        }
-        .gallery-slide {
-            min-width: 100%;
-            display: flex;
-            justify-content: space-between;
-            gap: 0.75rem;
-        }
-        .gallery-item {
-            flex: 1;
-            max-width: 33%;
-            transition: transform 0.3s ease;
-        }
-        .gallery-item:hover {
-            transform: scale(1.03);
-        }
-        .gallery-img {
-            width: 100%;
-            height: 140px;
-            object-fit: cover;
-            border-radius: 8px;
-        }
-        .leave-date-note {
-            color: #e53e3e;
-            font-size: 0.875rem;
-            margin-top: 0.75rem;
-        }
-        .status-result {
-            margin-top: 1.25rem;
-            padding: 1.25rem;
-            border-radius: 8px;
-            background-color: #f7fafc;
-        }
-        .slider-nav {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: #0d9488;
-            color: white;
-            padding: 10px;
-            cursor: pointer;
-            font-size: 18px;
-            border-radius: 50%;
-            user-select: none;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
-        .slider-nav:hover {
-            background-color: #14b8a6;
-            transform: scale(1.1);
-        }
-        .slider-nav.left {
-            left: 10px;
-        }
-        .slider-nav.right {
-            right: 10px;
-        }
-        .toast {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: #10b981;
-            color: white;
-            padding: 16px 24px;
-            border-radius: 8px;
-            z-index: 1000;
-            opacity: 0;
-            transform: translateY(-20px);
-            transition: opacity 0.5s ease, transform 0.5s ease;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-        .toast.error {
-            background-color: #ef4444;
-        }
-        .toast.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .flatpickr-day.disabled,
-        .flatpickr-day.disabled:hover {
-            color: #ff0000 !important;
-            background: none !important;
-            border-color: transparent !important;
-            cursor: not-allowed !important;
-            font-weight: bold;
-        }
-        .flatpickr-day {
-            color: #000000 !important;
-        }
-        .flatpickr-day:hover {
-            background: #e6e6e6 !important;
-        }
-        input[type="text"].flatpickr-input {
-            background-color: white;
-            color: #1f2937;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            padding: 0.75rem;
-            width: 100%;
-        }
-        input[type="email"] {
-            background-color: white;
-            color: #1f2937;
-            border: 1px solid #d1d5db;
-        }
-        select#time-slot {
+        .hamburger div {
+            width: 24px;
+            height: 3px;
+            background: var(--primary);
+            margin: 3px 0;
             transition: all 0.3s ease;
         }
-        select#time-slot.slide-in {
-            animation: slideIn 0.3s ease-out;
+        .hamburger.active div:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
         }
-        @keyframes slideIn {
-            from { transform: translateY(-10px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+        .hamburger.active div:nth-child(2) {
+            opacity: 0;
         }
-        .no-slots-message {
-            color: #e53e3e;
-            font-size: 0.875rem;
-            margin-top: 0.5rem;
-            display: none;
+        .hamburger.active div:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
         }
-        .no-slots-message.visible {
-            display: block;
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        .captcha-container {
+        .nav-menu.active {
+            display: flex;
+            flex-direction: column;
+            position: absolute;
+            top: 64px;
+            left: 0;
+            width: 100%;
+            background: var(--white);
+            padding: 16px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Hero Section */
+        .hero-bg {
+            background: linear-gradient(135deg, var(--hero-blue), var(--hero-light));
+            padding: 80px 0 120px;
+            margin-top: 64px;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(255,255,255,0.1)"><path d="M17.66 7.93L12 2.27 6.34 7.93a8 8 0 1011.32 0zM12 4.47l4.13 4.13A6 6 0 015.87 8.6L12 4.47zm0 15.06a6 6 0 01-4.24-1.76L12 13.53l4.24 4.24A6 6 0 0112 19.53z"/></svg>') repeat;
+            opacity: 0.3;
+        }
+        .hero-slideshow {
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+            height: 450px;
+            overflow: hidden;
+            border-radius: 16px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        .hero-slide {
+            position: absolute;
+            top: 0;
+            left: 100%;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: left 0.6s ease, opacity 0.6s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .hero-slide.active {
+            left: 0;
+            opacity: 1;
+        }
+        .hero-slide.exiting {
+            left: -100%;
+            opacity: 0;
+        }
+        .slide-content {
+            text-align: center;
+            padding: 32px;
+            max-width: 700px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .slide-content h2 {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--hero-blue);
             margin-bottom: 1rem;
         }
-        .captcha-question {
-            font-size: 1rem;
-            color: #1f2937;
-            margin-bottom: 0.5rem;
+        .slide-content p {
+            font-size: 1.25rem;
+            color: #4b5563;
+            margin-bottom: 1.5rem;
         }
-        .captcha-input {
+        .cta-button {
+            background: var(--secondary);
+            color: var(--white);
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .cta-button:hover {
+            background: #0d9488;
+            transform: scale(1.05);
+        }
+        .hero-dots {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+        }
+        .hero-dot {
+            width: 12px;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .hero-dot.active {
+            background: var(--secondary);
+            transform: scale(1.3);
+        }
+
+        /* Sections */
+        section {
+            padding: 60px 16px;
+        }
+        h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        p.subtitle {
+            font-size: 1.1rem;
+            text-align: center;
+            color: #6b7280;
+            margin-bottom: 2rem;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+        }
+
+        /* Forms */
+        .form-input {
             width: 100%;
-            padding: 0.75rem;
+            padding: 12px;
             border: 1px solid #d1d5db;
             border-radius: 8px;
-            margin-bottom: 0.5rem;
+            background: #f9fafb;
+            transition: border-color 0.2s ease;
         }
-        .refresh-captcha {
-            color: #0d9488;
-            cursor: pointer;
-            font-size: 0.875rem;
-            text-decoration: underline;
+        .form-input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 6px rgba(37, 99, 235, 0.2);
         }
-        .refresh-captcha:hover {
-            color: #14b8a6;
+        .form-button {
+            background: var(--primary);
+            color: var(--white);
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            width: 100%;
+            transition: background 0.2s ease;
         }
-        @media (max-width: 640px) {
-            body { font-size: 1rem; }
-            .text-4xl { font-size: 2rem; }
-            .text-6xl { font-size: 2.5rem; }
-            .text-3xl { font-size: 1.75rem; }
-            .text-xl { font-size: 1.25rem; }
-            .text-lg { font-size: 1.125rem; }
-            .h-screen { height: 65vh; }
-            .grid-cols-3, .grid-cols-2 { grid-template-columns: 1fr; }
-            .max-w-7xl { padding-left: 1.25rem; padding-right: 1.25rem; }
-            nav { padding: 0.75rem 0; }
-            .desktop-nav { display: none; }
-            .hamburger { display: block; font-size: 2rem; }
-            .hero-bg { height: 55vh; }
-            .hero-bg .max-w-3xl { padding: 1.25rem; }
-            .py-16 { padding-top: 2.5rem; padding-bottom: 2.5rem; }
-            .py-8 { padding-top: 1.75rem; padding-bottom: 1.75rem; }
-            .mb-12 { margin-bottom: 2.5rem; }
-            .mb-6 { margin-bottom: 1.75rem; }
-            .mb-4 { margin-bottom: 1.25rem; }
-            .slider-container { max-width: 100%; }
-            .slide { flex-direction: column; align-items: center; gap: 0.75rem; }
-            .slide img { width: 85%; height: 140px; object-fit: cover; }
-            .treatment-slide { min-width: 100%; }
-            .offer-slide { min-width: 100%; }
-            .treatment-media, .offer-media { height: 200px; width: 100%; }
-            .doctor-img { width: 200px; height: 200px; }
-            .doctor-card { padding: 2rem; }
-            .h-48 { height: 200px; }
-            .space-x-4 > :not([hidden]) ~ :not([hidden]) { margin-left: 0.75rem; }
-            .flex.justify-center.fade-in { flex-direction: column; align-items: center; gap: 0.75rem; }
-            .max-w-md { max-width: 100%; padding: 0 1rem; }
-            .px-6.py-3 { padding: 0.75rem 2rem; font-size: 1rem; }
-            .gallery-slide { flex-direction: row; }
-            .gallery-item { max-width: 32%; }
-            .gallery-img { height: 120px; }
-            input, textarea, select {
-                padding: 0.875rem;
+        .form-button:hover {
+            background: #1d4ed8;
+        }
+
+        /* Specific Section Styles */
+        #services {
+            background: var(--white);
+        }
+        #services h2 {
+            color: var(--dark);
+        }
+        #about {
+            background: var(--teal-light);
+        }
+        #about h2 {
+            color: var(--teal-dark);
+        }
+        #testimonials {
+            background: var(--purple-light);
+        }
+        #testimonials h2 {
+            color: var(--purple-dark);
+        }
+        #contact {
+            background: var(--gray);
+        }
+        #contact h2 {
+            color: var(--dark);
+        }
+        #book {
+            background: linear-gradient(135deg, var(--secondary), #0d9488);
+        }
+        #book h2 {
+            color: var(--white);
+        }
+        footer {
+            background: var(--footer-dark);
+            color: var(--white);
+            padding: 40px 16px;
+        }
+        footer a {
+            color: #bfdbfe;
+            transition: color 0.2s ease;
+        }
+        footer a:hover {
+            color: var(--white);
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+            .hamburger {
+                display: flex;
+            }
+            .hero-bg {
+                padding: 60px 0 80px;
+            }
+            .hero-slideshow {
+                height: 320px;
+            }
+            .slide-content h2 {
+                font-size: 2rem;
+            }
+            .slide-content p {
                 font-size: 1rem;
-                border-radius: 6px;
             }
-            .sidenav a { font-size: 1.125rem; padding: 14px 16px 14px 32px; }
-            .sidenav .closebtn { font-size: 1.75rem; }
-            .rating-stars .star { font-size: 1.25rem; }
-            .whatsapp-float img { height: 48px; width: 48px; }
-            .toast {
-                top: 10px;
-                right: 10px;
-                padding: 12px 18px;
-                font-size: 0.875rem;
+            .cta-button {
+                padding: 12px 24px;
+                font-size: 1rem;
             }
-            .flatpickr-calendar {
-                width: 100% !important;
-                max-width: 300px !important;
+            .hero-dots {
+                gap: 8px;
             }
-            .testimonial-slide { min-width: 100%; }
-            .slider-nav {
-                padding: 8px 12px;
-                font-size: 16px;
+            .hero-dot {
+                width: 10px;
+                height: 10px;
+            }
+            h2 {
+                font-size: 2rem;
+            }
+            section {
+                padding: 40px 12px;
+            }
+            .form-input, .form-button {
+                font-size: 0.95rem;
             }
         }
-        @media (min-width: 641px) {
-            .hamburger { display: none; }
-            .sidenav { display: none; }
-            .gallery-slide { justify-content: center; }
-            .gallery-item { max-width: 33.33%; }
-            .gallery-img { height: 180px; }
-            .treatment-media, .offer-media { max-height: 240px; }
+        @media (max-width: 480px) {
+            .slide-content h2 {
+                font-size: 1.5rem;
+            }
+            .slide-content p {
+                font-size: 0.9rem;
+            }
+            .hero-slideshow {
+                height: 280px;
+            }
+            .hamburger div {
+                width: 20px;
+                height: 2px;
+                margin: 2px 0;
+            }
+            .cta-button {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
         }
     </style>
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "Dentist",
-        "name": "Oak Dental Clinic",
-        "address": {
-            "@type": "PostalAddress",
-            "streetAddress": "2nd Floor, Vision Apartments, Saree Nagar, Nazampet Road, Bachupally",
-            "addressLocality": "Hyderabad",
-            "addressRegion": "Telangana",
-            "postalCode": "500090",
-            "addressCountry": "IN"
-        },
-        "telephone": "+91756936767",
-        "openingHours": "Mo-Sa 10:00-20:00"
-    }
-    </script>
 </head>
-<body class="bg-gray-100">
-    <!-- Toast Container -->
-    <div id="toast-container"></div>
-
-    <!-- Side Navigation for Mobile -->
-    <div id="mySidenav" class="sidenav">
-        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-        <a href="#home" onclick="closeNav()">Home</a>
-        <a href="#treatments" onclick="closeNav()">Our Treatments</a>
-        <a href="#about" onclick="closeNav()">About Us</a>
-        <a href="#contact" onclick="closeNav()">Contact Us</a>
-        <a href="#appointment" onclick="closeNav()">Book Appointment</a>
-        <a href="#status" onclick="closeNav()">Check Appointment Status</a>
-    </div>
-
-    <!-- Navbar -->
-    <nav class="nav-gradient shadow-lg fixed w-full z-10" aria-label="Main navigation">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex items-center space-x-3">
-                    <span class="hamburger text-2xl cursor-pointer md:hidden text-white" onclick="openNav()">☰</span>
-                    <img src="https://i.postimg.cc/bY0bwXgj/OAK-LOGO-HD.png" alt="Oak Dental Clinic Logo" class="h-10" loading="lazy">
-                    <div>
-                        <h1 class="header-title text-2xl font-bold text-white tracking-tight">Oak Dental Clinic</h1>
-                        <span class="text-xs text-white opacity-80">Multi-Speciality Dental Care</span>
-                    </div>
-                </div>
-                <div class="desktop-nav hidden md:flex items-center space-x-4">
-                    <a href="#home" class="text-white nav-link">Home</a>
-                    <a href="#treatments" class="text-white nav-link">Treatments</a>
-                    <a href="#about" class="text-white nav-link">About</a>
-                    <a href="#contact" class="text-white nav-link">Contact</a>
-                    <a href="#appointment" class="text-white nav-link">Book</a>
-                    <a href="#status" class="text-white nav-link">Status</a>
-                </div>
+<body>
+    <!-- Header -->
+    <nav class="navbar">
+        <div class="max-w-7xl mx-auto px-4 flex justify-between items-center h-16">
+            <div class="flex items-center gap-3">
+                <img src="https://i.postimg.cc/fbRFLwNV/OAK-LOGO-1.jpg" alt="OAK Dental Logo" class="h-10">
+                <h1 class="text-xl font-bold text-gray-800">OAK Dental Clinic</h1>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <div class="nav-menu" id="navMenu">
+                <a href="#home" class="nav-link active">Home</a>
+                <a href="#services" class="nav-link">Services</a>
+                <a href="#about" class="nav-link">About</a>
+                <a href="#testimonials" class="nav-link">Testimonials</a>
+                <a href="#contact" class="nav-link">Contact</a>
+                <a href="#book" class="cta-button text-sm">Book Now</a>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section id="home" class="hero-bg h-screen flex items-center justify-center text-center text-white">
-        <div class="max-w-3xl mx-auto px-4">
-            <h1 class="text-4xl md:text-6xl font-bold mb-4 fade-in">Welcome to Oak Dental Clinic</h1>
-            <p class="text-lg md:text-xl mb-6 fade-in">Your trusted multi-speciality dental care in Bachupally, Hyderabad.</p>
-            <div class="space-x-4">
-                <a href="#appointment" class="bg-teal-600 text-white px-6 py-3 rounded-full hover:bg-teal-700 fade-in">Book Appointment</a>
-                <a href="tel:+91756936767" class="bg-teal-600 text-white px-6 py-3 rounded-full hover:bg-teal-700 fade-in">Call Now</a>
+    <section id="home" class="hero-bg">
+        <div class="hero-slideshow">
+            <div class="hero-slide active">
+                <div class="slide-content">
+                    <h2>Smile Bright with OAK Dental</h2>
+                    <p>Top dental care in Hyderabad for implants, orthodontics, and more.</p>
+                    <a href="#book" class="cta-button">Book Appointment</a>
+                </div>
+            </div>
+            <div class="hero-slide">
+                <div class="slide-content">
+                    <h2>Trusted Care Since 2010</h2>
+                    <p>Formerly Manya Dental, we offer advanced, personalized treatments.</p>
+                    <a href="#about" class="cta-button">Learn More</a>
+                </div>
+            </div>
+            <div class="hero-slide">
+                <div class="slide-content">
+                    <h2>Painless Root Canals</h2>
+                    <p>Fast, effective treatments with minimal discomfort.</p>
+                    <a href="#services" class="cta-button">Explore Services</a>
+                </div>
+            </div>
+            <div class="hero-slide">
+                <div class="slide-content">
+                    <h2>Perfect Smile Design</h2>
+                    <p>Custom veneers, whitening, and aligners for a confident smile.</p>
+                    <a href="#services" class="cta-button">Discover More</a>
+                </div>
+            </div>
+            <div class="hero-dots">
+                <div class="hero-dot active"></div>
+                <div class="hero-dot"></div>
+                <div class="hero-dot"></div>
+                <div class="hero-dot"></div>
             </div>
         </div>
     </section>
 
-    <!-- Treatments Section (With Slider) -->
-    <section id="treatments" class="py-16 bg-gray-100">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">Our Treatments</h2>
-            <div class="slider-container fade-in">
-                <div class="slider" id="treatments-slider"></div>
-                <div class="slider-nav left" onclick="slideLeft('treatments-slider', 3, 33.33)"><i class="fas fa-arrow-left"></i></div>
-                <div class="slider-nav right" onclick="slideRight('treatments-slider', 3, 33.33)"><i class="fas fa-arrow-right"></i></div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Offers Section (With Slider, Backend Connected) -->
-    <section id="offers" class="py-16 bg-teal-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">Special Offers</h2>
-            <div class="slider-container fade-in">
-                <div class="slider" id="offers-slider"></div>
-                <div class="slider-nav left" onclick="slideLeft('offers-slider', 1, 100)"><i class="fas fa-arrow-left"></i></div>
-                <div class="slider-nav right" onclick="slideRight('offers-slider', 1, 100)"><i class="fas fa-arrow-right"></i></div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Services Section (Static, Side-by-Side with Animations) -->
-    <section id="services" class="py-16 bg-blue-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">Our Dental Services in Hyderabad</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="bg-white p-6 rounded-lg shadow-md text-center staggered-fade-in service-card">
-                    <i class="fas fa-tooth text-teal-600 text-4xl mb-4"></i>
-                    <h3 class="text-xl font-semibold text-teal-600 mb-4">General Dentistry</h3>
-                    <p class="text-gray-600 mb-4">Routine check-ups, cleanings, and fillings to keep your smile bright.</p>
-                    <a href="/services.html#general-dentistry" class="text-teal-600 hover:underline">Learn More</a>
+    <!-- Services Section -->
+    <section id="services" class="bg-white">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2>Our Services</h2>
+            <p class="subtitle">Expert dental care tailored to you.</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="card">
+                    <h3 class="text-xl font-semibold mb-3 text-gray-800">General Dentistry</h3>
+                    <p class="text-gray-600">Check-ups, cleanings, and fillings for oral health.</p>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-md text-center staggered-fade-in service-card">
-                    <i class="fas fa-smile text-teal-600 text-4xl mb-4"></i>
-                    <h3 class="text-xl font-semibold text-teal-600 mb-4">Cosmetic Dentistry</h3>
-                    <p class="text-gray-600 mb-4">Teeth whitening, veneers, and more to enhance your smile.</p>
-                    <a href="/services.html#cosmetic-dentistry" class="text-teal-600 hover:underline">Learn More</a>
+                <div class="card">
+                    <h3 class="text-xl font-semibold mb-3 text-gray-800">Root Canal</h3>
+                    <p class="text-gray-600">Painless treatments to save damaged teeth.</p>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-md text-center staggered-fade-in service-card">
-                    <i class="fas fa-align-center text-teal-600 text-4xl mb-4"></i>
-                    <h3 class="text-xl font-semibold text-teal-600 mb-4">Orthodontics</h3>
-                    <p class="text-gray-600 mb-4">Braces and aligners for perfectly aligned teeth.</p>
-                    <a href="/services.html#orthodontics" class="text-teal-600 hover:underline">Learn More</a>
+                <div class="card">
+                    <h3 class="text-xl font-semibold mb-3 text-gray-800">Smile Designing</h3>
+                    <p class="text-gray-600">Custom veneers and whitening for a perfect smile.</p>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-md text-center staggered-fade-in service-card">
-                    <i class="fas fa-tooth text-teal-600 text-4xl mb-4"></i>
-                    <h3 class="text-xl font-semibold text-teal-600 mb-4">Dental Implants</h3>
-                    <p class="text-gray-600 mb-4">Permanent solutions for missing teeth with advanced technology.</p>
-                    <a href="/services.html#dental-implants" class="text-teal-600 hover:underline">Learn More</a>
+                <div class="card">
+                    <h3 class="text-xl font-semibold mb-3 text-gray-800">Orthodontics</h3>
+                    <p class="text-gray-600">Braces and aligners for perfect alignment.</p>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-md text-center staggered-fade-in service-card">
-                    <i class="fas fa-tools text-teal-600 text-4xl mb-4"></i>
-                    <h3 class="text-xl font-semibold text-teal-600 mb-4">Root Canal Therapy</h3>
-                    <p class="text-gray-600 mb-4">Pain-free treatment to save damaged teeth.</p>
-                    <a href="/services.html#root-canal-therapy" class="text-teal-600 hover:underline">Learn More</a>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-md text-center staggered-fade-in service-card">
-                    <i class="fas fa-baby text-teal-600 text-4xl mb-4"></i>
-                    <h3 class="text-xl font-semibold text-teal-600 mb-4">Pediatric Dentistry</h3>
-                    <p class="text-gray-600 mb-4">Gentle dental care for children and teens.</p>
-                    <a href="/services.html#pediatric-dentistry" class="text-teal-600 hover:underline">Learn More</a>
-                </div>
-            </div>
-            <div class="text-center mt-8 fade-in">
-                <a href="#appointment" class="bg-teal-600 text-white px-6 py-3 rounded-full hover:bg-teal-700">Schedule a Visit</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Doctors Section -->
-    <section id="doctors" class="py-16 doctor-bg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">Meet Our Expert Dentist</h2>
-            <div class="flex justify-center">
-                <div class="doctor-card text-center fade-in">
-                    <img src="https://i.postimg.cc/c1YbXJmG/RAM-KOTI.jpg" alt="Dr. A. Ram Koti Reddy, Prosthodontist" class="doctor-img mx-auto mb-4" loading="lazy">
-                    <h3 class="text-xl font-semibold text-teal-600 mb-2">Dr. A. Ram Koti Reddy, BDS, MDS</h3>
-                    <p class="text-gray-600">Prosthodontist & Implantologist</p>
-                    <p class="text-gray-600">Reg. No: A19677</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Feedback Section -->
-    <section id="feedback" class="py-16 bg-gray-100">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">Share Your Feedback</h2>
-            <div class="max-w-md mx-auto fade-in">
-                <h3 class="text-xl font-semibold text-teal-600 mb-4">Submit Your Feedback</h3>
-                <div>
-                    <input type="text" id="feedback-full-name" placeholder="Full Name" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Full Name">
-                    <input type="email" id="feedback-email" placeholder="Your Email" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Your Email">
-                    <div class="mb-4">
-                        <label class="block text-gray-600 mb-2">Rating:</label>
-                        <div class="rating-stars flex space-x-1">
-                            <i class="fas fa-star star" data-rating="1"></i>
-                            <i class="fas fa-star star" data-rating="2"></i>
-                            <i class="fas fa-star star" data-rating="3"></i>
-                            <i class="fas fa-star star" data-rating="4"></i>
-                            <i class="fas fa-star star" data-rating="5"></i>
-                        </div>
-                    </div>
-                    <textarea id="feedback-description" placeholder="Your Feedback" class="w-full p-3 mb-4 border rounded-lg" rows="5" required aria-label="Your Feedback"></textarea>
-                    <button onclick="submitFeedback()" class="bg-teal-600 text-white px-6 py-3 rounded-full hover:bg-teal-700" aria-label="Submit Feedback">Submit Feedback</button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Before-and-After Section (With Slider) -->
-    <section id="before-after" class="py-16 bg-green-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">Before & After Transformations</h2>
-            <div class="slider-container fade-in">
-                <div class="slider" id="before-after-slider">
-                    <div class="slide">
-                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Before Treatment 1" loading="lazy">
-                        <img src="https://images.unsplash.com/photo-1618498082410-b4aa22193b38?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="After Treatment 1" loading="lazy">
-                    </div>
-                    <div class="slide">
-                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Before Treatment 2" loading="lazy">
-                        <img src="https://images.unsplash.com/photo-1618498082410-b4aa22193b38?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="After Treatment 2" loading="lazy">
-                    </div>
-                    <div class="slide">
-                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Before Treatment 3" loading="lazy">
-                        <img src="https://images.unsplash.com/photo-1618498082410-b4aa22193b38?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="After Treatment 3" loading="lazy">
-                    </div>
-                </div>
-                <div class="slider-nav left" onclick="slideLeft('before-after-slider', 1, 100)"><i class="fas fa-arrow-left"></i></div>
-                <div class="slider-nav right" onclick="slideRight('before-after-slider', 1, 100)"><i class="fas fa-arrow-right"></i></div>
             </div>
         </div>
     </section>
 
     <!-- About Section -->
-    <section id="about" class="py-16 bg-gray-100">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">About Oak Dental Clinic</h2>
-            <div class="flex flex-col md:flex-row items-center">
-                <div class="w-full md:w-1/2 mb-6 md:mb-0 fade-in">
-                    <picture>
-                        <source srcset="https://i.postimg.cc/TwK4Wyry/Screenshot-2025-05-16-001922.png" type="image/webp">
-                        <img src="https://i.postimg.cc/TwK4Wyry/Screenshot-2025-05-16-001922.png" alt="Oak Dental Clinic Team" class="rounded-lg shadow-md" loading="lazy">
-                    </picture>
-                </div>
-                <div class="w-full md:w-1/2 md:pl-8 fade-in">
-                    <p class="text-gray-600 mb-4">At Oak Dental Clinic in Bachupally, Hyderabad, we provide top-quality dental care in a comfortable environment. Led by Dr. A. Ram Koti Reddy, our team uses cutting-edge technology for effective treatments.</p>
-                    <p class="text-gray-600 mb-4">From general dentistry to advanced prosthodontics and implants, we offer personalized care to keep your smile healthy and radiant.</p>
-                    <a href="/about.html" class="bg-teal-600 text-white px-6 py-3 rounded-full hover:bg-teal-700">Know More</a>
-                </div>
+    <section id="about" class="bg-teal-light">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2>About OAK Dental</h2>
+            <p class="subtitle">Your trusted dental partner in Hyderabad.</p>
+            <div class="card">
+                <p class="text-gray-600 mb-4">OAK Dental Clinic, formerly Manya Dental, specializes in implants, orthodontics, root canal treatments, and smile designing at 123 Dental Street, Hyderabad.</p>
+                <a href="#contact" class="text-primary font-semibold hover:underline">Contact Us</a>
             </div>
         </div>
     </section>
 
-    <!-- Gallery Section (With Slider) -->
-    <section id="gallery" class="py-16 bg-yellow-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">Our Clinic in Bachupally</h2>
-            <div class="gallery-slider-container fade-in">
-                <div class="gallery-slider" id="gallery-slider">
-                    <div class="gallery-slide flex">
-                        <div class="gallery-item">
-                            <picture>
-                                <source srcset="https://i.postimg.cc/Xvfrsdpy/Oak-dental-interior-3.jpg?fm=webp" type="image/webp">
-                                <img src="https://i.postimg.cc/Xvfrsdpy/Oak-dental-interior-3.jpg" alt="Oak Dental Clinic Interior 1" class="gallery-img" loading="lazy">
-                            </picture>
-                        </div>
-                        <div class="gallery-item">
-                            <picture>
-                                <source srcset="https://i.postimg.cc/tTDYjbdq/Oak-dental-interior-4.jpg?fm=webp" type="image/webp">
-                                <img src="https://i.postimg.cc/tTDYjbdq/Oak-dental-interior-4.jpg" alt="Oak Dental Clinic Interior 2" class="gallery-img" loading="lazy">
-                            </picture>
-                        </div>
-                        <div class="gallery-item">
-                            <picture>
-                                <source srcset="https://i.postimg.cc/qvnq7ycZ/Oak-dental-interior-5.jpg?fm=webp" type="image/webp">
-                                <img src="https://i.postimg.cc/qvnq7ycZ/Oak-dental-interior-5.jpg" alt="Oak Dental Clinic Interior 3" class="gallery-img" loading="lazy">
-                            </picture>
-                        </div>
-                    </div>
-                    <div class="gallery-slide flex">
-                        <div class="gallery-item">
-                            <picture>
-                                <source srcset="https://i.postimg.cc/Xvfrsdpy/Oak-dental-interior-3.jpg?fm=webp" type="image/webp">
-                                <img src="https://i.postimg.cc/Xvfrsdpy/Oak-dental-interior-3.jpg" alt="Oak Dental Clinic Interior 4" class="gallery-img" loading="lazy">
-                            </picture>
-                        </div>
-                        <div class="gallery-item">
-                            <picture>
-                                <source srcset="https://i.postimg.cc/tTDYjbdq/Oak-dental-interior-4.jpg?fm=webp" type="image/webp">
-                                <img src="https://i.postimg.cc/tTDYjbdq/Oak-dental-interior-4.jpg" alt="Oak Dental Clinic Interior 5" class="gallery-img" loading="lazy">
-                            </picture>
-                        </div>
-                        <div class="gallery-item">
-                            <picture>
-                                <source srcset="https://i.postimg.cc/qvnq7ycZ/Oak-dental-interior-5.jpg?fm=webp" type="image/webp">
-                                <img src="https://i.postimg.cc/qvnq7ycZ/Oak-dental-interior-5.jpg" alt="Oak Dental Clinic Interior 6" class="gallery-img" loading="lazy">
-                            </picture>
-                        </div>
-                    </div>
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="bg-purple-light">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2>Patient Stories</h2>
+            <p class="subtitle">Hear from our satisfied patients.</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div class="card">
+                    <p class="text-gray-600 mb-4">"My smile transformation was amazing!"</p>
+                    <p class="font-semibold text-gray-800">Sarah M.</p>
                 </div>
-                <div class="slider-nav left" onclick="slideLeft('gallery-slider', 1, 100)"><i class="fas fa-arrow-left"></i></div>
-                <div class="slider-nav right" onclick="slideRight('gallery-slider', 1, 100)"><i class="fas fa-arrow-right"></i></div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Testimonials Section (With Slider and Auto-Slide) -->
-    <section id="testimonials" class="py-16 bg-gradient-to-r from-gray-100 to-gray-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">What Our Hyderabad Patients Say</h2>
-            <div class="testimonial-slider-container fade-in">
-                <div class="testimonial-slider" id="testimonial-slider"></div>
-                <div class="slider-nav left" onclick="slideLeft('testimonial-slider', 3, 33.33)"><i class="fas fa-arrow-left"></i></div>
-                <div class="slider-nav right" onclick="slideRight('testimonial-slider', 3, 33.33)"><i class="fas fa-arrow-right"></i></div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Blog Section -->
-    <section id="blog" class="py-16 bg-blue-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">Dental Tips & News</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="bg-white p-6 rounded-lg shadow-md fade-in">
-                    <picture>
-                        <source srcset="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80&fm=webp" type="image/webp">
-                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Healthy Teeth Tips" class="rounded-lg mb-4" loading="lazy">
-                    </picture>
-                    <h3 class="text-xl font-semibold text-teal-600 mb-2">5 Tips for Healthy Teeth</h3>
-                    <p class="text-gray-600 mb-4">Learn how to keep your smile bright with these simple habits.</p>
-                    <a href="/dentaltips.html?post=healthy-teeth" class="text-teal-600 hover:underline">Read More</a>
-                    <div class="flex space-x-4 mt-4">
-                        <a href="https://www.facebook.com/sharer/sharer.php?u=your-blog-url" class="text-teal-600 hover:text-teal-800">Share on Facebook</a>
-                        <a href="https://twitter.com/intent/tweet?url=your-blog-url" class="text-teal-600 hover:text-teal-800">Share on Twitter</a>
-                    </div>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-md fade-in">
-                    <picture>
-                        <source srcset="https://images.unsplash.com/photo-1618498082410-b4aa22193b38?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80&fm=webp" type="image/webp">
-                        <img src="https://images.unsplash.com/photo-1618498082410-b4aa22193b38?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Dental Implants Guide" class="rounded-lg mb-4" loading="lazy">
-                    </picture>
-                    <h3 class="text-xl font-semibold text-teal-600 mb-2">Guide to Dental Implants</h3>
-                    <p class="text-gray-600 mb-4">Everything you need to know about dental implants.</p>
-                    <a href="/dentaltips.html?post=dental-implants" class="text-teal-600 hover:underline">Read More</a>
-                    <div class="flex space-x-4 mt-4">
-                        <a href="https://www.facebook.com/sharer/sharer.php?u=your-blog-url" class="text-teal-600 hover:text-teal-800">Share on Facebook</a>
-                        <a href="https://twitter.com/intent/tweet?url=your-blog-url" class="text-teal-600 hover:text-teal-800">Share on Twitter</a>
-                    </div>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-md fade-in">
-                    <picture>
-                        <source srcset="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80&fm=webp" type="image/webp">
-                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Teeth Whitening Myths" class="rounded-lg mb-4" loading="lazy">
-                    </picture>
-                    <h3 class="text-xl font-semibold text-teal-600 mb-2">Top 5 Myths About Teeth Whitening</h3>
-                    <p class="text-gray-600 mb-4">Debunking common misconceptions about whitening.</p>
-                    <a href="/dentaltips.html?post=teeth-whitening" class="text-teal-600 hover:underline">Read More</a>
-                    <div class="flex space-x-4 mt-4">
-                        <a href="https://www.facebook.com/sharer/sharer.php?u=your-blog-url" class="text-teal-600 hover:text-teal-800">Share on Facebook</a>
-                        <a href="https://twitter.com/intent/tweet?url=your-blog-url" class="text-teal-600 hover:text-teal-800">Share on Twitter</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Check Appointment Status Section -->
-    <section id="status" class="py-16 bg-gray-100">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">Check Appointment Status</h2>
-            <div class="max-w-md mx-auto fade-in">
-                <h3 class="text-xl font-semibold text-teal-600 mb-4">Enter Your Details</h3>
-                <div>
-                    <input type="text" id="status-identifier" placeholder="Mobile Number or Email" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Mobile Number or Email">
-                    <button onclick="checkAppointmentStatus()" class="bg-teal-600 text-white px-6 py-3 rounded-full hover:bg-teal-700" aria-label="Check Appointment Status">Check Status</button>
-                    <div id="status-result" class="status-result hidden"></div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Book Appointment Section -->
-    <section id="appointment" class="py-16 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">Book an Appointment</h2>
-            <div class="max-w-md mx-auto fade-in">
-                <h3 class="text-xl font-semibold text-teal-600 mb-4">Appointment Details</h3>
-                <p class="leave-date-note">Note: Dates marked in red indicate the doctor is on leave. Please select another date.</p>
-                <div>
-                    <input type="text" id="full-name" placeholder="Full Name" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Full Name">
-                    <input type="email" id="email" placeholder="Your Email" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Your Email">
-                    <input type="tel" id="phone" placeholder="Your Phone" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Your Phone">
-                    <input type="text" id="appointment-date" placeholder="Select Appointment Date" class="w-full p-3 mb-4 border rounded-lg flatpickr-input" required aria-label="Appointment Date">
-                    <select id="time-slot" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Time Slot">
-                        <option value="" disabled selected>Select a valid date first</option>
-                    </select>
-                    <p id="no-slots-message" class="no-slots-message">No time slots available for this date. Please try another date or contact us.</p>
-                    <div class="captcha-container">
-                        <p id="captcha-question" class="captcha-question"></p>
-                        <input type="text" id="captcha-answer" placeholder="Enter the code" class="captcha-input" aria-label="CAPTCHA Answer">
-                        <p class="refresh-captcha" onclick="generateCaptcha()">Refresh CAPTCHA</p>
-                    </div>
-                    <div class="space-x-4">
-                        <button onclick="submitAppointment()" class="bg-teal-600 text-white px-6 py-3 rounded-full hover:bg-teal-700" aria-label="Submit Appointment Request">Book Appointment</button>
-                        <a href="https://wa.me/+91756936767?text=Hello%20Oak%20Dental%20Clinic,%20I%20would%20like%20to%20book%20an%20appointment." target="_blank" class="bg-green-500 text-white px-6 py-3 rounded-full hover:bg-green-600" aria-label="Contact via WhatsApp">WhatsApp Us</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- FAQ Section -->
-    <section id="faq" class="py-16 bg-purple-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">Frequently Asked Questions</h2>
-            <div class="space-y-4">
-                <div class="fade-in">
-                    <h3 class="text-xl font-semibold text-teal-600 mb-2">How often should I visit the dentist?</h3>
-                    <p class="text-gray-600">We recommend visiting every 6 months for a routine check-up and cleaning to maintain optimal oral health.</p>
-                </div>
-                <div class="fade-in">
-                    <h3 class="text-xl font-semibold text-teal-600 mb-2">Do you offer payment plans?</h3>
-                    <p class="text-gray-600">Yes, we offer flexible payment plans for various treatments. Contact us for more details.</p>
-                </div>
-                <div class="fade-in">
-                    <h3 class="text-xl font-semibold text-teal-600 mb-2">Is teeth whitening safe?</h3>
-                    <p class="text-gray-600">Absolutely! Our teeth whitening procedures are safe and performed by experienced professionals.</p>
+                <div class="card">
+                    <p class="text-gray-600 mb-4">"Painless root canal, great care!"</p>
+                    <p class="font-semibold text-gray-800">John D.</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="py-16 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold text-center text-gray-800 mb-12 fade-in">Contact Our Hyderabad Clinic</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="fade-in">
-                    <h3 class="text-xl font-semibold text-teal-600 mb-4">Get in Touch</h3>
-                    <p class="text-gray-600 mb-2"><strong>Address:</strong> 2nd Floor, Vision Apartments, Saree Nagar, Nazampet Road, Bachupally, Hyderabad, 500090</p>
-                    <p class="text-gray-600 mb-2"><strong>Phone:</strong> <a href="tel:+91756936767">756 936 767</a> / <a href="tel:+919502030637">9502 030 637</a></p>
-                    <p class="text-gray-600 mb-2"><strong>Email:</strong> <a href="mailto:info@oakdental.com">info@oakdental.com</a></p>
-                    <p class="text-gray-600 mb-4"><strong>Hours:</strong> Mon-Sat, 10:00 AM - 8:00 PM</p>
+    <section id="contact" class="bg-gray">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2>Contact Us</h2>
+            <p class="subtitle">Reach out for a healthier smile.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+                <div class="card">
+                    <h3 class="text-xl font-semibold mb-3 text-gray-800">Our Details</h3>
+                    <p class="text-gray-600"><strong>Address:</strong> 123 Dental Street, Hyderabad</p>
+                    <p class="text-gray-600"><strong>Phone:</strong> <a href="tel:+1234567890" class="hover:text-primary">+1234567890</a></p>
+                    <p class="text-gray-600"><strong>Email:</strong> <a href="mailto:contact@oakdental.com" class="hover:text-primary">contact@oakdental.com</a></p>
                 </div>
-                <div class="fade-in">
-                    <h3 class="text-xl font-semibold text-teal-600 mb-4">Send Us a Message</h3>
-                    <div>
-                        <input type="text" placeholder="Your Name" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Your Name">
-                        <input type="email" placeholder="Your Email" class="w-full p-3 mb-4 border rounded-lg" required aria-label="Your Email">
-                        <textarea placeholder="Your Message" class="w-full p-3 mb-4 border rounded-lg" rows="5" required aria-label="Your Message"></textarea>
-                        <button class="bg-teal-600 text-white px-6 py-3 rounded-full hover:bg-teal-700" aria-label="Send Message">Send</button>
+                <div class="card">
+                    <h3 class="text-xl font-semibold mb-3 text-gray-800">Hours</h3>
+                    <p class="text-gray-600">Mon-Fri: 9:00 AM - 6:00 PM</p>
+                    <p class="text-gray-600">Sat: 10:00 AM - 4:00 PM</p>
+                    <p class="text-gray-600">Sun: Closed</p>
+                </div>
+            </div>
+            <div class="max-w-lg mx-auto">
+                <h3 class="text-xl font-semibold mb-6 text-gray-800">Send a Message</h3>
+                <form id="contact-form" class="card">
+                    <div class="mb-4">
+                        <label for="contact-name" class="block text-gray-700 mb-2">Name</label>
+                        <input type="text" id="contact-name" class="form-input" required>
                     </div>
-                </div>
+                    <div class="mb-4">
+                        <label for="contact-email" class="block text-gray-700 mb-2">Email</label>
+                        <input type="email" id="contact-email" class="form-input" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="contact-message" class="block text-gray-700 mb-2">Message</label>
+                        <textarea id="contact-message" class="form-input" rows="4" required></textarea>
+                    </div>
+                    <button type="submit" class="form-button">Send</button>
+                </form>
             </div>
         </div>
     </section>
 
-    <!-- Newsletter Signup -->
-    <section class="py-16 bg-teal-600 text-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 class="text-3xl font-bold mb-6 fade-in">Stay Updated</h2>
-            <p class="text-lg mb-6 fade-in">Subscribe to our newsletter for the latest dental tips and clinic updates.</p>
-            <div class="flex justify-center fade-in">
-                <input type="email" id="newsletter-email" placeholder="Enter your email" class="w-full max-w-md p-3 rounded-l-lg focus:outline-none" aria-label="Email for Newsletter">
-                <button id="newsletter-submit" class="bg-teal-800 text-white px-6 py-3 rounded-r-lg hover:bg-teal-900" aria-label="Subscribe to Newsletter">Subscribe</button>
+    <!-- Booking Section -->
+    <section id="book" class="text-white">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2>Book Your Appointment</h2>
+            <p class="subtitle">Schedule your visit today.</p>
+            <div class="max-w-lg mx-auto">
+                <form id="booking-form" class="card">
+                    <div class="mb-4">
+                        <label for="name" class="block text-gray-700 mb-2">Name</label>
+                        <input type="text" id="name" class="form-input" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="email" class="block text-gray-700 mb-2">Email</label>
+                        <input type="email" id="email" class="form-input" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="mobile" class="block text-gray-700 mb-2">Mobile</label>
+                        <input type="tel" id="mobile" class="form-input" pattern="[0-9]{10}" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="date" class="block text-gray-700 mb-2">Date</label>
+                        <input type="date" id="date" class="form-input" min="2025-05-20" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="captcha" class="block text-gray-700 mb-2">CAPTCHA: <span id="captcha-question"></span></label>
+                        <input type="text" id="captcha" class="form-input" required>
+                    </div>
+                    <button type="submit" class="form-button">Book</button>
+                </form>
             </div>
         </div>
     </section>
-
-    <!-- Floating WhatsApp Button -->
-    <div class="whatsapp-float">
-        <a href="https://wa.me/+91756936767?text=Hello%20Oak%20Dental%20Clinic,%20I%20would%20like%20to%20book%20an%20appointment." target="_blank" aria-label="Contact via WhatsApp">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp Icon" class="h-12 w-12" loading="lazy">
-        </a>
-    </div>
 
     <!-- Footer -->
-    <footer class="bg-teal-600 text-white py-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <p>© 2025 Oak Dental Clinic. All rights reserved.</p>
-            <div class="mt-4 flex justify-center space-x-4">
-                <a href="#" class="hover:text-gray-200" aria-label="Facebook">Facebook</a>
-                <a href="#" class="hover:text-gray-200" aria-label="Twitter">Twitter</a>
-                <a href="#" class="hover:text-gray-200" aria-label="Instagram">Instagram</a>
-                <a href="/privacy-policy.html" class="hover:text-gray-200" aria-label="Privacy Policy">Privacy Policy</a>
-                <a href="/terms.html" class="hover:text-gray-200" aria-label="Terms of Use">Terms of Use</a>
+    <footer>
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <h3 class="text-xl font-semibold mb-4">OAK Dental Clinic</h3>
+            <p class="text-gray-300 mb-4">123 Dental Street, Hyderabad | <a href="tel:+1234567890">+1234567890</a> | <a href="mailto:contact@oakdental.com">contact@oakdental.com</a></p>
+            <div class="flex justify-center gap-4 mb-4">
+                <a href="https://facebook.com" aria-label="Facebook">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"></path></svg>
+                </a>
+                <a href="https://instagram.com" aria-label="Instagram">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.948-.196-4.354-2.617-6.78-6.979-6.98-=1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"></path></svg>
+                </a>
             </div>
+            <p class="text-gray-300">© 2025 OAK Dental Clinic. All rights reserved.</p>
         </div>
     </footer>
 
+    <!-- Scripts -->
     <script>
-        // Backend API Configuration
-        const API_BASE_URL = 'http://localhost:3000/api'; // Update to your deployed backend URL if not local
-        const API_KEY = 'your-api-key-here'; // Replace with your actual API key
+        // Hamburger Menu
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('navMenu');
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
 
-        // Google Analytics
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
-        gtag('config', 'G-YOUR-ID');
-
-        // Toast Message Function
-        function showToast(message, isError = false) {
-            const toastContainer = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = `toast ${isError ? 'error' : ''}`;
-            toast.textContent = message;
-            toastContainer.appendChild(toast);
-            setTimeout(() => toast.classList.add('show'), 100);
-            setTimeout(() => {
-                toast.classList.remove('show');
-                setTimeout(() => toast.remove(), 500);
-            }, 3000);
-        }
-
-        // Side Navigation
-        function openNav() {
-            document.getElementById("mySidenav").style.width = "280px";
-        }
-        function closeNav() {
-            document.getElementById("mySidenav").style.width = "0";
-        }
-
-        // Smooth Scrolling
+        // Smooth Scroll
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
+            anchor.addEventListener('click', (e) => {
                 e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
+                document.querySelector(anchor.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+                navMenu.classList.remove('active');
+                hamburger.classList.remove('active');
             });
         });
 
-        // Form Submission (Contact Form)
-        document.querySelector('#contact button').addEventListener('click', () => {
-            showToast('Message sent! We will get back to you soon.');
-        });
-
-        // Newsletter Signup
-        document.getElementById('newsletter-submit').addEventListener('click', () => {
-            const email = document.getElementById('newsletter-email').value;
-            if (!email) {
-                showToast('Please enter your email.', true);
-                return;
-            }
-            showToast('Thank you for subscribing to our newsletter!');
-            document.getElementById('newsletter-email').value = '';
-        });
-
-        // Fade-in and Staggered Animations
-        const fadeInElements = document.querySelectorAll('.fade-in');
-        const staggeredElements = document.querySelectorAll('.staggered-fade-in');
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
+        // Active Nav Link
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
+            let current = '';
+            sections.forEach(section => {
+                if (window.scrollY >= section.offsetTop - 100) {
+                    current = section.getAttribute('id');
                 }
             });
-        }, { threshold: 0.1 });
-        fadeInElements.forEach(element => observer.observe(element));
-        staggeredElements.forEach((element, index) => {
-            element.style.transitionDelay = `${index * 0.1}s`;
-            observer.observe(element);
+            navLinks.forEach(link => {
+                link.classList.toggle('active', link.getAttribute('href') === `#${current}`);
+            });
         });
 
-        // Slider Logic
-        const sliders = {
-            'offers-slider': { index: 0, visibleSlides: 1, slideWidth: 100 },
-            'treatments-slider': { index: 0, visibleSlides: 3, slideWidth: 33.33 },
-            'testimonial-slider': { index: 0, visibleSlides: 3, slideWidth: 33.33 },
-            'before-after-slider': { index: 0, visibleSlides: 1, slideWidth: 100 },
-            'gallery-slider': { index: 0, visibleSlides: 1, slideWidth: 100 }
-        };
-
-        function updateSlider(sliderId) {
-            const slider = document.getElementById(sliderId);
-            const state = sliders[sliderId];
-            const totalSlides = slider.children.length;
-            state.index = Math.max(0, Math.min(state.index, totalSlides - state.visibleSlides));
-            const translateX = -state.index * state.slideWidth;
-            slider.style.transform = `translateX(${translateX}%)`;
-
-            if (sliderId === 'testimonial-slider') {
-                const slides = slider.children;
-                for (let i = 0; i < slides.length; i++) {
-                    slides[i].classList.toggle('visible', i >= state.index && i < state.index + state.visibleSlides);
+        // Hero Slideshow
+        const slides = document.querySelectorAll('.hero-slide');
+        const dots = document.querySelectorAll('.hero-dot');
+        let currentSlide = 0;
+        function showSlide(index) {
+            slides[currentSlide].classList.add('exiting');
+            setTimeout(() => {
+                slides[currentSlide].classList.remove('active', 'exiting');
+                currentSlide = index;
+                slides[currentSlide].classList.add('active');
+                dots.forEach((dot, i) => dot.classList.toggle('active', i === index));
+            }, 600);
+        }
+        function nextSlide() {
+            showSlide((currentSlide + 1) % slides.length);
+        }
+        let slideInterval = setInterval(nextSlide, 5000);
+        dots.forEach((dot, i) => {
+            dot.addEventListener('click', () => {
+                if (i !== currentSlide) {
+                    clearInterval(slideInterval);
+                    showSlide(i);
+                    slideInterval = setInterval(nextSlide, 5000);
                 }
-            }
-        }
-
-        function slideLeft(sliderId, visibleSlides, slideWidth) {
-            sliders[sliderId].visibleSlides = visibleSlides;
-            sliders[sliderId].slideWidth = slideWidth;
-            sliders[sliderId].index--;
-            updateSlider(sliderId);
-        }
-
-        function slideRight(sliderId, visibleSlides, slideWidth) {
-            sliders[sliderId].visibleSlides = visibleSlides;
-            sliders[sliderId].slideWidth = slideWidth;
-            sliders[sliderId].index++;
-            updateSlider(sliderId);
-        }
-
-        // Automatic Sliding for Testimonials
-        function autoSlideTestimonials() {
-            slideRight('testimonial-slider', 3, 33.33);
-        }
-
-        let testimonialInterval = setInterval(autoSlideTestimonials, 5000);
-        document.getElementById('testimonial-slider').addEventListener('mouseenter', () => clearInterval(testimonialInterval));
-        document.getElementById('testimonial-slider').addEventListener('mouseleave', () => {
-            testimonialInterval = setInterval(autoSlideTestimonials, 5000);
+            });
         });
 
-        // CAPTCHA Logic (Letter-based)
-        let captchaAnswer = '';
+        // CAPTCHA
         function generateCaptcha() {
-            const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            captchaAnswer = '';
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            let captcha = '';
             for (let i = 0; i < 5; i++) {
-                captchaAnswer += letters.charAt(Math.floor(Math.random() * letters.length));
+                captcha += chars.charAt(Math.floor(Math.random() * chars.length));
             }
-            document.getElementById('captcha-question').textContent = `Enter this code: ${captchaAnswer}`;
-            document.getElementById('captcha-answer').value = '';
+            document.getElementById('captcha-question').textContent = captcha;
+            return captcha;
         }
+        let captchaAnswer = generateCaptcha();
 
-        function validateCaptcha() {
-            const userAnswer = document.getElementById('captcha-answer').value.toUpperCase();
-            return userAnswer === captchaAnswer;
-        }
-
-        // Treatments Loader
-        async function loadTreatments() {
-            try {
-                const response = await fetch(`${API_BASE_URL}/services`, {
-                    headers: { 'Authorization': `Bearer ${API_KEY}` }
-                });
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                const treatments = await response.json();
-                const treatmentsSlider = document.getElementById('treatments-slider');
-                treatmentsSlider.innerHTML = treatments.length === 0
-                    ? '<p class="text-center text-gray-600">No treatments available at the moment.</p>'
-                    : treatments.map(treatment => {
-                        const mediaUrl = treatment.image || treatment.video || '/placeholder.png';
-                        const mediaHTML = treatment.video && !treatment.image
-                            ? `<video src="${mediaUrl}" controls class="treatment-media" onerror="this.poster='/placeholder.png'"></video>`
-                            : `<img src="${mediaUrl}" alt="${treatment.title || 'Treatment Image'}" class="treatment-media" loading="lazy" onerror="this.src='/placeholder.png'">`;
-                        return `
-                            <div class="treatment-slide">
-                                <div class="bg-white p-6 rounded-lg shadow-md text-center">
-                                    ${mediaHTML}
-                                    <h3 class="text-xl font-semibold text-teal-600 mb-2">${treatment.title || 'Untitled'}</h3>
-                                    <p class="text-gray-600 mb-2">${treatment.description || 'No description available'}</p>
-                                    <p class="text-gray-800 font-semibold">Price: ₹${treatment.price || 'N/A'}</p>
-                                </div>
-                            </div>
-                        `;
-                    }).join('');
-                updateSlider('treatments-slider');
-            } catch (error) {
-                console.error('Error loading treatments:', error);
-                showToast('Error loading treatments. Please try again.', true);
+        // Booking Form
+        document.getElementById('booking-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const captchaInput = document.getElementById('captcha').value.toUpperCase();
+            if (captchaInput !== captchaAnswer) {
+                alert('Incorrect CAPTCHA. Try again.');
+                document.getElementById('captcha').value = '';
+                captchaAnswer = generateCaptcha();
+                return;
             }
-        }
-
-        // Offers Loader
-        async function loadOffers() {
-            try {
-                const response = await fetch(`${API_BASE_URL}/offers`, {
-                    headers: { 'Authorization': `Bearer ${API_KEY}` }
-                });
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                const offers = await response.json();
-                const offersSlider = document.getElementById('offers-slider');
-                offersSlider.innerHTML = offers.length === 0
-                    ? '<p class="text-center text-gray-600">No offers available at the moment.</p>'
-                    : offers.map(offer => `
-                        <div class="offer-slide">
-                            <div class="bg-white p-6 rounded-lg shadow-md text-center">
-                                <img src="${offer.image || '/placeholder.png'}" alt="${offer.title || 'Offer Image'}" class="offer-media" loading="lazy" onerror="this.src='/placeholder.png'">
-                                <h3 class="text-xl font-semibold text-teal-600 mb-2">${offer.title || 'Untitled'}</h3>
-                                <p class="text-gray-600 mb-2">${offer.description || 'No description available'}</p>
-                                <p class="text-gray-800 font-semibold">Price: ₹${offer.price || 'N/A'}</p>
-                            </div>
-                        </div>
-                    `).join('');
-                updateSlider('offers-slider');
-            } catch (error) {
-                console.error('Error loading offers:', error);
-                showToast('Error loading offers. Please try again.', true);
-            }
-        }
-
-        // Feedback Submission
-        let currentRating = 0;
-        document.querySelectorAll('.rating-stars .star').forEach(star => {
-            star.addEventListener('click', () => {
-                currentRating = parseInt(star.dataset.rating);
-                document.querySelectorAll('.rating-stars .star').forEach(s => {
-                    s.classList.toggle('selected', parseInt(s.dataset.rating) <= currentRating);
-                });
-            });
+            alert('Appointment booked successfully!');
+            e.target.reset();
+            captchaAnswer = generateCaptcha();
         });
 
-        async function submitFeedback() {
-            const full_name = document.getElementById('feedback-full-name').value;
-            const email = document.getElementById('feedback-email').value;
-            const description = document.getElementById('feedback-description').value;
-            if (!full_name || !email || !currentRating || !description) {
-                showToast('Please fill in all fields and select a rating.', true);
-                return;
-            }
-            try {
-                const response = await fetch(`${API_BASE_URL}/feedback`, {
-                    method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${API_KEY}`
-                    },
-                    body: JSON.stringify({ full_name, email, rating: currentRating, description })
-                });
-                if (response.ok) {
-                    loadTestimonials();
-                    document.getElementById('feedback-full-name').value = '';
-                    document.getElementById('feedback-email').value = '';
-                    document.getElementById('feedback-description').value = '';
-                    currentRating = 0;
-                    document.querySelectorAll('.rating-stars .star').forEach(s => s.classList.remove('selected'));
-                    showToast('Thank you for your feedback!');
-                } else {
-                    showToast('Error submitting feedback. Please try again.', true);
-                }
-            } catch (error) {
-                console.error('Error submitting feedback:', error);
-                showToast('Error submitting feedback. Please try again.', true);
-            }
-        }
-
-        // Testimonials Loader
-        async function loadTestimonials() {
-            try {
-                const response = await fetch(`${API_BASE_URL}/feedback`, {
-                    headers: { 'Authorization': `Bearer ${API_KEY}` }
-                });
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                const feedbacks = await response.json();
-                const testimonialSlider = document.getElementById('testimonial-slider');
-                testimonialSlider.innerHTML = feedbacks.length === 0
-                    ? '<p class="text-center text-gray-600">No testimonials available at the moment.</p>'
-                    : feedbacks.map(feedback => `
-                        <div class="testimonial-slide bg-white p-6 rounded-lg shadow-md">
-                            <p class="text-gray-600 mb-4">"${feedback.description}"</p>
-                            <p class="text-teal-600 font-semibold">— ${feedback.full_name}, ${feedback.rating}★</p>
-                        </div>
-                    `).join('');
-                updateSlider('testimonial-slider');
-            } catch (error) {
-                console.error('Error loading testimonials:', error);
-                showToast('Error loading testimonials. Please try again.', true);
-            }
-        }
-
-        // Appointment Handling
-        let leaveDates = [];
-        async function fetchLeaveDates() {
-            try {
-                const response = await fetch(`${API_BASE_URL}/leave-dates`, {
-                    headers: { 'Authorization': `Bearer ${API_KEY}` }
-                });
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                leaveDates = (await response.json()).map(date => new Date(date).toISOString().split('T')[0]);
-                initializeAppointmentCalendar();
-            } catch (error) {
-                console.error('Error fetching leave dates:', error);
-                showToast('Error loading calendar. Please try again.', true);
-            }
-        }
-
-        function initializeAppointmentCalendar() {
-            flatpickr('#appointment-date', {
-                dateFormat: 'Y-m-d',
-                minDate: 'today',
-                disable: leaveDates,
-                onChange: (selectedDates, dateStr) => {
-                    if (leaveDates.includes(dateStr)) {
-                        showToast(`The doctor is on leave on ${dateStr}. Please select another date, such as ${getNextAvailableDate(dateStr)}.`, true);
-                        document.getElementById('appointment-date').value = '';
-                        document.getElementById('time-slot').innerHTML = '<option value="" disabled selected>Select a valid date first</option>';
-                        document.getElementById('no-slots-message').classList.remove('visible');
-                    } else {
-                        populateTimeSlots(dateStr);
-                    }
-                },
-                onDayCreate: (dObj, dStr, fp, dayElem) => {
-                    const dayDate = dayElem.dateObj.toISOString().split('T')[0];
-                    if (leaveDates.includes(dayDate)) {
-                        dayElem.classList.add('disabled');
-                        dayElem.style.color = '#ff0000'; // Leave dates in red
-                    } else {
-                        dayElem.style.color = '#000000'; // Non-leave dates in black
-                    }
-                }
-            });
-        }
-
-        function getNextAvailableDate(currentDate) {
-            const date = new Date(currentDate);
-            let nextDate;
-            do {
-                date.setDate(date.getDate() + 1);
-                nextDate = date.toISOString().split('T')[0];
-            } while (leaveDates.includes(nextDate));
-            return nextDate;
-        }
-
-        async function populateTimeSlots(date) {
-            const timeSlotSelect = document.getElementById('time-slot');
-            const noSlotsMessage = document.getElementById('no-slots-message');
-            timeSlotSelect.innerHTML = '<option value="" disabled selected>Loading time slots...</option>';
-            noSlotsMessage.classList.remove('visible');
-            try {
-                const response = await fetch(`${API_BASE_URL}/time-slots?date=${encodeURIComponent(date)}`, {
-                    headers: { 'Authorization': `Bearer ${API_KEY}` }
-                });
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                const timeSlots = [
-                    "9:00 AM", "9:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM",
-                    "1:00 PM", "1:30 PM", "2:00 PM", "2:30 PM", "3:00 PM", "3:30 PM",
-                    "4:00 PM", "4:30 PM", "5:00 PM"
-                ];
-                const bookedSlots = await response.json();
-                const availableSlots = timeSlots.filter(slot => !bookedSlots.includes(slot));
-
-                if (!Array.isArray(availableSlots) || availableSlots.length === 0) {
-                    timeSlotSelect.innerHTML = '<option value="" disabled selected>No time slots available</option>';
-                    noSlotsMessage.classList.add('visible');
-                } else {
-                    timeSlotSelect.innerHTML = '<option value="" disabled selected>Select Time Slot</option>' +
-                        availableSlots.map(slot => `<option value="${slot}">${slot}</option>`).join('');
-                    timeSlotSelect.classList.add('slide-in');
-                    setTimeout(() => timeSlotSelect.classList.remove('slide-in'), 300);
-                }
-            } catch (error) {
-                console.error('Error fetching time slots:', error);
-                timeSlotSelect.innerHTML = '<option value="" disabled selected>Error loading slots</option>';
-                noSlotsMessage.classList.add('visible');
-                showToast('Unable to load time slots. Please try another date or contact us.', true);
-            }
-        }
-
-        async function submitAppointment() {
-            const data = {
-                id: Date.now().toString(),
-                full_name: document.getElementById('full-name').value,
-                email: document.getElementById('email').value,
-                phone: document.getElementById('phone').value,
-                date: document.getElementById('appointment-date').value,
-                time: document.getElementById('time-slot').value
-            };
-
-            if (!data.full_name || !data.email || !data.phone || !data.date || !data.time) {
-                showToast('Please fill in all fields.', true);
-                return;
-            }
-
-            if (leaveDates.includes(data.date)) {
-                showToast(`The doctor is on leave on ${data.date}. Please select another date, such as ${getNextAvailableDate(data.date)}.`, true);
-                return;
-            }
-
-            if (!validateCaptcha()) {
-                showToast('Incorrect CAPTCHA code. Please try again.', true);
-                generateCaptcha();
-                return;
-            }
-
-            try {
-                const response = await fetch(`${API_BASE_URL}/appointments`, {
-                    method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${API_KEY}`
-                    },
-                    body: JSON.stringify(data)
-                });
-                if (response.ok) {
-                    showToast('Appointment booked successfully!');
-                    document.getElementById('full-name').value = '';
-                    document.getElementById('email').value = '';
-                    document.getElementById('phone').value = '';
-                                        document.getElementById('appointment-date').value = '';
-                    document.getElementById('time-slot').innerHTML = '<option value="" disabled selected>Select a valid date first</option>';
-                    document.getElementById('no-slots-message').classList.remove('visible');
-                    document.getElementById('captcha-answer').value = '';
-                    generateCaptcha();
-                } else {
-                    const errorText = await response.text();
-                    showToast(`Error booking appointment: ${errorText}`, true);
-                }
-            } catch (error) {
-                console.error('Error submitting appointment:', error);
-                showToast('Error booking appointment. Please try again.', true);
-            }
-        }
-
-        // Check Appointment Status
-        async function checkAppointmentStatus() {
-            const identifier = document.getElementById('status-identifier').value;
-            if (!identifier) {
-                showToast('Please enter your mobile number or email.', true);
-                return;
-            }
-            try {
-                const response = await fetch(`${API_BASE_URL}/appointments?identifier=${encodeURIComponent(identifier)}`, {
-                    headers: { 'Authorization': `Bearer ${API_KEY}` }
-                });
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                const appointment = await response.json();
-                const statusResult = document.getElementById('status-result');
-                if (!appointment || Object.keys(appointment).length === 0) {
-                    statusResult.innerHTML = '<p class="text-red-600">No appointment found with the provided details.</p>';
-                } else {
-                    statusResult.innerHTML = `
-                        <p><strong>Name:</strong> ${appointment.full_name}</p>
-                        <p><strong>Date:</strong> ${appointment.date}</p>
-                        <p><strong>Time:</strong> ${appointment.time}</p>
-                        <p><strong>Status:</strong> ${appointment.status || 'Confirmed'}</p>
-                    `;
-                }
-                statusResult.classList.remove('hidden');
-            } catch (error) {
-                console.error('Error checking appointment status:', error);
-                showToast('Error checking appointment status. Please try again.', true);
-            }
-        }
-
-        // Initialize on Page Load
-        document.addEventListener('DOMContentLoaded', () => {
-            fetchLeaveDates();
-            loadTreatments();
-            loadOffers();
-            loadTestimonials();
-            generateCaptcha();
+        // Contact Form
+        document.getElementById('contact-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Message sent successfully!');
+            e.target.reset();
         });
     </script>
 </body>
 </html>
-                   
