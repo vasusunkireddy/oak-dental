@@ -300,6 +300,94 @@
         .cta-icon.whatsapp:hover {
             background: #1DA851;
         }
+        .cta-icon.chat {
+            background: var(--teal);
+        }
+        .cta-icon.chat:hover {
+            background: #0e7490;
+        }
+        .back-to-top {
+            background: var(--primary);
+            color: var(--white);
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+        .back-to-top.visible {
+            display: flex;
+        }
+        .back-to-top:hover {
+            background: #1e3a8a;
+            transform: scale(1.1);
+        }
+
+        /* Live Chat */
+        .chat-widget {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 300px;
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            display: none;
+            flex-direction: column;
+            z-index: 100;
+        }
+        .chat-widget.active {
+            display: flex;
+        }
+        .chat-header {
+            background: var(--teal);
+            color: var(--white);
+            padding: 12px;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .chat-body {
+            padding: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .chat-message {
+            margin-bottom: 12px;
+            padding: 8px;
+            border-radius: 8px;
+            background: #f3f4f6;
+        }
+        .chat-message.user {
+            background: var(--secondary);
+            color: var(--white);
+            text-align: right;
+        }
+        .chat-input {
+            display: flex;
+            padding: 12px;
+            border-top: 1px solid #d1d5db;
+        }
+        .chat-input input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            margin-right: 8px;
+        }
+        .chat-input button {
+            background: var(--teal);
+            color: var(--white);
+            padding: 8px 12px;
+            border-radius: 6px;
+        }
+        .chat-input button:hover {
+            background: #0e7490;
+        }
 
         /* Modal */
         .modal {
@@ -582,7 +670,7 @@
         }
 
         /* Forms */
-        .form-input {
+        .form-input, .form-select {
             width: 100%;
             padding: 10px;
             border: 1px solid #d1d5db;
@@ -592,7 +680,7 @@
             transition: border-color 0.3s ease;
             font-size: 0.9rem;
         }
-        .form-input:focus {
+        .form-input:focus, .form-select:focus {
             border-color: var(--secondary);
             outline: none;
             box-shadow: 0 0 6px rgba(20, 184, 166, 0.3);
@@ -629,8 +717,8 @@
             transform: translateY(-50%);
         }
         @keyframes spin {
-            0% { transform: translateY(-50%) rotate(0deg); }
-            100% { transform: translateY(-50%) rotate(360deg); }
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         /* Doctor Section */
@@ -807,55 +895,42 @@
             transform: scale(1.2);
         }
 
-        /* Specific Section Styles */
-        #services {
-            background: var(--white);
+        /* Social Sharing */
+        .social-share {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 1rem;
         }
-        #services h2 {
-            color: var(--lime);
-        }
-        #offers {
-            background: var(--peach);
-        }
-        #offers h2 {
-            color: var(--orange);
-        }
-        #why-choose-us {
-            background: var(--cyan);
-        }
-        #why-choose-us h2 {
-            color: var(--teal);
-        }
-        #about {
-            background: var(--peach);
-        }
-        #about h2 {
-            color: var(--orange);
-        }
-        #doctors {
-            background: var(--pale-blue);
-        }
-        #doctors h2 {
-            color: var(--navy);
-        }
-        #testimonials {
-            background: var(--cyan);
-        }
-        #testimonials h2 {
-            color: var(--teal);
-        }
-        #contact {
-            background: var(--pale-blue);
-        }
-        #contact h2 {
-            color: var(--navy);
-        }
-        #book {
-            background: linear-gradient(135deg, var(--book-bg), var(--book-bg-dark));
-        }
-        #book h2 {
+        .social-share a {
             color: var(--white);
+            background: var(--secondary);
+            padding: 8px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
         }
+        .social-share a:hover {
+            background: #0d9488;
+            transform: scale(1.1);
+        }
+
+        /* Specific Section Styles */
+        #services { background: var(--white); }
+        #services h2 { color: var(--lime); }
+        #offers { background: var(--peach); }
+        #offers h2 { color: var(--orange); }
+        #why-choose-us { background: var(--cyan); }
+        #why-choose-us h2 { color: var(--teal); }
+        #about { background: var(--peach); }
+        #about h2 { color: var(--orange); }
+        #doctors { background: var(--pale-blue); }
+        #doctors h2 { color: var(--navy); }
+        #testimonials { background: var(--cyan); }
+        #testimonials h2 { color: var(--teal); }
+        #contact { background: var(--pale-blue); }
+        #contact h2 { color: var(--navy); }
+        #book { background: linear-gradient(135deg, var(--book-bg), var(--book-bg-dark)); }
+        #book h2 { color: var(--white); }
         footer {
             background: var(--footer-teal);
             color: var(--white);
@@ -871,91 +946,34 @@
 
         /* Mobile Responsiveness */
         @media (max-width: 768px) {
-            body {
-                font-size: 0.9rem;
-            }
-            .nav-menu {
-                display: none;
-            }
-            .hamburger {
-                display: flex;
-            }
-            .hero-bg {
-                padding: 60px 0 80px;
-            }
-            .hero-slideshow {
-                height: 320px;
-            }
-            .slide-content h2 {
-                font-size: 2rem;
-            }
-            .slide-content p {
-                font-size: 0.95rem;
-            }
-            .cta-button {
-                padding: 10px 24px;
-                font-size: 0.9rem;
-            }
-            .hero-dots {
-                gap: 8px;
-                bottom: 50px;
-            }
-            .hero-dot {
-                width: 10px;
-                height: 10px;
-            }
-            .offer-thumbnails {
-                gap: 8px;
-                bottom: 10px;
-            }
-            .offer-thumbnail {
-                width: 50px;
-                height: 50px;
-            }
-            h2 {
-                font-size: 1.5rem;
-            }
-            section {
-                padding: 40px 8px;
-            }
-            .form-input, .form-button {
-                font-size: 0.85rem;
-            }
-            .sticky-cta {
-                bottom: 10px;
-                right: 10px;
-            }
-            .cta-icon {
-                width: 40px;
-                height: 40px;
-            }
+            body { font-size: 0.9rem; }
+            .nav-menu { display: none; }
+            .hamburger { display: flex; }
+            .hero-bg { padding: 60px 0 80px; }
+            .hero-slideshow { height: 320px; }
+            .slide-content h2 { font-size: 2rem; }
+            .slide-content p { font-size: 0.95rem; }
+            .cta-button { padding: 10px 24px; font-size: 0.9rem; }
+            .hero-dots { gap: 8px; bottom: 50px; }
+            .hero-dot { width: 10px; height: 10px; }
+            .offer-thumbnails { gap: 8px; bottom: 10px; }
+            .offer-thumbnail { width: 50px; height: 50px; }
+            h2 { font-size: 1.5rem; }
+            section { padding: 40px 8px; }
+            .form-input, .form-select, .form-button { font-size: 0.85rem; }
+            .sticky-cta { bottom: 10px; right: 10px; }
+            .cta-icon { width: 40px; height: 40px; }
+            .chat-widget { width: 100%; left: 0; bottom: 0; border-radius: 0; }
+            .chat-body { max-height: 200px; }
         }
         @media (max-width: 480px) {
-            .slide-content h2 {
-                font-size: 1.5rem;
-            }
-            .slide-content p {
-                font-size: 0.85rem;
-            }
-            .hero-slideshow {
-                height: 280px;
-            }
-            .hamburger div {
-                width: 20px;
-                height: 2px;
-                margin: 2px 0;
-            }
-            .cta-button {
-                padding: 8px 20px;
-                font-size: 0.85rem;
-            }
-            .offer-thumbnails {
-                gap: 6px;
-            }
-            .offer-thumbnail {
-                width: 40px;
-                height: 40px;
-            }
+            .slide-content h2 { font-size: 1.5rem; }
+            .slide-content p { font-size: 0.85rem; }
+            .hero-slideshow { height: 280px; }
+            .hamburger div { width: 20px; height: 2px; margin: 2px 0; }
+            .cta-button { padding: 8px 20px; font-size: 0.85rem; }
+            .offer-thumbnails { gap: 6px; }
+            .offer-thumbnail { width: 40px; height: 40px; }
         }
     </style>
 </head>
@@ -967,10 +985,12 @@
                 <img src="https://i.postimg.cc/fbRFLwNV/OAK-LOGO-1.jpg" alt="OAK Dental Logo" class="h-10">
                 <h1 class="text-xl font-bold text-gray-800">OAK Dental Clinic</h1>
             </div>
-            <div class="hamburger" id="hamburger">
-                <div></div>
-                <div></div>
-                <div></div>
+            <div class="flex items-center gap-4">
+                <div class="hamburger" id="hamburger">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
             </div>
             <div class="nav-menu" id="navMenu">
                 <a href="#home" class="nav-link active">Home</a>
@@ -1003,6 +1023,31 @@
                 <path d="M12 0C5.373 0 0 5.373 0 12c0 2.134.561 4.141 1.537 5.892L0 24l6.305-1.537A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm6.153 16.885c-.27.765-.99 1.395-1.755 1.665-.765.27-1.575.315-2.385.045-.81-.27-1.575-.855-2.115-1.485-.54-.63-.945-1.35-1.215-2.16-.27-.81-.315-1.665-.135-2.475l.135-.405c.18-.54.585-1.035 1.08-1.35.495-.315 1.08-.405 1.665-.225.585.18 1.08.585 1.35 1.125.27.54.405 1.17.405 1.845 0 .18 0 .36-.045.54-.045.18-.135.36-.225.495-.09.135-.225.27-.36.405-.135.135-.27.27-.405.405-.135.135-.27.27-.405.405-.135.135-.27.225-.405.315-.135.09-.27.18-.405.225-.765.405-1.485.585-2.115.54-.63-.045-1.215-.315-1.665-.765-.45-.45-.765-1.035-.855-1.71-.09-.675.045-1.35.405-1.935.36-.585 1.035-.99 1.71-1.08l.405-.045c.675-.045 1.35.09 1.935.405.585.315.99.855 1.215 1.485.225.63.27 1.305.135 1.935zm-2.385-6.885c-.405 0-.765.135-1.035.405-.27.27-.405.63-.405 1.035s.135.765.405 1.035c.27.27.63.405 1.035.405s.765-.135 1.035-.405c.27-.27.405-.63.405-1.035s-.135-.765-.405-1.035c-.27-.27-.630-.405-1.035-.405z"/>
             </svg>
         </a>
+        <button class="cta-icon chat" onclick="toggleChat()" aria-label="Open Live Chat">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12zM7 9h2v2H7zm4 0h2v2h-2zm4 0h2v2h-2z"/>
+            </svg>
+        </button>
+        <button class="back-to-top" id="backToTop" onclick="scrollToTop()" aria-label="Back to Top">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 5l-7 7h5v7h4v-7h5l-7-7z"/>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Live Chat Widget -->
+    <div class="chat-widget" id="chatWidget">
+        <div class="chat-header">
+            <span>Live Chat Support</span>
+            <button onclick="toggleChat()" aria-label="Close Chat">✕</button>
+        </div>
+        <div class="chat-body" id="chatBody">
+            <div class="chat-message">Welcome to OAK Dental! How can we assist you today?</div>
+        </div>
+        <div class="chat-input">
+            <input type="text" id="chatInput" placeholder="Type your message..." aria-label="Chat input">
+            <button onclick="sendChatMessage()">Send</button>
+        </div>
     </div>
 
     <!-- Modal -->
@@ -1297,12 +1342,15 @@
         <div class="max-w-7xl mx-auto px-4 text-center">
             <h3 class="text-xl font-semibold mb-4">OAK Dental Clinic</h3>
             <p class="text-gray-200 mb-4">123 Dental Street, Hyderabad | <a href="tel:+1234567890">+1234567890</a> | <a href="mailto:contact@oakdental.com">contact@oakdental.com</a></p>
-            <div class="flex justify-center gap-4 mb-4">
-                <a href="https://facebook.com" aria-label="Facebook">
+            <div class="social-share">
+                <a href="https://www.facebook.com/sharer/sharer.php?u=https://oakdental.com" aria-label="Share on Facebook">
                     <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"></path></svg>
                 </a>
-                <a href="https://instagram.com" aria-label="Instagram">
-                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.948-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"></path></svg>
+                <a href="https://twitter.com/intent/tweet?url=https://oakdental.com&text=Check%20out%20OAK%20Dental%20Clinic!" aria-label="Share on Twitter">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M22.46 6c-.77.35-1.6.58-2.46.69a4.3 4.3 0 001.88-2.38 8.6 8.6 0 01-2.72 1.05A4.28 4.28 0 0015.77 4c-2.36 0-4.28 1.92-4.28 4.29a4.3 4.3 0 00.11.98A12.14 12.14 0 013 4.69a4.29 4.29 0 001.33 5.71 4.24 4.24 0 01-1.94-.54v.05c0 2.07 1.47 3.8 3.42 4.2a4.3 4.3 0 01-1.93.07 4.28 4.28 0 004 2.98 8.58 8.58 0 01-5.33 1.84c-.34 0-.68-.02-1.01-.06A12.1 12.1 0 006.58 20c7.9 0 12.22-6.54 12.22-12.21 0-.19 0-.37-.01-.55A8.74 8.74 0 0022.46 6z"></path></svg>
+                </a>
+                <a href="https://www.linkedin.com/shareArticle?url=https://oakdental.com&title=OAK%20Dental%20Clinic" aria-label="Share on LinkedIn">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M4.98 3.5c0 1.381-1.11 2.5-2.48 2.5s-2.48-1.119-2.48-2.5c0-1.38 1.11-2.5 2.48-2.5s2.48 1.12 2.48 2.5zm.02 4.5h-5v16h5v-16zm7.982 0h-4.968v16h4.969v-8.399c0-4.67 6.029-5.052 6.029 0v8.399h4.988v-10.131c0-7.88-8.922-7.593-11.018-3.714v-2.155z"></path></svg>
                 </a>
             </div>
             <div class="max-w-md mx-auto mb-4">
@@ -1362,7 +1410,15 @@
             navLinks.forEach(link => {
                 link.classList.toggle('active', link.getAttribute('href') === `#${current}`);
             });
+            // Show/Hide Back to Top Button
+            document.getElementById('backToTop').classList.toggle('visible', window.scrollY > 300);
         });
+
+        // Back to Top
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            trackEvent('BackToTop', 'Click');
+        }
 
         // Hero Slideshow
         const slides = document.querySelectorAll('.hero-slide');
@@ -1400,6 +1456,7 @@
                         showSlide(i);
                         slideInterval = setInterval(nextSlide, 5000);
                     }, 700);
+                    trackEvent('HeroSlide', `Click_${i}`);
                 }
             });
         });
@@ -1413,54 +1470,43 @@
         async function fetchServices() {
             try {
                 const response = await fetch(ENDPOINTS.services);
-                if (!response.ok) throw new Error('Network error');
-                const data = await response.json();
-                return data.map(service => ({
-                    name: service.name || 'Unnamed Service',
-                    description: service.description || 'No description available.',
-                    image: service.image || 'https://via.placeholder.com/120?text=No+Image',
-                    price: service.price ? `₹${service.price}` : null
-                }));
+                if (!response.ok) throw new Error('Failed to fetch services');
+                allServices = await response.json();
+                displayServices(allServices.slice(0, INITIAL_DISPLAY_LIMIT));
+                seeMoreButton.style.display = allServices.length > INITIAL_DISPLAY_LIMIT ? 'block' : 'none';
             } catch (error) {
                 console.error('Error fetching services:', error);
-                return [];
+                servicesContainer.innerHTML = '<p class="text-red-600">Failed to load services. Please try again later.</p>';
             }
         }
 
-        async function displayServices(services, limit = INITIAL_DISPLAY_LIMIT) {
+        function displayServices(services) {
             servicesContainer.innerHTML = '';
-            const displayCount = Math.min(services.length, limit);
-            for (let i = 0; i < displayCount; i++) {
-                const service = services[i];
-                const serviceSlide = document.createElement('div');
-                serviceSlide.classList.add('service-slide');
-                serviceSlide.innerHTML = `
-                    <div class="service-content">
-                        <img src="${service.image}" alt="${service.name}" class="service-image">
-                        <div class="service-text">
-                            <h3>${service.name}</h3>
-                            <p>${service.description}</p>
-                            ${service.price ? `<p class="price">${service.price}</p>` : ''}
+            services.forEach((service, index) => {
+                const serviceCard = `
+                    <div class="service-slide" style="transition-delay: ${index * 0.2}s">
+                        <div class="service-content">
+                            <img src="${service.image || 'https://via.placeholder.com/120'}" alt="${service.name}" class="service-image">
+                            <div class="service-text">
+                                <h3>${service.name}</h3>
+                                <p>${service.description}</p>
+                                <p class="price">₹${service.price.toLocaleString()}</p>
+                            </div>
                         </div>
                     </div>
                 `;
-                servicesContainer.appendChild(serviceSlide);
-                setTimeout(() => serviceSlide.classList.add('visible'), 100 * i);
-            }
-            seeMoreButton.style.display = services.length > INITIAL_DISPLAY_LIMIT ? 'block' : 'none';
+                servicesContainer.insertAdjacentHTML('beforeend', serviceCard);
+            });
+            setTimeout(() => {
+                document.querySelectorAll('.service-slide').forEach(slide => slide.classList.add('visible'));
+            }, 100);
         }
 
         seeMoreButton.addEventListener('click', () => {
-            displayServices(allServices, allServices.length);
-            seeMoreButton.style.display = 'none';
-        });
-
-        async function loadServices() {
-            allServices = await fetchServices();
             displayServices(allServices);
-        }
-
-        loadServices();
+            seeMoreButton.style.display = 'none';
+            trackEvent('SeeMoreServices', 'Click');
+        });
 
         // Offers Section (Dynamic with Backend)
         const offersContainer = document.getElementById('offersContainer');
@@ -1469,179 +1515,281 @@
         async function fetchOffers() {
             try {
                 const response = await fetch(ENDPOINTS.offers);
-                if (!response.ok) throw new Error('Network error');
-                const data = await response.json();
-                return data.map(offer => ({
-                    description: offer.description || 'No description available.',
-                    image: offer.image || 'https://via.placeholder.com/300x150?text=No+Image'
-                }));
+                if (!response.ok) throw new Error('Failed to fetch offers');
+                const offers = await response.json();
+                displayOffers(offers);
+                displayOfferThumbnails(offers);
             } catch (error) {
                 console.error('Error fetching offers:', error);
-                return [];
+                offersContainer.innerHTML = '<p class="text-red-600">Failed to load offers. Please try again later.</p>';
             }
         }
 
-        async function displayOffers() {
-            const offers = await fetchOffers();
+        function displayOffers(offers) {
             offersContainer.innerHTML = '';
-            offerThumbnails.innerHTML = '';
             offers.forEach((offer, index) => {
-                // Offer Card
-                const offerCard = document.createElement('div');
-                offerCard.classList.add('offer-card');
-                offerCard.innerHTML = `
-                    <img src="${offer.image}" alt="Offer ${index + 1}" class="offer-image">
-                    <div class="offer-content">
-                        <p>${offer.description}</p>
+                const offerCard = `
+                    <div class="offer-card" style="transition-delay: ${index * 0.2}s">
+                        <img src="${offer.image || 'https://via.placeholder.com/300x150'}" alt="${offer.title}" class="offer-image">
+                        <div class="offer-content">
+                            <p>${offer.description}</p>
+                        </div>
                     </div>
                 `;
-                offersContainer.appendChild(offerCard);
-                setTimeout(() => offerCard.classList.add('visible'), 100 * index);
+                offersContainer.insertAdjacentHTML('beforeend', offerCard);
+            });
+            setTimeout(() => {
+                document.querySelectorAll('.offer-card').forEach(card => card.classList.add('visible'));
+            }, 100);
+        }
 
-                // Offer Thumbnail in Hero Section
-                const thumbnail = document.createElement('img');
-                thumbnail.src = offer.image;
-                thumbnail.alt = `Offer ${index + 1}`;
-                thumbnail.classList.add('offer-thumbnail');
+        function displayOfferThumbnails(offers) {
+            offerThumbnails.innerHTML = '';
+            offers.forEach((offer, index) => {
+                const thumbnail = `<img src="${offer.image || 'https://via.placeholder.com/60'}" alt="${offer.title}" class="offer-thumbnail" data-slide="${index}">`;
+                offerThumbnails.insertAdjacentHTML('beforeend', thumbnail);
+            });
+            document.querySelectorAll('.offer-thumbnail').forEach(thumbnail => {
                 thumbnail.addEventListener('click', () => {
-                    document.querySelector('#offers').scrollIntoView({ behavior: 'smooth' });
-                    setTimeout(() => offerCard.scrollIntoView({ behavior: 'smooth', block: 'center' }), 300);
+                    clearInterval(slideInterval);
+                    slides[currentSlide].classList.add('exiting');
+                    setTimeout(() => {
+                        showSlide(parseInt(thumbnail.dataset.slide));
+                        slideInterval = setInterval(nextSlide, 5000);
+                    }, 700);
+                    trackEvent('OfferThumbnail', `Click_${thumbnail.dataset.slide}`);
                 });
-                offerThumbnails.appendChild(thumbnail);
             });
         }
 
-        displayOffers();
+        // Booking Form
+        const bookingForm = document.getElementById('booking-form');
+        const captchaQuestion = document.getElementById('captcha-question');
+        let correctCaptchaAnswer;
 
-        // Testimonial Carousel
-        const testimonialSlides = document.querySelectorAll('.testimonial-slide');
-        const testimonialDots = document.querySelectorAll('.testimonial-dot');
-        let currentTestimonial = 0;
-        function showTestimonial(index) {
-            testimonialSlides[currentTestimonial].classList.remove('active');
-            testimonialDots[currentTestimonial].classList.remove('active');
-            currentTestimonial = index;
-            testimonialSlides[currentTestimonial].classList.add('active');
-            testimonialDots[currentTestimonial].classList.add('active');
+        function generateCaptcha() {
+            const num1 = Math.floor(Math.random() * 10) + 1;
+            const num2 = Math.floor(Math.random() * 10) + 1;
+            correctCaptchaAnswer = num1 + num2;
+            captchaQuestion.textContent = `${num1} + ${num2} = ?`;
         }
-        function nextTestimonial() {
-            showTestimonial((currentTestimonial + 1) % testimonialSlides.length);
-        }
-        let testimonialInterval = setInterval(nextTestimonial, 4000);
-        testimonialDots.forEach((dot, i) => {
-            dot.addEventListener('click', () => {
-                if (i !== currentTestimonial) {
-                    clearInterval(testimonialInterval);
-                    showTestimonial(i);
-                    testimonialInterval = setInterval(nextTestimonial, 4000);
-                }
-            });
+
+        bookingForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const button = bookingForm.querySelector('button');
+            button.classList.add('loading');
+            button.disabled = true;
+
+            const formData = new FormData(bookingForm);
+            const captchaInput = formData.get('captcha');
+
+            if (parseInt(captchaInput) !== correctCaptchaAnswer) {
+                alert('Incorrect CAPTCHA. Please try again.');
+                generateCaptcha();
+                button.classList.remove('loading');
+                button.disabled = false;
+                return;
+            }
+
+            try {
+                const response = await fetch(ENDPOINTS.bookAppointment, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        name: formData.get('name'),
+                        email: formData.get('email'),
+                        mobile: formData.get('mobile'),
+                        date: formData.get('date')
+                    }),
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                                if (!response.ok) throw new Error('Failed to book appointment');
+                const result = await response.json();
+                document.getElementById('modalMessage').textContent = `Your appointment is confirmed! Your Appointment ID is ${result.appointmentId}.`;
+                document.getElementById('confirmationModal').style.display = 'flex';
+                bookingForm.reset();
+                generateCaptcha();
+                trackEvent('BookAppointment', 'Success');
+            } catch (error) {
+                console.error('Error booking appointment:', error);
+                alert('Failed to book appointment. Please try again.');
+                trackEvent('BookAppointment', 'Error');
+            } finally {
+                button.classList.remove('loading');
+                button.disabled = false;
+            }
         });
 
-        // Section Animations
-        const sections = document.querySelectorAll('section');
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, { threshold: 0.1 });
-        sections.forEach(section => observer.observe(section));
+        // Status Form
+        const statusForm = document.getElementById('status-form');
 
-        // CAPTCHA
-        function generateCaptcha() {
-            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            let captcha = '';
-            for (let i = 0; i < 5; i++) {
-                captcha += chars.charAt(Math.floor(Math.random() * chars.length));
+        statusForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const button = statusForm.querySelector('button');
+            button.classList.add('loading');
+            button.disabled = true;
+
+            const formData = new FormData(statusForm);
+            try {
+                const response = await fetch(`${ENDPOINTS.checkStatus}?email=${encodeURIComponent(formData.get('status-email'))}&appointmentId=${encodeURIComponent(formData.get('status-id'))}`);
+                if (!response.ok) throw new Error('Failed to check status');
+                const result = await response.json();
+                document.getElementById('modalMessage').textContent = `Appointment Status: ${result.status}`;
+                document.getElementById('confirmationModal').style.display = 'flex';
+                statusForm.reset();
+                trackEvent('CheckStatus', 'Success');
+            } catch (error) {
+                console.error('Error checking status:', error);
+                alert('Failed to check status. Please try again.');
+                trackEvent('CheckStatus', 'Error');
+            } finally {
+                button.classList.remove('loading');
+                button.disabled = false;
             }
-            document.getElementById('captcha-question').textContent = captcha;
-            return captcha;
-        }
-        let captchaAnswer = generateCaptcha();
+        });
 
-        // Modal Functions
-        function showModal(message) {
-            document.getElementById('modalMessage').textContent = message;
-            document.getElementById('confirmationModal').style.display = 'flex';
-        }
+        // Contact Form
+        const contactForm = document.getElementById('contact-form');
+
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const button = contactForm.querySelector('button');
+            button.classList.add('loading');
+            button.disabled = true;
+
+            const formData = new FormData(contactForm);
+            try {
+                const response = await fetch(ENDPOINTS.contact, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        name: formData.get('contact-name'),
+                        email: formData.get('contact-email'),
+                        message: formData.get('contact-message')
+                    }),
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                if (!response.ok) throw new Error('Failed to send message');
+                document.getElementById('modalMessage').textContent = 'Your message has been sent successfully!';
+                document.getElementById('confirmationModal').style.display = 'flex';
+                contactForm.reset();
+                trackEvent('ContactForm', 'Success');
+            } catch (error) {
+                console.error('Error sending message:', error);
+                alert('Failed to send message. Please try again.');
+                trackEvent('ContactForm', 'Error');
+            } finally {
+                button.classList.remove('loading');
+                button.disabled = false;
+            }
+        });
+
+        // Newsletter Form
+        const newsletterForm = document.getElementById('newsletter-form');
+
+        newsletterForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const button = newsletterForm.querySelector('button');
+            button.classList.add('loading');
+            button.disabled = true;
+
+            const formData = new FormData(newsletterForm);
+            try {
+                const response = await fetch(ENDPOINTS.newsletter, {
+                    method: 'POST',
+                    body: JSON.stringify({ email: formData.get('newsletter-email') }),
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                if (!response.ok) throw new Error('Failed to subscribe');
+                document.getElementById('modalMessage').textContent = 'Thank you for subscribing to our newsletter!';
+                document.getElementById('confirmationModal').style.display = 'flex';
+                newsletterForm.reset();
+                trackEvent('NewsletterSubscribe', 'Success');
+            } catch (error) {
+                console.error('Error subscribing:', error);
+                alert('Failed to subscribe. Please try again.');
+                trackEvent('NewsletterSubscribe', 'Error');
+            } finally {
+                button.classList.remove('loading');
+                button.disabled = false;
+            }
+        });
+
+        // Modal Close
         function closeModal() {
             document.getElementById('confirmationModal').style.display = 'none';
         }
 
-        // Form Submission with Backend
-        async function submitForm(formId, endpoint, successMessage, data) {
-            const form = document.getElementById(formId);
-            const submitButton = form.querySelector('.form-button');
-            submitButton.classList.add('loading');
-            try {
-                const response = await fetch(endpoint, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                });
-                if (!response.ok) throw new Error('Network error');
-                const result = await response.json();
-                showModal(successMessage);
-                form.reset();
-                if (formId === 'booking-form') captchaAnswer = generateCaptcha();
-                return result;
-            } catch (error) {
-                console.error(`Error submitting ${formId}:`, error);
-                alert('An error occurred. Please try again.');
-            } finally {
-                submitButton.classList.remove('loading');
+        // Live Chat
+        function toggleChat() {
+            const chatWidget = document.getElementById('chatWidget');
+            chatWidget.classList.toggle('active');
+            if (chatWidget.classList.contains('active')) {
+                trackEvent('LiveChat', 'Open');
+            } else {
+                trackEvent('LiveChat', 'Close');
             }
         }
 
-        // Booking Form
-        document.getElementById('booking-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const captchaInput = document.getElementById('captcha').value.toUpperCase();
-            if (captchaInput !== captchaAnswer) {
-                alert('Incorrect CAPTCHA. Try again.');
-                document.getElementById('captcha').value = '';
-                captchaAnswer = generateCaptcha();
-                return;
+        function sendChatMessage() {
+            const chatInput = document.getElementById('chatInput');
+            const chatBody = document.getElementById('chatBody');
+            const message = chatInput.value.trim();
+            if (message) {
+                const userMessage = `<div class="chat-message user">${message}</div>`;
+                chatBody.insertAdjacentHTML('beforeend', userMessage);
+                chatBody.scrollTop = chatBody.scrollHeight;
+                setTimeout(() => {
+                    const botResponse = `<div class="chat-message">Thank you for your message! Our team will respond shortly.</div>`;
+                    chatBody.insertAdjacentHTML('beforeend', botResponse);
+                    chatBody.scrollTop = chatBody.scrollHeight;
+                }, 1000);
+                chatInput.value = '';
+                trackEvent('ChatMessage', 'Sent');
             }
-            const data = {
-                name: document.getElementById('name').value,
-                email: document.getElementById('email').value,
-                mobile: document.getElementById('mobile').value,
-                date: document.getElementById('date').value
-            };
-            const result = await submitForm('booking-form', ENDPOINTS.bookAppointment, `Appointment booked! Your ID is ${result?.appointmentId || 'N/A'}.`, data);
+        }
+
+        // Analytics Tracking
+        function trackEvent(category, action) {
+            console.log(`Analytics Event: ${category} - ${action}`);
+            // Example: gtag('event', action, { event_category: category });
+        }
+
+        // Section Animation on Scroll
+        function handleScrollAnimations() {
+            const sections = document.querySelectorAll('section');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        trackEvent('SectionView', entry.target.id);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            sections.forEach(section => observer.observe(section));
+        }
+
+        // Initialize
+        fetchServices();
+        fetchOffers();
+        generateCaptcha();
+        handleScrollAnimations();
+
+        // Accessibility Enhancements
+        document.querySelectorAll('input, button, textarea').forEach(element => {
+            element.addEventListener('focus', () => {
+                element.parentElement.classList.add('focused');
+            });
+            element.addEventListener('blur', () => {
+                element.parentElement.classList.remove('focused');
+            });
         });
 
-        // Status Form
-        document.getElementById('status-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const data = {
-                email: document.getElementById('status-email').value,
-                appointmentId: document.getElementById('status-id').value
-            };
-            const result = await submitForm('status-form', ENDPOINTS.checkStatus, `Appointment status: ${result?.status || 'Confirmed'}`, data);
-        });
-
-        // Contact Form
-        document.getElementById('contact-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const data = {
-                name: document.getElementById('contact-name').value,
-                email: document.getElementById('contact-email').value,
-                message: document.getElementById('contact-message').value
-            };
-            await submitForm('contact-form', ENDPOINTS.contact, 'Message sent successfully!', data);
-        });
-
-        // Newsletter Form
-        document.getElementById('newsletter-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const data = {
-                email: document.getElementById('newsletter-email').value
-            };
-            await submitForm('newsletter-form', ENDPOINTS.newsletter, 'Subscribed successfully!', data);
+        // Keyboard Navigation for Modal
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+                toggleChat();
+            }
         });
     </script>
 </body>
