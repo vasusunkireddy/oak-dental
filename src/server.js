@@ -15,12 +15,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Serve index.html for root URL
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
+app.use(express.static(path.join(__dirname, '../public')));
 
 // Database Connection
 const pool = new Pool({
@@ -232,7 +227,7 @@ app.post('/api/admin/send-otp', async (req, res) => {
     });
     res.json({ message: 'OTP sent successfully' });
   } catch (error) {
-        console.error('Error sending OTP:', error);
+    console.error('Error sending OTP:', error);
     res.status(500).json({ error: 'Failed to send OTP' });
   }
 });
@@ -261,12 +256,15 @@ app.post('/api/admin/verify-otp', async (req, res) => {
 
 // Reset Password
 app.post('/api/admin/reset-password', async (req, res) => {
-  const { email, password } = req.body;
+  const { email, newPassword, confirmPassword } = req.body;
   try {
-    if (!email || !password) {
-      return res.status(400).json({ error: 'Email and password are required' });
+    if (!email || !newPassword || !confirmPassword) {
+      return res.status(400).json({ error: 'All fields must be provided' });
     }
-    const hashedPassword = await bcrypt.hash(password, 10);
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({ error: 'Passwords do not match' });
+    }
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
     const result = await pool.query(
       'UPDATE users SET password = $1 WHERE email = $2 RETURNING id',
       [hashedPassword, email]
@@ -281,7 +279,8 @@ app.post('/api/admin/reset-password', async (req, res) => {
   }
 });
 
-// Protected Admin Dashboard Routes
+// Admin Dashboard Data (Protected Routes)
+// Get Appointments
 app.get('/api/admin/appointments', authenticateToken, async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM appointments ORDER BY created_at DESC');
@@ -292,6 +291,7 @@ app.get('/api/admin/appointments', authenticateToken, async (req, res) => {
   }
 });
 
+// Get Messages
 app.get('/api/admin/messages', authenticateToken, async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM messages ORDER BY created_at DESC');
@@ -302,6 +302,7 @@ app.get('/api/admin/messages', authenticateToken, async (req, res) => {
   }
 });
 
+// Get Subscribers
 app.get('/api/admin/subscribers', authenticateToken, async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM subscribers ORDER BY subscribed_on DESC');
@@ -312,60 +313,17 @@ app.get('/api/admin/subscribers', authenticateToken, async (req, res) => {
   }
 });
 
-// Delete Appointment
-app.delete('/api/admin/appointments/:id', authenticateToken, async (req, res) => {
-  const { id } = req.params;
-  try {
-    const result = await pool.query('DELETE FROM appointments WHERE id = $1 RETURNING id', [id]);
-    if (result.rowCount === 0) {
-      return res.status(404).json({ error: 'Appointment not found' });
-    }
-    res.json({ message: 'Appointment deleted successfully' });
-  } catch (error) {
-    console.error('Error deleting appointment:', error);
-    res.status(500).json({ error: 'Failed to delete appointment' });
-  }
-});
-
-// Delete Message
-app.delete('/api/admin/messages/:id', authenticateToken, async (req, res) => {
-  const { id } = req.params;
-  try {
-    const result = await pool.query('DELETE FROM messages WHERE id = $1 RETURNING id', [id]);
-    if (result.rowCount === 0) {
-      return res.status(404).json({ error: 'Message not found' });
-    }
-    res.json({ message: 'Message deleted successfully' });
-  } catch (error) {
-    console.error('Error deleting message:', error);
-    res.status(500).json({ error: 'Failed to delete message' });
-  }
-});
-
-// Delete Subscriber
-app.delete('/api/admin/subscribers/:id', authenticateToken, async (req, res) => {
-  const { id } = req.params;
-  try {
-    const result = await pool.query('DELETE FROM subscribers WHERE id = $1 RETURNING id', [id]);
-    if (result.rowCount === 0) {
-      return res.status(404).json({ error: 'Subscriber not found' });
-    }
-    res.json({ message: 'Subscriber deleted successfully' });
-  } catch (error) {
-    console.error('Error deleting subscriber:', error);
-    res.status(500).json({ error: 'Failed to delete subscriber' });
-  }
-});
-
-// Start Server
+// Start server
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, async () => {
+async function startServer() {
   await initializeDatabase();
-  console.log(`Server running on port ${PORT}`);
-});
+  app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
+}
 
-// Error Handling Middleware
+startServer();
+
+// Error Handling
 app.use((err, req, res, next) => {
-  console.error('Unexpected error:', err);
-  res.status(500).json({ error: 'An unexpected error occurred' });
+  console.error(err.stack);
+  res.status(500).json({ error: 'Something went wrong!' });
 });

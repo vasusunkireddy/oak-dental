@@ -3,1016 +3,681 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OAK Dental Admin Dashboard</title>
+  <meta name="description" content="OAK Dental Clinic Admin Dashboard for managing appointments, messages, and subscribers.">
+  <title>OAK Dental Clinic - Admin Dashboard</title>
+  <link rel="icon" href="https://i.postimg.cc/9MdzgVhV/OAK-LOGO-1.jpg" type="image/jpeg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-
+    /* Base Styles */
     body {
-      font-family: 'Inter', sans-serif;
-      background: url('https://images.unsplash.com/photo-1598256989800-fe5f95da9787?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') no-repeat center center fixed;
-      background-size: cover;
-      min-height: 100vh;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       margin: 0;
-      display: flex;
-      flex-direction: column;
-      overflow-x: hidden;
+      padding: 0;
+      line-height: 1.5;
+      color: #1F2937;
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    }
+    html {
+      scroll-behavior: smooth;
     }
 
-    .header {
-      background: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%);
-      backdrop-filter: blur(10px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    }
-
-    .sidebar {
-      background: #ffffff;
-      box-shadow: 4px 0 12px rgba(0, 0, 0, 0.15);
-      transition: transform 0.4s ease-in-out;
-    }
-
-    .card {
-      background: rgba(255, 255, 255, 0.97);
-      border-radius: 16px;
-      padding: 32px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      border: 1px solid rgba(20, 184, 166, 0.2);
-    }
-
-    .card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
-    }
-
-    .form-input {
+    /* Header */
+    header {
+      background: white;
+      color: #0D9488;
+      position: fixed;
       width: 100%;
-      padding: 16px;
-      border: 1px solid #d1d5db;
-      border-radius: 10px;
-      margin-bottom: 24px;
-      font-size: 16px;
-      background: rgba(255, 255, 255, 0.85);
-      transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    }
+    .header-container {
+      max-width: 7xl;
+      margin: 0 auto;
+      padding: 0 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 48px;
     }
 
-    .form-input:focus {
-      outline: none;
-      border-color: #10b981;
-      box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.25);
-      transform: scale(1.02);
-    }
-
-    .form-button {
-      background: linear-gradient(135deg, #10b981 0%, #14b8a6 100%);
-      color: white;
-      padding: 16px 32px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 16px;
-      font-weight: 700;
-      transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
-    }
-
-    .form-button:hover {
-      background: linear-gradient(135deg, #059669 0%, #0d9488 100%);
-      transform: translateY(-3px);
-      box-shadow: 0 6px 16px rgba(16, 185, 129, 0.5);
-    }
-
-    .form-button:disabled {
-      background: #9ca3af;
-      cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
-    }
-
-    .error {
-      color: #ef4444;
-      font-size: 14px;
-      font-weight: 500;
-      margin-bottom: 20px;
-      background: rgba(239, 68, 68, 0.1);
-      padding: 8px 12px;
-      border-radius: 6px;
-    }
-
-    .success {
-      color: #10b981;
-      font-size: 14px;
-      font-weight: 500;
-      margin-bottom: 20px;
-      background: rgba(16, 185, 129, 0.1);
-      padding: 8px 12px;
-      border-radius: 6px;
-    }
-
-    .link {
-      color: #10b981;
-      cursor: pointer;
-      text-decoration: none;
-      font-weight: 600;
-      transition: color 0.2s ease, transform 0.2s ease;
-    }
-
-    .link:hover {
-      color: #059669;
-      text-decoration: underline;
-      transform: scale(1.05);
-    }
-
-    .nav-link {
+    /* Logo */
+    .logo-container {
       display: flex;
       align-items: center;
-      padding: 16px 24px;
-      color: #1f2937;
-      border-radius: 10px;
-      transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease;
+      gap: 8px;
+    }
+    .logo-img {
+      width: 32px;
+      height: auto;
+      object-fit: contain;
+      border-radius: 6px;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      background: white;
+      padding: 2px;
+      filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
+    }
+    .logo-text {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #0D9488;
+    }
+    .logo-subtext {
+      font-size: 0.5rem;
+      color: #6B7280;
+      font-weight: 400;
+      text-transform: uppercase;
     }
 
-    .nav-link:hover, .nav-link.active {
-      background: linear-gradient(135deg, #e6fffa 0%, #ccfbf1 100%);
-      color: #10b981;
-      transform: translateX(4px);
+    /* Navigation */
+    .nav-link {
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    .nav-link:hover {
+      background-color: #0D9488;
+      color: #F472B6;
+    }
+    .hamburger {
+      display: none;
+      font-size: 1.25rem;
+      cursor: pointer;
+      color: #0D9488;
+    }
+    .nav-menu {
+      display: flex;
+      gap: 6px;
+    }
+    .nav-menu.authenticated {
+      display: none;
+    }
+    .nav-menu.authenticated.active {
+      display: flex;
     }
 
-    .nav-link svg {
-      width: 24px;
-      height: 24px;
-      margin-right: 12px;
-      transition: transform 0.3s ease;
+    /* Buttons */
+    .btn-primary {
+      background-color: #14B8A6;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.875rem;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn-primary:hover {
+      background-color: #115E59;
+      transform: translateY(-1px);
+    }
+    .btn-secondary {
+      background-color: #3B82F6;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.875rem;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    .btn-secondary:hover {
+      background-color: #1E40AF;
+      transform: translateY(-1px);
     }
 
-    .nav-link:hover svg, .nav-link.active svg {
-      transform: scale(1.1);
+    /* Cards */
+    .card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+      transform: scale(1.01);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
 
-    .fade-in {
-      animation: fadeIn 0.6s ease-in-out;
+    /* Tables */
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
     }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(15px); }
-      to { opacity: 1; transform: translateY(0); }
+    .admin-table th,
+    .admin-table td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #E5E7EB;
+      font-size: 0.875rem;
     }
-
-    .toast {
-      position: fixed;
-      top: 24px;
-      right: 24px;
-      padding: 16px 32px;
-      border-radius: 10px;
+    .admin-table th {
+      background: #0D9488;
       color: white;
       font-weight: 600;
-      font-size: 16px;
+    }
+    .admin-table tr:hover {
+      background: #F3F4F6;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      align-items: center;
+      justify-content: center;
       z-index: 1000;
-      opacity: 0;
-      transform: translateY(-30px);
-      animation: slideIn 0.4s ease forwards, slideOut 0.4s ease 3s forwards;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    }
+    .modal-content {
+      background: white;
+      padding: 16px;
+      border-radius: 8px;
+      text-align: center;
+      max-width: 90%;
+      width: 320px;
+    }
+    .modal-content h3 {
+      color: #0D9488;
+      margin-bottom: 8px;
+      font-size: 1.25rem;
+    }
+    .modal-content input,
+    .modal-content button {
+      width: 100%;
+      margin-bottom: 8px;
+      padding: 8px;
+      border-radius: 6px;
+      font-size: 0.875rem;
+    }
+    .modal-content input {
+      border: 1px solid #D1D5DB;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .modal-content input:focus {
+      border-color: #14B8A6;
+      box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.2);
+    }
+    .modal-content button {
+      background: #14B8A6;
+      color: white;
+      border: none;
+      font-weight: 600;
+    }
+    .modal-content button:hover {
+      background: #115E59;
     }
 
-    .toast-success {
-      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    /* Form Validation */
+    .valid {
+      border-color: #10B981 !important;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="%2310B981" viewBox="0 0 16 16"><path d="M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z"/></svg>') no-repeat right 8px center;
     }
 
-    .toast-error {
-      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    /* Toggle Between Login and Register */
+    .auth-toggle {
+      color: #0D9488;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.875rem;
+    }
+    .auth-toggle:hover {
+      color: #F472B6;
     }
 
-    @keyframes slideIn {
-      to { opacity: 1; transform: translateY(0); }
+    /* Auth Forms */
+    .auth-form {
+      max-width: 360px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+    .auth-form h2 {
+      font-size: 1.5rem;
+      margin-bottom: 12px;
+    }
+    .auth-form input {
+      font-size: 0.875rem;
+      padding: 8px;
+      border-radius: 6px;
+    }
+    .auth-form button {
+      padding: 8px;
+      font-size: 0.875rem;
+    }
+    .auth-form a,
+    .auth-form p {
+      font-size: 0.75rem;
     }
 
-    @keyframes slideOut {
-      to { opacity: 0; transform: translateY(-30px); }
-    }
-
-    .auth-container {
-      background: rgba(255, 255, 255, 0.92);
-      backdrop-filter: blur(15px);
-      border-radius: 16px;
-      padding: 48px;
-      max-width: 450px;
-      margin: auto;
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
-      border: 1px solid rgba(20, 184, 166, 0.3);
-    }
-
-    .section-title {
-      background: linear-gradient(90deg, #10b981, #14b8a6);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    @media (max-width: 768px) {
-      .sidebar {
-        width: 100%;
-        position: fixed;
-        z-index: 999;
-        transform: translateX(-100%);
+    /* Media Queries */
+    @media (max-width: 640px) {
+      .hamburger {
+        display: block;
       }
-      .sidebar.active {
-        transform: translateX(0);
+      .nav-menu {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 48px;
+        left: 0;
+        width: 100%;
+        background: #0D9488;
+        padding: 8px;
+        z-index: 10;
+      }
+      .nav-menu.active {
+        display: flex;
+      }
+      .nav-link {
+        padding: 8px;
+        text-align: center;
+      }
+      .logo-img {
+        width: 32px;
+      }
+      .logo-text {
+        font-size: 0.875rem;
+      }
+      .logo-subtext {
+        font-size: 0.5rem;
+      }
+      .admin-table {
+        font-size: 0.75rem;
+      }
+      .admin-table th,
+      .admin-table td {
+        padding: 6px;
+      }
+      .modal-content {
+        width: 90%;
+      }
+      .auth-form {
+        padding: 12px;
       }
       .auth-container {
-        padding: 24px;
-        max-width: 90%;
+        flex-direction: column;
+        gap: 12px;
       }
-      .form-button {
-        padding: 12px 24px;
+    }
+    @media (min-width: 640px) {
+      .logo-img {
+        width: 40px;
+      }
+      .logo-text {
+        font-size: 1.125rem;
+      }
+      .logo-subtext {
+        font-size: 0.625rem;
       }
     }
   </style>
 </head>
-<body class="min-h-screen">
+<body class="antialiased">
   <!-- Header -->
-  <header class="header shadow-sm p-6 flex items-center justify-between">
-    <div class="flex items-center">
-      <img src="https://i.postimg.cc/9MdzgVhV/OAK-LOGO-1.jpg" alt="OAK Dental Logo" class="w-14 h-14 mr-4 rounded-full border-2 border-white shadow-md">
-      <h1 class="text-3xl font-extrabold text-white">OAK Dental Admin</h1>
+  <header>
+    <div class="header-container">
+      <div class="logo-container">
+        <a href="/" aria-label="OAK Dental Clinic Home">
+          <img src="https://i.postimg.cc/9MdzgVhV/OAK-LOGO-1.jpg" alt="OAK Dental Clinic Logo" class="logo-img animate__animated animate__fadeIn">
+        </a>
+        <div class="flex flex-col">
+          <a href="/" class="logo-text" aria-label="OAK Dental Clinic">OAK Dental Clinic</a>
+          <span class="logo-subtext">Admin Dashboard</span>
+        </div>
+      </div>
+      <div class="flex items-center">
+        <div class="hamburger" aria-label="Toggle navigation menu"><i class="fas fa-bars"></i></div>
+        <div class="nav-menu authenticated">
+          <a href="#appointments" class="nav-link" aria-current="page">Appointments</a>
+          <a href="#messages" class="nav-link">Messages</a>
+          <a href="#subscribers" class="nav-link">Subscribers</a>
+          <a href="#" class="nav-link" onclick="logout()">Logout</a>
+        </div>
+      </div>
     </div>
-    <button id="logout-button" class="form-button hidden" onclick="logout()">Logout</button>
   </header>
 
-  <!-- Main Content -->
-  <div class="flex flex-1">
-    <!-- Sidebar -->
-    <aside id="sidebar" class="sidebar w-72 h-screen p-8 hidden">
-      <nav>
-        <ul>
-          <li><a href="#" class="nav-link" onclick="showSection('services')" data-section="services">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>Services
-          </a></li>
-          <li><a href="#" class="nav-link" onclick="showSection('offers')" data-section="offers">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" /></svg>Offers
-          </a></li>
-          <li><a href="#" class="nav-link" onclick="showSection('appointments')" data-section="appointments">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>Appointments
-          </a></li>
-          <li><a href="#" class="nav-link" onclick="showSection('contacts')" data-section="contacts">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>Contacts
-          </a></li>
-          <li><a href="#" class="nav-link" onclick="showSection('subscribers')" data-section="subscribers">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 005.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>Subscribers
-          </a></li>
-        </ul>
-      </nav>
-    </aside>
-
-    <!-- Content Area -->
-    <main class="flex-1 p-10">
-      <!-- Authentication Container -->
-      <div id="auth-container" class="auth-container">
+  <!-- Login/Register Section -->
+  <section id="auth" class="min-h-screen flex items-center justify-center pt-16 px-4">
+    <div class="card auth-form animate__animated animate__fadeIn">
+      <div class="flex flex-col sm:flex-row auth-container">
         <!-- Login Form -->
-        <div id="login-form" class="card hidden fade-in">
-          <h2 class="text-4xl font-extrabold mb-8 section-title text-center">Admin Login</h2>
-          <div id="login-error" class="error hidden"></div>
-          <input type="email" id="login-email" class="form-input" placeholder="Email" aria-label="Admin email">
-          <input type="password" id="login-password" class="form-input" placeholder="Password" aria-label="Admin password">
-          <button class="form-button w-full" onclick="login()">Login</button>
-          <p class="mt-6 text-sm text-center space-x-2">
-            <span class="link" onclick="showForgotPassword()">Forgot Password?</span> 
-            <span class="text-gray-500">|</span> 
-            <span class="link" onclick="showRegister()">Register</span>
-          </p>
+        <div class="flex-1" id="loginFormContainer">
+          <h2 class="text-xl font-bold text-teal-800 text-center mb-4">Admin Login</h2>
+          <form id="loginForm" class="space-y-3">
+            <input type="email" name="email" placeholder="Email" class="w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required>
+            <input type="password" name="password" placeholder="Password" class="w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required>
+            <button type="submit" class="btn-primary w-full">Login</button>
+            <a href="#" class="text-teal-500 hover:text-teal-600 text-center block" onclick="showModal('forgotPasswordModal')">Forgot Password?</a>
+            <p class="text-center mt-2">Don't have an account? <span class="auth-toggle" onclick="showRegister()">Register</span></p>
+          </form>
         </div>
-
         <!-- Register Form -->
-        <div id="register-form" class="card hidden fade-in">
-          <h2 class="text-4xl font-extrabold mb-8 section-title text-center">Admin Register</h2>
-          <div id="register-error" class="error hidden"></div>
-          <input type="text" id="register-name" class="form-input" placeholder="Full Name" aria-label="Admin name">
-          <input type="email" id="register-email" class="form-input" placeholder="Email" aria-label="Admin email">
-          <input type="password" id="register-password" class="form-input" placeholder="Password" aria-label="Admin password">
-          <input type="password" id="register-confirm-password" class="form-input" placeholder="Confirm Password" aria-label="Confirm password">
-          <button class="form-button w-full" onclick="register()">Register</button>
-          <p class="mt-6 text-sm text-center">
-            <span class="link" onclick="showLogin()">Back to Login</span>
-          </p>
+        <div class="flex-1 hidden" id="registerFormContainer">
+          <h2 class="text-xl font-bold text-teal-800 text-center mb-4">Admin Register</h2>
+          <form id="registerForm" class="space-y-3">
+            <input type="text" name="name" placeholder="Full Name" class="w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required>
+            <input type="email" name="email" placeholder="Email" class="w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required>
+            <input type="password" name="password" placeholder="Password" class="w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required>
+            <button type="submit" class="btn-primary w-full">Register</button>
+            <p class="text-center mt-2">Already have an account? <span class="auth-toggle" onclick="showLogin()">Login</span></p>
+          </form>
         </div>
+      </div>
+    </div>
+  </section>
 
-        <!-- Forgot Password Form -->
-        <div id="forgot-password-form" class="card hidden fade-in">
-          <h2 class="text-4xl font-extrabold mb-8 section-title text-center">Reset Password</h2>
-          <div id="forgot-password-message" class="success hidden"></div>
-          <div id="forgot-password-error" class="error hidden"></div>
-          <input type="email" id="forgot-password-email" class="form-input" placeholder="Email" aria-label="Admin email">
-          <button class="form-button w-full" onclick="requestPasswordReset()">Send OTP</button>
-          <p class="mt-6 text-sm text-center">
-            <span class="link" onclick="showLogin()">Back to Login</span>
-          </p>
-        </div>
-
-        <!-- OTP Verification Form -->
-        <div id="otp-form" class="card hidden fade-in">
-          <h2 class="text-4xl font-extrabold mb-8 section-title text-center">Verify OTP</h2>
-          <div id="otp-error" class="error hidden"></div>
-          <input type="text" id="otp-code" class="form-input" placeholder="Enter OTP" aria-label="OTP code">
-          <button class="form-button w-full" onclick="verifyOTP()">Verify OTP</button>
-          <p class="mt-6 text-sm text-center space-x-2">
-            <span class="link" onclick="showForgotPassword()">Resend OTP</span> 
-            <span class="text-gray-500">|</span> 
-            <span class="link" onclick="showLogin()">Back to Login</span>
-          </p>
-        </div>
-
-        <!-- Reset Password Form -->
-        <div id="reset-password-form" class="card hidden fade-in">
-          <h2 class="text-4xl font-extrabold mb-8 section-title text-center">Set New Password</h2>
-          <div id="reset-password-error" class="error hidden"></div>
-          <input type="password" id="new-password" class="form-input" placeholder="New Password" aria-label="New password">
-          <input type="password" id="confirm-new-password" class="form-input" placeholder="Confirm New Password" aria-label="Confirm new password">
-          <button class="form-button w-full" onclick="resetPassword()">Reset Password</button>
-          <p class="mt-6 text-sm text-center">
-            <span class="link" onclick="showLogin()">Back to Login</span>
-          </p>
+  <!-- Dashboard Section (Hidden by Default) -->
+  <section id="dashboard" class="py-16 hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Appointments -->
+      <div id="appointments" class="mb-10">
+        <h2 class="text-xl font-bold text-teal-800 mb-4 animate__animated animate__fadeIn">Appointments</h2>
+        <div class="card">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Date</th>
+                <th>Message</th>
+              </tr>
+            </thead>
+            <tbody id="appointmentsTable"></tbody>
+          </table>
         </div>
       </div>
 
-      <!-- Dashboard -->
-      <div id="dashboard" class="hidden">
-        <div class="mb-10">
-          <h2 class="text-3xl font-bold text-gray-800">Welcome, <span id="admin-name"></span></h2>
-        </div>
-
-        <!-- Services Section -->
-        <div id="services-section" class="card mb-10 hidden fade-in">
-          <h3 class="text-2xl font-semibold mb-6 section-title">Manage Services</h3>
-          <form id="service-form" class="mb-8">
-            <input type="hidden" id="service-id">
-            <input type="text" id="service-name" class="form-input" placeholder="Service Name" required>
-            <textarea id="service-description" class="form-input" placeholder="Description" rows="4" required></textarea>
-            <input type="number" id="service-price" class="form-input" placeholder="Price (₹)" required>
-            <input type="file" id="service-image" class="form-input" accept="image/*">
-            <button type="submit" class="form-button">Add/Update Service</button>
-          </form>
-          <div id="services-list"></div>
-        </div>
-
-        <!-- Offers Section -->
-        <div id="offers-section" class="card mb-10 hidden fade-in">
-          <h3 class="text-2xl font-semibold mb-6 section-title">Manage Offers</h3>
-          <form id="offer-form" class="mb-8">
-            <input type="hidden" id="offer-id">
-            <input type="text" id="offer-title" class="form-input" placeholder="Offer Title" required>
-            <textarea id="offer-description" class="form-input" placeholder="Description" rows="4" required></textarea>
-            <input type="text" id="offer-validity" class="form-input" placeholder="Validity (e.g., 2025-12-31)" required>
-            <input type="file" id="offer-image" class="form-input" accept="image/*">
-            <button type="submit" class="form-button">Add/Update Offer</button>
-          </form>
-          <div id="offers-list"></div>
-        </div>
-
-        <!-- Appointments Section -->
-        <div id="appointments-section" class="card mb-10 hidden fade-in">
-          <h3 class="text-2xl font-semibold mb-6 section-title">Manage Appointments</h3>
-          <div id="appointments-list"></div>
-        </div>
-
-        <!-- Contacts Section -->
-        <div id="contacts-section" class="card mb-10 hidden fade-in">
-          <h3 class="text-2xl font-semibold mb-6 section-title">Contact Messages</h3>
-          <div id="contacts-list"></div>
-        </div>
-
-        <!-- Subscribers Section -->
-        <div id="subscribers-section" class="card mb-10 hidden fade-in">
-          <h3 class="text-2xl font-semibold mb-6 section-title">Newsletter Subscribers</h3>
-          <div id="subscribers-list"></div>
+      <!-- Messages -->
+      <div id="messages" class="mb-10">
+        <h2 class="text-xl font-bold text-teal-800 mb-4 animate__animated animate__fadeIn">Messages</h2>
+        <div class="card">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Message</th>
+              </tr>
+            </thead>
+            <tbody id="messagesTable"></tbody>
+          </table>
         </div>
       </div>
-    </main>
+
+      <!-- Subscribers -->
+      <div id="subscribers" class="mb-10">
+        <h2 class="text-xl font-bold text-teal-800 mb-4 animate__animated animate__fadeIn">Subscribers</h2>
+        <div class="card">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Email</th>
+                <th>Subscribed On</th>
+              </tr>
+            </thead>
+            <tbody id="subscribersTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Forgot Password Modal -->
+  <div id="forgotPasswordModal" class="modal">
+    <div class="modal-content">
+      <h3>Forgot Password</h3>
+      <form id="forgotPasswordForm" class="space-y-3">
+        <input type="email" name="email" placeholder="Enter your email" class="border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required>
+        <button type="submit" class="btn-primary">Send OTP</button>
+        <button type="button" class="btn-secondary" onclick="closeModal('forgotPasswordModal')">Cancel</button>
+      </form>
+    </div>
   </div>
 
-  <div id="toast-container"></div>
+  <!-- OTP Verification Modal -->
+  <div id="otpModal" class="modal">
+    <div class="modal-content">
+      <h3>Verify OTP</h3>
+      <form id="otpForm" class="space-y-3">
+        <input type="text" name="otp" placeholder="Enter OTP" class="border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required>
+        <button type="submit" class="btn-primary">Verify OTP</button>
+        <button type="button" class="btn-secondary" onclick="closeModal('otpModal')">Cancel</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Reset Password Modal -->
+  <div id="resetPasswordModal" class="modal">
+    <div class="modal-content">
+      <h3>Reset Password</h3>
+      <form id="resetPasswordForm" class="space-y-3">
+        <input type="password" name="newPassword" placeholder="New Password" class="border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required>
+        <input type="password" name="confirmPassword" placeholder="Confirm Password" class="border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required>
+        <button type="submit" class="btn-primary">Reset Password</button>
+        <button type="button" class="btn-secondary" onclick="closeModal('resetPasswordModal')">Cancel</button>
+      </form>
+    </div>
+  </div>
 
   <script>
-    const API_BASE_URL = 'http://localhost:3000/api/v1';
-    let token = localStorage.getItem('adminToken');
-    let adminName = localStorage.getItem('adminName');
-    let resetEmail = '';
+    // API Configuration
+    const API_BASE_URL = 'http://localhost:3000/api';
 
-    // Toast Notification
-    function showToast(message, type = 'success') {
-      const toastContainer = document.getElementById('toast-container');
-      const toast = document.createElement('div');
-      toast.className = `toast toast-${type}`;
-      toast.textContent = message;
-      toastContainer.appendChild(toast);
-      setTimeout(() => toast.remove(), 3500);
+    // Helper Function for API Calls
+    async function apiCall(endpoint, method = 'GET', data = null) {
+      const headers = {
+        'Content-Type': 'application/json'
+      };
+      const token = localStorage.getItem('token');
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+      const config = { method, headers };
+      if (data) config.body = JSON.stringify(data);
+      try {
+        const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || 'Request failed');
+        return result;
+      } catch (error) {
+        console.error(`API error at ${endpoint}:`, error);
+        throw error;
+      }
     }
 
-    // UI State Management
-    function showLogin() {
-      document.getElementById('login-form').classList.remove('hidden');
-      document.getElementById('register-form').classList.add('hidden');
-      document.getElementById('forgot-password-form').classList.add('hidden');
-      document.getElementById('otp-form').classList.add('hidden');
-      document.getElementById('reset-password-form').classList.add('hidden');
-      document.getElementById('dashboard').classList.add('hidden');
-      document.getElementById('sidebar').classList.add('hidden');
-      document.getElementById('logout-button').classList.add('hidden');
-      clearErrors();
+    // Populate Tables
+    async function populateTables() {
+      try {
+        // Fetch Appointments
+        const appointments = await apiCall('/admin/appointments');
+        document.getElementById('appointmentsTable').innerHTML = appointments.map(item => `
+          <tr>
+            <td>${item.name || ''}</td>
+            <td>${item.email || ''}</td>
+            <td>${item.phone || ''}</td>
+            <td>${item.date || ''}</td>
+            <td>${item.message || ''}</td>
+          </tr>
+        `).join('');
+
+        // Fetch Messages
+        const messages = await apiCall('/admin/messages');
+        document.getElementById('messagesTable').innerHTML = messages.map(item => `
+          <tr>
+            <td>${item.name || ''}</td>
+            <td>${item.email || ''}</td>
+            <td>${item.message || ''}</td>
+          </tr>
+        `).join('');
+
+        // Fetch Subscribers
+        const subscribers = await apiCall('/admin/subscribers');
+        document.getElementById('subscribersTable').innerHTML = subscribers.map(item => `
+          <tr>
+            <td>${item.email || ''}</td>
+            <td>${new Date(item.subscribed_on).toLocaleDateString() || ''}</td>
+          </tr>
+        `).join('');
+      } catch (error) {
+        alert('Failed to load dashboard data. Please try again.');
+      }
     }
 
+    // Modal Functions
+    function showModal(modalId) {
+      document.getElementById(modalId).style.display = 'flex';
+    }
+    function closeModal(modalId) {
+      document.getElementById(modalId).style.display = 'none';
+    }
+
+    // Toggle Login/Register
     function showRegister() {
-      document.getElementById('login-form').classList.add('hidden');
-      document.getElementById('register-form').classList.remove('hidden');
-      document.getElementById('forgot-password-form').classList.add('hidden');
-      document.getElementById('otp-form').classList.add('hidden');
-      document.getElementById('reset-password-form').classList.add('hidden');
-      document.getElementById('dashboard').classList.add('hidden');
-      document.getElementById('sidebar').classList.add('hidden');
-      document.getElementById('logout-button').classList.add('hidden');
-      clearErrors();
+      document.getElementById('loginFormContainer').classList.add('hidden');
+      document.getElementById('registerFormContainer').classList.remove('hidden');
+    }
+    function showLogin() {
+      document.getElementById('registerFormContainer').classList.add('hidden');
+      document.getElementById('loginFormContainer').classList.remove('hidden');
     }
 
-    function showForgotPassword() {
-      document.getElementById('login-form').classList.add('hidden');
-      document.getElementById('register-form').classList.add('hidden');
-      document.getElementById('forgot-password-form').classList.remove('hidden');
-      document.getElementById('otp-form').classList.add('hidden');
-      document.getElementById('reset-password-form').classList.add('hidden');
-      document.getElementById('dashboard').classList.add('hidden');
-      document.getElementById('sidebar').classList.add('hidden');
-      document.getElementById('logout-button').classList.add('hidden');
-      clearErrors();
-    }
+    // Hamburger Menu
+    const hamburger = document.querySelector('.hamburger');
+    const navMenu = document.querySelector('.nav-menu');
+    hamburger.addEventListener('click', () => {
+      navMenu.classList.toggle('active');
+      hamburger.setAttribute('aria-expanded', navMenu.classList.contains('active'));
+    });
 
-    function showOTPForm() {
-      document.getElementById('login-form').classList.add('hidden');
-      document.getElementById('register-form').classList.add('hidden');
-      document.getElementById('forgot-password-form').classList.add('hidden');
-      document.getElementById('otp-form').classList.remove('hidden');
-      document.getElementById('reset-password-form').classList.add('hidden');
-      document.getElementById('dashboard').classList.add('hidden');
-      document.getElementById('sidebar').classList.add('hidden');
-      document.getElementById('logout-button').classList.add('hidden');
-      clearErrors();
-    }
-
-    function showResetPasswordForm() {
-      document.getElementById('login-form').classList.add('hidden');
-      document.getElementById('register-form').classList.add('hidden');
-      document.getElementById('forgot-password-form').classList.add('hidden');
-      document.getElementById('otp-form').classList.add('hidden');
-      document.getElementById('reset-password-form').classList.remove('hidden');
-      document.getElementById('dashboard').classList.add('hidden');
-      document.getElementById('sidebar').classList.add('hidden');
-      document.getElementById('logout-button').classList.add('hidden');
-      clearErrors();
-    }
-
-    function showDashboard() {
-      document.getElementById('auth-container').classList.add('hidden');
-      document.getElementById('dashboard').classList.remove('hidden');
-      document.getElementById('sidebar').classList.remove('hidden');
-      document.getElementById('logout-button').classList.remove('hidden');
-      document.getElementById('admin-name').textContent = adminName || 'Admin';
-      showSection('services');
-      setTimeout(fetchDashboardData, 0);
-    }
-
-    function showSection(section) {
-      const sections = ['services', 'offers', 'appointments', 'contacts', 'subscribers'];
-      sections.forEach(s => {
-        document.getElementById(`${s}-section`).classList.add('hidden');
-        document.querySelector(`[data-section="${s}"]`).classList.remove('active');
-      });
-      document.getElementById(`${section}-section`).classList.remove('hidden');
-      document.querySelector(`[data-section="${section}"]`).classList.add('active');
-    }
-
-    function clearErrors() {
-      document.getElementById('login-error').classList.add('hidden');
-      document.getElementById('register-error').classList.add('hidden');
-      document.getElementById('forgot-password-error').classList.add('hidden');
-      document.getElementById('forgot-password-message').classList.add('hidden');
-      document.getElementById('otp-error').classList.add('hidden');
-      document.getElementById('reset-password-error').classList.add('hidden');
-    }
-
-    // Authentication Functions
-    async function login() {
-      const email = document.getElementById('login-email').value.trim();
-      const password = document.getElementById('login-password').value;
-      const errorDiv = document.getElementById('login-error');
-
-      if (!email || !password) {
-        errorDiv.textContent = 'Please fill in all fields';
-        errorDiv.classList.remove('hidden');
-        showToast('Please fill in all fields', 'error');
-        return;
-      }
-
+    // Login Form
+    const loginForm = document.getElementById('loginForm');
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(loginForm);
+      const data = Object.fromEntries(formData);
       try {
-        const response = await fetch(`${API_BASE_URL}/admin/login`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password }),
-        });
-        const data = await response.json();
-        if (data.error) {
-          errorDiv.textContent = data.error;
-          errorDiv.classList.remove('hidden');
-          showToast(data.error, 'error');
-          return;
-        }
-        token = data.token;
-        adminName = data.name;
-        localStorage.setItem('adminToken', token);
-        localStorage.setItem('adminName', adminName);
-        showToast('Login successful!', 'success');
-        showDashboard();
+        const response = await apiCall('/admin/login', 'POST', data);
+        localStorage.setItem('token', response.token);
+        document.getElementById('auth').classList.add('hidden');
+        document.getElementById('dashboard').classList.remove('hidden');
+        navMenu.classList.add('authenticated');
+        navMenu.style.display = 'flex';
+        await populateTables();
       } catch (error) {
-        errorDiv.textContent = 'Error during login';
-        errorDiv.classList.remove('hidden');
-        showToast('Error during login', 'error');
+        alert(error.message || 'Login failed. Please check your credentials.');
       }
-    }
+    });
 
-    async function register() {
-      const name = document.getElementById('register-name').value.trim();
-      const email = document.getElementById('register-email').value.trim();
-      const password = document.getElementById('register-password').value;
-      const confirmPassword = document.getElementById('register-confirm-password').value;
-      const errorDiv = document.getElementById('register-error');
-
-      if (!name || !email || !password || !confirmPassword) {
-        errorDiv.textContent = 'Please fill in all fields';
-        errorDiv.classList.remove('hidden');
-        showToast('Please fill in all fields', 'error');
-        return;
-      }
-
-      if (password !== confirmPassword) {
-        errorDiv.textContent = 'Passwords do not match';
-        errorDiv.classList.remove('hidden');
-        showToast('Passwords do not match', 'error');
-        return;
-      }
-
-      if (password.length < 6) {
-        errorDiv.textContent = 'Password must be at least 6 characters';
-        errorDiv.classList.remove('hidden');
-        showToast('Password must be at least 6 characters', 'error');
-        return;
-      }
-
+    // Register Form
+    const registerForm = document.getElementById('registerForm');
+    registerForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(registerForm);
+      const data = Object.fromEntries(formData);
       try {
-        const response = await fetch(`${API_BASE_URL}/admin/register`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, email, password }),
-        });
-        const data = await response.json();
-        if (data.error) {
-          errorDiv.textContent = data.error;
-          errorDiv.classList.remove('hidden');
-          showToast(data.error, 'error');
-          return;
-        }
-        showToast('Registration successful! Please log in.', 'success');
+        await apiCall('/admin/register', 'POST', data);
+        alert('Registration successful. Please login.');
+        showLogin();
+        registerForm.reset();
+      } catch (error) {
+        alert(error.message || 'Registration failed. Please try again.');
+      }
+    });
+
+    // Forgot Password Form
+    let forgotPasswordEmail = '';
+    const forgotPasswordForm = document.getElementById('forgotPasswordForm');
+    forgotPasswordForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(forgotPasswordForm);
+      const data = Object.fromEntries(formData);
+      forgotPasswordEmail = data.email;
+      try {
+        await apiCall('/admin/send-otp', 'POST', data);
+        closeModal('forgotPasswordModal');
+        showModal('otpModal');
+      } catch (error) {
+        alert(error.message || 'Failed to send OTP. Please try again.');
+      }
+    });
+
+    // OTP Verification Form
+    const otpForm = document.getElementById('otpForm');
+    otpForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(otpForm);
+      const data = Object.fromEntries(formData);
+      try {
+        await apiCall('/admin/verify-otp', 'POST', { email: forgotPasswordEmail, otp: data.otp });
+        closeModal('otpModal');
+        showModal('resetPasswordModal');
+      } catch (error) {
+        alert(error.message || 'Invalid OTP. Please try again.');
+      }
+    });
+
+    // Reset Password Form
+    const resetPasswordForm = document.getElementById('resetPasswordForm');
+    resetPasswordForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(resetPasswordForm);
+      const data = Object.fromEntries(formData);
+      if (data.newPassword !== data.confirmPassword) {
+        alert('Passwords do not match.');
+        return;
+      }
+      try {
+        await apiCall('/admin/reset-password', 'POST', { email: forgotPasswordEmail, ...data });
+        closeModal('resetPasswordModal');
+        alert('Password reset successfully. Please login.');
         showLogin();
       } catch (error) {
-        errorDiv.textContent = 'Error during registration';
-        errorDiv.classList.remove('hidden');
-        showToast('Error during registration', 'error');
+        alert(error.message || 'Failed to reset password. Please try again.');
       }
-    }
+    });
 
-    async function requestPasswordReset() {
-      const email = document.getElementById('forgot-password-email').value.trim();
-      const errorDiv = document.getElementById('forgot-password-error');
-      const messageDiv = document.getElementById('forgot-password-message');
-
-      if (!email) {
-        errorDiv.textContent = 'Please enter your email';
-        errorDiv.classList.remove('hidden');
-        showToast('Please enter your email', 'error');
-        return;
-      }
-
-      try {
-        const response = await fetch(`${API_BASE_URL}/admin/request-otp`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email }),
-        });
-        const data = await response.json();
-        if (data.error) {
-          errorDiv.textContent = data.error;
-          errorDiv.classList.remove('hidden');
-          showToast(data.error, 'error');
-          return;
-        }
-        resetEmail = email;
-        messageDiv.textContent = 'OTP sent to your email';
-        messageDiv.classList.remove('hidden');
-        showToast('OTP sent to your email', 'success');
-        showOTPForm();
-      } catch (error) {
-        errorDiv.textContent = 'Error sending OTP';
-        errorDiv.classList.remove('hidden');
-        showToast('Error sending OTP', 'error');
-      }
-    }
-
-    async function verifyOTP() {
-      const otp = document.getElementById('otp-code').value.trim();
-      const errorDiv = document.getElementById('otp-error');
-
-      if (!otp) {
-        errorDiv.textContent = 'Please enter the OTP';
-        errorDiv.classList.remove('hidden');
-        showToast('Please enter the OTP', 'error');
-        return;
-      }
-
-      try {
-        const response = await fetch(`${API_BASE_URL}/admin/verify-otp`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: resetEmail, otp }),
-        });
-        const data = await response.json();
-        if (data.error) {
-          errorDiv.textContent = data.error;
-          errorDiv.classList.remove('hidden');
-          showToast(data.error, 'error');
-          return;
-        }
-        showToast('OTP verified successfully!', 'success');
-        showResetPasswordForm();
-      } catch (error) {
-        errorDiv.textContent = 'Error verifying OTP';
-        errorDiv.classList.remove('hidden');
-        showToast('Error verifying OTP', 'error');
-      }
-    }
-
-    async function resetPassword() {
-      const newPassword = document.getElementById('new-password').value;
-      const confirmPassword = document.getElementById('confirm-new-password').value;
-      const errorDiv = document.getElementById('reset-password-error');
-
-      if (!newPassword || !confirmPassword) {
-        errorDiv.textContent = 'Please fill in all fields';
-        errorDiv.classList.remove('hidden');
-        showToast('Please fill in all fields', 'error');
-        return;
-      }
-
-      if (newPassword !== confirmPassword) {
-        errorDiv.textContent = 'Passwords do not match';
-        errorDiv.classList.remove('hidden');
-        showToast('Passwords do not match', 'error');
-        return;
-      }
-
-      if (newPassword.length < 6) {
-        errorDiv.textContent = 'Password must be at least 6 characters';
-        errorDiv.classList.remove('hidden');
-        showToast('Password must be at least 6 characters', 'error');
-        return;
-      }
-
-      try {
-        const response = await fetch(`${API_BASE_URL}/admin/reset-password`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: resetEmail, password: newPassword }),
-        });
-        const data = await response.json();
-        if (data.error) {
-          errorDiv.textContent = data.error;
-          errorDiv.classList.remove('hidden');
-          showToast(data.error, 'error');
-          return;
-        }
-        showToast('Password reset successfully!', 'success');
-        showLogin();
-      } catch (error) {
-        errorDiv.textContent = 'Error resetting password';
-        errorDiv.classList.remove('hidden');
-        showToast('Error resetting password', 'error');
-      }
-    }
-
+    // Logout Function
     function logout() {
-      token = null;
-      adminName = null;
-      localStorage.removeItem('adminToken');
-      localStorage.removeItem('adminName');
-      document.getElementById('auth-container').classList.remove('hidden');
+      localStorage.removeItem('token');
       document.getElementById('dashboard').classList.add('hidden');
-      document.getElementById('sidebar').classList.add('hidden');
-      document.getElementById('logout-button').classList.add('hidden');
-      showToast('Logged out successfully!', 'success');
+      document.getElementById('auth').classList.remove('hidden');
+      navMenu.classList.remove('authenticated');
+      navMenu.style.display = 'none';
+      loginForm.reset();
       showLogin();
     }
 
-    // Dashboard Functions
-    async function fetchDashboardData() {
-      try {
-        const response = await fetch(`${API_BASE_URL}/admin/dashboard`, {
-          headers: { Authorization: `Bearer ${token}` },
+    // Form Validation
+    ['loginForm', 'registerForm', 'forgotPasswordForm', 'otpForm', 'resetPasswordForm'].forEach(formId => {
+      const form = document.getElementById(formId);
+      if (form) {
+        form.querySelectorAll('input').forEach(input => {
+          input.addEventListener('input', () => {
+            if (input.checkValidity()) {
+              input.classList.add('valid');
+            } else {
+              input.classList.remove('valid');
+            }
+          });
         });
-        const data = await response.json();
-        if (data.error) {
-          showToast(data.error, 'error');
-          return;
-        }
-        displayServices(data.services);
-        displayOffers(data.offers);
-        displayAppointments(data.appointments);
-        displayContacts(data.contacts);
-        displaySubscribers(data.subscribers);
-      } catch (error) {
-        showToast('Error fetching dashboard data', 'error');
-      }
-    }
-
-    function displayServices(services) {
-      const servicesList = document.getElementById('services-list');
-      servicesList.innerHTML = services.map(service => `
-        <div class="card mb-6 p-8">
-          <div class="flex items-center justify-between">
-            <div>
-              <h4 class="font-semibold text-xl text-gray-800">${service.name}</h4>
-              <p class="text-gray-600 mt-2">${service.description}</p>
-              <p class="text-gray-600 mt-1">Price: ₹${service.price}</p>
-            </div>
-            ${service.image ? `<img src="${service.image}" alt="${service.name}" class="w-20 h-20 object-cover rounded-lg border border-gray-200">` : ''}
-          </div>
-          <div class="mt-6 flex space-x-3">
-            <button class="form-button" onclick="editService(${service.id}, '${service.name}', '${service.description}', ${service.price}, '${service.image || ''}')">Edit</button>
-            <button class="form-button bg-red-500 hover:bg-red-600" onclick="deleteService(${service.id})">Delete</button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function displayOffers(offers) {
-      const offersList = document.getElementById('offers-list');
-      offersList.innerHTML = offers.map(offer => `
-        <div class="card mb-6 p-8">
-          <div class="flex items-center justify-between">
-            <div>
-              <h4 class="font-semibold text-xl text-gray-800">${offer.title}</h4>
-              <p class="text-gray-600 mt-2">${offer.description}</p>
-              <p class="text-gray-600 mt-1">Valid until: ${offer.validity}</p>
-            </div>
-            ${offer.image ? `<img src="${offer.image}" alt="${offer.title}" class="w-20 h-20 object-cover rounded-lg border border-gray-200">` : ''}
-          </div>
-          <div class="mt-6 flex space-x-3">
-            <button class="form-button" onclick="editOffer(${offer.id}, '${offer.title}', '${offer.description}', '${offer.validity}', '${offer.image || ''}')">Edit</button>
-            <button class="form-button bg-red-500 hover:bg-red-600" onclick="deleteOffer(${offer.id})">Delete</button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function displayAppointments(appointments) {
-      const appointmentsList = document.getElementById('appointments-list');
-      appointmentsList.innerHTML = appointments.map(appointment => `
-        <div class="card mb-6 p-8">
-          <p class="text-gray-800"><strong>Name:</strong> ${appointment.name}</p>
-          <p class="text-gray-600 mt-1"><strong>Email:</strong> ${appointment.email}</p>
-          <p class="text-gray-600 mt-1"><strong>Mobile:</strong> ${appointment.mobile}</p>
-          <p class="text-gray-600 mt-1"><strong>Date:</strong> ${new Date(appointment.date).toLocaleDateString()}</p>
-          <p class="text-gray-600 mt-1"><strong>Status:</strong> ${appointment.status}</p>
-          <div class="mt-6 flex space-x-3">
-            <select class="form-input w-auto" onchange="updateAppointmentStatus(${appointment.id}, this.value)">
-              <option value="pending" ${appointment.status === 'pending' ? 'selected' : ''}>Pending</option>
-              <option value="confirmed" ${appointment.status === 'confirmed' ? 'selected' : ''}>Confirmed</option>
-              <option value="cancelled" ${appointment.status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
-            </select>
-            <button class="form-button bg-red-500 hover:bg-red-600" onclick="deleteAppointment(${appointment.id})">Delete</button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function displayContacts(contacts) {
-      const contactsList = document.getElementById('contacts-list');
-      contactsList.innerHTML = contacts.map(contact => `
-        <div class="card mb-6 p-8">
-          <p class="text-gray-800"><strong>Name:</strong> ${contact.name}</p>
-          <p class="text-gray-600 mt-1"><strong>Email:</strong> ${contact.email}</p>
-          <p class="text-gray-600 mt-1"><strong>Message:</strong> ${contact.message}</p>
-        </div>
-      `).join('');
-    }
-
-    function displaySubscribers(subscribers) {
-      const subscribersList = document.getElementById('subscribers-list');
-      subscribersList.innerHTML = subscribers.map(subscriber => `
-        <div class="card mb-6 p-8">
-          <p class="text-gray-800"><strong>Email:</strong> ${subscriber.email}</p>
-        </div>
-      `).join('');
-    }
-
-    function editService(id, name, description, price, image) {
-      document.getElementById('service-id').value = id;
-      document.getElementById('service-name').value = name;
-      document.getElementById('service-description').value = description;
-      document.getElementById('service-price').value = price;
-      document.getElementById('service-image').value = '';
-      showSection('services');
-    }
-
-    function editOffer(id, title, description, validity, image) {
-      document.getElementById('offer-id').value = id;
-      document.getElementById('offer-title').value = title;
-      document.getElementById('offer-description').value = description;
-      document.getElementById('offer-validity').value = validity;
-      document.getElementById('offer-image').value = '';
-      showSection('offers');
-    }
-
-    async function deleteService(id) {
-      if (!confirm('Are you sure you want to delete this service?')) return;
-      try {
-        const response = await fetch(`${API_BASE_URL}/services/${id}`, {
-          method: 'DELETE',
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const data = await response.json();
-        if (data.error) {
-          showToast(data.error, 'error');
-          return;
-        }
-        showToast('Service deleted successfully!', 'success');
-        fetchDashboardData();
-      } catch (error) {
-        showToast('Error deleting service', 'error');
-      }
-    }
-
-    async function deleteOffer(id) {
-      if (!confirm('Are you sure you want to delete this offer?')) return;
-      try {
-        const response = await fetch(`${API_BASE_URL}/offers/${id}`, {
-          method: 'DELETE',
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const data = await response.json();
-        if (data.error) {
-          showToast(data.error, 'error');
-          return;
-        }
-        showToast('Offer deleted successfully!', 'success');
-        fetchDashboardData();
-      } catch (error) {
-        showToast('Error deleting offer', 'error');
-      }
-    }
-
-    async function updateAppointmentStatus(id, status) {
-      try {
-        const response = await fetch(`${API_BASE_URL}/appointments/${id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ status }),
-        });
-        const data = await response.json();
-        if (data.error) {
-          showToast(data.error, 'error');
-          return;
-        }
-        showToast('Appointment status updated!', 'success');
-        fetchDashboardData();
-      } catch (error) {
-        showToast('Error updating appointment status', 'error');
-      }
-    }
-
-    async function deleteAppointment(id) {
-      if (!confirm('Are you sure you want to delete this appointment?')) return;
-      try {
-        const response = await fetch(`${API_BASE_URL}/appointments/${id}`, {
-          method: 'DELETE',
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const data = await response.json();
-        if (data.error) {
-          showToast(data.error, 'error');
-          return;
-        }
-        showToast('Appointment deleted successfully!', 'success');
-        fetchDashboardData();
-      } catch (error) {
-        showToast('Error deleting appointment', 'error');
-      }
-    }
-
-    document.getElementById('service-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const id = document.getElementById('service-id').value;
-      const name = document.getElementById('service-name').value;
-      const description = document.getElementById('service-description').value;
-      const price = document.getElementById('service-price').value;
-      const imageFile = document.getElementById('service-image').files[0];
-
-      let image = '';
-      if (imageFile) {
-        const reader = new FileReader();
-        reader.onload = async () => {
-          image = reader.result;
-          await submitService(id, name, description, price, image);
-        };
-        reader.readAsDataURL(imageFile);
-      } else {
-        await submitService(id, name, description, price, image);
       }
     });
-
-    async function submitService(id, name, description, price, image) {
-      try {
-        const method = id ? 'PUT' : 'POST';
-        const url = id ? `${API_BASE_URL}/services/${id}` : `${API_BASE_URL}/services`;
-        const response = await fetch(url, {
-          method,
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ name, description, price, image }),
-        });
-        const data = await response.json();
-        if (data.error) {
-          showToast(data.error, 'error');
-          return;
-        }
-        document.getElementById('service-form').reset();
-        document.getElementById('service-id').value = '';
-        showToast(id ? 'Service updated successfully!' : 'Service added successfully!', 'success');
-        fetchDashboardData();
-      } catch (error) {
-        showToast('Error submitting service', 'error');
-      }
-    }
-
-    document.getElementById('offer-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const id = document.getElementById('offer-id').value;
-      const title = document.getElementById('offer-title').value;
-      const description = document.getElementById('offer-description').value;
-      const validity = document.getElementById('offer-validity').value;
-      const imageFile = document.getElementById('offer-image').files[0];
-
-      let image = '';
-      if (imageFile) {
-        const reader = new FileReader();
-        reader.onload = async () => {
-          image = reader.result;
-          await submitOffer(id, title, description, validity, image);
-        };
-        reader.readAsDataURL(imageFile);
-      } else {
-        await submitOffer(id, title, description, validity, image);
-      }
-    });
-
-    async function submitOffer(id, title, description, validity, image) {
-      try {
-        const method = id ? 'PUT' : 'POST';
-        const url = id ? `${API_BASE_URL}/offers/${id}` : `${API_BASE_URL}/offers`;
-        const response = await fetch(url, {
-          method,
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ title, description, validity, image }),
-        });
-        const data = await response.json();
-        if (data.error) {
-          showToast(data.error, 'error');
-          return;
-        }
-        document.getElementById('offer-form').reset();
-        document.getElementById('offer-id').value = '';
-        showToast(id ? 'Offer updated successfully!' : 'Offer added successfully!', 'success');
-        fetchDashboardData();
-      } catch (error) {
-        showToast('Error submitting offer', 'error');
-      }
-    }
-
-    // Initialize
-    if (token && adminName) {
-      showDashboard();
-    } else {
-      showLogin();
-    }
   </script>
 </body>
 </html>
