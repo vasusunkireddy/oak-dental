@@ -18,10 +18,11 @@
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       margin: 0;
       padding: 0;
-      line-height: 1.5;
+      line-height: 1.4;
       color: #1F2937;
       background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
       overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
     }
     html {
       scroll-behavior: smooth;
@@ -35,42 +36,42 @@
       width: 100%;
       top: 0;
       z-index: 10;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     }
     .header-container {
       max-width: 7xl;
       margin: 0 auto;
-      padding: 0 10px;
+      padding: 0 8px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      height: 44px;
+      height: 40px;
     }
 
     /* Logo */
     .logo-container {
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
     }
     .logo-img {
-      width: 28px;
+      width: 24px;
       height: auto;
       object-fit: contain;
-      border-radius: 5px;
+      border-radius: 4px;
       border: 1px solid rgba(0, 0, 0, 0.05);
       background: white;
-      padding: 2px;
+      padding: 1px;
       filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
       loading: lazy;
     }
     .logo-text {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       font-weight: 700;
       color: #0D9488;
     }
     .logo-subtext {
-      font-size: 0.45rem;
+      font-size: 0.4rem;
       color: #6B7280;
       font-weight: 400;
       text-transform: uppercase;
@@ -78,12 +79,16 @@
 
     /* Navigation */
     .nav-link {
-      padding: 3px 6px;
-      border-radius: 5px;
-      font-size: 0.7rem;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.65rem;
       font-weight: 500;
-      transition: background-color 0.3s ease, color 0.3s ease;
+      transition: background-color 0.2s ease, color 0.2s ease;
       touch-action: manipulation;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .nav-link:hover {
       background-color: #0D9488;
@@ -91,14 +96,19 @@
     }
     .hamburger {
       display: none;
-      font-size: 1rem;
+      font-size: 0.9rem;
       cursor: pointer;
       color: #0D9488;
-      padding: 6px;
+      padding: 8px;
+      min-height: 44px;
+      min-width: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .nav-menu {
       display: flex;
-      gap: 5px;
+      gap: 4px;
     }
     .nav-menu.authenticated {
       display: none;
@@ -111,15 +121,16 @@
     .btn-primary {
       background-color: #14B8A6;
       color: white;
-      padding: 5px 10px;
-      border-radius: 5px;
+      padding: 4px 8px;
+      border-radius: 4px;
       font-weight: 600;
-      font-size: 0.7rem;
-      transition: background-color 0.3s ease, transform 0.2s ease;
+      font-size: 0.65rem;
+      transition: background-color 0.2s ease, transform 0.2s ease;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       touch-action: manipulation;
+      min-height: 44px;
     }
     .btn-primary:hover {
       background-color: #115E59;
@@ -128,12 +139,13 @@
     .btn-secondary {
       background-color: #3B82F6;
       color: white;
-      padding: 5px 10px;
-      border-radius: 5px;
+      padding: 4px 8px;
+      border-radius: 4px;
       font-weight: 600;
-      font-size: 0.7rem;
-      transition: background-color 0.3s ease, transform 0.2s ease;
+      font-size: 0.65rem;
+      transition: background-color 0.2s ease, transform 0.2s ease;
       touch-action: manipulation;
+      min-height: 44px;
     }
     .btn-secondary:hover {
       background-color: #1E40AF;
@@ -142,12 +154,13 @@
     .btn-danger {
       background-color: #EF4444;
       color: white;
-      padding: 5px 10px;
-      border-radius: 5px;
+      padding: 4px 8px;
+      border-radius: 4px;
       font-weight: 600;
-      font-size: 0.7rem;
-      transition: background-color 0.3s ease, transform 0.2s ease;
+      font-size: 0.65rem;
+      transition: background-color 0.2s ease, transform 0.2s ease;
       touch-action: manipulation;
+      min-height: 44px;
     }
     .btn-danger:hover {
       background-color: #B91C1C;
@@ -157,13 +170,13 @@
     /* Cards */
     .card {
       background: white;
-      border-radius: 6px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border-radius: 5px;
+      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
     .card:hover {
       transform: scale(1.01);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
     }
 
     /* Tables */
@@ -173,19 +186,22 @@
       background: white;
       border-radius: 5px;
       overflow: hidden;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     }
     .admin-table th,
     .admin-table td {
-      padding: 6px;
+      padding: 5px;
       text-align: left;
       border-bottom: 1px solid #E5E7EB;
-      font-size: 0.7rem;
+      font-size: 0.6rem;
     }
     .admin-table th {
       background: #0D9488;
       color: white;
       font-weight: 600;
+      position: sticky;
+      top: 0;
+      z-index: 5;
     }
     .admin-table tr:hover {
       background: #F3F4F6;
@@ -206,25 +222,27 @@
     }
     .modal-content {
       background: white;
-      padding: 10px;
-      border-radius: 6px;
+      padding: 8px;
+      border-radius: 5px;
       text-align: center;
-      max-width: 85%;
-      width: 260px;
+      max-width: 80%;
+      width: 240px;
+      max-height: 80vh;
+      overflow-y: auto;
     }
     .modal-content h3 {
       color: #0D9488;
-      margin-bottom: 6px;
-      font-size: 0.9rem;
+      margin-bottom: 5px;
+      font-size: 0.8rem;
     }
     .modal-content input,
     .modal-content textarea,
     .modal-content button {
       width: 100%;
-      margin-bottom: 6px;
-      padding: 5px;
-      border-radius: 5px;
-      font-size: 0.7rem;
+      margin-bottom: 5px;
+      padding: 4px;
+      border-radius: 4px;
+      font-size: 0.6rem;
     }
     .modal-content input,
     .modal-content textarea {
@@ -243,6 +261,7 @@
       border: none;
       font-weight: 600;
       touch-action: manipulation;
+      min-height: 44px;
     }
     .modal-content button:hover {
       background: #115E59;
@@ -251,7 +270,7 @@
     /* Form Validation */
     .valid {
       border-color: #10B981 !important;
-      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="%2310B981" viewBox="0 0 16 16"><path d="M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z"/></svg>') no-repeat right 6px center;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" fill="%2310B981" viewBox="0 0 16 16"><path d="M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z"/></svg>') no-repeat right 5px center;
     }
 
     /* Toggle Between Login and Register */
@@ -259,7 +278,8 @@
       color: #0D9488;
       font-weight: 600;
       cursor: pointer;
-      font-size: 0.7rem;
+      font-size: 0.6rem;
+      touch-action: manipulation;
     }
     .auth-toggle:hover {
       color: #F472B6;
@@ -267,43 +287,46 @@
 
     /* Auth Forms */
     .auth-form {
-      max-width: 280px;
+      max-width: 240px;
       margin: 0 auto;
-      padding: 10px;
+      padding: 8px;
     }
     .auth-form h2 {
-      font-size: 1.1rem;
-      margin-bottom: 8px;
+      font-size: 1rem;
+      margin-bottom: 6px;
     }
     .auth-form input {
-      font-size: 0.7rem;
-      padding: 5px;
-      border-radius: 5px;
+      font-size: 0.6rem;
+      padding: 4px;
+      border-radius: 4px;
     }
     .auth-form button {
-      padding: 5px;
-      font-size: 0.7rem;
+      padding: 4px;
+      font-size: 0.6rem;
+      min-height: 44px;
     }
     .auth-form a,
     .auth-form p {
-      font-size: 0.65rem;
+      font-size: 0.6rem;
     }
 
     /* Toast Notifications */
     .toast {
       position: fixed;
-      top: 12px;
+      top: 50px;
       left: 50%;
       transform: translateX(-50%);
-      padding: 10px 20px;
-      border-radius: 6px;
+      padding: 8px 16px;
+      border-radius: 5px;
       color: white;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       font-weight: 500;
       z-index: 2000;
       opacity: 0;
-      transition: opacity 0.3s ease, transform 0.3s ease;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+      max-width: 90%;
+      text-align: center;
     }
     .toast.show {
       opacity: 1;
@@ -319,152 +342,160 @@
     /* Welcome Message */
     .welcome-message {
       background: white;
-      border-radius: 6px;
-      padding: 12px;
-      margin-bottom: 20px;
+      border-radius: 5px;
+      padding: 10px;
+      margin-bottom: 16px;
       text-align: center;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
     }
     .welcome-message h2 {
       color: #0D9488;
-      font-size: 1.25rem;
-      margin-bottom: 6px;
+      font-size: 1.1rem;
+      margin-bottom: 5px;
     }
     .welcome-message p {
       color: #6B7280;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
     }
 
     /* Media Queries */
     @media (max-width: 640px) {
       .hamburger {
-        display: block;
+        display: flex;
       }
       .nav-menu {
         display: none;
         flex-direction: column;
         position: absolute;
-        top: 44px;
+        top: 40px;
         left: 0;
         width: 100%;
         background: #0D9488;
-        padding: 5px;
+        padding: 4px;
         z-index: 10;
+        animation: slideDown 0.3s ease;
       }
       .nav-menu.active {
         display: flex;
       }
+      @keyframes slideDown {
+        from { transform: translateY(-10px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+      }
       .nav-link {
-        padding: 5px;
+        padding: 6px;
         text-align: center;
-        font-size: 0.65rem;
+        font-size: 0.6rem;
+        min-height: 44px;
       }
       .logo-img {
-        width: 24px;
+        width: 20px;
       }
       .logo-text {
-        font-size: 0.7rem;
+        font-size: 0.65rem;
       }
       .logo-subtext {
-        font-size: 0.4rem;
+        font-size: 0.35rem;
       }
       .admin-table {
-        font-size: 0.65rem;
+        font-size: 0.55rem;
         display: block;
         overflow-x: auto;
         white-space: nowrap;
       }
       .admin-table th,
       .admin-table td {
-        padding: 5px;
+        padding: 4px;
+        min-width: 80px;
       }
       .modal-content {
         width: 90%;
-        padding: 8px;
+        padding: 6px;
       }
       .modal-content h3 {
-        font-size: 0.85rem;
+        font-size: 0.75rem;
       }
       .modal-content input,
       .modal-content textarea,
       .modal-content button {
-        padding: 4px;
-        font-size: 0.65rem;
+        padding: 3px;
+        font-size: 0.55rem;
       }
       .auth-form {
-        padding: 8px;
-        max-width: 260px;
+        padding: 6px;
+        max-width: 220px;
       }
       .auth-container {
         flex-direction: column;
-        gap: 8px;
+        gap: 6px;
       }
       .auth-form h2 {
-        font-size: 1rem;
+        font-size: 0.9rem;
       }
       .welcome-message h2 {
-        font-size: 1.1rem;
+        font-size: 1rem;
       }
       .welcome-message p {
-        font-size: 0.7rem;
+        font-size: 0.65rem;
       }
       .toast {
-        width: 85%;
-        font-size: 0.7rem;
-        padding: 8px 16px;
+        top: 60px;
+        width: 90%;
+        font-size: 0.65rem;
+        padding: 6px 12px;
       }
     }
     @media (min-width: 640px) {
       .logo-img {
-        width: 36px;
+        width: 32px;
       }
       .logo-text {
-        font-size: 0.875rem;
+        font-size: 0.8rem;
       }
       .logo-subtext {
-        font-size: 0.55rem;
+        font-size: 0.5rem;
       }
       .btn-primary,
       .btn-secondary,
       .btn-danger {
-        padding: 6px 12px;
-        font-size: 0.75rem;
+        padding: 5px 10px;
+        font-size: 0.7rem;
       }
       .admin-table th,
       .admin-table td {
-        padding: 8px;
-        font-size: 0.75rem;
+        padding: 6px;
+        font-size: 0.65rem;
       }
       .modal-content {
-        width: 300px;
-        padding: 12px;
+        width: 280px;
+        padding: 10px;
       }
       .modal-content h3 {
-        font-size: 1rem;
+        font-size: 0.9rem;
       }
       .modal-content input,
       .modal-content textarea,
       .modal-content button {
-        padding: 6px;
-        font-size: 0.75rem;
+        padding: 5px;
+        font-size: 0.65rem;
       }
       .auth-form {
-        max-width: 320px;
-        padding: 12px;
+        max-width: 300px;
+        padding: 10px;
       }
       .auth-form h2 {
-        font-size: 1.25rem;
+        font-size: 1.1rem;
       }
       .welcome-message h2 {
-        font-size: 1.5rem;
+        font-size: 1.25rem;
       }
       .welcome-message p {
-        font-size: 0.875rem;
+        font-size: 0.8rem;
       }
       .toast {
         width: auto;
-        font-size: 0.75rem;
-        padding: 10px 20px;
+        font-size: 0.7rem;
+        padding: 8px 16px;
       }
     }
     @media (min-width: 1024px) {
@@ -475,11 +506,11 @@
         display: flex !important;
       }
       .nav-link {
-        padding: 4px 8px;
-        font-size: 0.75rem;
+        padding: 5px 10px;
+        font-size: 0.7rem;
       }
       .header-container {
-        height: 48px;
+        height: 44px;
       }
     }
   </style>
@@ -513,13 +544,13 @@
   </header>
 
   <!-- Login/Register Section -->
-  <section id="auth" class="min-h-screen flex items-center justify-center pt-14 px-3">
+  <section id="auth" class="min-h-screen flex items-center justify-center pt-12 px-2">
     <div class="card auth-form animate__animated animate__fadeIn">
       <div class="flex flex-col sm:flex-row auth-container">
         <!-- Login Form -->
         <div class="flex-1" id="loginFormContainer">
-          <h2 class="text-lg font-bold text-teal-800 text-center mb-3">Admin Login</h2>
-          <form id="loginForm" class="space-y-2">
+          <h2 class="text-base font-bold text-teal-800 text-center mb-2">Admin Login</h2>
+          <form id="loginForm" class="space-y-1.5">
             <input type="email" name="email" placeholder="Email" class="w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required>
             <input type="password" name="password" placeholder="Password" class="w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required>
             <button type="submit" class="btn-primary w-full">Login</button>
@@ -529,8 +560,8 @@
         </div>
         <!-- Register Form -->
         <div class="flex-1 hidden" id="registerFormContainer">
-          <h2 class="text-lg font-bold text-teal-800 text-center mb-3">Admin Register</h2>
-          <form id="registerForm" class="space-y-2">
+          <h2 class="text-base font-bold text-teal-800 text-center mb-2">Admin Register</h2>
+          <form id="registerForm" class="space-y-1.5">
             <input type="text" name="name" placeholder="Full Name" class="w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required>
             <input type="email" name="email" placeholder="Email" class="w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required>
             <input type="password" name="password" placeholder="Password" class="w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required>
@@ -543,8 +574,8 @@
   </section>
 
   <!-- Dashboard Section (Hidden by Default) -->
-  <section id="dashboard" class="py-14 hidden">
-    <div class="max-w-7xl mx-auto px-3 sm:px-5 lg:px-7">
+  <section id="dashboard" class="py-12 hidden">
+    <div class="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6">
       <!-- Welcome Message -->
       <div class="welcome-message animate__animated animate__fadeIn">
         <h2 id="welcomeTitle">Welcome!</h2>
@@ -552,57 +583,63 @@
       </div>
 
       <!-- Appointments -->
-      <div id="appointments" class="mb-8">
-        <h2 class="text-lg font-bold text-teal-800 mb-3 animate__animated animate__fadeIn">Appointments</h2>
+      <div id="appointments" class="mb-6">
+        <h2 class="text-base font-bold text-teal-800 mb-2 animate__animated animate__fadeIn">Appointments</h2>
         <div class="card">
-          <table class="admin-table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Date</th>
-                <th>Message</th>
-                <th>Status</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody id="appointmentsTable"></tbody>
-          </table>
+          <div class="table-wrapper" style="overflow-x: auto;">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Date</th>
+                  <th>Message</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="appointmentsTable"></tbody>
+            </table>
+          </div>
         </div>
       </div>
 
       <!-- Messages -->
-      <div id="messages" class="mb-8">
-        <h2 class="text-lg font-bold text-teal-800 mb-3 animate__animated animate__fadeIn">Messages</h2>
+      <div id="messages" class="mb-6">
+        <h2 class="text-base font-bold text-teal-800 mb-2 animate__animated animate__fadeIn">Messages</h2>
         <div class="card">
-          <table class="admin-table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Message</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody id="messagesTable"></tbody>
-          </table>
+          <div class="table-wrapper" style="overflow-x: auto;">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Message</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="messagesTable"></tbody>
+            </table>
+          </div>
         </div>
       </div>
 
       <!-- Subscribers -->
-      <div id="subscribers" class="mb-8">
-        <h2 class="text-lg font-bold text-teal-800 mb-3 animate__animated animate__fadeIn">Subscribers</h2>
+      <div id="subscribers" class="mb-6">
+        <h2 class="text-base font-bold text-teal-800 mb-2 animate__animated animate__fadeIn">Subscribers</h2>
         <div class="card">
-          <table class="admin-table">
-            <thead>
-              <tr>
-                <th>Email</th>
-                <th>Subscribed On</th>
-              </tr>
-            </thead>
-            <tbody id="subscribersTable"></tbody>
-          </table>
+          <div class="table-wrapper" style="overflow-x: auto;">
+            <table class="admin-table">
+              <thead>
+                <tr storefront
+                  <th>Email</th>
+                  <th>Subscribed On</th>
+                </tr>
+              </thead>
+              <tbody id="subscribersTable"></tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
@@ -612,7 +649,7 @@
   <div id="forgotPasswordModal" class="modal">
     <div class="modal-content">
       <h3>Forgot Password</h3>
-      <form id="forgotPasswordForm" class="space-y-2">
+      <form id="forgotPasswordForm" class="space-y-1.5">
         <input type="email" name="email" placeholder="Enter your email" class="border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required>
         <button type="submit" class="btn-primary">Send OTP</button>
         <button type="button" class="btn-secondary" onclick="closeModal('forgotPasswordModal')">Cancel</button>
@@ -624,7 +661,7 @@
   <div id="otpModal" class="modal">
     <div class="modal-content">
       <h3>Verify OTP</h3>
-      <form id="otpForm" class="space-y-2">
+      <form id="otpForm" class="space-y-1.5">
         <input type="text" name="otp" placeholder="Enter OTP" class="border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required>
         <button type="submit" class="btn-primary">Verify OTP</button>
         <button type="button" class="btn-secondary" onclick="closeModal('otpModal')">Cancel</button>
@@ -636,7 +673,7 @@
   <div id="resetPasswordModal" class="modal">
     <div class="modal-content">
       <h3>Reset Password</h3>
-      <form id="resetPasswordForm" class="space-y-2">
+      <form id="resetPasswordForm" class="space-y-1.5">
         <input type="password" name="newPassword" placeholder="New Password" class="border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required>
         <input type="password" name="confirmPassword" placeholder="Confirm Password" class="border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required>
         <button type="submit" class="btn-primary">Reset Password</button>
@@ -649,7 +686,7 @@
   <div id="cancelAppointmentModal" class="modal">
     <div class="modal-content">
       <h3>Cancel Appointment</h3>
-      <form id="cancelAppointmentForm" class="space-y-2">
+      <form id="cancelAppointmentForm" class="space-y-1.5">
         <textarea name="reason" placeholder="Reason for cancellation" class="border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required></textarea>
         <button type="submit" class="btn-primary">Submit</button>
         <button type="button" class="btn-secondary" onclick="closeModal('cancelAppointmentModal')">Cancel</button>
@@ -661,7 +698,7 @@
   <div id="replyMessageModal" class="modal">
     <div class="modal-content">
       <h3>Reply to Message</h3>
-      <form id="replyMessageForm" class="space-y-2">
+      <form id="replyMessageForm" class="space-y-1.5">
         <textarea name="reply" placeholder="Your reply" class="border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required></textarea>
         <button type="submit" class="btn-primary">Send Reply</button>
         <button type="button" class="btn-secondary" onclick="closeModal('replyMessageModal')">Cancel</button>
@@ -670,8 +707,21 @@
   </div>
 
   <script>
-    // API Configuration
+    // API Configuration with Fallback
     const API_BASE_URL = window.location.hostname === 'localhost' ? 'http://localhost:3000/api' : 'https://oak-dental.onrender.com/api';
+
+    // Debounce Utility for API Calls
+    function debounce(func, wait) {
+      let timeout;
+      return function executedFunction(...args) {
+        const later = () => {
+          clearTimeout(timeout);
+          func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+      };
+    }
 
     // Toast Notification Function
     function showToast(message, type = 'success') {
@@ -685,8 +735,8 @@
       setTimeout(() => {
         toast.classList.remove('show');
         toast.classList.add('animate__fadeOutUp');
-        setTimeout(() => toast.remove(), 500);
-      }, 3000);
+        setTimeout(() => toast.remove(), 400);
+      }, 2500);
     }
 
     // Helper Function for API Calls
@@ -705,22 +755,23 @@
         return result;
       } catch (error) {
         console.error(`API error at ${endpoint}:`, error);
+        showToast('Network error. Please check your connection.', 'error');
         throw error;
       }
     }
 
-    // Populate Tables
+    // Populate Tables with Schema Fallback
     async function populateTables() {
       try {
         // Fetch Appointments
         const appointments = await apiCall('/admin/appointments');
         document.getElementById('appointmentsTable').innerHTML = appointments.map(item => `
           <tr>
-            <td>${item.name || ''}</td>
-            <td>${item.email || ''}</td>
-            <td>${item.phone || ''}</td>
-            <td>${item.date || ''}</td>
-            <td>${item.message || ''}</td>
+            <td>${item.name || 'N/A'}</td>
+            <td>${item.email || 'N/A'}</td>
+            <td>${item.phone || 'N/A'}</td>
+            <td>${item.date || 'N/A'}</td>
+            <td>${item.message || 'N/A'}</td>
             <td>${item.status || 'Pending'}</td>
             <td>
               ${(item.status || 'pending').toLowerCase() === 'pending' ? `
@@ -735,11 +786,11 @@
         const messages = await apiCall('/admin/messages');
         document.getElementById('messagesTable').innerHTML = messages.map(item => `
           <tr>
-            <td>${item.full_name || ''}</td>
-            <td>${item.email || ''}</td>
-            <td>${item.message || ''}</td>
+            <td>${item.full_name || item.name || 'N/A'}</td>
+            <td>${item.email || 'N/A'}</td>
+            <td>${item.message || 'N/A'}</td>
             <td>
-              <button class="btn-primary text-xs px-1 py-0.5" onclick="showReplyModal(${item.id}, '${item.email.replace(/'/g, "\\'")}')">Reply</button>
+              <button class="btn-primary text-xs px-1 py-0.5" onclick="showReplyModal(${item.id}, '${(item.email || '').replace(/'/g, "\\'")}')">Reply</button>
             </td>
           </tr>
         `).join('');
@@ -748,8 +799,8 @@
         const subscribers = await apiCall('/admin/subscribers');
         document.getElementById('subscribersTable').innerHTML = subscribers.map(item => `
           <tr>
-            <td>${item.email || ''}</td>
-            <td>${new Date(item.subscribed_on).toLocaleDateString() || ''}</td>
+            <td>${item.email || 'N/A'}</td>
+            <td>${item.subscribed_on ? new Date(item.subscribed_on).toLocaleDateString() : 'N/A'}</td>
           </tr>
         `).join('');
       } catch (error) {
@@ -759,10 +810,13 @@
 
     // Modal Functions
     function showModal(modalId) {
-      document.getElementById(modalId).style.display = 'flex';
+      const modal = document.getElementById(modalId);
+      modal.style.display = 'flex';
+      setTimeout(() => modal.querySelector('input, textarea')?.focus(), 100);
     }
     function closeModal(modalId) {
-      document.getElementById(modalId).style.display = 'none';
+      const modal = document.getElementById(modalId);
+      modal.style.display = 'none';
       if (modalId === 'cancelAppointmentModal') {
         document.getElementById('cancelAppointmentForm').reset();
       } else if (modalId === 'replyMessageModal') {
@@ -788,7 +842,7 @@
       hamburger.setAttribute('aria-expanded', navMenu.classList.contains('active'));
     });
 
-    // Close menu when a nav link is clicked
+    // Close menu on nav link click
     document.querySelectorAll('.nav-link').forEach(link => {
       link.addEventListener('click', () => {
         navMenu.classList.remove('active');
@@ -806,13 +860,13 @@
       try {
         const response = await apiCall('/admin/login', 'POST', data);
         localStorage.setItem('token', response.token);
-        adminName = response.name;
+        adminName = response.name || 'Admin';
         document.getElementById('auth').classList.add('hidden');
         document.getElementById('dashboard').classList.remove('hidden');
         navMenu.classList.add('authenticated');
         navMenu.style.display = 'flex';
         document.getElementById('welcomeTitle').textContent = `Welcome, ${adminName}!`;
-        await populateTables();
+        await debounce(populateTables, 300)();
         showToast('Login successful!', 'success');
       } catch (error) {
         showToast(error.message || 'Login failed. Please check your credentials.', 'error');
@@ -893,7 +947,7 @@
     async function acceptAppointment(id) {
       try {
         await apiCall('/admin/appointment/action', 'POST', { id, action: 'accept' });
-        await populateTables();
+        await debounce(populateTables, 300)();
         showToast('Appointment accepted successfully.', 'success');
       } catch (error) {
         showToast(error.message || 'Failed to accept appointment.', 'error');
@@ -915,7 +969,7 @@
         await apiCall('/admin/appointment/action', 'POST', { id: currentAppointmentId, action: 'cancel', reason: data.reason });
         closeModal('cancelAppointmentModal');
         cancelAppointmentForm.reset();
-        await populateTables();
+        await debounce(populateTables, 300)();
         showToast('Appointment cancelled successfully.', 'success');
       } catch (error) {
         showToast(error.message || 'Failed to cancel appointment.', 'error');
@@ -970,6 +1024,9 @@
               input.classList.remove('valid');
             }
           });
+          input.addEventListener('focus', () => {
+            input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          });
         });
       }
     });
@@ -980,13 +1037,13 @@
       if (token) {
         try {
           const profile = await apiCall('/admin/profile');
-          adminName = profile.name;
+          adminName = profile.name || 'Admin';
           document.getElementById('auth').classList.add('hidden');
           document.getElementById('dashboard').classList.remove('hidden');
           navMenu.classList.add('authenticated');
           navMenu.style.display = 'flex';
           document.getElementById('welcomeTitle').textContent = `Welcome, ${adminName}!`;
-          await populateTables();
+          await debounce(populateTables, 300)();
         } catch (error) {
           localStorage.removeItem('token');
           showToast('Session expired. Please login again.', 'error');
