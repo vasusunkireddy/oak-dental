@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="description" content="OAK Dental Clinic Admin Dashboard for managing appointments, messages, and subscribers.">
   <title>OAK Dental Clinic - Admin Dashboard</title>
   <link rel="icon" href="https://i.postimg.cc/9MdzgVhV/OAK-LOGO-1.jpg" type="image/jpeg">
@@ -21,6 +21,7 @@
       line-height: 1.5;
       color: #1F2937;
       background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      overflow-x: hidden;
     }
     html {
       scroll-behavior: smooth;
@@ -39,36 +40,37 @@
     .header-container {
       max-width: 7xl;
       margin: 0 auto;
-      padding: 0 12px;
+      padding: 0 10px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      height: 48px;
+      height: 44px;
     }
 
     /* Logo */
     .logo-container {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
     }
     .logo-img {
-      width: 32px;
+      width: 28px;
       height: auto;
       object-fit: contain;
-      border-radius: 6px;
+      border-radius: 5px;
       border: 1px solid rgba(0, 0, 0, 0.05);
       background: white;
       padding: 2px;
       filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
+      loading: lazy;
     }
     .logo-text {
-      font-size: 0.875rem;
+      font-size: 0.75rem;
       font-weight: 700;
       color: #0D9488;
     }
     .logo-subtext {
-      font-size: 0.5rem;
+      font-size: 0.45rem;
       color: #6B7280;
       font-weight: 400;
       text-transform: uppercase;
@@ -76,11 +78,12 @@
 
     /* Navigation */
     .nav-link {
-      padding: 4px 8px;
-      border-radius: 6px;
-      font-size: 0.75rem;
+      padding: 3px 6px;
+      border-radius: 5px;
+      font-size: 0.7rem;
       font-weight: 500;
       transition: background-color 0.3s ease, color 0.3s ease;
+      touch-action: manipulation;
     }
     .nav-link:hover {
       background-color: #0D9488;
@@ -88,13 +91,14 @@
     }
     .hamburger {
       display: none;
-      font-size: 1.125rem;
+      font-size: 1rem;
       cursor: pointer;
       color: #0D9488;
+      padding: 6px;
     }
     .nav-menu {
       display: flex;
-      gap: 6px;
+      gap: 5px;
     }
     .nav-menu.authenticated {
       display: none;
@@ -107,14 +111,15 @@
     .btn-primary {
       background-color: #14B8A6;
       color: white;
-      padding: 6px 12px;
-      border-radius: 6px;
+      padding: 5px 10px;
+      border-radius: 5px;
       font-weight: 600;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       transition: background-color 0.3s ease, transform 0.2s ease;
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      touch-action: manipulation;
     }
     .btn-primary:hover {
       background-color: #115E59;
@@ -123,11 +128,12 @@
     .btn-secondary {
       background-color: #3B82F6;
       color: white;
-      padding: 6px 12px;
-      border-radius: 6px;
+      padding: 5px 10px;
+      border-radius: 5px;
       font-weight: 600;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       transition: background-color 0.3s ease, transform 0.2s ease;
+      touch-action: manipulation;
     }
     .btn-secondary:hover {
       background-color: #1E40AF;
@@ -136,11 +142,12 @@
     .btn-danger {
       background-color: #EF4444;
       color: white;
-      padding: 6px 12px;
-      border-radius: 6px;
+      padding: 5px 10px;
+      border-radius: 5px;
       font-weight: 600;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       transition: background-color 0.3s ease, transform 0.2s ease;
+      touch-action: manipulation;
     }
     .btn-danger:hover {
       background-color: #B91C1C;
@@ -150,7 +157,7 @@
     /* Cards */
     .card {
       background: white;
-      border-radius: 8px;
+      border-radius: 6px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
@@ -164,16 +171,16 @@
       width: 100%;
       border-collapse: collapse;
       background: white;
-      border-radius: 6px;
+      border-radius: 5px;
       overflow: hidden;
       box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
     }
     .admin-table th,
     .admin-table td {
-      padding: 8px;
+      padding: 6px;
       text-align: left;
       border-bottom: 1px solid #E5E7EB;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
     }
     .admin-table th {
       background: #0D9488;
@@ -199,25 +206,25 @@
     }
     .modal-content {
       background: white;
-      padding: 12px;
-      border-radius: 8px;
+      padding: 10px;
+      border-radius: 6px;
       text-align: center;
-      max-width: 90%;
-      width: 280px;
+      max-width: 85%;
+      width: 260px;
     }
     .modal-content h3 {
       color: #0D9488;
-      margin-bottom: 8px;
-      font-size: 1rem;
+      margin-bottom: 6px;
+      font-size: 0.9rem;
     }
     .modal-content input,
     .modal-content textarea,
     .modal-content button {
       width: 100%;
-      margin-bottom: 8px;
-      padding: 6px;
-      border-radius: 6px;
-      font-size: 0.75rem;
+      margin-bottom: 6px;
+      padding: 5px;
+      border-radius: 5px;
+      font-size: 0.7rem;
     }
     .modal-content input,
     .modal-content textarea {
@@ -235,6 +242,7 @@
       color: white;
       border: none;
       font-weight: 600;
+      touch-action: manipulation;
     }
     .modal-content button:hover {
       background: #115E59;
@@ -243,7 +251,7 @@
     /* Form Validation */
     .valid {
       border-color: #10B981 !important;
-      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="%2310B981" viewBox="0 0 16 16"><path d="M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z"/></svg>') no-repeat right 8px center;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="%2310B981" viewBox="0 0 16 16"><path d="M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z"/></svg>') no-repeat right 6px center;
     }
 
     /* Toggle Between Login and Register */
@@ -251,7 +259,7 @@
       color: #0D9488;
       font-weight: 600;
       cursor: pointer;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
     }
     .auth-toggle:hover {
       color: #F472B6;
@@ -259,38 +267,38 @@
 
     /* Auth Forms */
     .auth-form {
-      max-width: 320px;
+      max-width: 280px;
       margin: 0 auto;
-      padding: 12px;
+      padding: 10px;
     }
     .auth-form h2 {
-      font-size: 1.25rem;
-      margin-bottom: 10px;
+      font-size: 1.1rem;
+      margin-bottom: 8px;
     }
     .auth-form input {
-      font-size: 0.75rem;
-      padding: 6px;
-      border-radius: 6px;
+      font-size: 0.7rem;
+      padding: 5px;
+      border-radius: 5px;
     }
     .auth-form button {
-      padding: 6px;
-      font-size: 0.75rem;
+      padding: 5px;
+      font-size: 0.7rem;
     }
     .auth-form a,
     .auth-form p {
-      font-size: 0.7rem;
+      font-size: 0.65rem;
     }
 
     /* Toast Notifications */
     .toast {
       position: fixed;
-      top: 16px;
+      top: 12px;
       left: 50%;
       transform: translateX(-50%);
-      padding: 12px 24px;
-      border-radius: 8px;
+      padding: 10px 20px;
+      border-radius: 6px;
       color: white;
-      font-size: 0.875rem;
+      font-size: 0.75rem;
       font-weight: 500;
       z-index: 2000;
       opacity: 0;
@@ -311,20 +319,20 @@
     /* Welcome Message */
     .welcome-message {
       background: white;
-      border-radius: 8px;
-      padding: 16px;
-      margin-bottom: 24px;
+      border-radius: 6px;
+      padding: 12px;
+      margin-bottom: 20px;
       text-align: center;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
     .welcome-message h2 {
       color: #0D9488;
-      font-size: 1.5rem;
-      margin-bottom: 8px;
+      font-size: 1.25rem;
+      margin-bottom: 6px;
     }
     .welcome-message p {
       color: #6B7280;
-      font-size: 0.875rem;
+      font-size: 0.75rem;
     }
 
     /* Media Queries */
@@ -336,127 +344,142 @@
         display: none;
         flex-direction: column;
         position: absolute;
-        top: 48px;
+        top: 44px;
         left: 0;
         width: 100%;
         background: #0D9488;
-        padding: 6px;
+        padding: 5px;
         z-index: 10;
       }
       .nav-menu.active {
         display: flex;
       }
       .nav-link {
-        padding: 6px;
+        padding: 5px;
         text-align: center;
-        font-size: 0.7rem;
+        font-size: 0.65rem;
       }
       .logo-img {
-        width: 28px;
+        width: 24px;
       }
       .logo-text {
-        font-size: 0.75rem;
+        font-size: 0.7rem;
       }
       .logo-subtext {
-        font-size: 0.45rem;
+        font-size: 0.4rem;
       }
       .admin-table {
-        font-size: 0.7rem;
+        font-size: 0.65rem;
         display: block;
         overflow-x: auto;
         white-space: nowrap;
       }
       .admin-table th,
       .admin-table td {
-        padding: 6px;
+        padding: 5px;
       }
       .modal-content {
         width: 90%;
-        padding: 10px;
+        padding: 8px;
       }
       .modal-content h3 {
-        font-size: 0.9rem;
+        font-size: 0.85rem;
       }
       .modal-content input,
       .modal-content textarea,
       .modal-content button {
-        padding: 5px;
-        font-size: 0.7rem;
+        padding: 4px;
+        font-size: 0.65rem;
       }
       .auth-form {
-        padding: 10px;
-        max-width: 280px;
+        padding: 8px;
+        max-width: 260px;
       }
       .auth-container {
         flex-direction: column;
-        gap: 10px;
+        gap: 8px;
       }
       .auth-form h2 {
-        font-size: 1.1rem;
+        font-size: 1rem;
       }
       .welcome-message h2 {
-        font-size: 1.25rem;
+        font-size: 1.1rem;
       }
       .welcome-message p {
-        font-size: 0.75rem;
+        font-size: 0.7rem;
       }
       .toast {
-        width: 90%;
-        font-size: 0.75rem;
-        padding: 10px 20px;
+        width: 85%;
+        font-size: 0.7rem;
+        padding: 8px 16px;
       }
     }
     @media (min-width: 640px) {
       .logo-img {
-        width: 40px;
+        width: 36px;
       }
       .logo-text {
-        font-size: 1rem;
+        font-size: 0.875rem;
       }
       .logo-subtext {
-        font-size: 0.625rem;
+        font-size: 0.55rem;
       }
       .btn-primary,
       .btn-secondary,
       .btn-danger {
-        padding: 8px 16px;
-        font-size: 0.875rem;
+        padding: 6px 12px;
+        font-size: 0.75rem;
       }
       .admin-table th,
       .admin-table td {
-        padding: 10px;
-        font-size: 0.875rem;
+        padding: 8px;
+        font-size: 0.75rem;
       }
       .modal-content {
-        width: 320px;
-        padding: 16px;
+        width: 300px;
+        padding: 12px;
       }
       .modal-content h3 {
-        font-size: 1.25rem;
+        font-size: 1rem;
       }
       .modal-content input,
       .modal-content textarea,
       .modal-content button {
-        padding: 8px;
-        font-size: 0.875rem;
+        padding: 6px;
+        font-size: 0.75rem;
       }
       .auth-form {
-        max-width: 360px;
-        padding: 16px;
+        max-width: 320px;
+        padding: 12px;
       }
       .auth-form h2 {
-        font-size: 1.5rem;
+        font-size: 1.25rem;
       }
       .welcome-message h2 {
-        font-size: 1.75rem;
+        font-size: 1.5rem;
       }
       .welcome-message p {
-        font-size: 1rem;
+        font-size: 0.875rem;
       }
       .toast {
         width: auto;
-        font-size: 0.875rem;
-        padding: 12px 24px;
+        font-size: 0.75rem;
+        padding: 10px 20px;
+      }
+    }
+    @media (min-width: 1024px) {
+      .hamburger {
+        display: none;
+      }
+      .nav-menu {
+        display: flex !important;
+      }
+      .nav-link {
+        padding: 4px 8px;
+        font-size: 0.75rem;
+      }
+      .header-container {
+        height: 48px;
       }
     }
   </style>
@@ -470,7 +493,7 @@
     <div class="header-container">
       <div class="logo-container">
         <a href="/admin" aria-label="OAK Dental Clinic Admin Dashboard">
-          <img src="https://i.postimg.cc/9MdzgVhV/OAK-LOGO-1.jpg" alt="OAK Dental Clinic Logo" class="logo-img animate__animated animate__fadeIn">
+          <img src="https://i.postimg.cc/9MdzgVhV/OAK-LOGO-1.jpg" alt="OAK Dental Clinic Logo" class="logo-img animate__animated animate__fadeIn" loading="lazy">
         </a>
         <div class="flex flex-col">
           <a href="/admin" class="logo-text" aria-label="OAK Dental Clinic">OAK Dental Clinic</a>
@@ -490,29 +513,29 @@
   </header>
 
   <!-- Login/Register Section -->
-  <section id="auth" class="min-h-screen flex items-center justify-center pt-16 px-4">
+  <section id="auth" class="min-h-screen flex items-center justify-center pt-14 px-3">
     <div class="card auth-form animate__animated animate__fadeIn">
       <div class="flex flex-col sm:flex-row auth-container">
         <!-- Login Form -->
         <div class="flex-1" id="loginFormContainer">
-          <h2 class="text-xl font-bold text-teal-800 text-center mb-4">Admin Login</h2>
-          <form id="loginForm" class="space-y-3">
+          <h2 class="text-lg font-bold text-teal-800 text-center mb-3">Admin Login</h2>
+          <form id="loginForm" class="space-y-2">
             <input type="email" name="email" placeholder="Email" class="w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required>
             <input type="password" name="password" placeholder="Password" class="w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required>
             <button type="submit" class="btn-primary w-full">Login</button>
             <a href="#" class="text-teal-500 hover:text-teal-600 text-center block" onclick="showModal('forgotPasswordModal')">Forgot Password?</a>
-            <p class="text-center mt-2">Don't have an account? <span class="auth-toggle" onclick="showRegister()">Register</span></p>
+            <p class="text-center mt-1">Don't have an account? <span class="auth-toggle" onclick="showRegister()">Register</span></p>
           </form>
         </div>
         <!-- Register Form -->
         <div class="flex-1 hidden" id="registerFormContainer">
-          <h2 class="text-xl font-bold text-teal-800 text-center mb-4">Admin Register</h2>
-          <form id="registerForm" class="space-y-3">
+          <h2 class="text-lg font-bold text-teal-800 text-center mb-3">Admin Register</h2>
+          <form id="registerForm" class="space-y-2">
             <input type="text" name="name" placeholder="Full Name" class="w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required>
             <input type="email" name="email" placeholder="Email" class="w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required>
             <input type="password" name="password" placeholder="Password" class="w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required>
             <button type="submit" class="btn-primary w-full">Register</button>
-            <p class="text-center mt-2">Already have an account? <span class="auth-toggle" onclick="showLogin()">Login</span></p>
+            <p class="text-center mt-1">Already have an account? <span class="auth-toggle" onclick="showLogin()">Login</span></p>
           </form>
         </div>
       </div>
@@ -520,8 +543,8 @@
   </section>
 
   <!-- Dashboard Section (Hidden by Default) -->
-  <section id="dashboard" class="py-16 hidden">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <section id="dashboard" class="py-14 hidden">
+    <div class="max-w-7xl mx-auto px-3 sm:px-5 lg:px-7">
       <!-- Welcome Message -->
       <div class="welcome-message animate__animated animate__fadeIn">
         <h2 id="welcomeTitle">Welcome!</h2>
@@ -529,8 +552,8 @@
       </div>
 
       <!-- Appointments -->
-      <div id="appointments" class="mb-10">
-        <h2 class="text-xl font-bold text-teal-800 mb-4 animate__animated animate__fadeIn">Appointments</h2>
+      <div id="appointments" class="mb-8">
+        <h2 class="text-lg font-bold text-teal-800 mb-3 animate__animated animate__fadeIn">Appointments</h2>
         <div class="card">
           <table class="admin-table">
             <thead>
@@ -550,8 +573,8 @@
       </div>
 
       <!-- Messages -->
-      <div id="messages" class="mb-10">
-        <h2 class="text-xl font-bold text-teal-800 mb-4 animate__animated animate__fadeIn">Messages</h2>
+      <div id="messages" class="mb-8">
+        <h2 class="text-lg font-bold text-teal-800 mb-3 animate__animated animate__fadeIn">Messages</h2>
         <div class="card">
           <table class="admin-table">
             <thead>
@@ -568,8 +591,8 @@
       </div>
 
       <!-- Subscribers -->
-      <div id="subscribers" class="mb-10">
-        <h2 class="text-xl font-bold text-teal-800 mb-4 animate__animated animate__fadeIn">Subscribers</h2>
+      <div id="subscribers" class="mb-8">
+        <h2 class="text-lg font-bold text-teal-800 mb-3 animate__animated animate__fadeIn">Subscribers</h2>
         <div class="card">
           <table class="admin-table">
             <thead>
@@ -589,7 +612,7 @@
   <div id="forgotPasswordModal" class="modal">
     <div class="modal-content">
       <h3>Forgot Password</h3>
-      <form id="forgotPasswordForm" class="space-y-3">
+      <form id="forgotPasswordForm" class="space-y-2">
         <input type="email" name="email" placeholder="Enter your email" class="border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required>
         <button type="submit" class="btn-primary">Send OTP</button>
         <button type="button" class="btn-secondary" onclick="closeModal('forgotPasswordModal')">Cancel</button>
@@ -601,7 +624,7 @@
   <div id="otpModal" class="modal">
     <div class="modal-content">
       <h3>Verify OTP</h3>
-      <form id="otpForm" class="space-y-3">
+      <form id="otpForm" class="space-y-2">
         <input type="text" name="otp" placeholder="Enter OTP" class="border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required>
         <button type="submit" class="btn-primary">Verify OTP</button>
         <button type="button" class="btn-secondary" onclick="closeModal('otpModal')">Cancel</button>
@@ -613,7 +636,7 @@
   <div id="resetPasswordModal" class="modal">
     <div class="modal-content">
       <h3>Reset Password</h3>
-      <form id="resetPasswordForm" class="space-y-3">
+      <form id="resetPasswordForm" class="space-y-2">
         <input type="password" name="newPassword" placeholder="New Password" class="border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required>
         <input type="password" name="confirmPassword" placeholder="Confirm Password" class="border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required>
         <button type="submit" class="btn-primary">Reset Password</button>
@@ -626,7 +649,7 @@
   <div id="cancelAppointmentModal" class="modal">
     <div class="modal-content">
       <h3>Cancel Appointment</h3>
-      <form id="cancelAppointmentForm" class="space-y-3">
+      <form id="cancelAppointmentForm" class="space-y-2">
         <textarea name="reason" placeholder="Reason for cancellation" class="border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required></textarea>
         <button type="submit" class="btn-primary">Submit</button>
         <button type="button" class="btn-secondary" onclick="closeModal('cancelAppointmentModal')">Cancel</button>
@@ -638,7 +661,7 @@
   <div id="replyMessageModal" class="modal">
     <div class="modal-content">
       <h3>Reply to Message</h3>
-      <form id="replyMessageForm" class="space-y-3">
+      <form id="replyMessageForm" class="space-y-2">
         <textarea name="reply" placeholder="Your reply" class="border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required></textarea>
         <button type="submit" class="btn-primary">Send Reply</button>
         <button type="button" class="btn-secondary" onclick="closeModal('replyMessageModal')">Cancel</button>
@@ -691,7 +714,6 @@
       try {
         // Fetch Appointments
         const appointments = await apiCall('/admin/appointments');
-        console.log('Appointments:', appointments); // Debug
         document.getElementById('appointmentsTable').innerHTML = appointments.map(item => `
           <tr>
             <td>${item.name || ''}</td>
@@ -702,8 +724,8 @@
             <td>${item.status || 'Pending'}</td>
             <td>
               ${(item.status || 'pending').toLowerCase() === 'pending' ? `
-                <button class="btn-primary text-xs px-2 py-1" onclick="acceptAppointment(${item.id})">Accept</button>
-                <button class="btn-danger text-xs px-2 py-1 ml-2" onclick="showCancelModal(${item.id})">Cancel</button>
+                <button class="btn-primary text-xs px-1 py-0.5" onclick="acceptAppointment(${item.id})">Accept</button>
+                <button class="btn-danger text-xs px-1 py-0.5 ml-1" onclick="showCancelModal(${item.id})">Cancel</button>
               ` : (item.status || 'Pending')}
             </td>
           </tr>
@@ -717,7 +739,7 @@
             <td>${item.email || ''}</td>
             <td>${item.message || ''}</td>
             <td>
-              <button class="btn-primary text-xs px-2 py-1" onclick="showReplyModal(${item.id}, '${item.email.replace(/'/g, "\\'")}')">Reply</button>
+              <button class="btn-primary text-xs px-1 py-0.5" onclick="showReplyModal(${item.id}, '${item.email.replace(/'/g, "\\'")}')">Reply</button>
             </td>
           </tr>
         `).join('');
@@ -764,6 +786,14 @@
     hamburger.addEventListener('click', () => {
       navMenu.classList.toggle('active');
       hamburger.setAttribute('aria-expanded', navMenu.classList.contains('active'));
+    });
+
+    // Close menu when a nav link is clicked
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        navMenu.classList.remove('active');
+        hamburger.setAttribute('aria-expanded', 'false');
+      });
     });
 
     // Login Form
