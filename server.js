@@ -60,21 +60,8 @@ async function initializeDatabase() {
     `);
     if (adminColumns.rows.length === 0) {
       console.log('Adding missing name column to admins table');
-      try {
-        await pool.query('ALTER TABLE admins ADD COLUMN name VARCHAR(255) NOT NULL DEFAULT \'Unknown\'');
-        console.log('Successfully added name column to admins');
-      } catch (alterError) {
-        console.error('Failed to add name column to admins:', alterError);
-        const recheck = await pool.query(`
-          SELECT column_name FROM information_schema.columns 
-          WHERE table_name = 'admins' AND column_name = 'name';
-        `);
-        if (recheck.rows.length === 0) {
-          throw new Error('Unable to add name column to admins table');
-        }
-      }
-    } else {
-      console.log('Name column already exists in admins table');
+      await pool.query('ALTER TABLE admins ADD COLUMN name VARCHAR(255) NOT NULL DEFAULT \'Unknown\'');
+      console.log('Successfully added name column to admins');
     }
 
     // Create appointments table
@@ -86,9 +73,30 @@ async function initializeDatabase() {
         phone VARCHAR(20),
         date VARCHAR(50),
         message TEXT,
+        status VARCHAR(20) DEFAULT 'pending',
+        reason TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `);
+    // Verify appointments table schema
+    const appointmentColumns = await pool.query(`
+      SELECT column_name FROM information_schema.columns 
+      WHERE table_name = 'appointments';
+    `);
+    const hasStatus = appointmentColumns.rows.some(col => col.column_name === 'status');
+    const hasReason = appointmentColumns.rows.some(col => col.column_name === 'reason');
+    if (!hasStatus) {
+      console.log('Adding missing status column to appointments table');
+      await pool.query('ALTER TABLE appointments ADD COLUMN status VARCHAR(20) DEFAULT \'pending\'');
+      console.log('Successfully added status column to appointments');
+    }
+    if (!hasReason) {
+      console.log('Adding missing reason column to appointments table');
+      await pool.query('ALTER TABLE appointments ADD COLUMN reason TEXT');
+      console.log('Successfully added reason column to appointments');
+    }
+    // Ensure existing appointments have status
+    await pool.query('UPDATE appointments SET status = \'pending\' WHERE status IS NULL');
 
     // Create messages table
     await pool.query(`
@@ -107,21 +115,8 @@ async function initializeDatabase() {
     `);
     if (messageColumns.rows.length === 0) {
       console.log('Adding missing full_name column to messages table');
-      try {
-        await pool.query('ALTER TABLE messages ADD COLUMN full_name VARCHAR(255) NOT NULL DEFAULT \'Anonymous\'');
-        console.log('Successfully added full_name column to messages');
-      } catch (alterError) {
-        console.error('Failed to add full_name column to messages:', alterError);
-        const recheck = await pool.query(`
-          SELECT column_name FROM information_schema.columns 
-          WHERE table_name = 'messages' AND column_name = 'full_name';
-        `);
-        if (recheck.rows.length === 0) {
-          throw new Error('Unable to add full_name column to messages table');
-        }
-      }
-    } else {
-      console.log('Full_name column already exists in messages table');
+      await pool.query('ALTER TABLE messages ADD COLUMN full_name VARCHAR(255) NOT NULL DEFAULT \'Anonymous\'');
+      console.log('Successfully added full_name column to messages');
     }
 
     // Create subscribers table
@@ -139,21 +134,8 @@ async function initializeDatabase() {
     `);
     if (subscriberColumns.rows.length === 0) {
       console.log('Adding missing subscribed_on column to subscribers table');
-      try {
-        await pool.query('ALTER TABLE subscribers ADD COLUMN subscribed_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP');
-        console.log('Successfully added subscribed_on column to subscribers');
-      } catch (alterError) {
-        console.error('Failed to add subscribed_on column to subscribers:', alterError);
-        const recheck = await pool.query(`
-          SELECT column_name FROM information_schema.columns 
-          WHERE table_name = 'subscribers' AND column_name = 'subscribed_on';
-        `);
-        if (recheck.rows.length === 0) {
-          throw new Error('Unable to add subscribed_on column to subscribers table');
-        }
-      }
-    } else {
-      console.log('Subscribed_on column already exists in subscribers table');
+      await pool.query('ALTER TABLE subscribers ADD COLUMN subscribed_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP');
+      console.log('Successfully added subscribed_on column to subscribers');
     }
 
     // Create otps table
@@ -182,6 +164,28 @@ const transporter = nodemailer.createTransport({
     pass: EMAIL_PASS,
   },
 });
+
+// Test Email Configuration
+async function testEmailConfig() {
+  try {
+    await transporter.verify();
+    console.log('Email configuration verified successfully');
+  } catch (error) {
+    console.error('Email configuration error:', error);
+  }
+}
+
+// Placeholder SMS Function
+async function sendSMS(phone, message) {
+  if (SMS_API_KEY && SMS_API_URL) {
+    console.log(`SMS would be sent to ${phone}: ${message}`);
+    // Implement SMS API call here (e.g., Twilio)
+    return { success: true };
+  } else {
+    console.log(`SMS not configured. Would send to ${phone}: ${message}`);
+    return { success: false, message: 'SMS service not configured' };
+  }
+}
 
 // Middleware to Verify JWT
 function authenticateToken(req, res, next) {
@@ -230,11 +234,25 @@ app.post('/api/admin/login', async (req, res) => {
     if (!admin || !(await bcrypt.compare(password, admin.password))) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
-    const token = jwt.sign({ id: admin.id, email: admin.email }, JWT_SECRET, { expiresIn: '1h' });
-    res.json({ token });
+    const token = jwt.sign({ id: admin.id, email: admin.email, name: admin.name }, JWT_SECRET, { expiresIn: '1h' });
+    res.json({ token, name: admin.name });
   } catch (error) {
     console.error('Login error:', error);
     res.status(500).json({ error: 'Login failed' });
+  }
+});
+
+// Admin Profile
+app.get('/api/admin/profile', authenticateToken, async (req, res) => {
+  try {
+    const { rows } = await pool.query('SELECT name FROM admins WHERE id = $1', [req.user.id]);
+    if (rows.length === 0) {
+      return res.status(404).json({ error: 'Admin not found' });
+    }
+    res.json({ name: rows[0].name });
+  } catch (error) {
+    console.error('Profile error:', error);
+    res.status(500).json({ error: 'Failed to fetch profile' });
   }
 });
 
@@ -255,18 +273,22 @@ app.post('/api/admin/send-otp', async (req, res) => {
       'INSERT INTO otps (email, otp, expires_at) VALUES ($1, $2, $3)',
       [email, otp, expiresAt]
     );
-    // Send OTP via Email
     await transporter.sendMail({
       from: `"OAK Dental Clinic" <${EMAIL_USER}>`,
       to: email,
       subject: 'Your OTP for Password Reset',
-      text: `Your OTP is ${otp}. It is valid for 5 minutes.`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <h2 style="color: #0D9488;">OAK Dental Clinic</h2>
+          <p>Your OTP for password reset is <strong>${otp}</strong>.</p>
+          <p>This OTP is valid for 5 minutes.</p>
+          <p>If you did not request this, please ignore this email.</p>
+          <p style="color: #6B7280;">© 2025 OAK Dental Clinic. All rights reserved.</p>
+        </div>
+      `,
     });
     // Placeholder for SMS
-    if (SMS_API_KEY && SMS_API_URL) {
-      console.log(`SMS API would send OTP ${otp} to ${email}`);
-      // Implement SMS API call here
-    }
+    await sendSMS(rows[0].phone, `Your OAK Dental OTP is ${otp}. Valid for 5 minutes.`);
     res.json({ message: 'OTP sent' });
   } catch (error) {
     console.error('Send OTP error:', error);
@@ -319,6 +341,99 @@ app.post('/api/admin/reset-password', async (req, res) => {
   }
 });
 
+// Appointment Action (Accept/Cancel)
+app.post('/api/admin/appointment/action', authenticateToken, async (req, res) => {
+  try {
+    const { id, action, reason } = req.body;
+    if (!id || !action || (action === 'cancel' && !reason)) {
+      return res.status(400).json({ error: 'ID, action, and reason (for cancel) are required' });
+    }
+    if (!['accept', 'cancel'].includes(action)) {
+      return res.status(400).json({ error: 'Invalid action' });
+    }
+    const { rows } = await pool.query('SELECT * FROM appointments WHERE id = $1', [id]);
+    if (rows.length === 0) {
+      return res.status(404).json({ error: 'Appointment not found' });
+    }
+    const appointment = rows[0];
+    const status = action === 'accept' ? 'accepted' : 'cancelled';
+    await pool.query(
+      'UPDATE appointments SET status = $1, reason = $2 WHERE id = $3',
+      [status, action === 'cancel' ? reason : null, id]
+    );
+    // Send Email
+    const subject = `OAK Dental Clinic - Appointment ${status.charAt(0).toUpperCase() + status.slice(1)}`;
+    const html = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <h2 style="color: #0D9488;">OAK Dental Clinic</h2>
+        <p>Dear ${appointment.name || 'Customer'},</p>
+        <p>Your appointment has been <strong>${status}</strong>.</p>
+        <h3>Appointment Details:</h3>
+        <ul>
+          <li><strong>Date:</strong> ${appointment.date}</li>
+          <li><strong>Email:</strong> ${appointment.email}</li>
+          <li><strong>Phone:</strong> ${appointment.phone}</li>
+          <li><strong>Message:</strong> ${appointment.message || 'N/A'}</li>
+          ${action === 'cancel' ? `<li><strong>Reason for Cancellation:</strong> ${reason}</li>` : ''}
+        </ul>
+        <p>${action === 'accept' ? 'We look forward to seeing you!' : 'Please contact us to reschedule if needed.'}</p>
+        <p style="color: #6B7280;">© 2025 OAK Dental Clinic. All rights reserved.</p>
+      </div>
+    `;
+    await transporter.sendMail({
+      from: `"OAK Dental Clinic" <${EMAIL_USER}>`,
+      to: appointment.email,
+      subject,
+      html,
+    });
+    // Send SMS
+    const smsMessage = `OAK Dental Clinic: Your appointment on ${appointment.date} has been ${status}. ${action === 'cancel' ? `Reason: ${reason}` : 'We look forward to seeing you!'}`;
+    await sendSMS(appointment.phone, smsMessage);
+    res.json({ message: `Appointment ${status} successfully` });
+  } catch (error) {
+    console.error('Appointment action error:', error);
+    res.status(500).json({ error: 'Failed to process appointment action' });
+  }
+});
+
+// Message Reply
+app.post('/api/admin/message/reply', authenticateToken, async (req, res) => {
+  try {
+    const { id, reply } = req.body;
+    if (!id || !reply) {
+      return res.status(400).json({ error: 'ID and reply are required' });
+    }
+    const { rows } = await pool.query('SELECT * FROM messages WHERE id = $1', [id]);
+    if (rows.length === 0) {
+      return res.status(404).json({ error: 'Message not found' });
+    }
+    const message = rows[0];
+    await transporter.sendMail({
+      from: `"OAK Dental Clinic" <${EMAIL_USER}>`,
+      to: message.email,
+      subject: 'Response from OAK Dental Clinic',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <h2 style="color: #0D9488;">OAK Dental Clinic</h2>
+          <p>Dear ${message.full_name || 'Customer'},</p>
+          <p>Thank you for your message. Our response is below:</p>
+          <blockquote style="border-left: 4px solid #0D9488; padding-left: 10px; margin: 10px 0;">
+            ${reply}
+          </blockquote>
+          <h3>Your Original Message:</h3>
+          <p>${message.message}</p>
+          <p>We value your feedback and look forward to assisting you further.</p>
+          <p style="color: #6B7280;">© 2025 OAK Dental Clinic. All rights reserved.</p>
+        </div>
+      `,
+    });
+    res.json({ message: 'Reply sent successfully' });
+  } catch (error) {
+    console.error('Message reply error:', error);
+    res.status(500).json({ error: 'Failed to send reply: ' + error.message });
+  }
+});
+
 // Admin Endpoints (Protected)
 app.get('/api/admin/appointments', authenticateToken, async (req, res) => {
   try {
@@ -346,7 +461,7 @@ app.get('/api/admin/subscribers', authenticateToken, async (req, res) => {
     res.json(rows);
   } catch (error) {
     console.error('Get subscribers error:', error);
-    res.status(500).json({ error: 'Failed to fetch subscribers: ' + error.message });
+    res.status(500).json({ error: 'Failed to fetch subscribers' });
   }
 });
 
@@ -355,8 +470,8 @@ app.post('/api/appointments', async (req, res) => {
   try {
     const { name, email, phone, date, message } = req.body;
     await pool.query(
-      'INSERT INTO appointments (name, email, phone, date, message) VALUES ($1, $2, $3, $4, $5)',
-      [name, email, phone, date, message]
+      'INSERT INTO appointments (name, email, phone, date, message, status) VALUES ($1, $2, $3, $4, $5, $6)',
+      [name, email, phone, date, message, 'pending']
     );
     res.json({ message: 'Appointment submitted successfully' });
   } catch (error) {
@@ -396,6 +511,11 @@ app.post('/api/subscribers', async (req, res) => {
   }
 });
 
+// Serve Admin Dashboard
+app.get('/admin', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'admin.html'));
+});
+
 // Fallback to serve index.html for unmatched routes
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
@@ -404,6 +524,7 @@ app.get('*', (req, res) => {
 // Start Server
 async function startServer() {
   await initializeDatabase();
+  await testEmailConfig();
   app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
 }
 

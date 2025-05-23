@@ -133,6 +133,19 @@
       background-color: #1E40AF;
       transform: translateY(-1px);
     }
+    .btn-danger {
+      background-color: #EF4444;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.75rem;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    .btn-danger:hover {
+      background-color: #B91C1C;
+      transform: translateY(-1px);
+    }
 
     /* Cards */
     .card {
@@ -198,6 +211,7 @@
       font-size: 1rem;
     }
     .modal-content input,
+    .modal-content textarea,
     .modal-content button {
       width: 100%;
       margin-bottom: 8px;
@@ -205,12 +219,14 @@
       border-radius: 6px;
       font-size: 0.75rem;
     }
-    .modal-content input {
+    .modal-content input,
+    .modal-content textarea {
       border: 1px solid #D1D5DB;
       outline: none;
       transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
-    .modal-content input:focus {
+    .modal-content input:focus,
+    .modal-content textarea:focus {
       border-color: #14B8A6;
       box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.2);
     }
@@ -265,6 +281,52 @@
       font-size: 0.7rem;
     }
 
+    /* Toast Notifications */
+    .toast {
+      position: fixed;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 12px 24px;
+      border-radius: 8px;
+      color: white;
+      font-size: 0.875rem;
+      font-weight: 500;
+      z-index: 2000;
+      opacity: 0;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    .toast.success {
+      background-color: #10B981;
+    }
+    .toast.error {
+      background-color: #EF4444;
+    }
+
+    /* Welcome Message */
+    .welcome-message {
+      background: white;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 24px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    .welcome-message h2 {
+      color: #0D9488;
+      font-size: 1.5rem;
+      margin-bottom: 8px;
+    }
+    .welcome-message p {
+      color: #6B7280;
+      font-size: 0.875rem;
+    }
+
     /* Media Queries */
     @media (max-width: 640px) {
       .hamburger {
@@ -316,6 +378,7 @@
         font-size: 0.9rem;
       }
       .modal-content input,
+      .modal-content textarea,
       .modal-content button {
         padding: 5px;
         font-size: 0.7rem;
@@ -331,6 +394,17 @@
       .auth-form h2 {
         font-size: 1.1rem;
       }
+      .welcome-message h2 {
+        font-size: 1.25rem;
+      }
+      .welcome-message p {
+        font-size: 0.75rem;
+      }
+      .toast {
+        width: 90%;
+        font-size: 0.75rem;
+        padding: 10px 20px;
+      }
     }
     @media (min-width: 640px) {
       .logo-img {
@@ -343,7 +417,8 @@
         font-size: 0.625rem;
       }
       .btn-primary,
-      .btn-secondary {
+      .btn-secondary,
+      .btn-danger {
         padding: 8px 16px;
         font-size: 0.875rem;
       }
@@ -360,6 +435,7 @@
         font-size: 1.25rem;
       }
       .modal-content input,
+      .modal-content textarea,
       .modal-content button {
         padding: 8px;
         font-size: 0.875rem;
@@ -371,19 +447,33 @@
       .auth-form h2 {
         font-size: 1.5rem;
       }
+      .welcome-message h2 {
+        font-size: 1.75rem;
+      }
+      .welcome-message p {
+        font-size: 1rem;
+      }
+      .toast {
+        width: auto;
+        font-size: 0.875rem;
+        padding: 12px 24px;
+      }
     }
   </style>
 </head>
 <body class="antialiased">
+  <!-- Toast Container -->
+  <div id="toastContainer"></div>
+
   <!-- Header -->
   <header>
     <div class="header-container">
       <div class="logo-container">
-        <a href="/" aria-label="OAK Dental Clinic Home">
+        <a href="/admin" aria-label="OAK Dental Clinic Admin Dashboard">
           <img src="https://i.postimg.cc/9MdzgVhV/OAK-LOGO-1.jpg" alt="OAK Dental Clinic Logo" class="logo-img animate__animated animate__fadeIn">
         </a>
         <div class="flex flex-col">
-          <a href="/" class="logo-text" aria-label="OAK Dental Clinic">OAK Dental Clinic</a>
+          <a href="/admin" class="logo-text" aria-label="OAK Dental Clinic">OAK Dental Clinic</a>
           <span class="logo-subtext">Admin Dashboard</span>
         </div>
       </div>
@@ -432,6 +522,12 @@
   <!-- Dashboard Section (Hidden by Default) -->
   <section id="dashboard" class="py-16 hidden">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Welcome Message -->
+      <div class="welcome-message animate__animated animate__fadeIn">
+        <h2 id="welcomeTitle">Welcome!</h2>
+        <p>Manage appointments, messages, and subscribers with ease.</p>
+      </div>
+
       <!-- Appointments -->
       <div id="appointments" class="mb-10">
         <h2 class="text-xl font-bold text-teal-800 mb-4 animate__animated animate__fadeIn">Appointments</h2>
@@ -444,6 +540,8 @@
                 <th>Phone</th>
                 <th>Date</th>
                 <th>Message</th>
+                <th>Status</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody id="appointmentsTable"></tbody>
@@ -461,6 +559,7 @@
                 <th>Name</th>
                 <th>Email</th>
                 <th>Message</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody id="messagesTable"></tbody>
@@ -523,9 +622,49 @@
     </div>
   </div>
 
+  <!-- Cancel Appointment Modal -->
+  <div id="cancelAppointmentModal" class="modal">
+    <div class="modal-content">
+      <h3>Cancel Appointment</h3>
+      <form id="cancelAppointmentForm" class="space-y-3">
+        <textarea name="reason" placeholder="Reason for cancellation" class="border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required></textarea>
+        <button type="submit" class="btn-primary">Submit</button>
+        <button type="button" class="btn-secondary" onclick="closeModal('cancelAppointmentModal')">Cancel</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Reply Message Modal -->
+  <div id="replyMessageModal" class="modal">
+    <div class="modal-content">
+      <h3>Reply to Message</h3>
+      <form id="replyMessageForm" class="space-y-3">
+        <textarea name="reply" placeholder="Your reply" class="border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required></textarea>
+        <button type="submit" class="btn-primary">Send Reply</button>
+        <button type="button" class="btn-secondary" onclick="closeModal('replyMessageModal')">Cancel</button>
+      </form>
+    </div>
+  </div>
+
   <script>
     // API Configuration
     const API_BASE_URL = window.location.hostname === 'localhost' ? 'http://localhost:3000/api' : 'https://oak-dental.onrender.com/api';
+
+    // Toast Notification Function
+    function showToast(message, type = 'success') {
+      const toast = document.createElement('div');
+      toast.className = `toast ${type} animate__animated animate__fadeInDown`;
+      toast.textContent = message;
+      document.getElementById('toastContainer').appendChild(toast);
+      setTimeout(() => {
+        toast.classList.add('show');
+      }, 100);
+      setTimeout(() => {
+        toast.classList.remove('show');
+        toast.classList.add('animate__fadeOutUp');
+        setTimeout(() => toast.remove(), 500);
+      }, 3000);
+    }
 
     // Helper Function for API Calls
     async function apiCall(endpoint, method = 'GET', data = null) {
@@ -552,6 +691,7 @@
       try {
         // Fetch Appointments
         const appointments = await apiCall('/admin/appointments');
+        console.log('Appointments:', appointments); // Debug
         document.getElementById('appointmentsTable').innerHTML = appointments.map(item => `
           <tr>
             <td>${item.name || ''}</td>
@@ -559,6 +699,13 @@
             <td>${item.phone || ''}</td>
             <td>${item.date || ''}</td>
             <td>${item.message || ''}</td>
+            <td>${item.status || 'Pending'}</td>
+            <td>
+              ${(item.status || 'pending').toLowerCase() === 'pending' ? `
+                <button class="btn-primary text-xs px-2 py-1" onclick="acceptAppointment(${item.id})">Accept</button>
+                <button class="btn-danger text-xs px-2 py-1 ml-2" onclick="showCancelModal(${item.id})">Cancel</button>
+              ` : (item.status || 'Pending')}
+            </td>
           </tr>
         `).join('');
 
@@ -566,9 +713,12 @@
         const messages = await apiCall('/admin/messages');
         document.getElementById('messagesTable').innerHTML = messages.map(item => `
           <tr>
-            <td>${item.name || ''}</td>
+            <td>${item.full_name || ''}</td>
             <td>${item.email || ''}</td>
             <td>${item.message || ''}</td>
+            <td>
+              <button class="btn-primary text-xs px-2 py-1" onclick="showReplyModal(${item.id}, '${item.email.replace(/'/g, "\\'")}')">Reply</button>
+            </td>
           </tr>
         `).join('');
 
@@ -581,7 +731,7 @@
           </tr>
         `).join('');
       } catch (error) {
-        alert('Failed to load dashboard data. Please try again.');
+        showToast('Failed to load dashboard data. Please try again.', 'error');
       }
     }
 
@@ -591,6 +741,11 @@
     }
     function closeModal(modalId) {
       document.getElementById(modalId).style.display = 'none';
+      if (modalId === 'cancelAppointmentModal') {
+        document.getElementById('cancelAppointmentForm').reset();
+      } else if (modalId === 'replyMessageModal') {
+        document.getElementById('replyMessageForm').reset();
+      }
     }
 
     // Toggle Login/Register
@@ -612,6 +767,7 @@
     });
 
     // Login Form
+    let adminName = '';
     const loginForm = document.getElementById('loginForm');
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -620,13 +776,16 @@
       try {
         const response = await apiCall('/admin/login', 'POST', data);
         localStorage.setItem('token', response.token);
+        adminName = response.name;
         document.getElementById('auth').classList.add('hidden');
         document.getElementById('dashboard').classList.remove('hidden');
         navMenu.classList.add('authenticated');
         navMenu.style.display = 'flex';
+        document.getElementById('welcomeTitle').textContent = `Welcome, ${adminName}!`;
         await populateTables();
+        showToast('Login successful!', 'success');
       } catch (error) {
-        alert(error.message || 'Login failed. Please check your credentials.');
+        showToast(error.message || 'Login failed. Please check your credentials.', 'error');
       }
     });
 
@@ -638,11 +797,11 @@
       const data = Object.fromEntries(formData);
       try {
         await apiCall('/admin/register', 'POST', data);
-        alert('Registration successful. Please login.');
+        showToast('Registration successful. Please login.', 'success');
         showLogin();
         registerForm.reset();
       } catch (error) {
-        alert(error.message || 'Registration failed. Please try again.');
+        showToast(error.message || 'Registration failed. Please try again.', 'error');
       }
     });
 
@@ -658,8 +817,9 @@
         await apiCall('/admin/send-otp', 'POST', data);
         closeModal('forgotPasswordModal');
         showModal('otpModal');
+        showToast('OTP sent successfully.', 'success');
       } catch (error) {
-        alert(error.message || 'Failed to send OTP. Please try again.');
+        showToast(error.message || 'Failed to send OTP. Please try again.', 'error');
       }
     });
 
@@ -673,8 +833,9 @@
         await apiCall('/admin/verify-otp', 'POST', { email: forgotPasswordEmail, otp: data.otp });
         closeModal('otpModal');
         showModal('resetPasswordModal');
+        showToast('OTP verified successfully.', 'success');
       } catch (error) {
-        alert(error.message || 'Invalid OTP. Please try again.');
+        showToast(error.message || 'Invalid OTP. Please try again.', 'error');
       }
     });
 
@@ -685,16 +846,73 @@
       const formData = new FormData(resetPasswordForm);
       const data = Object.fromEntries(formData);
       if (data.newPassword !== data.confirmPassword) {
-        alert('Passwords do not match.');
+        showToast('Passwords do not match.', 'error');
         return;
       }
       try {
         await apiCall('/admin/reset-password', 'POST', { email: forgotPasswordEmail, ...data });
         closeModal('resetPasswordModal');
-        alert('Password reset successfully. Please login.');
+        showToast('Password reset successfully. Please login.', 'success');
         showLogin();
       } catch (error) {
-        alert(error.message || 'Failed to reset password. Please try again.');
+        showToast(error.message || 'Failed to reset password. Please try again.', 'error');
+      }
+    });
+
+    // Appointment Actions
+    async function acceptAppointment(id) {
+      try {
+        await apiCall('/admin/appointment/action', 'POST', { id, action: 'accept' });
+        await populateTables();
+        showToast('Appointment accepted successfully.', 'success');
+      } catch (error) {
+        showToast(error.message || 'Failed to accept appointment.', 'error');
+      }
+    }
+
+    let currentAppointmentId = null;
+    function showCancelModal(id) {
+      currentAppointmentId = id;
+      showModal('cancelAppointmentModal');
+    }
+
+    const cancelAppointmentForm = document.getElementById('cancelAppointmentForm');
+    cancelAppointmentForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(cancelAppointmentForm);
+      const data = Object.fromEntries(formData);
+      try {
+        await apiCall('/admin/appointment/action', 'POST', { id: currentAppointmentId, action: 'cancel', reason: data.reason });
+        closeModal('cancelAppointmentModal');
+        cancelAppointmentForm.reset();
+        await populateTables();
+        showToast('Appointment cancelled successfully.', 'success');
+      } catch (error) {
+        showToast(error.message || 'Failed to cancel appointment.', 'error');
+      }
+    });
+
+    // Message Reply
+    let currentMessageId = null;
+    let currentMessageEmail = '';
+    function showReplyModal(id, email) {
+      currentMessageId = id;
+      currentMessageEmail = email;
+      showModal('replyMessageModal');
+    }
+
+    const replyMessageForm = document.getElementById('replyMessageForm');
+    replyMessageForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(replyMessageForm);
+      const data = Object.fromEntries(formData);
+      try {
+        await apiCall('/admin/message/reply', 'POST', { id: currentMessageId, reply: data.reply });
+        closeModal('replyMessageModal');
+        replyMessageForm.reset();
+        showToast('Reply sent successfully.', 'success');
+      } catch (error) {
+        showToast(error.message || 'Failed to send reply. Please check email configuration.', 'error');
       }
     });
 
@@ -707,13 +925,14 @@
       navMenu.style.display = 'none';
       loginForm.reset();
       showLogin();
+      showToast('Logged out successfully.', 'success');
     }
 
     // Form Validation
-    ['loginForm', 'registerForm', 'forgotPasswordForm', 'otpForm', 'resetPasswordForm'].forEach(formId => {
+    ['loginForm', 'registerForm', 'forgotPasswordForm', 'otpForm', 'resetPasswordForm', 'cancelAppointmentForm', 'replyMessageForm'].forEach(formId => {
       const form = document.getElementById(formId);
       if (form) {
-        form.querySelectorAll('input').forEach(input => {
+        form.querySelectorAll('input, textarea').forEach(input => {
           input.addEventListener('input', () => {
             if (input.checkValidity()) {
               input.classList.add('valid');
@@ -730,14 +949,17 @@
       const token = localStorage.getItem('token');
       if (token) {
         try {
-          await apiCall('/admin/appointments'); // Test token validity
+          const profile = await apiCall('/admin/profile');
+          adminName = profile.name;
           document.getElementById('auth').classList.add('hidden');
           document.getElementById('dashboard').classList.remove('hidden');
           navMenu.classList.add('authenticated');
           navMenu.style.display = 'flex';
+          document.getElementById('welcomeTitle').textContent = `Welcome, ${adminName}!`;
           await populateTables();
         } catch (error) {
           localStorage.removeItem('token');
+          showToast('Session expired. Please login again.', 'error');
         }
       }
     });
