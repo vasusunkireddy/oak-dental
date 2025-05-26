@@ -434,6 +434,46 @@ app.post('/api/admin/message/reply', authenticateToken, async (req, res) => {
   }
 });
 
+// Delete Appointment
+app.delete('/api/admin/appointment/delete', authenticateToken, async (req, res) => {
+  try {
+    const { id } = req.body;
+    if (!id) {
+      return res.status(400).json({ error: 'ID is required' });
+    }
+    const { rows } = await pool.query('SELECT * FROM appointments WHERE id = $1', [id]);
+    if (rows.length === 0) {
+      return res.status(404).json({ error: 'Appointment not found' });
+    }
+    await pool.query('DELETE FROM appointments WHERE id = $1', [id]);
+    console.log(`Appointment with ID ${id} deleted successfully by admin ID ${req.user.id}`);
+    res.json({ message: 'Appointment deleted successfully' });
+  } catch (error) {
+    console.error('Delete appointment error:', error);
+    res.status(500).json({ error: 'Failed to delete appointment: ' + error.message });
+  }
+});
+
+// Delete Message
+app.delete('/api/admin/message/delete', authenticateToken, async (req, res) => {
+  try {
+    const { id } = req.body;
+    if (!id) {
+      return res.status(400).json({ error: 'ID is required' });
+    }
+    const { rows } = await pool.query('SELECT * FROM messages WHERE id = $1', [id]);
+    if (rows.length === 0) {
+      return res.status(404).json({ error: 'Message not found' });
+    }
+    await pool.query('DELETE FROM messages WHERE id = $1', [id]);
+    console.log(`Message with ID ${id} deleted successfully by admin ID ${req.user.id}`);
+    res.json({ message: 'Message deleted successfully' });
+  } catch (error) {
+    console.error('Delete message error:', error);
+    res.status(500).json({ error: 'Failed to delete message: ' + error.message });
+  }
+});
+
 // Admin Endpoints (Protected)
 app.get('/api/admin/appointments', authenticateToken, async (req, res) => {
   try {

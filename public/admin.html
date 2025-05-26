@@ -161,6 +161,32 @@
       background-color: #B91C1C;
       transform: translateY(-1px);
     }
+    .action-buttons {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 6px;
+    }
+    .action-buttons button {
+      font-size: 0.85rem;
+      padding: 6px 12px;
+      line-height: 1;
+      min-width: 80px;
+      text-align: center;
+    }
+    .card-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .card-actions button {
+      font-size: 0.85rem;
+      padding: 6px 12px;
+      line-height: 1;
+      min-width: 80px;
+      text-align: center;
+      flex: 1 1 auto;
+    }
 
     /* Cards */
     .card {
@@ -210,11 +236,6 @@
     .table-card p {
       margin: 4px 0;
       font-size: 0.85rem;
-    }
-    .table-card .actions {
-      display: flex;
-      gap: 8px;
-      margin-top: 8px;
     }
 
     /* Modal */
@@ -359,6 +380,14 @@
       font-size: 0.9rem;
     }
 
+    /* No Data Message */
+    .no-data {
+      text-align: center;
+      padding: 16px;
+      color: #6B7280;
+      font-size: 0.9rem;
+    }
+
     /* Media Queries */
     @media (max-width: 640px) {
       .header-container {
@@ -395,6 +424,12 @@
       .btn-danger {
         padding: 6px 12px;
         font-size: 0.85rem;
+      }
+      .action-buttons button,
+      .card-actions button {
+        padding: 6px 10px;
+        font-size: 0.8rem;
+        min-width: 70px;
       }
       .modal-content {
         width: 90%;
@@ -762,17 +797,24 @@
     const populateTables = debounce(async () => {
       try {
         // Fetch Appointments
+        console.log('Fetching appointments...');
         const appointments = await apiCall('/admin/appointments');
+        console.log('Appointments response:', appointments);
         const appointmentsTable = document.getElementById('appointmentsTable');
         const appointmentsCards = document.getElementById('appointmentsCards');
-        // Log the status of each appointment to debug
+        
+        if (!appointments || appointments.length === 0) {
+          console.log('No appointments found.');
+          appointmentsTable.innerHTML = '<tr><td colspan="7" class="no-data">No appointments available.</td></tr>';
+          appointmentsCards.innerHTML = '<div class="no-data">No appointments available.</div>';
+          return;
+        }
+
         appointments.forEach(item => {
-          console.log(`Appointment ID: ${item.id}, Status: ${item.status}`);
+          console.log(`Appointment ID: ${item.id}, Status: ${item.status}, Name: ${item.name}, Email: ${item.email}`);
         });
-        appointmentsTable.innerHTML = appointments.map(item => {
-          const status = (item.status || 'pending').toLowerCase().trim();
-          const isPending = !status || status === 'pending';
-          return `
+
+        appointmentsTable.innerHTML = appointments.map(item => `
           <tr>
             <td>${item.name || ''}</td>
             <td>${item.email || ''}</td>
@@ -781,19 +823,15 @@
             <td>${item.message || ''}</td>
             <td>${item.status || 'Pending'}</td>
             <td>
-              ${isPending ? `
-                <button class="btn-primary text-sm px-2 py-1" onclick="acceptAppointment(${item.id})">Accept</button>
-                <button class="btn-danger text-sm px-2 py-1 ml-1" onclick="showCancelModal(${item.id})">Cancel</button>
-                <button class="btn-danger text-sm px-2 py-1 ml-1" onclick="showDeleteAppointmentModal(${item.id})">Delete</button>
-              ` : (item.status || 'Pending')}
+              <div class="action-buttons">
+                <button class="btn-primary" onclick="acceptAppointment(${item.id})">Accept</button>
+                <button class="btn-danger" onclick="showCancelModal(${item.id})">Cancel</button>
+                <button class="btn-danger" onclick="showDeleteAppointmentModal(${item.id})">Delete</button>
+              </div>
             </td>
           </tr>
-        `;
-        }).join('');
-        appointmentsCards.innerHTML = appointments.map(item => {
-          const status = (item.status || 'pending').toLowerCase().trim();
-          const isPending = !status || status === 'pending';
-          return `
+        `).join('');
+        appointmentsCards.innerHTML = appointments.map(item => `
           <div class="table-card">
             <p><strong>Name:</strong> ${item.name || ''}</p>
             <p><strong>Email:</strong> ${item.email || ''}</p>
@@ -801,16 +839,13 @@
             <p><strong>Date:</strong> ${item.date || ''}</p>
             <p><strong>Message:</strong> ${item.message || ''}</p>
             <p><strong>Status:</strong> ${item.status || 'Pending'}</p>
-            <div class="actions">
-              ${isPending ? `
-                <button class="btn-primary text-sm px-2 py-1" onclick="acceptAppointment(${item.id})">Accept</button>
-                <button class="btn-danger text-sm px-2 py-1" onclick="showCancelModal(${item.id})">Cancel</button>
-                <button class="btn-danger text-sm px-2 py-1" onclick="showDeleteAppointmentModal(${item.id})">Delete</button>
-              ` : `<span>${item.status || 'Pending'}</span>`}
+            <div class="card-actions">
+              <button class="btn-primary" onclick="acceptAppointment(${item.id})">Accept</button>
+              <button class="btn-danger" onclick="showCancelModal(${item.id})">Cancel</button>
+              <button class="btn-danger" onclick="showDeleteAppointmentModal(${item.id})">Delete</button>
             </div>
           </div>
-        `;
-        }).join('');
+        `).join('');
 
         // Fetch Messages
         const messages = await apiCall('/admin/messages');
@@ -822,8 +857,10 @@
             <td>${item.email || ''}</td>
             <td>${item.message || ''}</td>
             <td>
-              <button class="btn-primary text-sm px-2 py-1" onclick="showReplyModal(${item.id}, '${item.email.replace(/'/g, "\\'")}')">Reply</button>
-              <button class="btn-danger text-sm px-2 py-1 ml-1" onclick="showDeleteMessageModal(${item.id})">Delete</button>
+              <div class="action-buttons">
+                <button class="btn-primary" onclick="showReplyModal(${item.id}, '${item.email.replace(/'/g, "\\'")}')">Reply</button>
+                <button class="btn-danger" onclick="showDeleteMessageModal(${item.id})">Delete</button>
+              </div>
             </td>
           </tr>
         `).join('');
@@ -832,9 +869,9 @@
             <p><strong>Name:</strong> ${item.full_name || ''}</p>
             <p><strong>Email:</strong> ${item.email || ''}</p>
             <p><strong>Message:</strong> ${item.message || ''}</p>
-            <div class="actions">
-              <button class="btn-primary text-sm px-2 py-1" onclick="showReplyModal(${item.id}, '${item.email.replace(/'/g, "\\'")}')">Reply</button>
-              <button class="btn-danger text-sm px-2 py-1" onclick="showDeleteMessageModal(${item.id})">Delete</button>
+            <div class="card-actions">
+              <button class="btn-primary" onclick="showReplyModal(${item.id}, '${item.email.replace(/'/g, "\\'")}')">Reply</button>
+              <button class="btn-danger" onclick="showDeleteMessageModal(${item.id})">Delete</button>
             </div>
           </div>
         `).join('');
@@ -856,7 +893,8 @@
           </div>
         `).join('');
       } catch (error) {
-        showToast('Failed to load dashboard data.', 'error');
+        console.error('Error in populateTables:', error);
+        showToast('Failed to load dashboard data. Check console for details.', 'error');
       }
     }, 300);
 

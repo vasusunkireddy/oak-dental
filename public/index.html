@@ -104,11 +104,12 @@
       text-transform: uppercase;
     }
     .doctor-img {
-      width: 80px;
-      height: 80px;
+      width: 120px;
+      height: 120px;
       object-fit: cover;
-      border: 2px solid #60A5FA;
       border-radius: 50%;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin-bottom: 1rem;
     }
     .nav-link {
       transition: color 0.3s ease;
@@ -179,24 +180,31 @@
     .phone-icon {
       background: #3B82F6;
     }
+    .faq-container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
     .faq-item {
       margin-bottom: 12px;
       border-bottom: 1px solid #D1D5DB;
       padding-bottom: 8px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     }
     .faq-question {
       display: flex;
       justify-content: space-between;
       align-items: center;
       cursor: pointer;
-      padding: 10px 0;
+      padding: 12px 16px;
       transition: background-color 0.3s ease;
     }
     .faq-question:hover {
       background-color: #E5E7EB;
     }
     .faq-question h3 {
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       font-weight: 600;
       color: #0D9488;
       margin: 0;
@@ -205,13 +213,13 @@
     .faq-answer {
       max-height: 0;
       overflow: hidden;
-      padding: 0 10px;
+      padding: 0 16px;
       color: #212529;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       transition: max-height 0.4s ease, padding 0.3s ease;
     }
     .faq-answer.active {
-      padding: 10px;
+      padding: 12px 16px;
       max-height: 150px;
     }
     .faq-toggle {
@@ -259,6 +267,27 @@
       border-radius: 9999px;
       cursor: pointer;
       font-size: 0.9rem;
+    }
+    .toast {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #14B8A6;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+      font-size: 0.9rem;
+      opacity: 0;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    .toast.show {
+      display: block;
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
     }
     .valid {
       border-color: #10B981 !important;
@@ -383,8 +412,8 @@
         font-size: 0.85rem;
       }
       .doctor-img {
-        width: 60px;
-        height: 60px;
+        width: 100px;
+        height: 100px;
       }
       .faq-question h3 {
         font-size: 0.85rem;
@@ -473,7 +502,7 @@
         <div class="hero-text-container">
           <h1 class="text-2xl md:text-4xl font-extrabold mb-3 animate__animated animate__fadeIn">Welcome to OAK Dental Clinic</h1>
           <p class="text-base md:text-lg mb-4">Transform your smile with expert care in Hyderabad.</p>
-          <a href="#appointment" class="btn-primary">Book Appointment</a>
+          <a href="#appointment" class="btn-primary">Book Appointment Now</a>
         </div>
       </div>
     </div>
@@ -482,7 +511,7 @@
         <div class="hero-text-container">
           <h1 class="text-2xl md:text-4xl font-extrabold mb-3 animate__animated animate__fadeIn">Advanced Dental Solutions</h1>
           <p class="text-base md:text-lg mb-4">State-of-the-art treatments for a perfect smile.</p>
-          <a href="#appointment" class="btn-primary">Book Appointment</a>
+          <a href="https://wa.me/919876543210" class="btn-primary">WhatsApp Us</a>
         </div>
       </div>
     </div>
@@ -491,7 +520,7 @@
         <div class="hero-text-container">
           <h1 class="text-2xl md:text-4xl font-extrabold mb-3 animate__animated animate__fadeIn">Comfortable Dental Care</h1>
           <p class="text-base md:text-lg mb-4">Painless procedures tailored to your needs.</p>
-          <a href="#appointment" class="btn-primary">Book Appointment</a>
+          <a href="tel:+919876543210" class="btn-secondary">Call Us</a>
         </div>
       </div>
     </div>
@@ -500,7 +529,7 @@
         <div class="hero-text-container">
           <h1 class="text-2xl md:text-4xl font-extrabold mb-3 animate__animated animate__fadeIn">Smile with Confidence</h1>
           <p class="text-base md:text-lg mb-4">Personalized cosmetic dentistry for stunning results.</p>
-          <a href="#appointment" class="btn-primary">Book Appointment</a>
+          <a href="#appointment" class="btn-primary">Book Appointment Now</a>
         </div>
       </div>
     </div>
@@ -509,11 +538,6 @@
       <div class="dot" data-slide="1" role="tab" aria-label="Go to slide 2" tabindex="0"></div>
       <div class="dot" data-slide="2" role="tab" aria-label="Go to slide 3" tabindex="0"></div>
       <div class="dot" data-slide="3" role="tab" aria-label="Go to slide 4" tabindex="0"></div>
-    </div>
-    <div class="mt-4 space-x-2 absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-wrap justify-center gap-2">
-      <a href="#appointment" class="btn-primary">Book Appointment</a>
-      <a href="tel:+919876543210" class="btn-secondary">Call Us</a>
-      <a href="https://wa.me/919876543210" class="btn-primary">WhatsApp Us</a>
     </div>
   </section>
   <section id="local-info" class="py-8 bg-teal-50">
@@ -577,7 +601,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
       <h2 class="text-2xl md:text-3xl font-extrabold text-teal-800 mb-6 animate__animated animate__fadeIn">Meet Our Specialist</h2>
       <div class="card max-w-sm mx-auto">
-        <img src="https://i.postimg.cc/qRGc26Qd/RAM-KOTI.jpg" alt="Dr. A. Ram Koti Reddy" class="doctor-img mx-auto mb-4" loading="lazy">
+        <img src="https://i.postimg.cc/qRGc26Qd/RAM-KOTI.jpg" alt="Dr. A. Ram Koti Reddy" class="doctor-img mx-auto" loading="lazy">
         <h3 class="text-lg font-semibold text-teal-700">Dr. A. Ram Koti Reddy</h3>
         <p class="text-gray-600 text-sm">Chief Dental Specialist</p>
         <p class="text-gray-500 text-sm italic">Expert in Cosmetic Dentistry & Implants</p>
@@ -735,7 +759,7 @@
   <section id="faq" class="py-12 bg-teal-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <h2 class="text-2xl md:text-3xl font-extrabold text-teal-800 text-center mb-8 animate__animated animate__fadeIn">Frequently Asked Questions</h2>
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="faq-container">
         <div class="space-y-4">
           <div class="faq-item" role="region" aria-labelledby="faq1">
             <div class="faq-question" id="faq1" onclick="toggleAnswer(this)" role="button" aria-expanded="false" tabindex="0">
@@ -773,10 +797,10 @@
               We offer teeth whitening, veneers, and orthodontics. Schedule a consultation for personalized smile enhancement options.
             </div>
           </div>
-          <div class="mt-6 text-center lg:text-left">
+          <div class="mt-6 text-center">
             <a href="tel:+919876543210" class="btn-primary uppercase">Instant Call Back</a>
           </div>
-        
+        </div>
       </div>
     </div>
   </section>
@@ -796,13 +820,7 @@
       </div>
       <p class="text-gray-200 text-center text-sm">© 2025 OAK Multi-Speciality Dental Clinic. All rights reserved.</p>
     </div>
-    <div id="newsletterModal" class="modal">
-      <div class="modal-content">
-        <h3>Subscribed!</h3>
-        <p>Thank you for subscribing to our newsletter!</p>
-        <button onclick="closeModal('newsletterModal')">Close</button>
-      </div>
-    </div>
+    <div id="newsletterToast" class="toast">Subscribed! Thank you for joining our newsletter.</div>
   </footer>
   <script>
     // API Base URL
@@ -939,6 +957,16 @@
       if (modal) modal.style.display = 'none';
     }
 
+    // Toast Notification
+    function showToast(message, duration = 3000) {
+      const toast = document.getElementById('newsletterToast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, duration);
+    }
+
     // Form Submission
     ['appointmentForm', 'contactForm', 'newsletterForm'].forEach(formId => {
       const form = document.getElementById(formId);
@@ -969,17 +997,20 @@
                 break;
               case 'newsletterForm':
                 endpoint = '/subscribers';
-                modalId = 'newsletterModal';
                 break;
             }
             try {
               await apiCall(endpoint, 'POST', data);
               form.reset();
               form.querySelectorAll('input, textarea').forEach(input => input.classList.remove('valid'));
-              const modal = document.getElementById(modalId);
-              if (modal) modal.style.display = 'flex';
+              if (formId === 'newsletterForm') {
+                showToast('Subscribed! Thank you for joining our newsletter.');
+              } else {
+                const modal = document.getElementById(modalId);
+                if (modal) modal.style.display = 'flex';
+              }
             } catch (error) {
-              alert(`Failed to submit ${formId.replace('Form', '')}. Please try again.`);
+              showToast(`Failed to submit ${formId.replace('Form', '')}. Please try again.`);
             }
           }
         });
