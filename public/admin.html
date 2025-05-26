@@ -8,7 +8,7 @@
   <link rel="icon" href="https://i.postimg.cc/9MdzgVhV/OAK-LOGO-1.jpg" type="image/jpeg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=crossorigin" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
@@ -717,12 +717,12 @@
       document.getElementById('toastContainer').appendChild(toast);
       setTimeout(() => {
         toast.classList.add('show');
-      }, 100);
+      }, 10);
       setTimeout(() => {
         toast.classList.remove('show');
         toast.classList.add('animate__fadeOutUp');
-        setTimeout(() => toast.remove(), 500);
-      }, 3000);
+        setTimeout(() => toast.remove(), 300);
+      }, 2500);
     }
 
     // Helper Function for API Calls
@@ -740,19 +740,39 @@
         if (!response.ok) throw new Error(result.error || 'Request failed');
         return result;
       } catch (error) {
-        console.error(`API error at ${endpoint}:`, error);
+        showToast(error.message || 'Request failed. Please try again.', 'error');
         throw error;
       }
     }
 
+    // Debounce Function to Prevent Rapid API Calls
+    function debounce(func, wait) {
+      let timeout;
+      return function executedFunction(...args) {
+        const later = () => {
+          clearTimeout(timeout);
+          func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+      };
+    }
+
     // Populate Tables and Cards
-    async function populateTables() {
+    const populateTables = debounce(async () => {
       try {
         // Fetch Appointments
         const appointments = await apiCall('/admin/appointments');
         const appointmentsTable = document.getElementById('appointmentsTable');
         const appointmentsCards = document.getElementById('appointmentsCards');
-        appointmentsTable.innerHTML = appointments.map(item => `
+        // Log the status of each appointment to debug
+        appointments.forEach(item => {
+          console.log(`Appointment ID: ${item.id}, Status: ${item.status}`);
+        });
+        appointmentsTable.innerHTML = appointments.map(item => {
+          const status = (item.status || 'pending').toLowerCase().trim();
+          const isPending = !status || status === 'pending';
+          return `
           <tr>
             <td>${item.name || ''}</td>
             <td>${item.email || ''}</td>
@@ -761,15 +781,19 @@
             <td>${item.message || ''}</td>
             <td>${item.status || 'Pending'}</td>
             <td>
-              ${(item.status || 'pending').toLowerCase() === 'pending' ? `
+              ${isPending ? `
                 <button class="btn-primary text-sm px-2 py-1" onclick="acceptAppointment(${item.id})">Accept</button>
                 <button class="btn-danger text-sm px-2 py-1 ml-1" onclick="showCancelModal(${item.id})">Cancel</button>
                 <button class="btn-danger text-sm px-2 py-1 ml-1" onclick="showDeleteAppointmentModal(${item.id})">Delete</button>
               ` : (item.status || 'Pending')}
             </td>
           </tr>
-        `).join('');
-        appointmentsCards.innerHTML = appointments.map(item => `
+        `;
+        }).join('');
+        appointmentsCards.innerHTML = appointments.map(item => {
+          const status = (item.status || 'pending').toLowerCase().trim();
+          const isPending = !status || status === 'pending';
+          return `
           <div class="table-card">
             <p><strong>Name:</strong> ${item.name || ''}</p>
             <p><strong>Email:</strong> ${item.email || ''}</p>
@@ -778,14 +802,15 @@
             <p><strong>Message:</strong> ${item.message || ''}</p>
             <p><strong>Status:</strong> ${item.status || 'Pending'}</p>
             <div class="actions">
-              ${(item.status || 'pending').toLowerCase() === 'pending' ? `
+              ${isPending ? `
                 <button class="btn-primary text-sm px-2 py-1" onclick="acceptAppointment(${item.id})">Accept</button>
                 <button class="btn-danger text-sm px-2 py-1" onclick="showCancelModal(${item.id})">Cancel</button>
                 <button class="btn-danger text-sm px-2 py-1" onclick="showDeleteAppointmentModal(${item.id})">Delete</button>
               ` : `<span>${item.status || 'Pending'}</span>`}
             </div>
           </div>
-        `).join('');
+        `;
+        }).join('');
 
         // Fetch Messages
         const messages = await apiCall('/admin/messages');
@@ -815,25 +840,25 @@
         `).join('');
 
         // Fetch Subscribers
-        const subscriptions = await apiCall('/admin/subscribers');
+        const subscribers = await apiCall('/admin/subscribers');
         const subscribersTable = document.getElementById('subscribersTable');
         const subscribersCards = document.getElementById('subscribersCards');
-        subscribersTable.innerHTML = subscriptions.map(item => `
+        subscribersTable.innerHTML = subscribers.map(item => `
           <tr>
             <td>${item.email || ''}</td>
             <td>${new Date(item.subscribed_on).toLocaleDateString() || ''}</td>
           </tr>
         `).join('');
-        subscribersCards.innerHTML = subscriptions.map(item => `
+        subscribersCards.innerHTML = subscribers.map(item => `
           <div class="table-card">
             <p><strong>Email:</strong> ${item.email || ''}</p>
             <p><strong>Subscribed On:</strong> ${new Date(item.subscribed_on).toLocaleDateString() || ''}</p>
           </div>
         `).join('');
       } catch (error) {
-        showToast('Failed to load dashboard data. Please try again.', 'error');
+        showToast('Failed to load dashboard data.', 'error');
       }
-    }
+    }, 300);
 
     // Modal Functions
     function showModal(modalId) {
@@ -845,6 +870,10 @@
         document.getElementById('cancelAppointmentForm').reset();
       } else if (modalId === 'replyMessageModal') {
         document.getElementById('replyMessageForm').reset();
+      } else if (modalId === 'deleteAppointmentModal') {
+        document.getElementById('deleteAppointmentForm').reset();
+      } else if (modalId === 'deleteMessageModal') {
+        document.getElementById('deleteMessageForm').reset();
       }
     }
 
@@ -893,7 +922,7 @@
         await populateTables();
         showToast('Login successful!', 'success');
       } catch (error) {
-        showToast(error.message || 'Login failed. Please check your credentials.', 'error');
+        showToast('Login failed. Check credentials.', 'error');
       }
     });
 
@@ -909,7 +938,7 @@
         showLogin();
         registerForm.reset();
       } catch (error) {
-        showToast(error.message || 'Registration failed. Please try again.', 'error');
+        showToast('Registration failed.', 'error');
       }
     });
 
@@ -927,7 +956,7 @@
         showModal('otpModal');
         showToast('OTP sent successfully.', 'success');
       } catch (error) {
-        showToast(error.message || 'Failed to send OTP. Please try again.', 'error');
+        showToast('Failed to send OTP.', 'error');
       }
     });
 
@@ -943,7 +972,7 @@
         showModal('resetPasswordModal');
         showToast('OTP verified successfully.', 'success');
       } catch (error) {
-        showToast(error.message || 'Invalid OTP. Please try again.', 'error');
+        showToast('Invalid OTP.', 'error');
       }
     });
 
@@ -963,20 +992,20 @@
         showToast('Password reset successfully. Please login.', 'success');
         showLogin();
       } catch (error) {
-        showToast(error.message || 'Failed to reset password. Please try again.', 'error');
+        showToast('Failed to reset password.', 'error');
       }
     });
 
     // Appointment Actions
-    async function acceptAppointment(id) {
+    const acceptAppointment = debounce(async (id) => {
       try {
         await apiCall('/admin/appointment/action', 'POST', { id, action: 'accept' });
         await populateTables();
-        showToast('Appointment accepted successfully.', 'success');
+        showToast('Appointment accepted.', 'success');
       } catch (error) {
-        showToast(error.message || 'Failed to accept appointment.', 'error');
+        showToast('Failed to accept appointment.', 'error');
       }
-    }
+    }, 300);
 
     let currentAppointmentId = null;
     function showCancelModal(id) {
@@ -994,9 +1023,9 @@
         closeModal('cancelAppointmentModal');
         cancelAppointmentForm.reset();
         await populateTables();
-        showToast('Appointment cancelled successfully.', 'success');
+        showToast('Appointment cancelled.', 'success');
       } catch (error) {
-        showToast(error.message || 'Failed to cancel appointment.', 'error');
+        showToast('Failed to cancel appointment.', 'error');
       }
     });
 
@@ -1038,7 +1067,7 @@
         replyMessageForm.reset();
         showToast('Reply sent successfully.', 'success');
       } catch (error) {
-        showToast(error.message || 'Failed to send reply. Please check email configuration.', 'error');
+        showToast('Failed to send reply.', 'error');
       }
     });
 
@@ -1091,6 +1120,7 @@
     // Check for Existing Token
     window.addEventListener('load', async () => {
       const token = localStorage.getItem('token');
+      navMenu.style.display = 'none';
       if (token) {
         try {
           const profile = await apiCall('/admin/profile');
@@ -1104,10 +1134,7 @@
         } catch (error) {
           localStorage.removeItem('token');
           showToast('Session expired. Please login again.', 'error');
-          navMenu.style.display = 'none';
         }
-      } else {
-        navMenu.style.display = 'none';
       }
     });
   </script>
