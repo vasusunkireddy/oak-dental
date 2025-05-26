@@ -20,7 +20,8 @@
       padding: 0;
       line-height: 1.6;
       color: #1F2937;
-      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1598256989800-fe5f95da9787?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') no-repeat center center fixed;
+      background-size: cover;
       overflow-x: hidden;
     }
     html {
@@ -76,6 +77,12 @@
     }
 
     /* Navigation */
+    .nav-menu.authenticated {
+      display: none;
+    }
+    .nav-menu.authenticated.active {
+      display: flex;
+    }
     .nav-menu {
       display: none;
       flex-direction: column;
@@ -89,9 +96,6 @@
       padding: 8px 0;
     }
     .nav-menu.active {
-      display: flex;
-    }
-    .nav-menu.authenticated.active {
       display: flex;
     }
     .nav-link {
@@ -111,6 +115,7 @@
       cursor: pointer;
       color: #0D9488;
       padding: 8px;
+      display: none;
     }
 
     /* Buttons */
@@ -159,24 +164,24 @@
 
     /* Cards */
     .card {
-      background: white;
+      background: rgba(255, 255, 255, 0.95);
       border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
     .card:hover {
       transform: scale(1.01);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
     }
 
     /* Tables */
     .admin-table {
       width: 100%;
       border-collapse: collapse;
-      background: white;
+      background: rgba(255, 255, 255, 0.95);
       border-radius: 8px;
       overflow: hidden;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
     }
     .admin-table th,
     .admin-table td {
@@ -196,11 +201,11 @@
 
     /* Mobile Table Cards */
     .table-card {
-      background: white;
+      background: rgba(255, 255, 255, 0.95);
       border-radius: 8px;
       padding: 12px;
       margin-bottom: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     }
     .table-card p {
       margin: 4px 0;
@@ -280,6 +285,7 @@
       max-width: 360px;
       margin: 0 auto;
       padding: 16px;
+      background: rgba(255, 255, 255, 0.95);
     }
     .auth-form h2 {
       font-size: 1.25rem;
@@ -336,12 +342,12 @@
 
     /* Welcome Message */
     .welcome-message {
-      background: white;
+      background: rgba(255, 255, 255, 0.95);
       border-radius: 8px;
       padding: 16px;
       margin-bottom: 24px;
       text-align: center;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     }
     .welcome-message h2 {
       color: #0D9488;
@@ -349,7 +355,7 @@
       margin-bottom: 8px;
     }
     .welcome-message p {
-      color: #6B7280;
+      color: #1F2937;
       font-size: 0.9rem;
     }
 
@@ -426,7 +432,7 @@
       .hamburger {
         display: none;
       }
-      .nav-menu {
+      .nav-menu.authenticated {
         display: flex !important;
         flex-direction: row;
         position: static;
@@ -809,16 +815,16 @@
         `).join('');
 
         // Fetch Subscribers
-        const subscribers = await apiCall('/admin/subscribers');
+        const subscriptions = await apiCall('/admin/subscribers');
         const subscribersTable = document.getElementById('subscribersTable');
         const subscribersCards = document.getElementById('subscribersCards');
-        subscribersTable.innerHTML = subscribers.map(item => `
+        subscribersTable.innerHTML = subscriptions.map(item => `
           <tr>
             <td>${item.email || ''}</td>
             <td>${new Date(item.subscribed_on).toLocaleDateString() || ''}</td>
           </tr>
         `).join('');
-        subscribersCards.innerHTML = subscribers.map(item => `
+        subscribersCards.innerHTML = subscriptions.map(item => `
           <div class="table-card">
             <p><strong>Email:</strong> ${item.email || ''}</p>
             <p><strong>Subscribed On:</strong> ${new Date(item.subscribed_on).toLocaleDateString() || ''}</p>
@@ -882,6 +888,7 @@
         document.getElementById('auth').classList.add('hidden');
         document.getElementById('dashboard').classList.remove('hidden');
         navMenu.classList.add('authenticated');
+        navMenu.style.display = 'flex';
         document.getElementById('welcomeTitle').textContent = `Welcome, ${adminName}!`;
         await populateTables();
         showToast('Login successful!', 'success');
@@ -1059,13 +1066,14 @@
       document.getElementById('dashboard').classList.add('hidden');
       document.getElementById('auth').classList.remove('hidden');
       navMenu.classList.remove('authenticated');
+      navMenu.style.display = 'none';
       loginForm.reset();
       showLogin();
       showToast('Logged out successfully.', 'success');
     }
 
     // Form Validation
-    ['loginForm', 'registerForm', 'forgotPasswordForm', 'otpForm', 'resetPasswordForm', 'cancelAppointmentForm', 'replyMessageForm'].forEach(formId => {
+    ['loginForm', 'registerForm', 'forgotPasswordForm', 'otpForm', 'resetPasswordForm', 'cancelAppointmentForm', 'replyMessageForm', 'deleteAppointmentForm', 'deleteMessageForm'].forEach(formId => {
       const form = document.getElementById(formId);
       if (form) {
         form.querySelectorAll('input, textarea').forEach(input => {
@@ -1090,12 +1098,16 @@
           document.getElementById('auth').classList.add('hidden');
           document.getElementById('dashboard').classList.remove('hidden');
           navMenu.classList.add('authenticated');
+          navMenu.style.display = 'flex';
           document.getElementById('welcomeTitle').textContent = `Welcome, ${adminName}!`;
           await populateTables();
         } catch (error) {
           localStorage.removeItem('token');
           showToast('Session expired. Please login again.', 'error');
+          navMenu.style.display = 'none';
         }
+      } else {
+        navMenu.style.display = 'none';
       }
     });
   </script>
