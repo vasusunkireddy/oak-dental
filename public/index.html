@@ -106,10 +106,16 @@
     .dot.active {
       background-color: #F472B6;
     }
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
     .logo-img {
-      width: 60px;
-      height: 20px;
+      width: 40px;
+      height: 40px;
       object-fit: contain;
+      border-radius: 8px;
     }
     .logo-text {
       font-size: 1.1rem;
@@ -140,6 +146,10 @@
     }
     .doctor-img:hover {
       transform: scale(1.05);
+    }
+    .doctor-description {
+      max-width: 500px;
+      margin: 0 auto;
     }
     .nav-link {
       transition: color 0.3s ease;
@@ -183,6 +193,13 @@
     .card:hover {
       transform: translateY(-4px);
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+    .why-choose-us-img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 16px;
     }
     .sticky-cta {
       position: fixed;
@@ -396,8 +413,8 @@
         font-size: 1rem;
       }
       .logo-img {
-        width: 80px;
-        height: 28px;
+        width: 48px;
+        height: 48px;
       }
       .logo-text {
         font-size: 1.3rem;
@@ -430,6 +447,9 @@
       .doctor-img {
         max-width: 300px;
       }
+      .why-choose-us-img {
+        height: 350px;
+      }
     }
     @media (max-width: 640px) {
       .hero-bg {
@@ -445,6 +465,10 @@
       .hero-text-container p {
         font-size: 0.9rem;
         text-shadow: 0 0 5px rgba(255, 255, 255, 0.6);
+      }
+      .logo-img {
+        width: 36px;
+        height: 36px;
       }
       .sticky-cta {
         gap: 6px;
@@ -479,6 +503,9 @@
       }
       .doctor-img {
         max-width: 200px;
+      }
+      .why-choose-us-img {
+        height: 200px;
       }
     }
   </style>
@@ -529,7 +556,7 @@
   <nav class="bg-gradient-to-r from-teal-600 to-teal-800 text-white fixed w-full top-0 z-10 shadow-md">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between h-16 items-center">
-        <div class="flex items-center space-x-3">
+        <div class="logo-container">
           <a href="#home" aria-label="OAK Dental Clinic Home">
             <img src="https://i.postimg.cc/9MdzgVhV/OAK-LOGO-1.jpg" alt="OAK Dental Clinic Logo" class="logo-img animate__animated animate__fadeIn" loading="lazy">
           </a>
@@ -661,12 +688,13 @@
       <h2 class="text-2xl md:text-3xl font-extrabold text-teal-800 text-center mb-6 animate__animated animate__fadeIn">Meet Our Specialist</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
         <div class="flex justify-center">
-          <img src="https://i.ibb.co/RGCxyQ0C/Whats-App-Image-2025-05-27-at-21-32-32-a354476d.jpg" alt="Dr. A. Ram Koti Reddy" class="doctor-img" loading="lazy">
+          <img src="https://i.ibb.co/dwK3Bk6X/Whats-App-Image-2025-05-27-at-21-32-32-e50f5321.jpg" alt="Dr. A. Ram Koti Reddy" class="doctor-img" loading="lazy">
         </div>
-        <div class="text-center md:text-left">
+        <div class="text-center md:text-left doctor-description">
           <h3 class="text-lg font-semibold text-teal-700">Dr. A. Ram Koti Reddy</h3>
           <p class="text-gray-600 text-base">Chief Dental Specialist</p>
           <p class="text-gray-500 text-base italic">Expert in Cosmetic Dentistry & Implants</p>
+          <p class="text-gray-600 text-base mt-2">With over 15 years of experience, Dr. A. Ram Koti Reddy leads OAK Dental Clinic with a passion for transforming smiles. Specializing in cosmetic dentistry and dental implants, he combines advanced techniques with a patient-centered approach to deliver exceptional results.</p>
         </div>
       </div>
     </div>
@@ -678,7 +706,7 @@
         Experience exceptional care with our cutting-edge technology and skilled professionals dedicated to your comfort.
         <span class="block mt-2 text-teal-700 font-semibold">Trusted by over 5,000 happy patients!</span>
       </p>
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
         <div class="space-y-4">
           <div class="flex items-center space-x-3 animate__animated animate__fadeInLeft">
             <i class="fas fa-microchip text-teal-500 text-lg"></i>
@@ -731,7 +759,7 @@
           </div>
         </div>
         <div class="card animate__animated animate__fadeInRight">
-          <img src="https://images.unsplash.com/photo-1560070201-d3d11effa179?auto=format&fit=crop&w=600&q=80" alt="Modern dental clinic interior" class="w-full h-48 object-cover" loading="lazy">
+          <img src="https://images.unsplash.com/photo-1560070201-d3d11effa179?auto=format&fit=crop&w=600&q=80" alt="Modern dental clinic interior" class="why-choose-us-img" loading="lazy">
         </div>
       </div>
     </div>
@@ -744,19 +772,19 @@
           <div class="testimonial-slide">
             <div class="card">
               <p class="text-gray-600 text-base italic mb-3">"Dr. Reddy transformed my smile with implants. Exceptional care!"</p>
-              <p class="text-teal-700 font-semibold text-base">John D.</p>
+              <p class="text-teal-700 font-semibold text-base">vasu s.</p>
             </div>
           </div>
           <div class="testimonial-slide">
             <div class="card">
               <p class="text-gray-600 text-base italic mb-3">"The staff made my visit stress-free and comfortable!"</p>
-              <p class="text-teal-700 font-semibold text-base">Lisa M.</p>
+              <p class="text-teal-700 font-semibold text-base">sai ram.</p>
             </div>
           </div>
           <div class="testimonial-slide">
             <div class="card">
               <p class="text-gray-600 text-base italic mb-3">"Cosmetic dentistry gave me confidence to smile again!"</p>
-              <p class="text-teal-700 font-semibold text-base">Mark T.</p>
+              <p class="text-teal-700 font-semibold text-base">jashu.</p>
             </div>
           </div>
         </div>
@@ -776,7 +804,7 @@
           <input type="email" name="email" placeholder="Your Email" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 text-base" required>
           <input type="tel" name="phone" placeholder="Your Mobile Number" pattern="[0-9]{10}" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 text-base" required>
           <input type="date" name="date" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 text-base" min="2025-05-27" required>
-          <textarea name="message" placeholder="Your Message (Optional)" class="w-full p-3 border border-gray-300 rounded-lg h-24 focus:ring-2 focus:ring-teal-500 text-base"></textarea>
+          <textarea name="message" placeholder="Your Message" class="w-full p-3 border border-gray-300 rounded-lg h-24 focus:ring-2 focus:ring-teal-500 text-base"></textarea>
           <button type="submit" class="btn-primary w-full">Submit Appointment</button>
         </form>
       </div>
@@ -821,11 +849,11 @@
   </section>
   <section id="faq" class="py-12 bg-teal-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <h2 class="text-2xl md:text-3xl font-extrabold text-teal-800 text-center mb-8 animate__animated animate__fadeIn">Frequently Asked Questions</h2>
+      <h2 class="text-2xl md:text-3xl font-extrabold text-teal-800 text-center mb-8">Frequently Asked Questions</h2>
       <div class="faq-container">
         <div class="space-y-4">
-          <div class="faq-item" role="region" aria-labelledby="faq1">
-            <div class="faq-question" id="faq1" onclick="toggleAnswer(this)" role="button" aria-expanded="false" tabindex="0">
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleAnswer(this)">
               <h3>1. What should I do if I have a dental emergency?</h3>
               <i class="faq-toggle fas fa-plus"></i>
             </div>
@@ -833,8 +861,8 @@
               Contact OAK Dental immediately for urgent situations like severe pain or broken teeth. We’ll guide you and ensure prompt care.
             </div>
           </div>
-          <div class="faq-item" role="region" aria-labelledby="faq2">
-            <div class="faq-question" id="faq2" onclick="toggleAnswer(this)" role="button" aria-expanded="false" tabindex="0">
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleAnswer(this)">
               <h3>2. How do I know if I need a root canal?</h3>
               <i class="faq-toggle fas fa-plus"></i>
             </div>
@@ -842,17 +870,17 @@
               Signs include persistent pain, sensitivity, or gum swelling. Our specialists can assess if a root canal is necessary.
             </div>
           </div>
-          <div class="faq-item" role="region" aria-labelledby="faq3">
-            <div class="faq-question" id="faq3" onclick="toggleAnswer(this)" role="button" aria-expanded="false" tabindex="0">
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleAnswer(this)">
               <h3>3. Are dental implants a good option for missing teeth?</h3>
               <i class="faq-toggle fas fa-plus"></i>
             </div>
             <div class="faq-answer">
-              Yes, implants are durable and natural-looking. They maintain jawbone health, and we can determine if they’re right for you.
+              Yes, implants are durable and natural-looking. They maintain jawbone health.
             </div>
           </div>
-          <div class="faq-item" role="region" aria-labelledby="faq4">
-            <div class="faq-question" id="faq4" onclick="toggleAnswer(this)" role="button" aria-expanded="false" tabindex="0">
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleAnswer(this)">
               <h3>4. How can I improve the appearance of my smile?</h3>
               <i class="faq-toggle fas fa-plus"></i>
             </div>
@@ -877,9 +905,9 @@
         </form>
       </div>
       <div class="flex justify-center space-x-4 mb-4">
-        <a href="https://www.instagram.com/oakdentalclinichyd/" class="text-white hover:text-fuchsia-400" aria-label="Instagram"><i class="fab fa-instagram w-5 h-5"></i></a>
-        <a href="https://facebook.com" class="text-white hover:text-fuchsia-400" aria-label="Facebook"><i class="fab fa-facebook w-5 h-5"></i></a>
-        <a href="https://twitter.com" class="text-white hover:text-fuchsia-400" aria-label="Twitter"><i class="fab fa-twitter w-5 h-5"></i></a>
+        <a href="https://www.instagram.com/oakdentalclinichyd/" class="text-white hover:text-fuchsia-400" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="https://facebook.com" class="text-white hover:text-fuchsia-400" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+        <a href="https://twitter.com" class="text-white hover:text-fuchsia-400" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
       </div>
       <p class="text-gray-200 text-center text-base">© 2025 OAK Multi-Speciality Dental Clinic. All rights reserved.</p>
     </div>
@@ -887,7 +915,7 @@
   </footer>
   <script>
     // API Base URL
-    const API_BASE_URL = window.location.hostname === 'localhost' ? 'http://localhost:3000/api' : 'https://oak-dental.onrender.com/api';
+    const API_BASE_URL = window.location.hostname === 'localhost' ? 'http://localhost:3000/api' : 'https://api.oakdentalclinic.com';
 
     // API Call Helper
     async function apiCall(endpoint, method = 'POST', data = null) {
