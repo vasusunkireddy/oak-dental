@@ -187,7 +187,7 @@
       font-size: 0.9rem;
       padding: 8px 16px;
       line-height: 1;
-      min-width: 90px;
+      min-width: 100px;
       text-align: center;
     }
     .card-actions {
@@ -200,7 +200,7 @@
       font-size: 0.9rem;
       padding: 8px 16px;
       line-height: 1;
-      min-width: 90px;
+      min-width: 100px;
       text-align: center;
       flex: 1 1 auto;
     }
@@ -211,7 +211,7 @@
       border-radius: 12px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
-      overflow: hidden;
+      overflow-x: auto;
     }
     .card:hover {
       transform: translateY(-5px);
@@ -428,6 +428,24 @@
       font-weight: 500;
     }
 
+    /* Bulk Actions */
+    .bulk-actions {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .checkbox-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .select-all-checkbox {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+
     /* Animations */
     @keyframes slideDown {
       from { transform: translateY(-100%); }
@@ -520,6 +538,10 @@
         width: 95%;
         font-size: 0.9rem;
         padding: 12px 24px;
+      }
+      .bulk-actions {
+        flex-direction: column;
+        align-items: flex-start;
       }
     }
     @media (min-width: 641px) {
@@ -660,10 +682,18 @@
       <!-- Appointments -->
       <div id="appointments" class="mb-12">
         <h2 class="text-2xl font-bold text-gray-800 mb-4 animate__animated animate__fadeIn">Appointments</h2>
+        <div class="bulk-actions">
+          <div class="checkbox-container">
+            <input type="checkbox" id="selectAllAppointments" class="select-all-checkbox">
+            <label for="selectAllAppointments" class="text-gray-800 font-medium">Select All</label>
+          </div>
+          <button class="btn-danger" onclick="showBulkDeleteModal()" disabled id="bulkDeleteButton">Delete Selected</button>
+        </div>
         <div class="card">
           <table class="admin-table">
             <thead>
               <tr>
+                <th>Select</th>
                 <th>Name</th>
                 <th>Email</th>
                 <th>Phone</th>
@@ -778,6 +808,18 @@
     </div>
   </div>
 
+  <!-- Bulk Delete Appointment Modal -->
+  <div id="bulkDeleteAppointmentModal" class="modal">
+    <div class="modal-content">
+      <h3>Delete Selected Appointments</h3>
+      <p>Are you sure you want to delete the selected appointments?</p>
+      <form id="bulkDeleteAppointmentForm" class="space-y-3">
+        <button type="submit" class="btn-danger">Delete Selected</button>
+        <button type="button" class="btn-secondary" onclick="closeModal('bulkDeleteAppointmentModal')">Cancel</button>
+      </form>
+    </div>
+  </div>
+
   <!-- Reply Message Modal -->
   <div id="replyMessageModal" class="modal">
     <div class="modal-content">
@@ -867,8 +909,9 @@
         
         if (!appointments || appointments.length === 0) {
           console.log('No appointments found.');
-          appointmentsTable.innerHTML = '<tr><td colspan="7" class="no-data">No appointments available.</td></tr>';
+          appointmentsTable.innerHTML = '<tr><td colspan="8" class="no-data">No appointments available.</td></tr>';
           appointmentsCards.innerHTML = '<div class="no-data">No appointments available.</div>';
+          document.getElementById('bulkDeleteButton').disabled = true;
           return;
         }
 
@@ -878,6 +921,7 @@
 
         appointmentsTable.innerHTML = appointments.map(item => `
           <tr>
+            <td><input type="checkbox" class="appointment-checkbox" data-id="${item.id}"></td>
             <td>${item.name || ''}</td>
             <td>${item.email || ''}</td>
             <td>${item.phone || ''}</td>
@@ -895,6 +939,10 @@
         `).join('');
         appointmentsCards.innerHTML = appointments.map(item => `
           <div class="table-card">
+            <div class="checkbox-container">
+              <input type="checkbox" class="appointment-checkbox" data-id="${item.id}">
+              <label>Select</label>
+            </div>
             <p><strong>Name:</strong> ${item.name || ''}</p>
             <p><strong>Email:</strong> ${item.email || ''}</p>
             <p><strong>Phone:</strong> ${item.phone || ''}</p>
@@ -908,6 +956,9 @@
             </div>
           </div>
         `).join('');
+
+        // Enable bulk delete button based on checkbox state
+        updateBulkDeleteButton();
 
         // Fetch Messages
         const messages = await apiCall('/admin/messages');
@@ -976,6 +1027,8 @@
         document.getElementById('deleteAppointmentForm').reset();
       } else if (modalId === 'deleteMessageModal') {
         document.getElementById('deleteMessageForm').reset();
+      } else if (modalId === 'bulkDeleteAppointmentModal') {
+        document.getElementById('bulkDeleteAppointmentForm').reset();
       }
     }
 
@@ -1165,6 +1218,59 @@
       }
     });
 
+    // Bulk Delete Appointments
+    function updateBulkDeleteButton() {
+      const checkboxes = document.querySelectorAll('.appointment-checkbox:checked');
+      const bulkDeleteButton = document.getElementById('bulkDeleteButton');
+      bulkDeleteButton.disabled = checkboxes.length === 0;
+    }
+
+    function showBulkDeleteModal() {
+      const selectedIds = Array.from(document.querySelectorAll('.appointment-checkbox:checked')).map(cb => parseInt(cb.dataset.id));
+      if (selectedIds.length === 0) {
+        showToast('No appointments selected.', 'error');
+        return;
+      }
+      showModal('bulkDeleteAppointmentModal');
+    }
+
+    const bulkDeleteAppointmentForm = document.getElementById('bulkDeleteAppointmentForm');
+    bulkDeleteAppointmentForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const selectedIds = Array.from(document.querySelectorAll('.appointment-checkbox:checked')).map(cb => parseInt(cb.dataset.id));
+      if (selectedIds.length === 0) {
+        showToast('No appointments selected.', 'error');
+        closeModal('bulkDeleteAppointmentModal');
+        return;
+      }
+      try {
+        await Promise.all(selectedIds.map(id => apiCall('/admin/appointment/delete', 'DELETE', { id })));
+        closeModal('bulkDeleteAppointmentModal');
+        await populateTables();
+        showToast(`${selectedIds.length} appointment${selectedIds.length > 1 ? 's' : ''} deleted successfully.`, 'success');
+      } catch (error) {
+        showToast(error.message || 'Failed to delete appointments.', 'error');
+      }
+    });
+
+    // Select All Checkbox
+    const selectAllCheckbox = document.getElementById('selectAllAppointments');
+    selectAllCheckbox.addEventListener('change', () => {
+      const checkboxes = document.querySelectorAll('.appointment-checkbox');
+      checkboxes.forEach(cb => cb.checked = selectAllCheckbox.checked);
+      updateBulkDeleteButton();
+    });
+
+    // Individual Checkbox Event Listener
+    document.addEventListener('change', (e) => {
+      if (e.target.classList.contains('appointment-checkbox')) {
+        updateBulkDeleteButton();
+        const allCheckboxes = document.querySelectorAll('.appointment-checkbox');
+        const checkedCheckboxes = document.querySelectorAll('.appointment-checkbox:checked');
+        selectAllCheckbox.checked = allCheckboxes.length === checkedCheckboxes.length;
+      }
+    });
+
     // Message Actions
     let currentMessageId = null;
     let currentMessageEmail = '';
@@ -1222,7 +1328,7 @@
     }
 
     // Form Validation
-    ['loginForm', 'registerForm', 'forgotPasswordForm', 'otpForm', 'resetPasswordForm', 'cancelAppointmentForm', 'replyMessageForm', 'deleteAppointmentForm', 'deleteMessageForm'].forEach(formId => {
+    ['loginForm', 'registerForm', 'forgotPasswordForm', 'otpForm', 'resetPasswordForm', 'cancelAppointmentForm', 'replyMessageForm', 'deleteAppointmentForm', 'deleteMessageForm', 'bulkDeleteAppointmentForm'].forEach(formId => {
       const form = document.getElementById(formId);
       if (form) {
         form.querySelectorAll('input, textarea').forEach(input => {
