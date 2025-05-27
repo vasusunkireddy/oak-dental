@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="OAK Multi-Speciality Dental Clinic in Hyderabad offers expert dental care, led by Dr. A. Ram Koti Reddy. Book your appointment today!">
+  <meta property="og:title" content="OAK Multi-Speciality Dental Clinic">
+  <meta property="og:description" content="Expert dental care in Hyderabad with advanced treatments and patient-focused services.">
+  <meta property="og:image" content="https://i.postimg.cc/9MdzgVhV/OAK-LOGO-1.jpg">
+  <meta property="og:url" content="https://oak-dental.onrender.com">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="OAK Multi-Speciality Dental Clinic">
+  <meta name="twitter:description" content="Expert dental care in Hyderabad with advanced treatments and patient-focused services.">
+  <meta name="twitter:image" content="https://i.postimg.cc/9MdzgVhV/OAK-LOGO-1.jpg">
+  <title>OAK Multi-Speciality Dental Clinic</title>
+  <link rel="icon" href="https://i.postimg.cc/9MdzgVhV/OAK-LOGO-1.jpg" type="image/jpeg">
+  <link rel="preload" href="https://cdn.tailwindcss.com" as="script">
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" as="style">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      background-color: #f4f4f9;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    .hero-bg {
+      position: relative;
+      min-height: 50vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: linear-gradient(to bottom, #60A5FA, #F472B6);
+    }
+    .hero-slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), no-repeat center center/cover;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: translateX(100%);
+      transition: all 0.5s ease-in-out;
+    }
+    .hero-slide.active {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .hero-slide.prev {
+      transform: translateX(-100%);
+    }
+    .hero-text-container {
+      width: 90%;
+      max-width: 600px;
+      text-align: center;
+      color: white;
+    }
+    .dots-container {
+      position: absolute;
+      bottom: 10px;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+    }
+    .dot {
+      width: 8px;
+      height: 8px;
+      background-color: rgba(255, 255, 255, 0.7);
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .dot.active {
+      background-color: #F472B6;
+    }
+    .logo-img {
+      width: 60px;
+      height: 20px;
+      object-fit: contain;
+    }
+    .logo-text {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: white;
+    }
+    .logo-text:hover {
+      color: #F472B6;
+    }
+    .logo-subtext {
+      font-size: 0.7rem;
+      color: #E5E7EB;
+      font-weight: 400;
+      text-transform: uppercase;
+    }
+    .doctor-img {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+      border-radius: 0;
+      box-shadow: none;
+      margin-bottom: 1rem;
+    }
+    .nav-link {
+      transition: color 0.3s ease;
+    }
+    .nav-link:hover {
+      color: #F472B6;
+    }
+    .btn-primary {
+      background-color: #14B8A6;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      padding: 8px 16px;
+      font-size: 0.95rem;
+      border-radius: 9999px;
+      color: white;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn-primary:hover {
+      background-color: #0D9488;
+      transform: translateY(-2px);
+    }
+    .btn-secondary {
+      background-color: #60A5FA;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      padding: 8px 16px;
+      font-size: 0.95rem;
+      border-radius: 9999px;
+      color: white;
+    }
+    .btn-secondary:hover {
+      background-color: #3B82F6;
+      transform: translateY(-2px);
+    }
+    .card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+    .sticky-cta {
+      position: fixed;
+      bottom: 16px;
+      right: 16px;
+      display: flex;
+      gap: 8px;
+      z-index: 1000;
+    }
+    .cta-icon {
+      font-size: 1.2rem;
+      padding: 10px;
+      border-radius: 50%;
+      background: #14B8A6;
+      color: white;
+      transition: transform 0.3s ease, background-color 0.3s ease;
+    }
+    .cta-icon:hover {
+      background-color: #F472B6;
+      transform: scale(1.1);
+    }
+    .whatsapp-icon {
+      background: #25D366;
+    }
+    .phone-icon {
+      background: #3B82F6;
+    }
+    .faq-container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .faq-item {
+      margin-bottom: 12px;
+      border-bottom: 1px solid #D1D5DB;
+      padding-bottom: 8px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+    .faq-question {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      padding: 12px 16px;
+      transition: background-color 0.3s ease;
+    }
+    .faq-question:hover {
+      background-color: #E5E7EB;
+    }
+    .faq-question h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #0D9488;
+      margin: 0;
+      flex: 1;
+    }
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      padding: 0 16px;
+      color: #212529;
+      font-size: 0.95rem;
+      transition: max-height 0.4s ease, padding 0.3s ease;
+    }
+    .faq-answer.active {
+      padding: 12px 16px;
+      max-height: 150px;
+    }
+    .faq-toggle {
+      font-size: 0.95rem;
+      color: #0D9488;
+      transition: transform 0.3s ease;
+    }
+    .faq-toggle.active {
+      transform: rotate(45deg);
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .modal-content {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+      max-width: 90%;
+      width: 300px;
+    }
+    .modal-content h3 {
+      color: #0D9488;
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+    }
+    .modal-content p {
+      font-size: 0.95rem;
+      margin-bottom: 15px;
+    }
+    .modal-content button {
+      background: #14B8A6;
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 9999px;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+    .toast {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #14B8A6;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+      font-size: 0.95rem;
+      opacity: 0;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    .toast.show {
+      display: block;
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    .valid {
+      border-color: #10B981 !important;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="%2310B981" viewBox="0 0 16 16"><path d="M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z"/></svg>') no-repeat right 8px center;
+    }
+    .hamburger {
+      display: block;
+      font-size: 1.3rem;
+      cursor: pointer;
+      color: white;
+      padding: 8px;
+    }
+    .nav-menu {
+      display: none;
+      flex-direction: column;
+      position: absolute;
+      top: 60px;
+      left: 0;
+      width: 100%;
+      background: #0D9488;
+      padding: 10px 0;
+      z-index: 1000;
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    .nav-menu.active {
+      display: flex;
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .nav-link {
+      padding: 10px;
+      text-align: center;
+      font-size: 1rem;
+      color: white;
+    }
+    .testimonial-container {
+      position: relative;
+      overflow: hidden;
+    }
+    .testimonial-wrapper {
+      display: flex;
+      transition: transform 0.4s ease;
+    }
+    .testimonial-slide {
+      min-width: 100%;
+      box-sizing: border-box;
+      padding: 0 10px;
+    }
+    .testimonial-nav {
+      position: absolute;
+      top: 50%;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      transform: translateY(-50%);
+    }
+    .testimonial-nav button {
+      background: rgba(0, 0, 0, 0.5);
+      color: white;
+      border: none;
+      padding: 8px;
+      cursor: pointer;
+      border-radius: 50%;
+      font-size: 0.85rem;
+    }
+    @media (min-width: 768px) {
+      .hero-bg {
+        min-height: 60vh;
+      }
+      .logo-img {
+        width: 80px;
+        height: 28px;
+      }
+      .logo-text {
+        font-size: 1.3rem;
+      }
+      .logo-subtext {
+        font-size: 0.8rem;
+      }
+      .hamburger {
+        display: none;
+      }
+      .nav-menu {
+        display: flex;
+        flex-direction: row;
+        position: static;
+        background: none;
+        padding: 0;
+        opacity: 1;
+        transform: none;
+      }
+      .nav-link {
+        padding: 8px 12px;
+        font-size: 1rem;
+      }
+      .hero-text-container h1 {
+        font-size: 3.5rem;
+      }
+      .hero-text-container p {
+        font-size: 1.3rem;
+      }
+      .faq-question h3 {
+        font-size: 1.1rem;
+      }
+      .faq-answer {
+        font-size: 1rem;
+      }
+    }
+    @media (max-width: 640px) {
+      .hero-text-container h1 {
+        font-size: 2.2rem;
+      }
+      .hero-text-container p {
+        font-size: 1.1rem;
+      }
+      .sticky-cta {
+        gap: 6px;
+        bottom: 12px;
+        right: 12px;
+      }
+      .cta-icon {
+        font-size: 1.1rem;
+        padding: 8px;
+      }
+      .btn-primary, .btn-secondary {
+        padding: 6px 12px;
+        font-size: 0.9rem;
+      }
+      .faq-question h3 {
+        font-size: 0.95rem;
+      }
+      .faq-answer {
+        font-size: 0.9rem;
+      }
+      section h2 {
+        font-size: 2rem;
+      }
+      section p {
+        font-size: 1rem;
+      }
+      .card h3 {
+        font-size: 1.1rem;
+      }
+      .card p {
+        font-size: 0.95rem;
+      }
+    }
+  </style>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Dentist",
+      "name": "OAK Multi-Speciality Dental Clinic",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Bachupally",
+        "addressLocality": "Hyderabad",
+        "addressRegion": "Telangana",
+        "postalCode": "500090",
+        "addressCountry": "IN"
+      },
+      "telephone": "+919876543210",
+      "email": "contact@oakdentalclinic.com",
+      "openingHours": "Mo-Fr 09:00-18:00, Sa 10:00-16:00",
+      "url": "https://oak-dental.onrender.com"
+    }
+  </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
+</head>
+<body>
+  <script>
+    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+    (function(){
+      var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+      s1.async=true;
+      s1.src='https://embed.tawk.to/YOUR_TAWK_PROPERTY_ID/default';
+      s1.charset='UTF-8';
+      s1.setAttribute('crossorigin','*');
+      s0.parentNode.insertBefore(s1,s0);
+    })();
+  </script>
+  <div class="fixed bottom-4 right-4 z-20 sticky-cta">
+    <a href="https://wa.me/917569366767" class="cta-icon whatsapp-icon" aria-label="Contact us on WhatsApp"><i class="fab fa-whatsapp"></i></a>
+    <a href="tel:+917569366767" class="cta-icon phone-icon" aria-label="Call us"><i class="fas fa-phone"></i></a>
+    <a href="#appointment" class="cta-icon animate__animated animate__pulse animate__infinite" aria-label="Book an appointment"><i class="fas fa-calendar-alt"></i></a>
+  </div>
+  <nav class="bg-gradient-to-r from-teal-600 to-teal-800 text-white fixed w-full top-0 z-10 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16 items-center">
+        <div class="flex items-center space-x-3">
+          <a href="#home" aria-label="OAK Dental Clinic Home">
+            <img src="https://i.postimg.cc/9MdzgVhV/OAK-LOGO-1.jpg" alt="OAK Dental Clinic Logo" class="logo-img animate__animated animate__fadeIn" loading="lazy">
+          </a>
+          <div class="flex flex-col">
+            <a href="#home" class="logo-text">OAK Dental Clinic</a>
+            <span class="logo-subtext">A Multi Speciality & Implant Centre</span>
+          </div>
+        </div>
+        <div class="flex items-center">
+          <div class="hamburger" aria-label="Toggle navigation menu"><i class="fas fa-bars"></i></div>
+          <div class="nav-menu space-y-3 md:space-y-0 md:space-x-4">
+            <a href="#home" class="nav-link block md:inline-block font-medium">Home</a>
+            <a href="about.html" class="nav-link block md:inline-block font-medium">About</a>
+            <a href="#services" class="nav-link block md:inline-block font-medium">Services</a>
+            <a href="#team" class="nav-link block md:inline-block font-medium">Team</a>
+            <a href="#why-choose-us" class="nav-link block md:inline-block font-medium">Why Choose Us</a>
+            <a href="#testimonials" class="nav-link block md:inline-block font-medium">Testimonials</a>
+            <a href="#appointment" class="nav-link block md:inline-block font-medium">Appointment</a>
+            <a href="#contact" class="nav-link block md:inline-block font-medium">Contact</a>
+            <a href="#faq" class="nav-link block md:inline-block font-medium">FAQ</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <section id="home" class="hero-bg" aria-label="Hero section">
+    <div class="hero-slide active" style="background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1629909615184-74f495363b67?auto=format&fit=crop&w=1200&q=80')">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div class="hero-text-container">
+          <h1 class="text-2xl md:text-4xl font-extrabold mb-3 animate__animated animate__fadeIn">Welcome to OAK Dental Clinic</h1>
+          <p class="text-base md:text-lg mb-4">Transform your smile with expert care in Hyderabad.</p>
+          <a href="#appointment" class="btn-primary">Book Appointment Now</a>
+        </div>
+      </div>
+    </div>
+    <div class="hero-slide" style="background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1642844819197-5f5f21b89ff8?auto=format&fit=crop&w=1200&q=80')">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div class="hero-text-container">
+          <h1 class="text-2xl md:text-4xl font-extrabold mb-3 animate__animated animate__fadeIn">Advanced Dental Solutions</h1>
+          <p class="text-base md:text-lg mb-4">State-of-the-art treatments for a perfect smile.</p>
+          <a href="https://wa.me/919876543210" class="btn-primary">WhatsApp Us</a>
+        </div>
+      </div>
+    </div>
+    <div class="hero-slide" style="background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://plus.unsplash.com/premium_photo-1661668387863-3032a13723f1?auto=format&fit=crop&w=1200&q=80')">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div class="hero-text-container">
+          <h1 class="text-2xl md:text-4xl font-extrabold mb-3 animate__animated animate__fadeIn">Comfortable Dental Care</h1>
+          <p class="text-base md:text-lg mb-4">Painless procedures tailored to your needs.</p>
+          <a href="tel:+919876543210" class="btn-secondary">Call Us</a>
+        </div>
+      </div>
+    </div>
+    <div class="hero-slide" style="background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://plus.unsplash.com/premium_photo-1681966962522-546f370bc98e?auto=format&fit=crop&w=1200&q=80')">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div class="hero-text-container">
+          <h1 class="text-2xl md:text-4xl font-extrabold mb-3 animate__animated animate__fadeIn">Smile with Confidence</h1>
+          <p class="text-base md:text-lg mb-4">Personalized cosmetic dentistry for stunning results.</p>
+          <a href="#appointment" class="btn-primary">Book Appointment Now</a>
+        </div>
+      </div>
+    </div>
+    <div class="dots-container" role="tablist">
+      <div class="dot active" data-slide="0" role="tab" aria-label="Go to slide 1" tabindex="0"></div>
+      <div class="dot" data-slide="1" role="tab" aria-label="Go to slide 2" tabindex="0"></div>
+      <div class="dot" data-slide="2" role="tab" aria-label="Go to slide 3" tabindex="0"></div>
+      <div class="dot" data-slide="3" role="tab" aria-label="Go to slide 4" tabindex="0"></div>
+    </div>
+  </section>
+  <section id="local-info" class="py-8 bg-teal-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-2xl md:text-3xl font-extrabold text-teal-800 mb-4 animate__animated animate__fadeIn">Serving Hyderabad with Care</h2>
+      <p class="text-base text-gray-600 max-w-3xl mx-auto">
+        Located in Bachupally, Hyderabad, OAK Dental Clinic is proud to serve our community. Join our free dental check-up camp on June 15, 2025! <a href="#appointment" class="text-teal-500 hover:text-teal-600 font-semibold">Book Your Spot</a>
+      </p>
+    </div>
+  </section>
+  <section id="about" class="py-12 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-2xl md:text-3xl font-extrabold text-teal-800 mb-6 animate__animated animate__fadeIn">About Us</h2>
+      <p class="text-base text-gray-600 max-w-3xl mx-auto mb-6 animate__animated animate__fadeInUp">
+        OAK Multi-Speciality Dental Clinic delivers state-of-the-art dental care with a focus on patient comfort. Led by Dr. A. Ram Koti Reddy, we offer comprehensive services. <a href="about.html" class="text-teal-500 hover:text-teal-600 font-semibold">Know More</a>
+      </p>
+      <a href="about.html" class="btn-primary">Explore Our Story</a>
+    </div>
+  </section>
+  <section id="services" class="py-12 bg-gray-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-2xl md:text-3xl font-extrabold text-teal-800 text-center mb-6 animate__animated animate__fadeIn">Our Services</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="card animate__animated animate__fadeInUp">
+          <h3 class="text-lg font-semibold text-teal-700 mb-2">General Dentistry</h3>
+          <p class="text-gray-600 text-sm mb-3">Routine check-ups, cleanings, and fillings for optimal oral health.</p>
+          <a href="general-dentistry.html" class="text-teal-500 hover:text-teal-600 font-semibold text-sm">Know More</a>
+        </div>
+        <div class="card animate__animated animate__fadeInUp animate__delay-1s">
+          <h3 class="text-lg font-semibold text-teal-700 mb-2">Cosmetic Dentistry</h3>
+          <p class="text-gray-600 text-sm mb-3">Teeth whitening, veneers, and smile makeovers for confidence.</p>
+          <a href="cosmetic-dentistry.html" class="text-teal-500 hover:text-teal-600 font-semibold text-sm">Know More</a>
+        </div>
+        <div class="card animate__animated animate__fadeInUp animate__delay-2s">
+          <h3 class="text-lg font-semibold text-teal-700 mb-2">Orthodontics</h3>
+          <p class="text-gray-600 text-sm mb-3">Braces and Invisalign for perfectly aligned smiles.</p>
+          <a href="orthodontics.html" class="text-teal-500 hover:text-teal-600 font-semibold text-sm">Know More</a>
+        </div>
+        <div class="card animate__animated animate__fadeInUp">
+          <h3 class="text-lg font-semibold text-teal-700 mb-2">Dental Implants</h3>
+          <p class="text-gray-600 text-sm mb-3">Permanent solutions for missing teeth with advanced technology.</p>
+          <a href="dental-implants.html" class="text-teal-500 hover:text-teal-600 font-semibold text-sm">Know More</a>
+        </div>
+        <div class="card animate__animated animate__fadeInUp animate__delay-1s">
+          <h3 class="text-lg font-semibold text-teal-700 mb-2">Oral Surgery</h3>
+          <p class="text-gray-600 text-sm mb-3">Extractions and wisdom teeth removal with expert care.</p>
+          <a href="oral-surgery.html" class="text-teal-500 hover:text-teal-600 font-semibold text-sm">Know More</a>
+        </div>
+        <div class="card animate__animated animate__fadeInUp animate__delay-2s">
+          <h3 class="text-lg font-semibold text-teal-700 mb-2">Pediatric Dentistry</h3>
+          <p class="text-gray-600 text-sm mb-3">Gentle care tailored for children's dental needs.</p>
+          <a href="pediatric-dentistry.html" class="text-teal-500 hover:text-teal-600 font-semibold text-sm">Know More</a>
+        </div>
+      </div>
+      <div class="mt-6 text-center">
+        <a href="#appointment" class="btn-primary">Book Your Service</a>
+      </div>
+    </div>
+  </section>
+  <section id="team" class="py-12 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-2xl md:text-3xl font-extrabold text-teal-800 text-center mb-6 animate__animated animate__fadeIn">Meet Our Specialist</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+        <div>
+          <img src="https://i.postimg.cc/qRGc26Qd/RAM-KOTI.jpg" alt="Dr. A. Ram Koti Reddy" class="doctor-img" loading="lazy">
+        </div>
+        <div class="text-center md:text-left">
+          <h3 class="text-lg font-semibold text-teal-700">Dr. A. Ram Koti Reddy</h3>
+          <p class="text-gray-600 text-base">Chief Dental Specialist</p>
+          <p class="text-gray-500 text-base italic">Expert in Cosmetic Dentistry & Implants</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section id="why-choose-us" class="py-12 bg-teal-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-2xl md:text-3xl font-extrabold text-teal-800 text-center mb-6 animate__animated animate__fadeIn">What Makes Us Different?</h2>
+      <p class="text-base text-gray-600 text-center max-w-3xl mx-auto mb-8 animate__animated animate__fadeInUp">
+        Experience exceptional care with our cutting-edge technology and skilled professionals dedicated to your comfort.
+        <span class="block mt-2 text-teal-700 font-semibold">Trusted by over 5,000 happy patients!</span>
+      </p>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+        <div class="space-y-4">
+          <div class="flex items-center space-x-3 animate__animated animate__fadeInLeft">
+            <i class="fas fa-microchip text-teal-500 text-lg"></i>
+            <div>
+              <h3 class="text-lg font-semibold text-teal-700">Cutting-Edge Equipment</h3>
+              <p class="text-gray-600 text-base">State-of-the-art technology for precise treatments.</p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-3 animate__animated animate__fadeInLeft animate__delay-1s">
+            <i class="fas fa-user-md text-teal-500 text-lg"></i>
+            <div>
+              <h3 class="text-lg font-semibold text-teal-700">Comprehensive Care</h3>
+              <p class="text-gray-600 text-base">Thorough guidance throughout your dental journey.</p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-3 animate__animated animate__fadeInLeft animate__delay-2s">
+            <i class="fas fa-heart text-teal-500 text-lg"></i>
+            <div>
+              <h3 class="text-lg font-semibold text-teal-700">Patient-Focused Approach</h3>
+              <p class="text-gray-600 text-base">Tailored care to meet your unique needs.</p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-3 animate__animated animate__fadeInLeft">
+            <i class="fas fa-users text-teal-500 text-lg"></i>
+            <div>
+              <h3 class="text-lg font-semibold text-teal-700">Thousands of Happy Patients</h3>
+              <p class="text-gray-600 text-base">Trusted by countless patients for exceptional results.</p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-3 animate__animated animate__fadeInLeft animate__delay-1s">
+            <i class="fas fa-clipboard-list text-teal-500 text-lg"></i>
+            <div>
+              <h3 class="text-lg font-semibold text-teal-700">Personalized Treatment Plans</h3>
+              <p class="text-gray-600 text-base">Customized plans for optimal outcomes.</p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-3 animate__animated animate__fadeInLeft animate__delay-2s">
+            <i class="fas fa-tooth text-teal-500 text-lg"></i>
+            <div>
+              <h3 class="text-lg font-semibold text-teal-700">Skilled Dentists</h3>
+              <p class="text-gray-600 text-base">Expert professionals with specialized experience.</p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-3 animate__animated animate__fadeInLeft">
+            <i class="fas fa-smile text-teal-500 text-lg"></i>
+            <div>
+              <h3 class="text-lg font-semibold text-teal-700">Painless Procedures</h3>
+              <p class="text-gray-600 text-base">Gentle techniques for a stress-free experience.</p>
+            </div>
+          </div>
+        </div>
+        <div class="card animate__animated animate__fadeInRight">
+          <img src="https://images.unsplash.com/photo-1560070201-d3d11effa179?auto=format&fit=crop&w=600&q=80" alt="Modern dental clinic interior" class="w-full h-48 object-cover" loading="lazy">
+        </div>
+      </div>
+    </div>
+  </section>
+  <section id="testimonials" class="py-12 bg-fuchsia-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-2xl md:text-3xl font-extrabold text-teal-800 text-center mb-6 animate__animated animate__fadeIn">What Our Patients Say</h2>
+      <div class="testimonial-container">
+        <div class="testimonial-wrapper">
+          <div class="testimonial-slide">
+            <div class="card">
+              <p class="text-gray-600 text-base italic mb-3">"Dr. Reddy transformed my smile with implants. Exceptional care!"</p>
+              <p class="text-teal-700 font-semibold text-base">John D.</p>
+            </div>
+          </div>
+          <div class="testimonial-slide">
+            <div class="card">
+              <p class="text-gray-600 text-base italic mb-3">"The staff made my visit stress-free and comfortable!"</p>
+              <p class="text-teal-700 font-semibold text-base">Lisa M.</p>
+            </div>
+          </div>
+          <div class="testimonial-slide">
+            <div class="card">
+              <p class="text-gray-600 text-base italic mb-3">"Cosmetic dentistry gave me confidence to smile again!"</p>
+              <p class="text-teal-700 font-semibold text-base">Mark T.</p>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-nav">
+          <button class="prev" aria-label="Previous testimonial"><i class="fas fa-chevron-left"></i></button>
+          <button class="next" aria-label="Next testimonial"><i class="fas fa-chevron-right"></i></button>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section id="appointment" class="py-12 bg-teal-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-2xl md:text-3xl font-extrabold text-teal-800 text-center mb-6 animate__animated animate__fadeIn">Book an Appointment</h2>
+      <div class="max-w-md mx-auto card">
+        <form id="appointmentForm" class="space-y-4">
+          <input type="text" name="name" placeholder="Your Name" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 text-base" required>
+          <input type="email" name="email" placeholder="Your Email" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 text-base" required>
+          <input type="tel" name="phone" placeholder="Your Mobile Number" pattern="[0-9]{10}" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 text-base" required>
+          <input type="date" name="date" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 text-base" min="2025-05-27" required>
+          <textarea name="message" placeholder="Your Message (Optional)" class="w-full p-3 border border-gray-300 rounded-lg h-24 focus:ring-2 focus:ring-teal-500 text-base"></textarea>
+          <button type="submit" class="btn-primary w-full">Submit Appointment</button>
+        </form>
+      </div>
+    </div>
+    <div id="appointmentModal" class="modal">
+      <div class="modal-content">
+        <h3>Appointment Booked!</h3>
+        <p>Your appointment request has been submitted. We'll contact you soon.</p>
+        <button onclick="closeModal('appointmentModal')">Close</button>
+      </div>
+    </div>
+  </section>
+  <section id="contact" class="py-12 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-2xl md:text-3xl font-extrabold text-teal-800 text-center mb-6 animate__animated animate__fadeIn">Contact Us</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="card">
+          <h3 class="text-lg font-semibold text-teal-700 mb-3">Get in Touch</h3>
+          <p class="text-gray-600 text-base mb-2"><strong>Address:</strong> Bachupally, Hyderabad, Telangana 500090</p>
+          <p class="text-gray-600 text-base mb-2"><strong>Phone:</strong> <a href="tel:+919876543210" class="text-teal-500 hover:text-teal-600">+91 98765 43210</a></p>
+          <p class="text-gray-600 text-base mb-2"><strong>Email:</strong> <a href="mailto:contact@oakdentalclinic.com" class="text-teal-500 hover:text-teal-600">contact@oakdentalclinic.com</a></p>
+          <p class="text-gray-600 text-base"><strong>Hours:</strong> Mon-Fri: 9 AM - 6 PM, Sat: 10 AM - 4 PM</p>
+        </div>
+        <div class="card">
+          <h3 class="text-lg font-semibold text-teal-700 mb-3">Send a Message</h3>
+          <form id="contactForm" class="space-y-4">
+            <input type="text" name="name" placeholder="Your Name" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 text-base" required>
+            <input type="email" name="email" placeholder="Your Email" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 text-base" required>
+            <textarea name="message" placeholder="Your Message" class="w-full p-3 border border-gray-300 rounded-lg h-24 focus:ring-2 focus:ring-teal-500 text-base" required></textarea>
+            <button type="submit" class="btn-primary">Submit</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div id="contactModal" class="modal">
+      <div class="modal-content">
+        <h3>Message Sent!</h3>
+        <p>Thank you for your message. We'll get back to you soon.</p>
+        <button onclick="closeModal('contactModal')">Close</button>
+      </div>
+    </div>
+  </section>
+  <section id="faq" class="py-12 bg-teal-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-2xl md:text-3xl font-extrabold text-teal-800 text-center mb-8 animate__animated animate__fadeIn">Frequently Asked Questions</h2>
+      <div class="faq-container">
+        <div class="space-y-4">
+          <div class="faq-item" role="region" aria-labelledby="faq1">
+            <div class="faq-question" id="faq1" onclick="toggleAnswer(this)" role="button" aria-expanded="false" tabindex="0">
+              <h3>1. What should I do if I have a dental emergency?</h3>
+              <i class="faq-toggle fas fa-plus"></i>
+            </div>
+            <div class="faq-answer">
+              Contact OAK Dental immediately for urgent situations like severe pain or broken teeth. We’ll guide you and ensure prompt care.
+            </div>
+          </div>
+          <div class="faq-item" role="region" aria-labelledby="faq2">
+            <div class="faq-question" id="faq2" onclick="toggleAnswer(this)" role="button" aria-expanded="false" tabindex="0">
+              <h3>2. How do I know if I need a root canal?</h3>
+              <i class="faq-toggle fas fa-plus"></i>
+            </div>
+            <div class="faq-answer">
+              Signs include persistent pain, sensitivity, or gum swelling. Our specialists can assess if a root canal is necessary.
+            </div>
+          </div>
+          <div class="faq-item" role="region" aria-labelledby="faq3">
+            <div class="faq-question" id="faq3" onclick="toggleAnswer(this)" role="button" aria-expanded="false" tabindex="0">
+              <h3>3. Are dental implants a good option for missing teeth?</h3>
+              <i class="faq-toggle fas fa-plus"></i>
+            </div>
+            <div class="faq-answer">
+              Yes, implants are durable and natural-looking. They maintain jawbone health, and we can determine if they’re right for you.
+            </div>
+          </div>
+          <div class="faq-item" role="region" aria-labelledby="faq4">
+            <div class="faq-question" id="faq4" onclick="toggleAnswer(this)" role="button" aria-expanded="false" tabindex="0">
+              <h3>4. How can I improve the appearance of my smile?</h3>
+              <i class="faq-toggle fas fa-plus"></i>
+            </div>
+            <div class="faq-answer">
+              We offer teeth whitening, veneers, and orthodontics. Schedule a consultation for personalized smile enhancement options.
+            </div>
+          </div>
+          <div class="mt-6 text-center">
+            <a href="tel:+919876543210" class="btn-primary uppercase">Instant Call Back</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <footer class="bg-gradient-to-r from-teal-600 to-teal-800 text-white py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-6">
+        <h3 class="text-lg font-semibold mb-3">Stay Updated</h3>
+        <form id="newsletterForm" class="max-w-sm mx-auto space-y-3">
+          <input type="email" name="email" placeholder="Enter your email" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 text-base" required>
+          <button type="submit" class="btn-primary w-full">Subscribe</button>
+        </form>
+      </div>
+      <div class="flex justify-center space-x-4 mb-4">
+        <a href="https://www.instagram.com/oakdentalclinichyd/" class="text-white hover:text-fuchsia-400" aria-label="Instagram"><i class="fab fa-instagram w-5 h-5"></i></a>
+        <a href="https://facebook.com" class="text-white hover:text-fuchsia-400" aria-label="Facebook"><i class="fab fa-facebook w-5 h-5"></i></a>
+        <a href="https://twitter.com" class="text-white hover:text-fuchsia-400" aria-label="Twitter"><i class="fab fa-twitter w-5 h-5"></i></a>
+      </div>
+      <p class="text-gray-200 text-center text-base">© 2025 OAK Multi-Speciality Dental Clinic. All rights reserved.</p>
+    </div>
+    <div id="newsletterToast" class="toast">Subscribed! Thank you for joining our newsletter.</div>
+  </footer>
+  <script>
+    // API Base URL
+    const API_BASE_URL = window.location.hostname === 'localhost' ? 'http://localhost:3000/api' : 'https://oak-dental.onrender.com/api';
+
+    // API Call Helper
+    async function apiCall(endpoint, method = 'POST', data = null) {
+      const config = {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+      };
+      if (data) config.body = JSON.stringify(data);
+      try {
+        const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
+        if (!response.ok) throw new Error('Submission failed');
+        return await response.json();
+      } catch (error) {
+        console.error(`Error at ${endpoint}:`, error);
+        throw error;
+      }
+    }
+
+    // Smooth Scroll
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.querySelector(anchor.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+
+    // Hero Slider
+    const slides = document.querySelectorAll('.hero-slide');
+    const dots = document.querySelectorAll('.dot');
+    let currentSlide = 0;
+    let slideInterval = setInterval(nextSlide, 4000);
+
+    function showSlide(index) {
+      slides.forEach((slide, i) => {
+        slide.classList.remove('active', 'prev');
+        if (i === index) {
+          slide.classList.add('active');
+        } else if (i === (index - 1 + slides.length) % slides.length) {
+          slide.classList.add('prev');
+        }
+      });
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === index);
+        dot.setAttribute('aria-selected', i === index);
+      });
+    }
+
+    function nextSlide() {
+      currentSlide = (currentSlide + 1) % slides.length;
+      showSlide(currentSlide);
+    }
+
+    const heroSection = document.querySelector('.hero-bg');
+    heroSection.addEventListener('mouseenter', () => clearInterval(slideInterval));
+    heroSection.addEventListener('mouseleave', () => slideInterval = setInterval(nextSlide, 4000));
+
+    dots.forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        clearInterval(slideInterval);
+        currentSlide = parseInt(dot.getAttribute('data-slide'));
+        showSlide(currentSlide);
+        slideInterval = setInterval(nextSlide, 4000);
+      });
+      dot.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          clearInterval(slideInterval);
+          currentSlide = parseInt(dot.getAttribute('data-slide'));
+          showSlide(currentSlide);
+          slideInterval = setInterval(nextSlide, 4000);
+        }
+      });
+    });
+
+    // Hamburger Menu
+    const hamburger = document.querySelector('.hamburger');
+    const navMenu = document.querySelector('.nav-menu');
+    hamburger.addEventListener('click', () => {
+      navMenu.classList.toggle('active');
+      hamburger.setAttribute('aria-expanded', navMenu.classList.contains('active'));
+    });
+
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        navMenu.classList.remove('active');
+        hamburger.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    // Testimonial Carousel
+    const testimonialWrapper = document.querySelector('.testimonial-wrapper');
+    const prevBtn = document.querySelector('.testimonial-nav .prev');
+    const nextBtn = document.querySelector('.testimonial-nav .next');
+    let currentTestimonial = 0;
+    const totalTestimonials = document.querySelectorAll('.testimonial-slide').length;
+
+    function updateTestimonial() {
+      testimonialWrapper.style.transform = `translateX(-${currentTestimonial * 100}%)`;
+    }
+
+    nextBtn.addEventListener('click', () => {
+      currentTestimonial = (currentTestimonial + 1) % totalTestimonials;
+      updateTestimonial();
+    });
+
+    prevBtn.addEventListener('click', () => {
+      currentTestimonial = (currentTestimonial - 1 + totalTestimonials) % totalTestimonials;
+      updateTestimonial();
+    });
+
+    // FAQ Toggle
+    function toggleAnswer(element) {
+      const answer = element.nextElementSibling;
+      const toggle = element.querySelector('.faq-toggle');
+      const isActive = answer.classList.contains('active');
+      document.querySelectorAll('.faq-answer').forEach(ans => ans.classList.remove('active'));
+      document.querySelectorAll('.faq-toggle').forEach(tog => tog.classList.remove('active'));
+      if (!isActive) {
+        answer.classList.add('active');
+        toggle.classList.add('active');
+        element.setAttribute('aria-expanded', 'true');
+      } else {
+        element.setAttribute('aria-expanded', 'false');
+      }
+    }
+
+    // Modal Close
+    function closeModal(modalId) {
+      const modal = document.getElementById(modalId);
+      if (modal) modal.style.display = 'none';
+    }
+
+    // Toast Notification
+    function showToast(message, duration = 3000) {
+      const toast = document.getElementById('newsletterToast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, duration);
+    }
+
+    // Form Submission
+    ['appointmentForm', 'contactForm', 'newsletterForm'].forEach(formId => {
+      const form = document.getElementById(formId);
+      if (form) {
+        form.querySelectorAll('input, textarea').forEach(input => {
+          input.addEventListener('input', () => {
+            if (input.checkValidity()) {
+              input.classList.add('valid');
+            } else {
+              input.classList.remove('valid');
+            }
+          });
+        });
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          if (form.checkValidity()) {
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+            let endpoint, modalId;
+            switch (formId) {
+              case 'appointmentForm':
+                endpoint = '/appointments';
+                modalId = 'appointmentModal';
+                break;
+              case 'contactForm':
+                endpoint = '/messages';
+                modalId = 'contactModal';
+                break;
+              case 'newsletterForm':
+                endpoint = '/subscribers';
+                break;
+            }
+            try {
+              await apiCall(endpoint, 'POST', data);
+              form.reset();
+              form.querySelectorAll('input, textarea').forEach(input => input.classList.remove('valid'));
+              if (formId === 'newsletterForm') {
+                showToast('Subscribed! Thank you for joining our newsletter.');
+              } else {
+                const modal = document.getElementById(modalId);
+                if (modal) modal.style.display = 'flex';
+              }
+            } catch (error) {
+              showToast(`Failed to submit ${formId.replace('Form', '')}. Please try again.`);
+            }
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>
