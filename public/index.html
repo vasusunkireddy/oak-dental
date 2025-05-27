@@ -65,18 +65,28 @@
       max-width: 700px;
       text-align: center;
       color: white;
-      padding: 2rem;
+      padding: 1.5rem;
     }
     .hero-text-container h1 {
-      font-size: 2.5rem;
+      font-size: 2rem;
       font-weight: 800;
       margin-bottom: 1rem;
       line-height: 1.2;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 215, 0, 0.5);
     }
     .hero-text-container p {
-      font-size: 1.25rem;
-      margin-bottom: 1.5rem;
+      font-size: 1rem;
+      margin-bottom: 1.25rem;
       line-height: 1.5;
+      text-shadow: 0 0 8px rgba(255, 255, 255, 0.7);
+    }
+    .hero-slide.active h1, .hero-slide.active p {
+      animation: shine 1.5s ease-in-out once;
+    }
+    @keyframes shine {
+      0% { text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 215, 0, 0.5); }
+      50% { text-shadow: 0 0 20px rgba(255, 255, 255, 1), 0 0 30px rgba(255, 215, 0, 0.8), 0 0 40px rgba(255, 255, 255, 0.5); }
+      100% { text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 215, 0, 0.5); }
     }
     .dots-container {
       position: absolute;
@@ -117,15 +127,19 @@
     }
     .doctor-img {
       width: 100%;
-      max-width: 400px;
+      max-width: 300px;
       height: auto;
       object-fit: cover;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       margin-bottom: 1rem;
       display: block;
       margin-left: auto;
       margin-right: auto;
+      transition: transform 0.3s ease;
+    }
+    .doctor-img:hover {
+      transform: scale(1.05);
     }
     .nav-link {
       transition: color 0.3s ease;
@@ -376,10 +390,10 @@
         min-height: 70vh;
       }
       .hero-text-container h1 {
-        font-size: 4rem;
+        font-size: 2rem;
       }
       .hero-text-container p {
-        font-size: 1.5rem;
+        font-size: 1rem;
       }
       .logo-img {
         width: 80px;
@@ -414,15 +428,23 @@
         font-size: 1rem;
       }
       .doctor-img {
-        max-width: 500px;
+        max-width: 300px;
       }
     }
     @media (max-width: 640px) {
+      .hero-bg {
+        min-height: 50vh;
+      }
+      .hero-text-container {
+        padding: 1rem;
+      }
       .hero-text-container h1 {
-        font-size: 2rem;
+        font-size: 1.5rem;
+        text-shadow: 0 0 6px rgba(255, 255, 255, 0.7), 0 0 12px rgba(255, 215, 0, 0.4);
       }
       .hero-text-container p {
-        font-size: 1rem;
+        font-size: 0.9rem;
+        text-shadow: 0 0 5px rgba(255, 255, 255, 0.6);
       }
       .sticky-cta {
         gap: 6px;
@@ -430,7 +452,7 @@
         right: 12px;
       }
       .cta-icon {
-        font-size: 1.1rem;
+        font-size: 1rem;
         padding: 8px;
       }
       .btn-primary, .btn-secondary {
@@ -456,7 +478,7 @@
         font-size: 0.95rem;
       }
       .doctor-img {
-        max-width: 300px;
+        max-width: 200px;
       }
     }
   </style>
@@ -639,7 +661,7 @@
       <h2 class="text-2xl md:text-3xl font-extrabold text-teal-800 text-center mb-6 animate__animated animate__fadeIn">Meet Our Specialist</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
         <div class="flex justify-center">
-          <img src="https://i.ibb.co/S2TKdX6/RAM-KOTI.jpg" alt="Dr. A. Ram Koti Reddy" class="doctor-img" loading="lazy">
+          <img src="https://i.ibb.co/RGCxyQ0C/Whats-App-Image-2025-05-27-at-21-32-32-a354476d.jpg" alt="Dr. A. Ram Koti Reddy" class="doctor-img" loading="lazy">
         </div>
         <div class="text-center md:text-left">
           <h3 class="text-lg font-semibold text-teal-700">Dr. A. Ram Koti Reddy</h3>
