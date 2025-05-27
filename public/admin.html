@@ -20,9 +20,10 @@
       padding: 0;
       line-height: 1.6;
       color: #1F2937;
-      background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1598256989800-fe5f95da9787?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') no-repeat center center fixed;
+      background: url('https://images.unsplash.com/photo-1598256989800-fe5f95da9787?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') no-repeat center center fixed;
       background-size: cover;
       overflow-x: hidden;
+      min-height: 100vh;
     }
     html {
       scroll-behavior: smooth;
@@ -30,48 +31,54 @@
 
     /* Header */
     header {
-      background: white;
-      color: #0D9488;
+      background: linear-gradient(90deg, #1F2937, #374151);
+      color: white;
       position: fixed;
       width: 100%;
       top: 0;
       z-index: 1000;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+      transition: transform 0.3s ease;
     }
     .header-container {
       max-width: 7xl;
       margin: 0 auto;
-      padding: 0 12px;
+      padding: 0 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      height: 56px;
+      height: 64px;
     }
 
     /* Logo */
     .logo-container {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
     .logo-img {
-      width: 32px;
+      width: 40px;
       height: auto;
       object-fit: contain;
-      border-radius: 6px;
-      border: 1px solid rgba(0, 0, 0, 0.05);
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
       background: white;
-      padding: 3px;
-      filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
+      padding: 4px;
+      filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.2));
+      transition: transform 0.3s ease;
+    }
+    .logo-img:hover {
+      transform: scale(1.05);
     }
     .logo-text {
-      font-size: 1rem;
+      font-size: 1.2rem;
       font-weight: 700;
-      color: #0D9488;
+      color: white;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     }
     .logo-subtext {
-      font-size: 0.6rem;
-      color: #6B7280;
+      font-size: 0.7rem;
+      color: rgba(255, 255, 255, 0.8);
       font-weight: 400;
       text-transform: uppercase;
     }
@@ -86,104 +93,114 @@
     .nav-menu {
       display: none;
       flex-direction: column;
-      position: absolute;
-      top: 56px;
+      position: fixed;
+      top: 64px;
       left: 0;
       width: 100%;
-      background: white;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      background: #1F2937;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
       z-index: 999;
-      padding: 8px 0;
+      padding: 12px 0;
+      max-height: calc(100vh - 64px);
+      overflow-y: auto;
     }
     .nav-menu.active {
       display: flex;
+      animation: slideDown 0.3s ease;
     }
     .nav-link {
-      padding: 10px 16px;
-      font-size: 0.9rem;
-      font-weight: 500;
-      color: #0D9488;
-      transition: background-color 0.3s ease, color 0.3s ease;
+      padding: 12px 20px;
+      font-size: 1rem;
+      font-weight: 600;
+      color: white;
+      transition: background-color 0.3s ease, transform 0.2s ease;
       touch-action: manipulation;
     }
     .nav-link:hover {
-      background-color: #0D9488;
-      color: white;
+      background-color: #374151;
+      transform: translateX(5px);
     }
     .hamburger {
-      font-size: 1.5rem;
+      font-size: 1.8rem;
       cursor: pointer;
-      color: #0D9488;
+      color: white;
       padding: 8px;
       display: none;
+      transition: transform 0.3s ease;
+    }
+    .hamburger:hover {
+      transform: rotate(90deg);
     }
 
     /* Buttons */
     .btn-primary {
-      background-color: #14B8A6;
+      background: linear-gradient(45deg, #3B82F6, #60A5FA);
       color: white;
-      padding: 8px 16px;
-      border-radius: 6px;
+      padding: 10px 20px;
+      border-radius: 8px;
       font-weight: 600;
-      font-size: 0.9rem;
-      transition: background-color 0.3s ease, transform 0.2s ease;
+      font-size: 0.95rem;
+      transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
       touch-action: manipulation;
     }
     .btn-primary:hover {
-      background-color: #115E59;
-      transform: translateY(-1px);
+      background: linear-gradient(45deg, #1E40AF, #2563EB);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
     .btn-secondary {
-      background-color: #3B82F6;
+      background: linear-gradient(45deg, #6B7280, #9CA3AF);
       color: white;
-      padding: 8px 16px;
-      border-radius: 6px;
+      padding: 10px 20px;
+      border-radius: 8px;
       font-weight: 600;
-      font-size: 0.9rem;
-      transition: background-color 0.3s ease, transform 0.2s ease;
+      font-size: 0.95rem;
+      transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
       touch-action: manipulation;
     }
     .btn-secondary:hover {
-      background-color: #1E40AF;
-      transform: translateY(-1px);
+      background: linear-gradient(45deg, #4B5563, #6B7280);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
     .btn-danger {
-      background-color: #EF4444;
+      background: linear-gradient(45deg, #EF4444, #F87171);
       color: white;
-      padding: 8px 16px;
-      border-radius: 6px;
+      padding: 10px 20px;
+      border-radius: 8px;
       font-weight: 600;
-      font-size: 0.9rem;
-      transition: background-color 0.3s ease, transform 0.2s ease;
+      font-size: 0.95rem;
+      transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
       touch-action: manipulation;
     }
     .btn-danger:hover {
-      background-color: #B91C1C;
-      transform: translateY(-1px);
+      background: linear-gradient(45deg, #B91C1C, #DC2626);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
     .action-buttons {
       display: flex;
       flex-wrap: nowrap;
-      gap: 6px;
+      gap: 8px;
     }
     .action-buttons button {
-      font-size: 0.85rem;
-      padding: 6px 12px;
+      font-size: 0.9rem;
+      padding: 8px 16px;
       line-height: 1;
-      min-width: 80px;
+      min-width: 90px;
       text-align: center;
     }
     .card-actions {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 8px;
+      gap: 10px;
+      margin-top: 10px;
     }
     .card-actions button {
-      font-size: 0.85rem;
-      padding: 6px 12px;
+      font-size: 0.9rem;
+      padding: 8px 16px;
       line-height: 1;
-      min-width: 80px;
+      min-width: 90px;
       text-align: center;
       flex: 1 1 auto;
     }
@@ -191,13 +208,14 @@
     /* Cards */
     .card {
       background: rgba(255, 255, 255, 0.95);
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
+      overflow: hidden;
     }
     .card:hover {
-      transform: scale(1.01);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
     }
 
     /* Tables */
@@ -205,21 +223,22 @@
       width: 100%;
       border-collapse: collapse;
       background: rgba(255, 255, 255, 0.95);
-      border-radius: 8px;
+      border-radius: 12px;
       overflow: hidden;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     }
     .admin-table th,
     .admin-table td {
-      padding: 12px;
+      padding: 14px;
       text-align: left;
       border-bottom: 1px solid #E5E7EB;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
     }
     .admin-table th {
-      background: #0D9488;
+      background: linear-gradient(45deg, #1F2937, #374151);
       color: white;
-      font-weight: 600;
+      font-weight: 700;
+      text-transform: uppercase;
     }
     .admin-table tr:hover {
       background: #F3F4F6;
@@ -228,14 +247,19 @@
     /* Mobile Table Cards */
     .table-card {
       background: rgba(255, 255, 255, 0.95);
-      border-radius: 8px;
-      padding: 12px;
-      margin-bottom: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 14px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease;
+    }
+    .table-card:hover {
+      transform: translateY(-3px);
     }
     .table-card p {
-      margin: 4px 0;
-      font-size: 0.85rem;
+      margin: 6px 0;
+      font-size: 0.9rem;
+      color: #1F2937;
     }
 
     /* Modal */
@@ -246,32 +270,36 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.6);
+      background: rgba(0, 0, 0, 0.7);
       align-items: center;
       justify-content: center;
       z-index: 1000;
+      backdrop-filter: blur(4px);
     }
     .modal-content {
       background: white;
-      padding: 16px;
-      border-radius: 8px;
-      max-width: 90%;
-      width: 320px;
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 95%;
+      width: 400px;
       text-align: center;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      animation: slideUp 0.3s ease;
     }
     .modal-content h3 {
-      color: #0D9488;
-      margin-bottom: 12px;
-      font-size: 1.1rem;
+      color: #1F2937;
+      margin-bottom: 16px;
+      font-size: 1.25rem;
+      font-weight: 700;
     }
     .modal-content input,
     .modal-content textarea,
     .modal-content button {
       width: 100%;
-      margin-bottom: 8px;
-      padding: 8px;
-      border-radius: 6px;
-      font-size: 0.9rem;
+      margin-bottom: 12px;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 0.95rem;
     }
     .modal-content input,
     .modal-content textarea {
@@ -281,18 +309,18 @@
     }
     .modal-content input:focus,
     .modal-content textarea:focus {
-      border-color: #14B8A6;
-      box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.2);
+      border-color: #3B82F6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
     }
     .modal-content button {
-      background: #14B8A6;
+      background: linear-gradient(45deg, #3B82F6, #60A5FA);
       color: white;
       border: none;
       font-weight: 600;
       touch-action: manipulation;
     }
     .modal-content button:hover {
-      background: #115E59;
+      background: linear-gradient(45deg, #1E40AF, #2563EB);
     }
 
     /* Form Validation */
@@ -303,32 +331,38 @@
 
     /* Auth Forms */
     .auth-form {
-      max-width: 360px;
+      max-width: 400px;
       margin: 0 auto;
-      padding: 16px;
+      padding: 20px;
       background: rgba(255, 255, 255, 0.95);
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
     .auth-form h2 {
-      font-size: 1.25rem;
-      margin-bottom: 12px;
+      font-size: 1.5rem;
+      margin-bottom: 16px;
+      color: #1F2937;
+      font-weight: 700;
     }
     .auth-form input {
-      font-size: 0.9rem;
-      padding: 8px;
-      border-radius: 6px;
+      font-size: 0.95rem;
+      padding: 10px;
+      border-radius: 8px;
     }
     .auth-form button {
-      padding: 8px;
-      font-size: 0.9rem;
+      padding: 10px;
+      font-size: 0.95rem;
     }
     .auth-form a,
     .auth-form p {
-      font-size: 0.85rem;
+      font-size: 0.9rem;
+      color: #1F2937;
     }
     .auth-toggle {
-      color: #0D9488;
+      color: #3B82F6;
       font-weight: 600;
       cursor: pointer;
+      transition: color 0.3s ease;
     }
     .auth-toggle:hover {
       color: #F472B6;
@@ -337,81 +371,102 @@
     /* Toast Notifications */
     .toast {
       position: fixed;
-      top: 16px;
+      top: 20px;
       left: 50%;
       transform: translateX(-50%);
-      padding: 12px 24px;
-      border-radius: 8px;
+      padding: 14px 28px;
+      border-radius: 10px;
       color: white;
-      font-size: 0.9rem;
-      font-weight: 500;
+      font-size: 0.95rem;
+      font-weight: 600;
       z-index: 2000;
       opacity: 0;
       transition: opacity 0.3s ease, transform 0.3s ease;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
     }
     .toast.show {
       opacity: 1;
       transform: translateX(-50%) translateY(0);
     }
     .toast.success {
-      background-color: #10B981;
+      background: linear-gradient(45deg, #10B981, #34D399);
     }
     .toast.error {
-      background-color: #EF4444;
+      background: linear-gradient(45deg, #EF4444, #F87171);
     }
 
     /* Welcome Message */
     .welcome-message {
       background: rgba(255, 255, 255, 0.95);
-      border-radius: 8px;
-      padding: 16px;
-      margin-bottom: 24px;
+      border-radius: 12px;
+      padding: 24px;
+      margin-top: 96px;
+      margin-bottom: 32px;
       text-align: center;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      animation: fadeInUp 0.5s ease;
     }
     .welcome-message h2 {
-      color: #0D9488;
-      font-size: 1.5rem;
-      margin-bottom: 8px;
+      color: #1F2937;
+      font-size: 2rem;
+      margin-bottom: 12px;
+      font-weight: 700;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
     }
     .welcome-message p {
       color: #1F2937;
-      font-size: 0.9rem;
+      font-size: 1rem;
+      font-weight: 500;
     }
 
     /* No Data Message */
     .no-data {
       text-align: center;
-      padding: 16px;
+      padding: 20px;
       color: #6B7280;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    /* Animations */
+    @keyframes slideDown {
+      from { transform: translateY(-100%); }
+      to { transform: translateY(0); }
+    }
+    @keyframes slideUp {
+      from { transform: translateY(50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    @keyframes fadeInUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
     }
 
     /* Media Queries */
     @media (max-width: 640px) {
       .header-container {
-        height: 48px;
+        height: 56px;
+        padding: 0 12px;
       }
       .logo-img {
-        width: 28px;
+        width: 32px;
       }
       .logo-text {
-        font-size: 0.9rem;
+        font-size: 1rem;
       }
       .logo-subtext {
-        font-size: 0.55rem;
+        font-size: 0.6rem;
       }
       .hamburger {
         display: block;
       }
       .nav-menu {
-        top: 48px;
-        padding: 8px 0;
+        top: 56px;
+        padding: 10px 0;
       }
       .nav-link {
-        font-size: 0.85rem;
-        padding: 8px 12px;
+        font-size: 0.9rem;
+        padding: 10px 16px;
       }
       .admin-table {
         display: none;
@@ -422,45 +477,49 @@
       .btn-primary,
       .btn-secondary,
       .btn-danger {
-        padding: 6px 12px;
-        font-size: 0.85rem;
+        padding: 8px 14px;
+        font-size: 0.9rem;
       }
       .action-buttons button,
       .card-actions button {
-        padding: 6px 10px;
-        font-size: 0.8rem;
-        min-width: 70px;
+        padding: 8px 12px;
+        font-size: 0.85rem;
+        min-width: 80px;
       }
       .modal-content {
         width: 90%;
-        padding: 12px;
+        padding: 16px;
       }
       .modal-content h3 {
-        font-size: 1rem;
+        font-size: 1.1rem;
       }
       .modal-content input,
       .modal-content textarea,
       .modal-content button {
-        padding: 6px;
-        font-size: 0.85rem;
+        padding: 8px;
+        font-size: 0.9rem;
       }
       .auth-form {
-        max-width: 90%;
-        padding: 12px;
+        max-width: 95%;
+        padding: 16px;
       }
       .auth-form h2 {
-        font-size: 1.1rem;
-      }
-      .welcome-message h2 {
         font-size: 1.25rem;
       }
+      .welcome-message {
+        margin-top: 80px;
+        padding: 20px;
+      }
+      .welcome-message h2 {
+        font-size: 1.5rem;
+      }
       .welcome-message p {
-        font-size: 0.85rem;
+        font-size: 0.9rem;
       }
       .toast {
-        width: 90%;
-        font-size: 0.85rem;
-        padding: 10px 20px;
+        width: 95%;
+        font-size: 0.9rem;
+        padding: 12px 24px;
       }
     }
     @media (min-width: 641px) {
@@ -475,11 +534,11 @@
         background: none;
         box-shadow: none;
         padding: 0;
-        gap: 8px;
+        gap: 12px;
       }
       .nav-link {
-        padding: 6px 12px;
-        border-radius: 6px;
+        padding: 8px 16px;
+        border-radius: 8px;
       }
       .table-card {
         display: none;
@@ -488,39 +547,42 @@
         display: table;
       }
       .header-container {
-        height: 64px;
+        height: 72px;
       }
       .logo-img {
-        width: 36px;
+        width: 44px;
       }
       .logo-text {
-        font-size: 1.1rem;
+        font-size: 1.3rem;
       }
       .logo-subtext {
-        font-size: 0.65rem;
+        font-size: 0.75rem;
       }
       .btn-primary,
       .btn-secondary,
       .btn-danger {
-        padding: 8px 16px;
-        font-size: 0.9rem;
+        padding: 10px 20px;
+        font-size: 0.95rem;
       }
       .modal-content {
-        width: 360px;
-        padding: 16px;
+        width: 400px;
+        padding: 20px;
       }
       .modal-content h3 {
-        font-size: 1.1rem;
+        font-size: 1.25rem;
       }
       .auth-form {
-        max-width: 400px;
-        padding: 16px;
+        max-width: 420px;
+        padding: 20px;
       }
       .auth-form h2 {
-        font-size: 1.5rem;
+        font-size: 1.75rem;
+      }
+      .welcome-message {
+        margin-top: 104px;
       }
       .welcome-message h2 {
-        font-size: 1.75rem;
+        font-size: 2rem;
       }
       .welcome-message p {
         font-size: 1rem;
@@ -557,27 +619,27 @@
   </header>
 
   <!-- Login/Register Section -->
-  <section id="auth" class="min-h-screen flex items-center justify-center pt-16 px-4">
+  <section id="auth" class="min-h-screen flex items-center justify-center pt-20 px-4">
     <div class="card auth-form animate__animated animate__fadeIn">
       <div class="flex flex-col gap-4">
         <!-- Login Form -->
         <div id="loginFormContainer">
-          <h2 class="text-xl font-bold text-teal-800 text-center mb-4">Admin Login</h2>
+          <h2 class="text-xl font-bold text-gray-800 text-center mb-4">Admin Login</h2>
           <form id="loginForm" class="space-y-3">
-            <input type="email" name="email" placeholder="Email" class="w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required>
-            <input type="password" name="password" placeholder="Password" class="w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required>
+            <input type="email" name="email" placeholder="Email" class="w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+            <input type="password" name="password" placeholder="Password" class="w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
             <button type="submit" class="btn-primary w-full">Login</button>
-            <a href="#" class="text-teal-500 hover:text-teal-600 text-center block" onclick="showModal('forgotPasswordModal')">Forgot Password?</a>
+            <a href="#" class="text-blue-500 hover:text-blue-600 text-center block" onclick="showModal('forgotPasswordModal')">Forgot Password?</a>
             <p class="text-center mt-2">Don't have an account? <span class="auth-toggle" onclick="showRegister()">Register</span></p>
           </form>
         </div>
         <!-- Register Form -->
         <div class="hidden" id="registerFormContainer">
-          <h2 class="text-xl font-bold text-teal-800 text-center mb-4">Admin Register</h2>
+          <h2 class="text-xl font-bold text-gray-800 text-center mb-4">Admin Register</h2>
           <form id="registerForm" class="space-y-3">
-            <input type="text" name="name" placeholder="Full Name" class="w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required>
-            <input type="email" name="email" placeholder="Email" class="w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required>
-            <input type="password" name="password" placeholder="Password" class="w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required>
+            <input type="text" name="name" placeholder="Full Name" class="w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+            <input type="email" name="email" placeholder="Email" class="w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+            <input type="password" name="password" placeholder="Password" class="w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
             <button type="submit" class="btn-primary w-full">Register</button>
             <p class="text-center mt-2">Already have an account? <span class="auth-toggle" onclick="showLogin()">Login</span></p>
           </form>
@@ -587,17 +649,17 @@
   </section>
 
   <!-- Dashboard Section (Hidden by Default) -->
-  <section id="dashboard" class="py-16 px-4 hidden">
+  <section id="dashboard" class="py-20 px-4 hidden">
     <div class="max-w-7xl mx-auto">
       <!-- Welcome Message -->
-      <div class="welcome-message animate__animated animate__fadeIn">
+      <div class="welcome-message animate__animated animate__fadeInUp">
         <h2 id="welcomeTitle">Welcome!</h2>
         <p>Manage appointments, messages, and subscribers with ease.</p>
       </div>
 
       <!-- Appointments -->
       <div id="appointments" class="mb-12">
-        <h2 class="text-xl font-bold text-teal-800 mb-4 animate__animated animate__fadeIn">Appointments</h2>
+        <h2 class="text-2xl font-bold text-gray-800 mb-4 animate__animated animate__fadeIn">Appointments</h2>
         <div class="card">
           <table class="admin-table">
             <thead>
@@ -619,7 +681,7 @@
 
       <!-- Messages -->
       <div id="messages" class="mb-12">
-        <h2 class="text-xl font-bold text-teal-800 mb-4 animate__animated animate__fadeIn">Messages</h2>
+        <h2 class="text-2xl font-bold text-gray-800 mb-4 animate__animated animate__fadeIn">Messages</h2>
         <div class="card">
           <table class="admin-table">
             <thead>
@@ -638,7 +700,7 @@
 
       <!-- Subscribers -->
       <div id="subscribers" class="mb-12">
-        <h2 class="text-xl font-bold text-teal-800 mb-4 animate__animated animate__fadeIn">Subscribers</h2>
+        <h2 class="text-2xl font-bold text-gray-800 mb-4 animate__animated animate__fadeIn">Subscribers</h2>
         <div class="card">
           <table class="admin-table">
             <thead>
@@ -660,7 +722,7 @@
     <div class="modal-content">
       <h3>Forgot Password</h3>
       <form id="forgotPasswordForm" class="space-y-3">
-        <input type="email" name="email" placeholder="Enter your email" class="border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required>
+        <input type="email" name="email" placeholder="Enter your email" class="border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
         <button type="submit" class="btn-primary">Send OTP</button>
         <button type="button" class="btn-secondary" onclick="closeModal('forgotPasswordModal')">Cancel</button>
       </form>
@@ -672,7 +734,7 @@
     <div class="modal-content">
       <h3>Verify OTP</h3>
       <form id="otpForm" class="space-y-3">
-        <input type="text" name="otp" placeholder="Enter OTP" class="border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required>
+        <input type="text" name="otp" placeholder="Enter OTP" class="border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
         <button type="submit" class="btn-primary">Verify OTP</button>
         <button type="button" class="btn-secondary" onclick="closeModal('otpModal')">Cancel</button>
       </form>
@@ -684,8 +746,8 @@
     <div class="modal-content">
       <h3>Reset Password</h3>
       <form id="resetPasswordForm" class="space-y-3">
-        <input type="password" name="newPassword" placeholder="New Password" class="border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required>
-        <input type="password" name="confirmPassword" placeholder="Confirm Password" class="border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required>
+        <input type="password" name="newPassword" placeholder="New Password" class="border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+        <input type="password" name="confirmPassword" placeholder="Confirm Password" class="border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
         <button type="submit" class="btn-primary">Reset Password</button>
         <button type="button" class="btn-secondary" onclick="closeModal('resetPasswordModal')">Cancel</button>
       </form>
@@ -697,7 +759,7 @@
     <div class="modal-content">
       <h3>Cancel Appointment</h3>
       <form id="cancelAppointmentForm" class="space-y-3">
-        <textarea name="reason" placeholder="Reason for cancellation" class="border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required></textarea>
+        <textarea name="reason" placeholder="Reason for cancellation" class="border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required></textarea>
         <button type="submit" class="btn-primary">Submit</button>
         <button type="button" class="btn-secondary" onclick="closeModal('cancelAppointmentModal')">Cancel</button>
       </form>
@@ -721,7 +783,7 @@
     <div class="modal-content">
       <h3>Reply to Message</h3>
       <form id="replyMessageForm" class="space-y-3">
-        <textarea name="reply" placeholder="Your reply" class="border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required></textarea>
+        <textarea name="reply" placeholder="Your reply" class="border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required></textarea>
         <button type="submit" class="btn-primary">Send Reply</button>
         <button type="button" class="btn-secondary" onclick="closeModal('replyMessageModal')">Cancel</button>
       </form>
@@ -901,9 +963,11 @@
     // Modal Functions
     function showModal(modalId) {
       document.getElementById(modalId).style.display = 'flex';
+      document.body.style.overflow = 'hidden';
     }
     function closeModal(modalId) {
       document.getElementById(modalId).style.display = 'none';
+      document.body.style.overflow = 'auto';
       if (modalId === 'cancelAppointmentModal') {
         document.getElementById('cancelAppointmentForm').reset();
       } else if (modalId === 'replyMessageModal') {
@@ -931,6 +995,11 @@
     hamburger.addEventListener('click', () => {
       navMenu.classList.toggle('active');
       hamburger.setAttribute('aria-expanded', navMenu.classList.contains('active'));
+      if (navMenu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = 'auto';
+      }
     });
 
     // Close menu when a nav link is clicked
@@ -938,6 +1007,17 @@
       link.addEventListener('click', () => {
         navMenu.classList.remove('active');
         hamburger.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = 'auto';
+        const targetId = link.getAttribute('href').substring(1);
+        if (targetId) {
+          const targetElement = document.getElementById(targetId);
+          if (targetElement) {
+            window.scrollTo({
+              top: targetElement.offsetTop - 100,
+              behavior: 'smooth'
+            });
+          }
+        }
       });
     });
 
@@ -1133,10 +1213,12 @@
       document.getElementById('dashboard').classList.add('hidden');
       document.getElementById('auth').classList.remove('hidden');
       navMenu.classList.remove('authenticated');
+      navMenu.classList.remove('active');
       navMenu.style.display = 'none';
       loginForm.reset();
       showLogin();
       showToast('Logged out successfully.', 'success');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     // Form Validation
@@ -1173,6 +1255,15 @@
           localStorage.removeItem('token');
           showToast('Session expired. Please login again.', 'error');
         }
+      }
+    });
+
+    // Handle window resize for navigation
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 640) {
+        navMenu.classList.remove('active');
+        document.body.style.overflow = 'auto';
+        hamburger.setAttribute('aria-expanded', 'false');
       }
     });
   </script>
