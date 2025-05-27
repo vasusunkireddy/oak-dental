@@ -98,24 +98,25 @@
       background: #1F2937;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
       z-index: 999;
-      padding: 16px 0;
+      padding: 20px 0;
       transform: translateY(0);
       opacity: 1;
-      transition: transform 0.3s ease, opacity 0.3s ease;
+      transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
     }
     .nav-menu:not(.active) {
       transform: translateY(-100%);
       opacity: 0;
-      transition: transform 0.3s ease, opacity 0.3s ease;
+      transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
     }
     .nav-link {
-      padding: 12px 20px;
-      font-size: 1rem;
+      padding: 14px 24px;
+      font-size: 1.1rem;
       font-weight: 600;
       color: white;
       border-radius: 8px;
       transition: background-color 0.3s ease, transform 0.2s ease;
       cursor: pointer;
+      text-align: center;
     }
     .nav-link:hover {
       background-color: #374151;
@@ -127,6 +128,7 @@
       color: white;
       padding: 8px;
       display: none;
+      transition: transform 0.3s ease;
     }
     .hamburger:hover {
       transform: rotate(90deg);
@@ -136,10 +138,10 @@
     .btn-primary {
       background: linear-gradient(45deg, #3B82F6, #60A5FA);
       color: white;
-      padding: 10px 20px;
+      padding: 12px 24px;
       border-radius: 8px;
       font-weight: 600;
-      font-size: 0.95rem;
+      font-size: 1rem;
       transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
     }
     .btn-primary:hover {
@@ -150,10 +152,10 @@
     .btn-secondary {
       background: linear-gradient(45deg, #6B7280, #9CA3AF);
       color: white;
-      padding: 10px 20px;
+      padding: 12px 24px;
       border-radius: 8px;
       font-weight: 600;
-      font-size: 0.95rem;
+      font-size: 1rem;
       transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
     }
     .btn-secondary:hover {
@@ -164,10 +166,10 @@
     .btn-danger {
       background: linear-gradient(45deg, #EF4444, #F87171);
       color: white;
-      padding: 10px 20px;
+      padding: 12px 24px;
       border-radius: 8px;
       font-weight: 600;
-      font-size: 0.95rem;
+      font-size: 1rem;
       transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
     }
     .btn-danger:hover {
@@ -177,25 +179,27 @@
     }
     .action-buttons {
       display: flex;
-      flex-wrap: nowrap;
-      gap: 8px;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
     }
     .action-buttons button {
-      font-size: 0.9rem;
-      padding: 8px 16px;
-      min-width: 100px;
+      font-size: 0.95rem;
+      padding: 10px 20px;
+      min-width: 120px;
       text-align: center;
     }
     .card-actions {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
-      margin-top: 10px;
+      margin-top: 12px;
+      justify-content: center;
     }
     .card-actions button {
-      font-size: 0.9rem;
-      padding: 8px 16px;
-      min-width: 100px;
+      font-size: 0.95rem;
+      padding: 10px 20px;
+      min-width: 120px;
       text-align: center;
       flex: 1 1 auto;
     }
@@ -224,10 +228,10 @@
     }
     .admin-table th,
     .admin-table td {
-      padding: 14px;
+      padding: 16px;
       text-align: left;
       border-bottom: 1px solid #E5E7EB;
-      font-size: 0.95rem;
+      font-size: 1rem;
     }
     .admin-table th {
       background: linear-gradient(45deg, #1F2937, #374151);
@@ -243,8 +247,8 @@
     .table-card {
       background: rgba(255, 255, 255, 0.95);
       border-radius: 12px;
-      padding: 14px;
-      margin-bottom: 14px;
+      padding: 16px;
+      margin-bottom: 16px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
       transition: transform 0.3s ease;
     }
@@ -252,8 +256,8 @@
       transform: translateY(-3px);
     }
     .table-card p {
-      margin: 6px 0;
-      font-size: 0.9rem;
+      margin: 8px 0;
+      font-size: 1rem;
       color: #1F2937;
     }
 
@@ -273,7 +277,7 @@
     }
     .modal-content {
       background: white;
-      padding: 20px;
+      padding: 24px;
       border-radius: 12px;
       max-width: 95%;
       width: 400px;
@@ -292,9 +296,9 @@
     .modal-content button {
       width: 100%;
       margin-bottom: 12px;
-      padding: 10px;
+      padding: 12px;
       border-radius: 8px;
-      font-size: 0.95rem;
+      font-size: 1rem;
     }
     .modal-content input,
     .modal-content textarea {
@@ -327,7 +331,7 @@
     .auth-form {
       max-width: 400px;
       margin: 0 auto;
-      padding: 20px;
+      padding: 24px;
       background: rgba(255, 255, 255, 0.95);
       border-radius: 12px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
@@ -339,17 +343,17 @@
       font-weight: 700;
     }
     .auth-form input {
-      font-size: 0.95rem;
-      padding: 10px;
+      font-size: 1rem;
+      padding: 12px;
       border-radius: 8px;
     }
     .auth-form button {
-      padding: 10px;
-      font-size: 0.95rem;
+      padding: 12px;
+      font-size: 1rem;
     }
     .auth-form a,
     .auth-form p {
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       color: #1F2937;
     }
     .auth-toggle {
@@ -418,16 +422,17 @@
       text-align: center;
       padding: 20px;
       color: #6B7280;
-      font-size: 0.95rem;
+      font-size: 1rem;
       font-weight: 500;
     }
 
     /* Bulk Actions */
     .bulk-actions {
       display: flex;
-      gap: 10px;
+      gap: 12px;
       margin-bottom: 16px;
       flex-wrap: wrap;
+      align-items: center;
     }
     .checkbox-container {
       display: flex;
@@ -435,8 +440,8 @@
       gap: 8px;
     }
     .select-all-checkbox {
-      width: 18px;
-      height: 18px;
+      width: 20px;
+      height: 20px;
       cursor: pointer;
     }
 
@@ -461,13 +466,13 @@
         padding: 0 12px;
       }
       .logo-img {
-        width: 32px;
+        width: 36px;
       }
       .logo-text {
-        font-size: 1rem;
+        font-size: 1.1rem;
       }
       .logo-subtext {
-        font-size: 0.6rem;
+        font-size: 0.65rem;
       }
       .hamburger {
         display: block;
@@ -480,11 +485,12 @@
         animation: slideIn 0.3s ease forwards;
       }
       .nav-menu:not(.active) {
+        display: none;
         animation: slideOut 0.3s ease forwards;
       }
       .nav-link {
-        font-size: 1.1rem; /* Increased for readability */
-        padding: 14px 20px;
+        font-size: 1.2rem;
+        padding: 16px 24px;
       }
       .admin-table {
         display: none;
@@ -492,56 +498,68 @@
       .table-card {
         display: block;
       }
+      .table-card p {
+        font-size: 1.1rem;
+      }
       .btn-primary,
       .btn-secondary,
       .btn-danger {
-        padding: 8px 14px;
-        font-size: 0.9rem;
+        padding: 10px 20px;
+        font-size: 1rem;
+        min-width: 140px;
       }
       .action-buttons button,
       .card-actions button {
-        padding: 8px 12px;
-        font-size: 0.85rem;
-        min-width: 80px;
+        padding: 10px 16px;
+        font-size: 1rem;
+        min-width: 140px;
       }
       .modal-content {
         width: 90%;
-        padding: 16px;
+        padding: 20px;
       }
       .modal-content h3 {
-        font-size: 1.1rem;
+        font-size: 1.2rem;
       }
       .modal-content input,
       .modal-content textarea,
       .modal-content button {
-        padding: 8px;
-        font-size: 0.9rem;
+        padding: 10px;
+        font-size: 1rem;
       }
       .auth-form {
         max-width: 95%;
-        padding: 16px;
+        padding: 20px;
       }
       .auth-form h2 {
-        font-size: 1.25rem;
+        font-size: 1.3rem;
       }
       .welcome-message {
         margin-top: 80px;
         padding: 20px;
       }
       .welcome-message h2 {
-        font-size: 1.5rem;
+        font-size: 1.6rem;
       }
       .welcome-message p {
-        font-size: 0.9rem;
+        font-size: 1rem;
       }
       .toast {
-        width: 95%;
-        font-size: 0.9rem;
+        width: 90%;
+        font-size: 1rem;
         padding: 12px 24px;
       }
       .bulk-actions {
         flex-direction: column;
         align-items: flex-start;
+      }
+      .bulk-actions button {
+        width: 100%;
+        text-align: center;
+      }
+      .select-all-checkbox {
+        width: 22px;
+        height: 22px;
       }
     }
     @media (min-width: 641px) {
@@ -560,7 +578,7 @@
         opacity: 1;
       }
       .nav-link {
-        padding: 8px 16px;
+        padding: 10px 18px;
         font-size: 1rem;
       }
       .table-card {
@@ -584,19 +602,19 @@
       .btn-primary,
       .btn-secondary,
       .btn-danger {
-        padding: 10px 20px;
-        font-size: 0.95rem;
+        padding: 12px 24px;
+        font-size: 1rem;
       }
       .modal-content {
         width: 400px;
-        padding: 20px;
+        padding: 24px;
       }
       .modal-content h3 {
         font-size: 1.25rem;
       }
       .auth-form {
         max-width: 420px;
-        padding: 20px;
+        padding: 24px;
       }
       .auth-form h2 {
         font-size: 1.75rem;
@@ -1007,7 +1025,7 @@
         console.error('Error in populateTables:', error);
         showToast('Failed to load dashboard data.', 'error');
       }
-    }, 300);
+    }, 200);
 
     // Modal Functions
     function showModal(modalId) {
@@ -1038,9 +1056,10 @@
     const navMenu = document.querySelector('.nav-menu');
     hamburger.addEventListener('click', () => {
       console.log('Hamburger clicked');
-      navMenu.classList.toggle('active');
-      hamburger.setAttribute('aria-expanded', navMenu.classList.contains('active'));
-      document.body.style.overflow = navMenu.classList.contains('active') ? 'hidden' : 'auto';
+      const isActive = navMenu.classList.toggle('active');
+      hamburger.setAttribute('aria-expanded', isActive);
+      document.body.style.overflow = isActive ? 'hidden' : 'auto';
+      navMenu.style.display = isActive ? 'flex' : 'none';
     });
 
     // Close menu when a nav link is clicked
@@ -1049,6 +1068,7 @@
         e.preventDefault();
         console.log('Nav link clicked:', link.getAttribute('href'));
         navMenu.classList.remove('active');
+        navMenu.style.display = 'none';
         hamburger.setAttribute('aria-expanded', 'false');
         document.body.style.overflow = 'auto';
         const targetId = link.getAttribute('href').substring(1);
@@ -1165,7 +1185,7 @@
       } catch (error) {
         showToast('Failed to accept appointment.', 'error');
       }
-    }, 300);
+    }, 200);
 
     let currentAppointmentId = null;
     function showCancelModal(id) {
@@ -1304,8 +1324,8 @@
       localStorage.removeItem('token');
       document.getElementById('dashboard').classList.add('hidden');
       document.getElementById('auth').classList.remove('hidden');
-      navMenu.style.display = 'none';
       navMenu.classList.remove('active');
+      navMenu.style.display = 'none';
       loginForm.reset();
       showLogin();
       showToast('Logged out successfully.', 'success');
@@ -1352,9 +1372,9 @@
     window.addEventListener('resize', () => {
       if (window.innerWidth > 640) {
         navMenu.classList.remove('active');
+        navMenu.style.display = 'flex';
         document.body.style.overflow = 'auto';
         hamburger.setAttribute('aria-expanded', 'false');
-        navMenu.style.display = 'flex';
       } else {
         navMenu.style.display = navMenu.classList.contains('active') ? 'flex' : 'none';
       }
