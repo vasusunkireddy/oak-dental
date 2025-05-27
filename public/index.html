@@ -417,7 +417,7 @@
         height: 48px;
       }
       .logo-text {
-        font-size: 1 rem;
+        font-size: 1rem;
       }
       .logo-subtext {
         font-size: 0.8rem;
@@ -528,26 +528,10 @@
       "url": "https://oak-dental.onrender.com"
     }
   </script>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-XXXXXXXXXX');
-  </script>
+  <!-- Removed Google Analytics script to avoid placeholder errors -->
 </head>
 <body>
-  <script>
-    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-    (function(){
-      var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-      s1.async=true;
-      s1.src='https://embed.tawk.to/YOUR_TAWK_PROPERTY_ID/default';
-      s1.charset='UTF-8';
-      s1.setAttribute('crossorigin','*');
-      s0.parentNode.insertBefore(s1,s0);
-    })();
-  </script>
+  <!-- Removed Tawk.to script to avoid placeholder errors -->
   <div class="fixed bottom-4 right-4 z-20 sticky-cta">
     <a href="https://wa.me/917569366767" class="cta-icon whatsapp-icon" aria-label="Contact us on WhatsApp"><i class="fab fa-whatsapp"></i></a>
     <a href="tel:+917569366767" class="cta-icon phone-icon" aria-label="Call us"><i class="fas fa-phone"></i></a>
@@ -803,7 +787,7 @@
           <input type="text" name="name" placeholder="Your Name" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 text-base" required>
           <input type="email" name="email" placeholder="Your Email" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 text-base" required>
           <input type="tel" name="phone" placeholder="Your Mobile Number" pattern="[0-9]{10}" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 text-base" required>
-          <input type="date" name="date" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 text-base" min="2025-05-27" required>
+          <input type="date" name="date" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 text-base" min="2025-05-28" required>
           <textarea name="message" placeholder="Your Message" class="w-full p-3 border border-gray-300 rounded-lg h-24 focus:ring-2 focus:ring-teal-500 text-base"></textarea>
           <button type="submit" class="btn-primary w-full">Submit Appointment</button>
         </form>
@@ -812,7 +796,7 @@
     <div id="appointmentModal" class="modal">
       <div class="modal-content">
         <h3>Appointment Booked!</h3>
-        <p>Your appointment request has been submitted. We'll contact you soon. Thankyou.</p>
+        <p>Your appointment request has been submitted. We'll contact you soon. Thank you.</p>
         <button onclick="closeModal('appointmentModal')">Close</button>
       </div>
     </div>
@@ -914,10 +898,10 @@
     <div id="newsletterToast" class="toast">Subscribed! Thank you for joining our newsletter.</div>
   </footer>
   <script>
-    // API Base URL
-    const API_BASE_URL = window.location.hostname === 'localhost' ? 'http://localhost:3000/api' : 'https://api.oakdentalclinic.com';
+    // API Base URL - Updated to match Render deployment
+    const API_BASE_URL = window.location.hostname === 'localhost' ? 'http://localhost:3000/api' : 'https://oak-dental.onrender.com/api';
 
-    // API Call Helper
+    // API Call Helper with Error Handling
     async function apiCall(endpoint, method = 'POST', data = null) {
       const config = {
         method,
@@ -926,7 +910,10 @@
       if (data) config.body = JSON.stringify(data);
       try {
         const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
-        if (!response.ok) throw new Error('Submission failed');
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`Submission failed: ${errorText || response.statusText}`);
+        }
         return await response.json();
       } catch (error) {
         console.error(`Error at ${endpoint}:`, error);
@@ -938,7 +925,10 @@
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', (e) => {
         e.preventDefault();
-        document.querySelector(anchor.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+        const target = document.querySelector(anchor.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
       });
     });
 
@@ -1045,7 +1035,10 @@
     // Modal Close
     function closeModal(modalId) {
       const modal = document.getElementById(modalId);
-      if (modal) modal.style.display = 'none';
+      if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+      }
     }
 
     // Toast Notification
@@ -1058,7 +1051,7 @@
       }, duration);
     }
 
-    // Form Submission
+    // Form Submission with Enhanced Error Handling
     ['appointmentForm', 'contactForm', 'newsletterForm'].forEach(formId => {
       const form = document.getElementById(formId);
       if (form) {
@@ -1076,36 +1069,53 @@
           if (form.checkValidity()) {
             const formData = new FormData(form);
             const data = Object.fromEntries(formData);
-            let endpoint, modalId;
+            let endpoint, modalId, successMessage;
             switch (formId) {
               case 'appointmentForm':
                 endpoint = '/appointments';
                 modalId = 'appointmentModal';
+                successMessage = 'Appointment booked successfully!';
                 break;
               case 'contactForm':
                 endpoint = '/messages';
                 modalId = 'contactModal';
+                successMessage = 'Message sent successfully!';
                 break;
               case 'newsletterForm':
                 endpoint = '/subscribers';
+                successMessage = 'Subscribed! Thank you for joining our newsletter.';
                 break;
             }
             try {
-              await apiCall(endpoint, 'POST', data);
+              const response = await apiCall(endpoint, 'POST', data);
+              console.log(`${formId} response:`, response);
               form.reset();
               form.querySelectorAll('input, textarea').forEach(input => input.classList.remove('valid'));
               if (formId === 'newsletterForm') {
-                showToast('Subscribed! Thank you for joining our newsletter.');
+                showToast(successMessage);
               } else {
                 const modal = document.getElementById(modalId);
-                if (modal) modal.style.display = 'flex';
+                if (modal) {
+                  modal.style.display = 'flex';
+                  document.body.style.overflow = 'hidden';
+                }
               }
             } catch (error) {
+              console.error(`Error submitting ${formId}:`, error);
               showToast(`Failed to submit ${formId.replace('Form', '')}. Please try again.`);
             }
+          } else {
+            showToast('Please fill out all required fields correctly.');
           }
         });
       }
+    });
+
+    // Ensure modals are hidden on page load
+    window.addEventListener('load', () => {
+      document.querySelectorAll('.modal').forEach(modal => {
+        modal.style.display = 'none';
+      });
     });
   </script>
 </body>
