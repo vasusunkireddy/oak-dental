@@ -117,10 +117,9 @@
       transition: background-color 0.3s ease, transform 0.2s ease;
       cursor: pointer;
       text-align: center;
-      background: linear-gradient(45deg, #3B82F6, #60A5FA);
     }
     .nav-link:hover {
-      background: linear-gradient(45deg, #1E40AF, #2563EB);
+      background-color: #374151;
       transform: translateX(5px);
     }
     .hamburger {
@@ -130,12 +129,9 @@
       padding: 8px;
       display: none;
       transition: transform 0.3s ease;
-      border-radius: 8px;
-      background: linear-gradient(45deg, #4B5563, #6B7280);
     }
     .hamburger:hover {
-      transform: scale(1.1);
-      background: linear-gradient(45deg, #374151, #4B5563);
+      transform: rotate(90deg);
     }
 
     /* Buttons */
@@ -143,46 +139,43 @@
       background: linear-gradient(45deg, #3B82F6, #60A5FA);
       color: white;
       padding: 12px 24px;
-      border-radius: 10px;
+      border-radius: 8px;
       font-weight: 600;
       font-size: 1rem;
       transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
     .btn-primary:hover {
       background: linear-gradient(45deg, #1E40AF, #2563EB);
       transform: translateY(-2px);
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
     .btn-secondary {
       background: linear-gradient(45deg, #6B7280, #9CA3AF);
       color: white;
       padding: 12px 24px;
-      border-radius: 10px;
+      border-radius: 8px;
       font-weight: 600;
       font-size: 1rem;
       transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
     .btn-secondary:hover {
       background: linear-gradient(45deg, #4B5563, #6B7280);
       transform: translateY(-2px);
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
     .btn-danger {
       background: linear-gradient(45deg, #EF4444, #F87171);
       color: white;
       padding: 12px 24px;
-      border-radius: 10px;
+      border-radius: 8px;
       font-weight: 600;
       font-size: 1rem;
       transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
     .btn-danger:hover {
       background: linear-gradient(45deg, #B91C1C, #DC2626);
       transform: translateY(-2px);
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
     .action-buttons {
       display: flex;
@@ -486,29 +479,18 @@
       }
       .nav-menu {
         display: none;
-        flex-direction: column;
-        position: fixed;
-        top: 56px;
-        left: 0;
-        width: 100%;
-        background: #1F2937;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
-        padding: 20px 0;
-        transform: translateY(-100%);
-        opacity: 0;
-        transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
       }
       .nav-menu.active {
         display: flex;
-        transform: translateY(0);
-        opacity: 1;
+        animation: slideIn 0.3s ease forwards;
+      }
+      .nav-menu:not(.active) {
+        display: none;
+        animation: slideOut 0.3s ease forwards;
       }
       .nav-link {
         font-size: 1.2rem;
         padding: 16px 24px;
-        margin: 0 16px;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       }
       .admin-table {
         display: none;
@@ -525,14 +507,12 @@
         padding: 10px 20px;
         font-size: 1rem;
         min-width: 140px;
-        border-radius: 10px;
       }
       .action-buttons button,
       .card-actions button {
         padding: 10px 16px;
         font-size: 1rem;
         min-width: 140px;
-        border-radius: 10px;
       }
       .modal-content {
         width: 90%;
@@ -600,8 +580,6 @@
       .nav-link {
         padding: 10px 18px;
         font-size: 1rem;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       }
       .table-card {
         display: none;
@@ -626,7 +604,6 @@
       .btn-danger {
         padding: 12px 24px;
         font-size: 1rem;
-        border-radius: 10px;
       }
       .modal-content {
         width: 400px;
@@ -1081,8 +1058,8 @@
       console.log('Hamburger clicked');
       const isActive = navMenu.classList.toggle('active');
       hamburger.setAttribute('aria-expanded', isActive);
-      navMenu.style.display = isActive ? 'flex' : 'none';
       document.body.style.overflow = isActive ? 'hidden' : 'auto';
+      navMenu.style.display = isActive ? 'flex' : 'none';
     });
 
     // Close menu when a nav link is clicked
@@ -1374,7 +1351,7 @@
     // Initial Load
     window.addEventListener('load', async () => {
       const token = localStorage.getItem('token');
-      navMenu.style.display = window.innerWidth > 640 ? 'flex' : 'none';
+      navMenu.style.display = 'none';
       if (token) {
         try {
           const profile = await apiCall('/admin/profile');
