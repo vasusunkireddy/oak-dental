@@ -20,7 +20,7 @@
       padding: 0;
       line-height: 1.6;
       color: #1F2937;
-      background: url('https://images.unsplash.com/photo-1598256989800-fe5f95da9787?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') no-repeat center center fixed;
+      background: linear-gradient(135deg, rgba(13, 148, 136, 0.8), rgba(20, 184, 166, 0.8)), url('https://images.unsplash.com/photo-1598256989800-fe5f95da9787?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') no-repeat center center fixed;
       background-size: cover;
       overflow-x: hidden;
       min-height: 100vh;
@@ -31,7 +31,7 @@
 
     /* Header */
     header {
-      background: linear-gradient(90deg, #1F2937, #374151);
+      background: linear-gradient(90deg, #0D9488, #14B8A6);
       color: white;
       position: fixed;
       width: 100%;
@@ -97,7 +97,7 @@
       top: 64px;
       left: 0;
       width: 100%;
-      background: #1F2937;
+      background: #0D9488;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
       z-index: 999;
       padding: 12px 0;
@@ -117,7 +117,7 @@
       touch-action: manipulation;
     }
     .nav-link:hover {
-      background-color: #374151;
+      background-color: #115E59;
       transform: translateX(5px);
     }
     .hamburger {
@@ -134,7 +134,7 @@
 
     /* Buttons */
     .btn-primary {
-      background: linear-gradient(45deg, #3B82F6, #60A5FA);
+      background: linear-gradient(45deg, #14B8A6, #22D3EE);
       color: white;
       padding: 10px 20px;
       border-radius: 8px;
@@ -144,12 +144,12 @@
       touch-action: manipulation;
     }
     .btn-primary:hover {
-      background: linear-gradient(45deg, #1E40AF, #2563EB);
+      background: linear-gradient(45deg, #115E59, #0E7490);
       transform: translateY(-2px);
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
     .btn-secondary {
-      background: linear-gradient(45deg, #6B7280, #9CA3AF);
+      background: linear-gradient(45deg, #3B82F6, #60A5FA);
       color: white;
       padding: 10px 20px;
       border-radius: 8px;
@@ -159,7 +159,7 @@
       touch-action: manipulation;
     }
     .btn-secondary:hover {
-      background: linear-gradient(45deg, #4B5563, #6B7280);
+      background: linear-gradient(45deg, #1E40AF, #2563EB);
       transform: translateY(-2px);
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
@@ -207,7 +207,7 @@
 
     /* Cards */
     .card {
-      background: rgba(255, 255, 255, 0.95);
+      background: rgba(255, 255, 255, 0.97);
       border-radius: 12px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -222,7 +222,7 @@
     .admin-table {
       width: 100%;
       border-collapse: collapse;
-      background: rgba(255, 255, 255, 0.95);
+      background: rgba(255, 255, 255, 0.97);
       border-radius: 12px;
       overflow: hidden;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
@@ -235,18 +235,18 @@
       font-size: 0.95rem;
     }
     .admin-table th {
-      background: linear-gradient(45deg, #1F2937, #374151);
+      background: linear-gradient(45deg, #0D9488, #14B8A6);
       color: white;
       font-weight: 700;
       text-transform: uppercase;
     }
     .admin-table tr:hover {
-      background: #F3F4F6;
+      background: #F0FDFA;
     }
 
     /* Mobile Table Cards */
     .table-card {
-      background: rgba(255, 255, 255, 0.95);
+      background: rgba(255, 255, 255, 0.97);
       border-radius: 12px;
       padding: 14px;
       margin-bottom: 14px;
@@ -287,7 +287,7 @@
       animation: slideUp 0.3s ease;
     }
     .modal-content h3 {
-      color: #1F2937;
+      color: #0D9488;
       margin-bottom: 16px;
       font-size: 1.25rem;
       font-weight: 700;
@@ -309,18 +309,18 @@
     }
     .modal-content input:focus,
     .modal-content textarea:focus {
-      border-color: #3B82F6;
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+      border-color: #14B8A6;
+      box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.3);
     }
     .modal-content button {
-      background: linear-gradient(45deg, #3B82F6, #60A5FA);
+      background: linear-gradient(45deg, #14B8A6, #22D3EE);
       color: white;
       border: none;
       font-weight: 600;
       touch-action: manipulation;
     }
     .modal-content button:hover {
-      background: linear-gradient(45deg, #1E40AF, #2563EB);
+      background: linear-gradient(45deg, #115E59, #0E7490);
     }
 
     /* Form Validation */
@@ -334,14 +334,14 @@
       max-width: 400px;
       margin: 0 auto;
       padding: 20px;
-      background: rgba(255, 255, 255, 0.95);
+      background: rgba(255, 255, 255, 0.97);
       border-radius: 12px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
     .auth-form h2 {
       font-size: 1.5rem;
       margin-bottom: 16px;
-      color: #1F2937;
+      color: #0D9488;
       font-weight: 700;
     }
     .auth-form input {
@@ -359,7 +359,7 @@
       color: #1F2937;
     }
     .auth-toggle {
-      color: #3B82F6;
+      color: #0D9488;
       font-weight: 600;
       cursor: pointer;
       transition: color 0.3s ease;
@@ -397,7 +397,7 @@
 
     /* Welcome Message */
     .welcome-message {
-      background: rgba(255, 255, 255, 0.95);
+      background: linear-gradient(45deg, rgba(255, 255, 255, 0.97), rgba(240, 253, 250, 0.97));
       border-radius: 12px;
       padding: 24px;
       margin-top: 96px;
@@ -407,7 +407,7 @@
       animation: fadeInUp 0.5s ease;
     }
     .welcome-message h2 {
-      color: #1F2937;
+      color: #0D9488;
       font-size: 2rem;
       margin-bottom: 12px;
       font-weight: 700;
@@ -624,22 +624,22 @@
       <div class="flex flex-col gap-4">
         <!-- Login Form -->
         <div id="loginFormContainer">
-          <h2 class="text-xl font-bold text-gray-800 text-center mb-4">Admin Login</h2>
+          <h2 class="text-xl font-bold text-teal-800 text-center mb-4">Admin Login</h2>
           <form id="loginForm" class="space-y-3">
-            <input type="email" name="email" placeholder="Email" class="w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
-            <input type="password" name="password" placeholder="Password" class="w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+            <input type="email" name="email" placeholder="Email" class="w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required>
+            <input type="password" name="password" placeholder="Password" class="w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required>
             <button type="submit" class="btn-primary w-full">Login</button>
-            <a href="#" class="text-blue-500 hover:text-blue-600 text-center block" onclick="showModal('forgotPasswordModal')">Forgot Password?</a>
+            <a href="#" class="text-teal-500 hover:text-teal-600 text-center block" onclick="showModal('forgotPasswordModal')">Forgot Password?</a>
             <p class="text-center mt-2">Don't have an account? <span class="auth-toggle" onclick="showRegister()">Register</span></p>
           </form>
         </div>
         <!-- Register Form -->
         <div class="hidden" id="registerFormContainer">
-          <h2 class="text-xl font-bold text-gray-800 text-center mb-4">Admin Register</h2>
+          <h2 class="text-xl font-bold text-teal-800 text-center mb-4">Admin Register</h2>
           <form id="registerForm" class="space-y-3">
-            <input type="text" name="name" placeholder="Full Name" class="w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
-            <input type="email" name="email" placeholder="Email" class="w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
-            <input type="password" name="password" placeholder="Password" class="w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+            <input type="text" name="name" placeholder="Full Name" class="w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required>
+            <input type="email" name="email" placeholder="Email" class="w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required>
+            <input type="password" name="password" placeholder="Password" class="w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required>
             <button type="submit" class="btn-primary w-full">Register</button>
             <p class="text-center mt-2">Already have an account? <span class="auth-toggle" onclick="showLogin()">Login</span></p>
           </form>
@@ -659,7 +659,7 @@
 
       <!-- Appointments -->
       <div id="appointments" class="mb-12">
-        <h2 class="text-2xl font-bold text-gray-800 mb-4 animate__animated animate__fadeIn">Appointments</h2>
+        <h2 class="text-2xl font-bold text-teal-800 mb-4 animate__animated animate__fadeIn">Appointments</h2>
         <div class="card">
           <table class="admin-table">
             <thead>
@@ -681,7 +681,7 @@
 
       <!-- Messages -->
       <div id="messages" class="mb-12">
-        <h2 class="text-2xl font-bold text-gray-800 mb-4 animate__animated animate__fadeIn">Messages</h2>
+        <h2 class="text-2xl font-bold text-teal-800 mb-4 animate__animated animate__fadeIn">Messages</h2>
         <div class="card">
           <table class="admin-table">
             <thead>
@@ -700,7 +700,7 @@
 
       <!-- Subscribers -->
       <div id="subscribers" class="mb-12">
-        <h2 class="text-2xl font-bold text-gray-800 mb-4 animate__animated animate__fadeIn">Subscribers</h2>
+        <h2 class="text-2xl font-bold text-teal-800 mb-4 animate__animated animate__fadeIn">Subscribers</h2>
         <div class="card">
           <table class="admin-table">
             <thead>
@@ -722,7 +722,7 @@
     <div class="modal-content">
       <h3>Forgot Password</h3>
       <form id="forgotPasswordForm" class="space-y-3">
-        <input type="email" name="email" placeholder="Enter your email" class="border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+        <input type="email" name="email" placeholder="Enter your email" class="border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required>
         <button type="submit" class="btn-primary">Send OTP</button>
         <button type="button" class="btn-secondary" onclick="closeModal('forgotPasswordModal')">Cancel</button>
       </form>
@@ -734,7 +734,7 @@
     <div class="modal-content">
       <h3>Verify OTP</h3>
       <form id="otpForm" class="space-y-3">
-        <input type="text" name="otp" placeholder="Enter OTP" class="border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+        <input type="text" name="otp" placeholder="Enter OTP" class="border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required>
         <button type="submit" class="btn-primary">Verify OTP</button>
         <button type="button" class="btn-secondary" onclick="closeModal('otpModal')">Cancel</button>
       </form>
@@ -746,8 +746,8 @@
     <div class="modal-content">
       <h3>Reset Password</h3>
       <form id="resetPasswordForm" class="space-y-3">
-        <input type="password" name="newPassword" placeholder="New Password" class="border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
-        <input type="password" name="confirmPassword" placeholder="Confirm Password" class="border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+        <input type="password" name="newPassword" placeholder="New Password" class="border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required>
+        <input type="password" name="confirmPassword" placeholder="Confirm Password" class="border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required>
         <button type="submit" class="btn-primary">Reset Password</button>
         <button type="button" class="btn-secondary" onclick="closeModal('resetPasswordModal')">Cancel</button>
       </form>
@@ -759,7 +759,7 @@
     <div class="modal-content">
       <h3>Cancel Appointment</h3>
       <form id="cancelAppointmentForm" class="space-y-3">
-        <textarea name="reason" placeholder="Reason for cancellation" class="border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required></textarea>
+        <textarea name="reason" placeholder="Reason for cancellation" class="border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required></textarea>
         <button type="submit" class="btn-primary">Submit</button>
         <button type="button" class="btn-secondary" onclick="closeModal('cancelAppointmentModal')">Cancel</button>
       </form>
@@ -783,7 +783,7 @@
     <div class="modal-content">
       <h3>Reply to Message</h3>
       <form id="replyMessageForm" class="space-y-3">
-        <textarea name="reply" placeholder="Your reply" class="border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required></textarea>
+        <textarea name="reply" placeholder="Your reply" class="border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" required></textarea>
         <button type="submit" class="btn-primary">Send Reply</button>
         <button type="button" class="btn-secondary" onclick="closeModal('replyMessageModal')">Cancel</button>
       </form>
@@ -1216,7 +1216,8 @@
       navMenu.classList.remove('active');
       navMenu.style.display = 'none';
       loginForm.reset();
-      showLogin();
+
+    showLogin();
       showToast('Logged out successfully.', 'success');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
