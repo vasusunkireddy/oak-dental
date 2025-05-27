@@ -32,7 +32,7 @@
     }
     .hero-bg {
       position: relative;
-      min-height: 50vh;
+      min-height: 60vh;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -45,13 +45,13 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), no-repeat center center/cover;
+      background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), no-repeat center center/cover;
       display: flex;
       align-items: center;
       justify-content: center;
       opacity: 0;
       transform: translateX(100%);
-      transition: all 0.5s ease-in-out;
+      transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
     }
     .hero-slide.active {
       opacity: 1;
@@ -62,20 +62,32 @@
     }
     .hero-text-container {
       width: 90%;
-      max-width: 600px;
+      max-width: 700px;
       text-align: center;
       color: white;
+      padding: 2rem;
+    }
+    .hero-text-container h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      line-height: 1.2;
+    }
+    .hero-text-container p {
+      font-size: 1.25rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
     }
     .dots-container {
       position: absolute;
-      bottom: 10px;
+      bottom: 15px;
       display: flex;
       justify-content: center;
-      gap: 8px;
+      gap: 10px;
     }
     .dot {
-      width: 8px;
-      height: 8px;
+      width: 10px;
+      height: 10px;
       background-color: rgba(255, 255, 255, 0.7);
       border-radius: 50%;
       cursor: pointer;
@@ -105,11 +117,15 @@
     }
     .doctor-img {
       width: 100%;
+      max-width: 400px;
       height: auto;
       object-fit: cover;
-      border-radius: 0;
-      box-shadow: none;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       margin-bottom: 1rem;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
     }
     .nav-link {
       transition: color 0.3s ease;
@@ -120,8 +136,8 @@
     .btn-primary {
       background-color: #14B8A6;
       transition: background-color 0.3s ease, transform 0.2s ease;
-      padding: 8px 16px;
-      font-size: 0.95rem;
+      padding: 10px 20px;
+      font-size: 1rem;
       border-radius: 9999px;
       color: white;
       display: inline-flex;
@@ -135,8 +151,8 @@
     .btn-secondary {
       background-color: #60A5FA;
       transition: background-color 0.3s ease, transform 0.2s ease;
-      padding: 8px 16px;
-      font-size: 0.95rem;
+      padding: 10px 20px;
+      font-size: 1rem;
       border-radius: 9999px;
       color: white;
     }
@@ -357,7 +373,13 @@
     }
     @media (min-width: 768px) {
       .hero-bg {
-        min-height: 60vh;
+        min-height: 70vh;
+      }
+      .hero-text-container h1 {
+        font-size: 4rem;
+      }
+      .hero-text-container p {
+        font-size: 1.5rem;
       }
       .logo-img {
         width: 80px;
@@ -385,25 +407,22 @@
         padding: 8px 12px;
         font-size: 1rem;
       }
-      .hero-text-container h1 {
-        font-size: 3.5rem;
-      }
-      .hero-text-container p {
-        font-size: 1.3rem;
-      }
       .faq-question h3 {
         font-size: 1.1rem;
       }
       .faq-answer {
         font-size: 1rem;
       }
+      .doctor-img {
+        max-width: 500px;
+      }
     }
     @media (max-width: 640px) {
       .hero-text-container h1 {
-        font-size: 2.2rem;
+        font-size: 2rem;
       }
       .hero-text-container p {
-        font-size: 1.1rem;
+        font-size: 1rem;
       }
       .sticky-cta {
         gap: 6px;
@@ -415,7 +434,7 @@
         padding: 8px;
       }
       .btn-primary, .btn-secondary {
-        padding: 6px 12px;
+        padding: 8px 16px;
         font-size: 0.9rem;
       }
       .faq-question h3 {
@@ -425,16 +444,19 @@
         font-size: 0.9rem;
       }
       section h2 {
-        font-size: 2rem;
+        font-size: 1.8rem;
       }
       section p {
-        font-size: 1rem;
+        font-size: 0.95rem;
       }
       .card h3 {
         font-size: 1.1rem;
       }
       .card p {
         font-size: 0.95rem;
+      }
+      .doctor-img {
+        max-width: 300px;
       }
     }
   </style>
@@ -512,38 +534,38 @@
     </div>
   </nav>
   <section id="home" class="hero-bg" aria-label="Hero section">
-    <div class="hero-slide active" style="background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1629909615184-74f495363b67?auto=format&fit=crop&w=1200&q=80')">
+    <div class="hero-slide active" style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1629909615184-74f495363b67?auto=format&fit=crop&w=1920&q=80')">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div class="hero-text-container">
-          <h1 class="text-2xl md:text-4xl font-extrabold mb-3 animate__animated animate__fadeIn">Welcome to OAK Dental Clinic</h1>
-          <p class="text-base md:text-lg mb-4">Transform your smile with expert care in Hyderabad.</p>
+          <h1 class="animate__animated animate__fadeIn">Welcome to OAK Dental Clinic</h1>
+          <p class="animate__animated animate__fadeIn animate__delay-1s">Transform your smile with expert care in Hyderabad.</p>
           <a href="#appointment" class="btn-primary">Book Appointment Now</a>
         </div>
       </div>
     </div>
-    <div class="hero-slide" style="background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1642844819197-5f5f21b89ff8?auto=format&fit=crop&w=1200&q=80')">
+    <div class="hero-slide" style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1642844819197-5f5f21b89ff8?auto=format&fit=crop&w=1920&q=80')">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div class="hero-text-container">
-          <h1 class="text-2xl md:text-4xl font-extrabold mb-3 animate__animated animate__fadeIn">Advanced Dental Solutions</h1>
-          <p class="text-base md:text-lg mb-4">State-of-the-art treatments for a perfect smile.</p>
+          <h1 class="animate__animated animate__fadeIn">Advanced Dental Solutions</h1>
+          <p class="animate__animated animate__fadeIn animate__delay-1s">State-of-the-art treatments for a perfect smile.</p>
           <a href="https://wa.me/919876543210" class="btn-primary">WhatsApp Us</a>
         </div>
       </div>
     </div>
-    <div class="hero-slide" style="background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://plus.unsplash.com/premium_photo-1661668387863-3032a13723f1?auto=format&fit=crop&w=1200&q=80')">
+    <div class="hero-slide" style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://plus.unsplash.com/premium_photo-1661668387863-3032a13723f1?auto=format&fit=crop&w=1920&q=80')">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div class="hero-text-container">
-          <h1 class="text-2xl md:text-4xl font-extrabold mb-3 animate__animated animate__fadeIn">Comfortable Dental Care</h1>
-          <p class="text-base md:text-lg mb-4">Painless procedures tailored to your needs.</p>
+          <h1 class="animate__animated animate__fadeIn">Comfortable Dental Care</h1>
+          <p class="animate__animated animate__fadeIn animate__delay-1s">Painless procedures tailored to your needs.</p>
           <a href="tel:+919876543210" class="btn-secondary">Call Us</a>
         </div>
       </div>
     </div>
-    <div class="hero-slide" style="background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://plus.unsplash.com/premium_photo-1681966962522-546f370bc98e?auto=format&fit=crop&w=1200&q=80')">
+    <div class="hero-slide" style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://plus.unsplash.com/premium_photo-1681966962522-546f370bc98e?auto=format&fit=crop&w=1920&q=80')">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div class="hero-text-container">
-          <h1 class="text-2xl md:text-4xl font-extrabold mb-3 animate__animated animate__fadeIn">Smile with Confidence</h1>
-          <p class="text-base md:text-lg mb-4">Personalized cosmetic dentistry for stunning results.</p>
+          <h1 class="animate__animated animate__fadeIn">Smile with Confidence</h1>
+          <p class="animate__animated animate__fadeIn animate__delay-1s">Personalized cosmetic dentistry for stunning results.</p>
           <a href="#appointment" class="btn-primary">Book Appointment Now</a>
         </div>
       </div>
@@ -616,8 +638,8 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <h2 class="text-2xl md:text-3xl font-extrabold text-teal-800 text-center mb-6 animate__animated animate__fadeIn">Meet Our Specialist</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-        <div>
-          <img src="https://i.postimg.cc/qRGc26Qd/RAM-KOTI.jpg" alt="Dr. A. Ram Koti Reddy" class="doctor-img" loading="lazy">
+        <div class="flex justify-center">
+          <img src="https://i.ibb.co/S2TKdX6/RAM-KOTI.jpg" alt="Dr. A. Ram Koti Reddy" class="doctor-img" loading="lazy">
         </div>
         <div class="text-center md:text-left">
           <h3 class="text-lg font-semibold text-teal-700">Dr. A. Ram Koti Reddy</h3>
