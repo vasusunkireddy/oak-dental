@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { Pool } = require('pg');
+const mysql = require('mysql2/promise');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
@@ -16,7 +16,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Environment Variables
 const {
-  DATABASE_URL,
+  DB_NAME,
+  DB_HOST,
+  DB_USER,
+  DB_PASSWORD,
+  DB_PORT,
   PORT = 3000,
   JWT_SECRET,
   NODE_ENV,
@@ -30,15 +34,21 @@ const {
 } = process.env;
 
 // Database Connection
-const pool = new Pool({
-  connectionString: DATABASE_URL,
-  ssl: NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+const pool = mysql.createPool({
+  host: DB_HOST,
+  user: DB_USER,
+  password: DB_PASSWORD,
+  database: DB_NAME,
+  port: DB_PORT,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
 });
 
 // Log Database Connection
-pool.on('connect', () => {
-  console.log(`Connected to database: ${DATABASE_URL}`);
-});
+pool.getConnection()
+  .then(() => console.log(`Connected to MySQL database: ${DB_NAME}`))
+  .catch(err => console.error('Database connection error:', err));
 
 // Initialize Database
 async function initializeDatabase() {
@@ -46,7 +56,7 @@ async function initializeDatabase() {
     // Create admins table
     await pool.query(`
       CREATE TABLE IF NOT EXISTS admins (
-        id SERIAL PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
         email VARCHAR(255) UNIQUE NOT NULL,
         password VARCHAR(255) NOT NULL,
@@ -54,20 +64,19 @@ async function initializeDatabase() {
       );
     `);
     // Verify admins table schema
-    const adminColumns = await pool.query(`
-      SELECT column_name FROM information_schema.columns 
-      WHERE table_name = 'admins' AND column_name = 'name';
+    const [adminColumns] = await pool.query(`
+      SHOW COLUMNS FROM admins LIKE 'name';
     `);
-    if (adminColumns.rows.length === 0) {
+    if (adminColumns.length === 0) {
       console.log('Adding missing name column to admins table');
-      await pool.query('ALTER TABLE admins ADD COLUMN name VARCHAR(255) NOT NULL DEFAULT \'Unknown\'');
+      await pool.query('ALTER TABLE admins ADD name VARCHAR(255) NOT NULL DEFAULT "Unknown"');
       console.log('Successfully added name column to admins');
     }
 
     // Create appointments table
     await pool.query(`
       CREATE TABLE IF NOT EXISTS appointments (
-        id SERIAL PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(255),
         email VARCHAR(255),
         phone VARCHAR(20),
@@ -79,29 +88,29 @@ async function initializeDatabase() {
       );
     `);
     // Verify appointments table schema
-    const appointmentColumns = await pool.query(`
-      SELECT column_name FROM information_schema.columns 
-      WHERE table_name = 'appointments';
-    `);
-    const hasStatus = appointmentColumns.rows.some(col => col.column_name === 'status');
-    const hasReason = appointmentColumns.rows.some(col => col.column_name === 'reason');
+    const [appointmentColumns] = await pool.query('SHOW COLUMNS FROM appointments');
+    const hasStatus = appointmentColumns.some(col => col.Field === 'status');
+    const hasReason = appointmentColumns.some(col => col.Field === 'reason');
+
     if (!hasStatus) {
       console.log('Adding missing status column to appointments table');
-      await pool.query('ALTER TABLE appointments ADD COLUMN status VARCHAR(20) DEFAULT \'pending\'');
+      await pool.query("ALTER TABLE appointments ADD status VARCHAR(20) DEFAULT 'pending'");
       console.log('Successfully added status column to appointments');
     }
+
     if (!hasReason) {
       console.log('Adding missing reason column to appointments table');
-      await pool.query('ALTER TABLE appointments ADD COLUMN reason TEXT');
+      await pool.query('ALTER TABLE appointments ADD reason TEXT');
       console.log('Successfully added reason column to appointments');
     }
-    // Ensure existing appointments have status
-    await pool.query('UPDATE appointments SET status = \'pending\' WHERE status IS NULL');
+
+    // Ensure existing appointments have a default status
+    await pool.query("UPDATE appointments SET status = 'pending' WHERE status IS NULL");
 
     // Create messages table
     await pool.query(`
       CREATE TABLE IF NOT EXISTS messages (
-        id SERIAL PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         full_name VARCHAR(255) NOT NULL,
         email VARCHAR(255),
         message TEXT,
@@ -109,39 +118,37 @@ async function initializeDatabase() {
       );
     `);
     // Verify messages table schema
-    const messageColumns = await pool.query(`
-      SELECT column_name FROM information_schema.columns 
-      WHERE table_name = 'messages' AND column_name = 'full_name';
+    const [messageColumns] = await pool.query(`
+      SHOW COLUMNS FROM messages LIKE 'full_name';
     `);
-    if (messageColumns.rows.length === 0) {
+    if (messageColumns.length === 0) {
       console.log('Adding missing full_name column to messages table');
-      await pool.query('ALTER TABLE messages ADD COLUMN full_name VARCHAR(255) NOT NULL DEFAULT \'Anonymous\'');
+      await pool.query('ALTER TABLE messages ADD full_name VARCHAR(255) NOT NULL DEFAULT "Anonymous"');
       console.log('Successfully added full_name column to messages');
     }
 
     // Create subscribers table
     await pool.query(`
       CREATE TABLE IF NOT EXISTS subscribers (
-        id SERIAL PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         email VARCHAR(255) UNIQUE,
         subscribed_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `);
     // Verify subscribers table schema
-    const subscriberColumns = await pool.query(`
-      SELECT column_name FROM information_schema.columns 
-      WHERE table_name = 'subscribers' AND column_name = 'subscribed_on';
+    const [subscriberColumns] = await pool.query(`
+      SHOW COLUMNS FROM subscribers LIKE 'subscribed_on';
     `);
-    if (subscriberColumns.rows.length === 0) {
+    if (subscriberColumns.length === 0) {
       console.log('Adding missing subscribed_on column to subscribers table');
-      await pool.query('ALTER TABLE subscribers ADD COLUMN subscribed_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP');
+      await pool.query('ALTER TABLE subscribers ADD subscribed_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP');
       console.log('Successfully added subscribed_on column to subscribers');
     }
 
     // Create otps table
     await pool.query(`
       CREATE TABLE IF NOT EXISTS otps (
-        id SERIAL PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         email VARCHAR(255) NOT NULL,
         otp VARCHAR(6) NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -191,7 +198,7 @@ async function sendSMS(phone, message) {
 function authenticateToken(req, res, next) {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
-  if (!token) return res.status(401).json({ error: 'Unauthorized' });
+  if (!token) return res (401).json({ error: 'Unauthorized' });
   jwt.verify(token, JWT_SECRET, (err, user) => {
     if (err) return res.status(403).json({ error: 'Invalid token' });
     req.user = user;
@@ -206,13 +213,13 @@ app.post('/api/admin/register', async (req, res) => {
     if (!name || !email || !password) {
       return res.status(400).json({ error: 'All fields are required' });
     }
-    const { rows } = await pool.query('SELECT * FROM admins WHERE email = $1', [email]);
+    const [rows] = await pool.query('SELECT * FROM admins WHERE email = ?', [email]);
     if (rows.length > 0) {
       return res.status(400).json({ error: 'Email already registered' });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     await pool.query(
-      'INSERT INTO admins (name, email, password) VALUES ($1, $2, $3)',
+      'INSERT INTO admins (name, email, password) VALUES (?, ?, ?)',
       [name, email, hashedPassword]
     );
     res.json({ message: 'Registration successful' });
@@ -229,7 +236,7 @@ app.post('/api/admin/login', async (req, res) => {
     if (!email || !password) {
       return res.status(400).json({ error: 'Email and password are required' });
     }
-    const { rows } = await pool.query('SELECT * FROM admins WHERE email = $1', [email]);
+    const [rows] = await pool.query('SELECT * FROM admins WHERE email = ?', [email]);
     const admin = rows[0];
     if (!admin || !(await bcrypt.compare(password, admin.password))) {
       return res.status(401).json({ error: 'Invalid credentials' });
@@ -245,7 +252,7 @@ app.post('/api/admin/login', async (req, res) => {
 // Admin Profile
 app.get('/api/admin/profile', authenticateToken, async (req, res) => {
   try {
-    const { rows } = await pool.query('SELECT name FROM admins WHERE id = $1', [req.user.id]);
+    const [rows] = await pool.query('SELECT name FROM admins WHERE id = ?', [req.user.id]);
     if (rows.length === 0) {
       return res.status(404).json({ error: 'Admin not found' });
     }
@@ -263,14 +270,14 @@ app.post('/api/admin/send-otp', async (req, res) => {
     if (!email) {
       return res.status(400).json({ error: 'Email is required' });
     }
-    const { rows } = await pool.query('SELECT * FROM admins WHERE email = $1', [email]);
+    const [rows] = await pool.query('SELECT * FROM admins WHERE email = ?', [email]);
     if (rows.length === 0) {
       return res.status(404).json({ error: 'Email not found' });
     }
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
     await pool.query(
-      'INSERT INTO otps (email, otp, expires_at) VALUES ($1, $2, $3)',
+      'INSERT INTO otps (email, otp, expires_at) VALUES (?, ?, ?)',
       [email, otp, expiresAt]
     );
     await transporter.sendMail({
@@ -303,14 +310,14 @@ app.post('/api/admin/verify-otp', async (req, res) => {
     if (!email || !otp) {
       return res.status(400).json({ error: 'Email and OTP are required' });
     }
-    const { rows } = await pool.query(
-      'SELECT * FROM otps WHERE email = $1 AND otp = $2 AND expires_at > NOW()',
+    const [rows] = await pool.query(
+      'SELECT * FROM otps WHERE email = ? AND otp = ? AND expires_at > NOW()',
       [email, otp]
     );
     if (rows.length === 0) {
       return res.status(400).json({ error: 'Invalid or expired OTP' });
     }
-    await pool.query('DELETE FROM otps WHERE email = $1', [email]);
+    await pool.query('DELETE FROM otps WHERE email = ?', [email]);
     res.json({ message: 'OTP verified' });
   } catch (error) {
     console.error('Verify OTP error:', error);
@@ -328,12 +335,12 @@ app.post('/api/admin/reset-password', async (req, res) => {
     if (newPassword !== confirmPassword) {
       return res.status(400).json({ error: 'Passwords do not match' });
     }
-    const { rows } = await pool.query('SELECT * FROM admins WHERE email = $1', [email]);
+    const [rows] = await pool.query('SELECT * FROM admins WHERE email = ?', [email]);
     if (rows.length === 0) {
       return res.status(404).json({ error: 'Email not found' });
     }
     const hashedPassword = await bcrypt.hash(newPassword, 10);
-    await pool.query('UPDATE admins SET password = $1 WHERE email = $2', [hashedPassword, email]);
+    await pool.query('UPDATE admins SET password = ? WHERE email = ?', [hashedPassword, email]);
     res.json({ message: 'Password reset successful' });
   } catch (error) {
     console.error('Reset password error:', error);
@@ -351,14 +358,14 @@ app.post('/api/admin/appointment/action', authenticateToken, async (req, res) =>
     if (!['accept', 'cancel'].includes(action)) {
       return res.status(400).json({ error: 'Invalid action' });
     }
-    const { rows } = await pool.query('SELECT * FROM appointments WHERE id = $1', [id]);
+    const [rows] = await pool.query('SELECT * FROM appointments WHERE id = ?', [id]);
     if (rows.length === 0) {
       return res.status(404).json({ error: 'Appointment not found' });
     }
     const appointment = rows[0];
     const status = action === 'accept' ? 'accepted' : 'cancelled';
     await pool.query(
-      'UPDATE appointments SET status = $1, reason = $2 WHERE id = $3',
+      'UPDATE appointments SET status = ?, reason = ? WHERE id = ?',
       [status, action === 'cancel' ? reason : null, id]
     );
     // Send Email
@@ -403,7 +410,7 @@ app.post('/api/admin/message/reply', authenticateToken, async (req, res) => {
     if (!id || !reply) {
       return res.status(400).json({ error: 'ID and reply are required' });
     }
-    const { rows } = await pool.query('SELECT * FROM messages WHERE id = $1', [id]);
+    const [rows] = await pool.query('SELECT * FROM messages WHERE id = ?', [id]);
     if (rows.length === 0) {
       return res.status(404).json({ error: 'Message not found' });
     }
@@ -441,11 +448,11 @@ app.delete('/api/admin/appointment/delete', authenticateToken, async (req, res) 
     if (!id) {
       return res.status(400).json({ error: 'ID is required' });
     }
-    const { rows } = await pool.query('SELECT * FROM appointments WHERE id = $1', [id]);
+    const [rows] = await pool.query('SELECT * FROM appointments WHERE id = ?', [id]);
     if (rows.length === 0) {
       return res.status(404).json({ error: 'Appointment not found' });
     }
-    await pool.query('DELETE FROM appointments WHERE id = $1', [id]);
+    await pool.query('DELETE FROM appointments WHERE id = ?', [id]);
     console.log(`Appointment with ID ${id} deleted successfully by admin ID ${req.user.id}`);
     res.json({ message: 'Appointment deleted successfully' });
   } catch (error) {
@@ -461,11 +468,11 @@ app.delete('/api/admin/message/delete', authenticateToken, async (req, res) => {
     if (!id) {
       return res.status(400).json({ error: 'ID is required' });
     }
-    const { rows } = await pool.query('SELECT * FROM messages WHERE id = $1', [id]);
+    const [rows] = await pool.query('SELECT * FROM messages WHERE id = ?', [id]);
     if (rows.length === 0) {
       return res.status(404).json({ error: 'Message not found' });
     }
-    await pool.query('DELETE FROM messages WHERE id = $1', [id]);
+    await pool.query('DELETE FROM messages WHERE id = ?', [id]);
     console.log(`Message with ID ${id} deleted successfully by admin ID ${req.user.id}`);
     res.json({ message: 'Message deleted successfully' });
   } catch (error) {
@@ -477,7 +484,7 @@ app.delete('/api/admin/message/delete', authenticateToken, async (req, res) => {
 // Admin Endpoints (Protected)
 app.get('/api/admin/appointments', authenticateToken, async (req, res) => {
   try {
-    const { rows } = await pool.query('SELECT * FROM appointments ORDER BY created_at DESC');
+    const [rows] = await pool.query('SELECT * FROM appointments ORDER BY created_at DESC');
     res.json(rows);
   } catch (error) {
     console.error('Get appointments error:', error);
@@ -487,7 +494,7 @@ app.get('/api/admin/appointments', authenticateToken, async (req, res) => {
 
 app.get('/api/admin/messages', authenticateToken, async (req, res) => {
   try {
-    const { rows } = await pool.query('SELECT * FROM messages ORDER BY created_at DESC');
+    const [rows] = await pool.query('SELECT * FROM messages ORDER BY created_at DESC');
     res.json(rows);
   } catch (error) {
     console.error('Get messages error:', error);
@@ -497,7 +504,7 @@ app.get('/api/admin/messages', authenticateToken, async (req, res) => {
 
 app.get('/api/admin/subscribers', authenticateToken, async (req, res) => {
   try {
-    const { rows } = await pool.query('SELECT * FROM subscribers ORDER BY subscribed_on DESC');
+    const [rows] = await pool.query('SELECT * FROM subscribers ORDER BY subscribed_on DESC');
     res.json(rows);
   } catch (error) {
     console.error('Get subscribers error:', error);
@@ -510,7 +517,7 @@ app.post('/api/appointments', async (req, res) => {
   try {
     const { name, email, phone, date, message } = req.body;
     await pool.query(
-      'INSERT INTO appointments (name, email, phone, date, message, status) VALUES ($1, $2, $3, $4, $5, $6)',
+      'INSERT INTO appointments (name, email, phone, date, message, status) VALUES (?, ?, ?, ?, ?, ?)',
       [name, email, phone, date, message, 'pending']
     );
     res.json({ message: 'Appointment submitted successfully' });
@@ -527,7 +534,7 @@ app.post('/api/messages', async (req, res) => {
       return res.status(400).json({ error: 'Email and message are required' });
     }
     await pool.query(
-      'INSERT INTO messages (full_name, email, message) VALUES ($1, $2, $3)',
+      'INSERT INTO messages (full_name, email, message) VALUES (?, ?, ?)',
       [name || 'Anonymous', email, message]
     );
     res.json({ message: 'Message submitted successfully' });
@@ -543,7 +550,7 @@ app.post('/api/subscribers', async (req, res) => {
     if (!email) {
       return res.status(400).json({ error: 'Email is required' });
     }
-    await pool.query('INSERT INTO subscribers (email) VALUES ($1) ON CONFLICT (email) DO NOTHING', [email]);
+    await pool.query('INSERT IGNORE INTO subscribers (email) VALUES (?)', [email]);
     res.json({ message: 'Subscription successful' });
   } catch (error) {
     console.error('Submit subscriber error:', error);
